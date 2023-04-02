@@ -6,6 +6,7 @@ import '../../temp/data.dart';
 import '../../utils/colors/app_colors.dart';
 import '../../utils/constants/dimension.dart';
 import '../../utils/styles/app_texts.dart';
+import '../../widgets/global/cart_button.dart';
 import '../../widgets/global/custom_app_bar.dart';
 import '../../widgets/global/order_type_picker.dart';
 import '../../widgets/global/product_item.dart';
@@ -116,70 +117,75 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Expanded(
-                  child: ListView(controller: _scrollController, children: [
-                    SizedBox(
-                      height: Dimension.height24,
-                    ),
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: Dimension.width16),
-                      child: const OrderTypePicker(),
-                    ),
-                    SizedBox(
-                      height: Dimension.height24,
-                    ),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: Dimension.width16),
-                      child: Text(
-                        "See recently",
-                        textAlign: TextAlign.left,
-                        style: AppText.style.boldBlack16,
-                      ),
-                    ),
-                    SizedBox(
-                      height: Dimension.height12,
-                    ),
-                    FutureBuilder(
-                        future: _generateProducts(),
-                        builder: (context, snapshot) {
-                          return Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: Dimension.width16),
-                              child: ListView.separated(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemBuilder: (ctx, index) {
-                                    return snapshot.data == null
-                                        ? const SizedBox()
-                                        : Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                            ),
-                                            padding: const EdgeInsets.all(5),
-                                            child: snapshot.data![index]);
-                                  },
-                                  separatorBuilder: (ctx, index) {
-                                    return SizedBox(
-                                      height: Dimension.height8,
-                                    );
-                                  },
-                                  itemCount: snapshot.data == null
-                                      ? 0
-                                      : snapshot.data!.length)
-                              // child: Column(
-                              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              //   children: snapshot.data ?? <Widget>[],
-                              // ),
-                              );
-                        }),
-                    SizedBox(
-                      height: Dimension.height20,
-                    )
-                  ]),
+                  child: Stack(
+                    children: [
+                      ListView(controller: _scrollController, children: [
+                        SizedBox(
+                          height: Dimension.height24,
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: Dimension.width16),
+                          child: const OrderTypePicker(),
+                        ),
+                        SizedBox(
+                          height: Dimension.height24,
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: Dimension.width16),
+                          child: Text(
+                            "Used recently",
+                            style: AppText.style.boldBlack16,
+                          ),
+                        ),
+                        SizedBox(
+                          height: Dimension.height12,
+                        ),
+                        FutureBuilder(
+                            future: _generateProducts(),
+                            builder: (context, snapshot) {
+                              return Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: Dimension.width16),
+                                  child: ListView.separated(
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemBuilder: (ctx, index) {
+                                        return snapshot.data == null
+                                            ? const SizedBox()
+                                            : Container(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                ),
+                                                padding:
+                                                    const EdgeInsets.all(5),
+                                                child: snapshot.data![index]);
+                                      },
+                                      separatorBuilder: (ctx, index) {
+                                        return SizedBox(
+                                          height: Dimension.height8,
+                                        );
+                                      },
+                                      itemCount: snapshot.data == null
+                                          ? 0
+                                          : snapshot.data!.length)
+                                  // child: Column(
+                                  //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  //   children: snapshot.data ?? <Widget>[],
+                                  // ),
+                                  );
+                            }),
+                        SizedBox(
+                          height: Dimension.height20,
+                        )
+                      ]),
+                      CartButton(scrollController: _scrollController, money: 56000, amount: 1,)
+                    ],
+                  ),
                 ),
               ],
             )));
