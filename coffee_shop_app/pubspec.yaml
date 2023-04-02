@@ -15,6 +15,9 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.2
   flutter_bloc: ^8.1.2
+  font_awesome_flutter: ^10.4.0
+  intl: ^0.18.0
+  shared_preferences: ^2.0.20
   # firebase_core: ^1.14.0
   # firebase_auth: ^3.3.13
   # flutter_svg: ^1.0.0
@@ -32,3 +35,17 @@ flutter:
   #   - assets/icons/
   #   - assets/
 
+  assets:
+    - assets\images\pickup_icon.png
+    - assets\images\pickup_small_icon.png
+    - assets\images\delivery_small_icon.png
+    - assets\images\delivery_icon.png
+    
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
