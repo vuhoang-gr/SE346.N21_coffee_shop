@@ -15,13 +15,18 @@ class Dimension {
   static double getWidthFromValue(double inputWidth) {
     return (width / 360) * inputWidth;
   }
-  
+
+  static double heightTimePicker = 120 * width / 375;
+  static double addToCart108 = 108 * width / 375;
+  static double height150 = getHeightFromValue(150);
+  static double height230 = getHeightFromValue(230);
   static double height160 = getHeightFromValue(160);
   static double height86 = getHeightFromValue(86);
   static double height72 = getHeightFromValue(72);
   static double height68 = getHeightFromValue(68);
   static double height56 = getHeightFromValue(56);
   static double height48 = getHeightFromValue(48);
+  static double height45 = getHeightFromValue(45);
   static double height43 = getHeightFromValue(43);
   static double height40 = getHeightFromValue(40);
   static double height37 = getHeightFromValue(37);
@@ -30,6 +35,7 @@ class Dimension {
   static double height20 = getHeightFromValue(20);
   static double height16 = getHeightFromValue(16);
   static double height12 = getHeightFromValue(12);
+  static double height18 = getHeightFromValue(18);
   static double height10 = getHeightFromValue(10);
   static double height8 = getHeightFromValue(8);
   static double height7 = getHeightFromValue(7);
