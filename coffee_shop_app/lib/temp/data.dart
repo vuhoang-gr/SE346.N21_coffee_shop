@@ -3,6 +3,7 @@
 import '../services/models/address.dart';
 import '../services/models/delivery_address.dart';
 import '../services/models/food.dart';
+import '../services/models/store.dart';
 
 class Data {
   static const name = "Nguyen Van A";
@@ -92,53 +93,73 @@ class Data {
         ]),
   ];
 
-  // static final List<Store> _storeAddress = [
-  //   Store(
-  //       id: "st01",
-  //       sb: "Store 1",
-  //       address: Address(
-  //           city: "HCM city",
-  //           district: "Thu Duc",
-  //           ward: "Linh Trung",
-  //           shortName: "short Name 1"),
-  //       phone: "01234567890"),
-  //   Store(
-  //       id: "st02",
-  //       sb: "Store 2",
-  //       address: Address(
-  //           city: "HCM city",
-  //           district: "Thu Duc",
-  //           ward: "Linh Trung",
-  //           shortName: "short Name 2"),
-  //       phone: "01234567890"),
-  //   Store(
-  //       id: "st03",
-  //       sb: "Store 3",
-  //       address: Address(
-  //           city: "HCM city",
-  //           district: "Thu Duc",
-  //           ward: "Linh Trung",
-  //           shortName: "short Name 3"),
-  //       phone: "01234567890"),
-  //   Store(
-  //       id: "st04",
-  //       sb: "Store 4",
-  //       address: Address(
-  //           city: "HCM city",
-  //           district: "Thu Duc",
-  //           ward: "Linh Trung",
-  //           shortName: "short Name 4"),
-  //       phone: "01234567890"),
-  //   Store(
-  //       id: "st05",
-  //       sb: "Store 5",
-  //       address: Address(
-  //           city: "HCM city",
-  //           district: "Thu Duc",
-  //           ward: "Linh Trung",
-  //           shortName: "short Name 5"),
-  //       phone: "01234567890"),
-  // ];
+  static final List<Store> storeAddress = [
+    Store(
+        id: "st01",
+        sb: "Store 1",
+        address: Address(
+            city: "HCM city",
+            district: "Thu Duc",
+            ward: "Linh Trung",
+            shortName: "short Name 1"),
+        phone: "01234567890"),
+    Store(
+        id: "st02",
+        sb: "Store 2",
+        address: Address(
+            city: "HCM city",
+            district: "Thu Duc",
+            ward: "Linh Trung",
+            shortName: "short Name 2"),
+        phone: "01234567890"),
+    Store(
+        id: "st03",
+        sb: "Store 3",
+        address: Address(
+            city: "HCM city",
+            district: "Thu Duc",
+            ward: "Linh Trung",
+            shortName: "short Name 3"),
+        phone: "01234567890"),
+    Store(
+        id: "st04",
+        sb: "Store 4",
+        address: Address(
+            city: "HCM city",
+            district: "Thu Duc",
+            ward: "Linh Trung",
+            shortName: "short Name 4"),
+        phone: "01234567890"),
+    Store(
+        id: "st05",
+        sb: "Store 5",
+        address: Address(
+            city: "HCM city",
+            district: "Thu Duc",
+            ward: "Linh Trung",
+            shortName: "short Name 5"),
+        phone: "01234567890"),
+  ];
+  static final List<Store> favoriteStores = [
+    Store(
+        id: "st01",
+        sb: "Store 1",
+        address: Address(
+            city: "HCM city",
+            district: "Thu Duc",
+            ward: "Linh Trung",
+            shortName: "short Name 1"),
+        phone: "01234567890"),
+    Store(
+        id: "st05",
+        sb: "Store 5",
+        address: Address(
+            city: "HCM city",
+            district: "Thu Duc",
+            ward: "Linh Trung",
+            shortName: "short Name 5"),
+        phone: "01234567890"),
+  ];
 
   static final List<DeliveryAddress> addresses = [
     DeliveryAddress(

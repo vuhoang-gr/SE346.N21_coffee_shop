@@ -2,8 +2,6 @@ import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:intl/intl.dart';
 
 import '../utils/constants/dimension.dart';
@@ -39,9 +37,7 @@ class _CartStorePickupState extends State<CartStorePickup> {
               CustomAppBar(
                 leading: Text(
                   'Cart',
-                  style: TextStyle(
-                      fontSize: Dimension.height18,
-                      fontWeight: FontWeight.bold),
+                  style: AppText.style.boldBlack18
                 ),
               ),
               Expanded(
@@ -177,9 +173,7 @@ class _CartStorePickupState extends State<CartStorePickup> {
                                   children: [
                                     Text(
                                       'Price',
-                                      style: TextStyle(
-                                          fontSize: Dimension.font14,
-                                          height: 1.5),
+                                      style: AppText.style.regularBlack14,
                                     ),
                                     Text(
                                       '319.000 ₫',
@@ -276,10 +270,7 @@ class _CartStorePickupState extends State<CartStorePickup> {
                                 onPressed: () {},
                                 child: Text(
                                   'Pay 319.000 ₫',
-                                  style: TextStyle(
-                                      fontSize: Dimension.height16,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.normal),
+                                  style: AppText.style.regularWhite16,
                                 ),
                               ),
                             ),
@@ -375,7 +366,7 @@ class _CartStorePickupState extends State<CartStorePickup> {
 
                                                             return Center(
                                                               child: Text(
-                                                                '${day}',
+                                                                day,
                                                                 style: AppText
                                                                     .style
                                                                     .boldBlack16,
@@ -427,10 +418,7 @@ class _CartStorePickupState extends State<CartStorePickup> {
                                   onPressed: () {},
                                   child: Text(
                                     'Apply',
-                                    style: TextStyle(
-                                        fontSize: Dimension.height16,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.normal),
+                                    style: AppText.style.regularWhite16,
                                   ),
                                 ),
                               ),
