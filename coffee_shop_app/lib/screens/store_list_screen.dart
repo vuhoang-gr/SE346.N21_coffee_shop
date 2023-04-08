@@ -2,8 +2,6 @@ import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 import '../utils/constants/dimension.dart';
 import '../widgets/feature/store/store_list_item.dart';
@@ -20,9 +18,9 @@ class StoreListScreen extends StatefulWidget {
 }
 
 class _StoreListScreenState extends State<StoreListScreen> {
-  FocusNode _focus = FocusNode();
+  final FocusNode _focus = FocusNode();
 
-  TextEditingController _controller = TextEditingController();
+  final TextEditingController _controller = TextEditingController();
 
   String newString = "";
   @override
@@ -59,9 +57,7 @@ class _StoreListScreenState extends State<StoreListScreen> {
                 CustomAppBar(
                   leading: Text(
                     'Stores',
-                    style: TextStyle(
-                        fontSize: Dimension.height18,
-                        fontWeight: FontWeight.bold),
+                    style: AppText.style.boldBlack18,
                   ),
                 ),
                 Container(
@@ -82,11 +78,10 @@ class _StoreListScreenState extends State<StoreListScreen> {
                         },
                         controller: _controller,
                         focusNode: _focus,
-                        style:
-                            TextStyle(height: 1.5, fontSize: Dimension.font14),
+                        style: AppText.style.regularBlack14,
                         decoration: InputDecoration(
                             prefixIcon: const Icon(CupertinoIcons.search),
-                            suffixIcon: !newString.isEmpty
+                            suffixIcon: newString.isNotEmpty
                                 ? IconButton(
                                     onPressed: () {
                                       _controller.clear();
@@ -101,8 +96,7 @@ class _StoreListScreenState extends State<StoreListScreen> {
                                 left: Dimension.height16,
                                 right: Dimension.height16),
                             hintText: 'Search store',
-                            hintStyle:
-                                const TextStyle(color: AppColors.greyTextColor),
+                            hintStyle: AppText.style.regularGrey14,
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(4),
                                 borderSide:

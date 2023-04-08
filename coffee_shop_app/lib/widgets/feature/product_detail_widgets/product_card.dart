@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../../utils/constants/dimension.dart';
+import '../../../utils/styles/app_texts.dart';
 
 class ProductCard extends StatefulWidget {
   const ProductCard({super.key});
@@ -71,10 +70,7 @@ class _ProductCardState extends State<ProductCard> {
                           borderRadius: BorderRadius.circular(16)),
                       child: Text(
                         '${_index + 1}/5',
-                        style: TextStyle(
-                            fontSize: Dimension.font14,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400),
+                        style: AppText.style.regularWhite14
                       ),
                     ))
               ]),
@@ -97,18 +93,14 @@ class _ProductCardState extends State<ProductCard> {
                           children: [
                             Text(
                               "Capuccino",
-                              style: TextStyle(
-                                  fontSize: Dimension.height16, height: 1.5),
+                              style: AppText.style.regularBlack16,
                             ),
                             const SizedBox(
                               height: 2,
                             ),
                             Text(
                               "69.000 ₫",
-                              style: TextStyle(
-                                  fontSize: Dimension.font14,
-                                  height: 1.5,
-                                  fontWeight: FontWeight.w700),
+                              style: AppText.style.boldBlack14
                             ),
                           ],
                         ),
@@ -136,10 +128,7 @@ class _ProductCardState extends State<ProductCard> {
                     ),
                     Text(
                       "Dark, rich espresso lies in wait under a smoothed and stretched layer of thick milk foam. An alchemy of barista artistry and craft.",
-                      style: TextStyle(
-                          fontSize: Dimension.height12,
-                          height: 1.5,
-                          color: const Color.fromRGBO(128, 128, 137, 1)),
+                      style: AppText.style.regularGrey12,
                     ),
                   ],
                 ),

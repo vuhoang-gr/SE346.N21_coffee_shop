@@ -1,8 +1,6 @@
 import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 import '../temp/model_temp.dart';
 import '../utils/constants/dimension.dart';
@@ -139,10 +137,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                                 ),
                                                 Text(
                                                   listSize[index].size,
-                                                  style: TextStyle(
-                                                      fontSize:
-                                                          Dimension.font14,
-                                                      height: 1.5),
+                                                  style: AppText.style.regularBlack14,
                                                 ),
                                               ],
                                             ),
@@ -185,10 +180,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                   const TextSpan(text: 'Topping '),
                                   TextSpan(
                                       text: '(maximum 2)',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.normal,
-                                          fontSize: Dimension.font14,
-                                          color: AppColors.greyTextColor)),
+                                      style: AppText.style.regularGrey14,)
                                 ],
                               ),
                             ),
@@ -228,9 +220,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                               ),
                                               Text(
                                                 listTopping[index].name,
-                                                style: TextStyle(
-                                                    fontSize: Dimension.font14,
-                                                    height: 1.5),
+                                                style: AppText.style.regularBlack14
                                               ),
                                             ],
                                           ),
@@ -274,16 +264,14 @@ class _ProductDetailState extends State<ProductDetail> {
                             textAlignVertical: TextAlignVertical.top,
                             expands: true,
                             maxLength: 100,
-                            style: TextStyle(
-                                height: 1.5, fontSize: Dimension.font14),
+                            style: AppText.style.regularBlack14,
                             decoration: InputDecoration(
                                 contentPadding: EdgeInsets.only(
                                     top: Dimension.height8,
                                     left: Dimension.height16,
                                     right: Dimension.height16),
                                 hintText: 'Your note to barista',
-                                hintStyle: const TextStyle(
-                                    color: AppColors.greyTextColor),
+                                hintStyle: AppText.style.regularGrey14,
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(4),
                                     borderSide: const BorderSide(
@@ -332,8 +320,9 @@ class _ProductDetailState extends State<ProductDetail> {
                                       onTap: () {
                                         setState(() {
                                           _numberToAdd--;
-                                          if (_numberToAdd == 0)
+                                          if (_numberToAdd == 0) {
                                             isEnable = false;
+                                          }
                                         });
                                       }),
                                   SizedBox(
@@ -342,8 +331,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                   SquareAmountBox(
                                       child: Text(
                                     '$_numberToAdd',
-                                    style:
-                                        TextStyle(fontSize: Dimension.height16),
+                                    style:AppText.style.regularBlack16,
                                   )),
                                   SizedBox(
                                     width: Dimension.height8 / 2,
@@ -373,10 +361,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                   onPressed: () {},
                                   child: Text(
                                     'Add to cart - 69.000 ₫',
-                                    style: TextStyle(
-                                        fontSize: Dimension.height16,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.normal),
+                                    style: AppText.style.regularWhite16,
                                   ),
                                 ),
                               )

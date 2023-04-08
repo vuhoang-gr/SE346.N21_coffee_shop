@@ -1,8 +1,6 @@
 import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 import '../../../utils/constants/dimension.dart';
 import '../product_detail_widgets/round_image.dart';
@@ -41,20 +39,14 @@ class OrderManageProductItem extends StatelessWidget {
                   ),
                   Text(
                     'Size: Small',
-                    style: TextStyle(
-                        fontSize: Dimension.height12,
-                        color: AppColors.greyTextColor,
-                        height: 1.5),
+                    style: AppText.style.regularGrey12
                   ),
                   SizedBox(
                     height: Dimension.height4,
                   ),
                   Text(
                     '69.000 ₫ x 1',
-                    style: TextStyle(
-                        fontSize: Dimension.height12,
-                        color: AppColors.greyTextColor,
-                        height: 1.5),
+                    style: AppText.style.regularGrey12
                   ),
                   SizedBox(
                     height: Dimension.height4,
@@ -66,10 +58,7 @@ class OrderManageProductItem extends StatelessWidget {
                         border: Border.all(color: AppColors.greyTextField)),
                     child: Text(
                       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus rhoncus lorem risus sollicitudin.',
-                      style: TextStyle(
-                          fontSize: Dimension.height12,
-                          color: AppColors.greyTextColor,
-                          height: 1.5),
+                      style: AppText.style.regularGrey12
                     ),
                   ),
                 ],

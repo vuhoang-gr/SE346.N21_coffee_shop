@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 import '../../utils/constants/dimension.dart';
 
 class ContainerCard extends StatelessWidget {
-  ContainerCard(
+  const ContainerCard(
       {super.key,
       required this.child,
       this.verticalPadding = 0,
       this.horizontalPadding = -1});
-  Widget child;
-  double verticalPadding;
-  double horizontalPadding;
+  final Widget child;
+  final double verticalPadding;
+  final double horizontalPadding;
 
   @override
   Widget build(BuildContext context) {

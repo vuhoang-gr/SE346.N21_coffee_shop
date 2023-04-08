@@ -2,8 +2,6 @@ import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:coffee_shop_app/widgets/feature/order_widgets/order_status_label.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 import '../../../utils/constants/dimension.dart';
 import '../../../utils/constants/string.dart';
@@ -25,9 +23,9 @@ class OrderCard extends StatelessWidget {
     bool isPickup;
     if (orderStatus == orderReceived ||
         orderStatus == orderReadyForPickup ||
-        orderStatus == orderCompleted)
+        orderStatus == orderCompleted) {
       isPickup = true;
-    else {
+    } else {
       isPickup = false;
     }
     if (orderStatus == orderPreparing || orderStatus == orderReceived) {
@@ -59,9 +57,7 @@ class OrderCard extends StatelessWidget {
                     text: orderStatus),
                 Text(
                   '20/04/2020, 04:20',
-                  style: TextStyle(
-                      fontSize: Dimension.height12,
-                      color: AppColors.greyTextColor),
+                  style: AppText.style.regularGrey12
                 ),
               ],
             ),

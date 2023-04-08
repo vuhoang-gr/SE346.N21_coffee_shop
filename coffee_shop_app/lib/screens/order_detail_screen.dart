@@ -1,8 +1,6 @@
 import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 import '../utils/constants/dimension.dart';
 import '../utils/constants/string.dart';
@@ -35,9 +33,7 @@ class OrderDetailScreen extends StatelessWidget {
                 CustomAppBar(
                   leading: Text(
                     'Order  247-96024',
-                    style: TextStyle(
-                        fontSize: Dimension.height18,
-                        fontWeight: FontWeight.bold),
+                    style: AppText.style.boldBlack18,
                   ),
                 ),
                 Expanded(
@@ -100,10 +96,7 @@ class OrderDetailScreen extends StatelessWidget {
                                               },
                                               child: Text(
                                                 'Contact support',
-                                                style: TextStyle(
-                                                    fontSize: Dimension.font14,
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                                style: AppText.style.boldBlack14
                                               ))
                                         ],
                                       ),
@@ -294,24 +287,13 @@ class OrderDetailScreen extends StatelessWidget {
                                                   ? const SizedBox.shrink()
                                                   : RichText(
                                                       text: TextSpan(
-                                                        style: TextStyle(
-                                                            fontSize: Dimension
-                                                                .height12,
-                                                            height: 1.5,
-                                                            color: AppColors
-                                                                .greyTextColor),
+                                                        style: AppText.style.regularGrey12,
                                                         children: <TextSpan>[
                                                           const TextSpan(
                                                               text: 'Nick'),
                                                           TextSpan(
                                                               text: ' • ',
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  fontSize:
-                                                                      Dimension
-                                                                          .font14)),
+                                                              style: AppText.style.boldBlack14,),
                                                           const TextSpan(
                                                               text:
                                                                   '0969696969'),

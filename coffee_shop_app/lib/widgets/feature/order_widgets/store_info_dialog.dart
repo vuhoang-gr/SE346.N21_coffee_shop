@@ -2,8 +2,6 @@ import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 import '../../../utils/constants/dimension.dart';
 import '../../../utils/styles/button.dart';
@@ -47,9 +45,7 @@ class StoreInfoDialog extends StatelessWidget {
                 children: [
                   Text(
                     'SB Han Thuyen',
-                    style: TextStyle(
-                        fontSize: Dimension.height18,
-                        fontWeight: FontWeight.bold),
+                    style: AppText.style.boldBlack18
                   ),
                   SizedBox(
                     height: Dimension.height16,

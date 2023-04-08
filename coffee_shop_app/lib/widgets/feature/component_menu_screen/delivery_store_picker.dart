@@ -1,3 +1,4 @@
+import 'package:coffee_shop_app/screens/store_selection_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -11,7 +12,9 @@ class DeliveryStorePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () {},
+        onTap: () {
+          Navigator.of(context).pushNamed(StoreSelectionScreen.routeName);
+        },
         child: Container(
             decoration: BoxDecoration(
               color: CupertinoColors.white,

@@ -2,8 +2,6 @@ import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 import '../../../utils/constants/dimension.dart';
 import '../../../utils/styles/button.dart';
@@ -45,10 +43,7 @@ class CheckoutProdItem extends StatelessWidget {
                   ),
                   Text(
                     'Size: Small',
-                    style: TextStyle(
-                        fontSize: Dimension.height12,
-                        color: AppColors.greyTextColor,
-                        height: 1.5),
+                    style: AppText.style.regularGrey12,
                   ),
                   SizedBox(
                     height: Dimension.height8 / 2,
@@ -67,10 +62,7 @@ class CheckoutProdItem extends StatelessWidget {
                         border: Border.all(color: AppColors.greyTextField)),
                     child: Text(
                       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus rhoncus lorem risus sollicitudin.',
-                      style: TextStyle(
-                          fontSize: Dimension.height12,
-                          color: AppColors.greyTextColor,
-                          height: 1.5),
+                      style: AppText.style.regularGrey12
                     ),
                   ),
                   SizedBox(
@@ -108,10 +100,7 @@ class CheckoutProdItem extends StatelessWidget {
                                                 Navigator.pop(context, 'Yes'),
                                             child: Text(
                                               'Yes',
-                                              style: TextStyle(
-                                                  fontSize: Dimension.height16,
-                                                  fontWeight:
-                                                      FontWeight.normal),
+                                              style: AppText.style.regularBlack16
                                             ),
                                           ),
                                         ),
@@ -125,10 +114,7 @@ class CheckoutProdItem extends StatelessWidget {
                                                 Navigator.pop(context, 'No'),
                                             child: Text(
                                               'No',
-                                              style: TextStyle(
-                                                  fontSize: Dimension.height16,
-                                                  fontWeight:
-                                                      FontWeight.normal),
+                                              style: AppText.style.regularBlack16
                                             ),
                                           ),
                                         ),
@@ -141,7 +127,7 @@ class CheckoutProdItem extends StatelessWidget {
                       SquareAmountBox(
                           child: Text(
                         '1',
-                        style: TextStyle(fontSize: Dimension.height16),
+                        style: AppText.style.regularBlack16
                       )),
                       SizedBox(
                         width: Dimension.height4,

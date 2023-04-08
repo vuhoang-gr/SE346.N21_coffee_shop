@@ -35,9 +35,7 @@ class _CartDeliveryState extends State<CartDelivery> {
               CustomAppBar(
                 leading: Text(
                   'Cart',
-                  style: TextStyle(
-                      fontSize: Dimension.height18,
-                      fontWeight: FontWeight.bold),
+                  style: AppText.style.boldBlack18
                 ),
               ),
               Expanded(
@@ -109,20 +107,12 @@ class _CartDeliveryState extends State<CartDelivery> {
                                               style: AppText.style.boldBlack14),
                                           RichText(
                                             text: TextSpan(
-                                              style: TextStyle(
-                                                  fontSize: Dimension.height12,
-                                                  height: 1.5,
-                                                  color:
-                                                      AppColors.greyTextColor),
+                                              style: AppText.style.regularGrey12,
                                               children: <TextSpan>[
                                                 const TextSpan(text: 'Nick'),
                                                 TextSpan(
                                                     text: ' • ',
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize:
-                                                            Dimension.font14)),
+                                                    style: AppText.style.boldBlack14,),
                                                 const TextSpan(
                                                     text: '0969696969'),
                                               ],
@@ -184,9 +174,7 @@ class _CartDeliveryState extends State<CartDelivery> {
                                   children: [
                                     Text(
                                       'Price',
-                                      style: TextStyle(
-                                          fontSize: Dimension.font14,
-                                          height: 1.5),
+                                      style: AppText.style.regularBlack14
                                     ),
                                     Text(
                                       '319.000 ₫',
@@ -280,10 +268,7 @@ class _CartDeliveryState extends State<CartDelivery> {
                                 onPressed: () {},
                                 child: Text(
                                   'Pay 319.000 ₫',
-                                  style: TextStyle(
-                                      fontSize: Dimension.height16,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.normal),
+                                  style: AppText.style.regularWhite16,
                                 ),
                               ),
                             ),

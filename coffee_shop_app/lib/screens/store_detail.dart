@@ -1,10 +1,7 @@
 import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
-import 'package:coffee_shop_app/widgets/global/order_type_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 import '../utils/constants/dimension.dart';
 import '../widgets/feature/product_detail_widgets/icon_widget_row.dart';

@@ -1,7 +1,5 @@
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 import '../../utils/constants/dimension.dart';
 import '../../utils/styles/button.dart';
@@ -80,9 +78,7 @@ class PickupManagement extends StatelessWidget {
                           child: Center(
                             child: Text(
                               'Order now!',
-                              style: TextStyle(
-                                  fontSize: Dimension.height16,
-                                  fontWeight: FontWeight.normal),
+                              style: AppText.style.regularBlack16,
                             ),
                           ),
                         )),

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../screens/store_selection_screen.dart';
 import '../../../utils/colors/app_colors.dart';
 import '../../../utils/constants/dimension.dart';
 import '../../../utils/styles/app_texts.dart';
@@ -10,6 +11,7 @@ class PickupStorePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: ()=> Navigator.of(context).pushNamed(StoreSelectionScreen.routeName),
       child: Container(
         color: CupertinoColors.white,
         padding: EdgeInsets.symmetric(

@@ -45,7 +45,7 @@ class ApplyCouponTextfield extends StatelessWidget {
         ),
         TextField(
           autofocus: true,
-          style: TextStyle(height: 1.5, fontSize: Dimension.font14),
+          style: AppText.style.regularBlack14,
           decoration: InputDecoration(
               suffix: GestureDetector(
                 onTap: () {
@@ -53,16 +53,12 @@ class ApplyCouponTextfield extends StatelessWidget {
                 },
                 child: RichText(
                   text: TextSpan(
-                    style: TextStyle(
-                        fontSize: Dimension.height16,
-                        height: 1.5,
-                        color: AppColors.greyTextField),
+                    style: AppText.style.regularGrey16,
                     children: <TextSpan>[
                       const TextSpan(text: '|  '),
                       TextSpan(
                           text: 'Apply',
-                          style: TextStyle(
-                              color: Colors.blue, fontSize: Dimension.font14)),
+                          style: AppText.style.regularBlue14,)
                     ],
                   ),
                 ),
@@ -72,7 +68,7 @@ class ApplyCouponTextfield extends StatelessWidget {
                   left: Dimension.height16,
                   right: Dimension.height16),
               hintText: 'Enter your code',
-              hintStyle: const TextStyle(color: AppColors.greyTextColor),
+              hintStyle: AppText.style.regularGrey14,
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(4),
                   borderSide: const BorderSide(color: Colors.black)),

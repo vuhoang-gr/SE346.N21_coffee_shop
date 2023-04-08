@@ -9,10 +9,10 @@ import '../../utils/constants/dimension.dart';
 import '../../utils/styles/app_texts.dart';
 
 class CartButton extends StatefulWidget {
-  int amount;
-  double money;
-  ScrollController scrollController;
-  CartButton(
+  final int amount;
+  final double money;
+  final ScrollController scrollController;
+  const CartButton(
       {super.key,
       this.amount = 0,
       this.money = 0,
