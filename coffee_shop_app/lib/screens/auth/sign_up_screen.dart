@@ -2,6 +2,7 @@ import 'package:coffee_shop_app/services/blocs/auth_cubit/auth_cubit.dart';
 import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/constants/dimension.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
+import 'package:coffee_shop_app/utils/validations/confirm_password_validate.dart';
 import 'package:coffee_shop_app/utils/validations/email_validate.dart';
 import 'package:coffee_shop_app/utils/validations/password_validate.dart';
 import 'package:coffee_shop_app/widgets/global/buttons/touchable_opacity.dart';
@@ -46,7 +47,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         CustormTextForm(
           controller: confirmController,
-          validator: PasswordValidator(),
+          validator: ConfirmPasswordValidator(oldPassword: passwordController),
           verifiedCheck: true,
           secure: true,
           label: 'Confirm password',

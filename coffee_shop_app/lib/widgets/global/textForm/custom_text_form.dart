@@ -1,18 +1,22 @@
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:coffee_shop_app/utils/validations/validator.dart';
+import 'package:coffee_shop_app/widgets/global/buttons/touchable_opacity.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../../utils/colors/app_colors.dart';
 import '../../../utils/constants/dimension.dart';
 
 class CustormTextForm extends StatefulWidget {
-  const CustormTextForm(
+  CustormTextForm(
       {super.key,
       required this.controller,
       this.validator,
       this.verifiedCheck = false,
       this.secure = false,
       this.margin,
-      this.label});
+      this.label,
+      this.readOnly = false,
+      this.haveDatePicker = false});
 
   final TextEditingController controller;
   final Validator? validator;
@@ -20,6 +24,8 @@ class CustormTextForm extends StatefulWidget {
   final bool secure;
   final EdgeInsets? margin;
   final String? label;
+  final bool haveDatePicker;
+  bool readOnly;
 
   @override
   State<CustormTextForm> createState() => _CustormTextFormState();
@@ -27,14 +33,41 @@ class CustormTextForm extends StatefulWidget {
 
 class _CustormTextFormState extends State<CustormTextForm> {
   late bool _isValidate;
+  late DateTime selectedDate;
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        widget.controller.text = DateFormat('dd/MM/yyyy').format(selectedDate);
+      });
+    }
+  }
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (widget.validator != null) {
       _isValidate = widget.validator!.validate(widget.controller.text);
     } else {
       _isValidate = false;
+    }
+
+    if (widget.haveDatePicker) {
+      DateTime getDate;
+      try {
+        getDate = DateFormat('dd/MM/yyyy').parse(widget.controller.text);
+      } catch (e) {
+        print('Wrong type of datetime');
+        getDate = DateTime(2000, 1, 1);
+      }
+      selectedDate = getDate;
     }
   }
 
@@ -52,6 +85,7 @@ class _CustormTextFormState extends State<CustormTextForm> {
       ),
       margin: widget.margin,
       child: TextFormField(
+        readOnly: widget.readOnly,
         style: AppText.style.regularWhite16.copyWith(
           color: AppColors.blackColor,
         ),
@@ -86,8 +120,20 @@ class _CustormTextFormState extends State<CustormTextForm> {
             vertical: Dimension.getHeightFromValue(10),
           ),
           alignLabelWithHint: false,
-          suffixIcon: _isValidate ? Icon(Icons.check) : null,
-          suffixIconColor: AppColors.greenColor,
+          suffixIcon: widget.haveDatePicker
+              ? TouchableOpacity(
+                  unable: widget.readOnly,
+                  onTap: () {
+                    _selectDate(context);
+                  },
+                  child: Icon(Icons.calendar_month),
+                )
+              : _isValidate
+                  ? Icon(Icons.check)
+                  : null,
+          suffixIconColor: widget.haveDatePicker
+              ? AppColors.greyTextColor
+              : AppColors.greenColor,
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: AppColors.blackColor,
