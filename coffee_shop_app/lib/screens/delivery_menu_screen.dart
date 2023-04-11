@@ -1,3 +1,5 @@
+import 'package:coffee_shop_app/screens/search_product_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -54,6 +56,12 @@ class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
               "Store pickup",
               style: AppText.style.boldBlack18,
             ),
+            trailing: GestureDetector(
+              onTap: ()=>Navigator.of(context).pushNamed(SearchProductScreen.routeName),
+              child: Icon(
+                CupertinoIcons.search
+              ),
+            )
           ),
           Expanded(
             child: Stack(

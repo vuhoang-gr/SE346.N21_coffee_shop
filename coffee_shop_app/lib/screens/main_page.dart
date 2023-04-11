@@ -1,4 +1,6 @@
 import 'package:coffee_shop_app/screens/cart_delivery.dart';
+import 'package:coffee_shop_app/screens/delivery_menu_screen.dart';
+import 'package:coffee_shop_app/screens/home/home_screen.dart';
 import 'package:coffee_shop_app/screens/order_detail_screen.dart';
 import 'package:coffee_shop_app/screens/order_management/order_management.dart';
 import 'package:coffee_shop_app/screens/product_detail.dart';
@@ -6,8 +8,6 @@ import 'package:coffee_shop_app/screens/store_list_screen.dart';
 import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 import '../utils/constants/dimension.dart';
 import '../utils/constants/string.dart';
@@ -56,10 +56,7 @@ class _MainPageState extends State<MainPage> {
                         ),
                         Text(
                           'Home',
-                          style: TextStyle(
-                              fontSize: Dimension.height10,
-                              color: AppColors.greyTextColor,
-                              height: 1.5),
+                          style: AppText.style.regularGrey10,
                         )
                       ],
                     ),
@@ -75,10 +72,7 @@ class _MainPageState extends State<MainPage> {
                         ),
                         Text(
                           'Menu',
-                          style: TextStyle(
-                              fontSize: Dimension.height10,
-                              color: AppColors.greyTextColor,
-                              height: 1.5),
+                          style: AppText.style.regularGrey10,
                         )
                       ],
                     ),
@@ -94,10 +88,7 @@ class _MainPageState extends State<MainPage> {
                         ),
                         Text(
                           'Stores',
-                          style: TextStyle(
-                              fontSize: Dimension.height150 / 15,
-                              color: AppColors.greyTextColor,
-                              height: 1.5),
+                          style: AppText.style.regularGrey10,
                         )
                       ],
                     ),
@@ -113,10 +104,7 @@ class _MainPageState extends State<MainPage> {
                         ),
                         Text(
                           'Order',
-                          style: TextStyle(
-                              fontSize: Dimension.height10,
-                              color: AppColors.greyTextColor,
-                              height: 1.5),
+                          style: AppText.style.regularGrey10,
                         )
                       ],
                     ),
@@ -132,10 +120,7 @@ class _MainPageState extends State<MainPage> {
                         ),
                         Text(
                           'Profile',
-                          style: TextStyle(
-                              fontSize: Dimension.height10,
-                              color: AppColors.greyTextColor,
-                              height: 1.5),
+                          style: AppText.style.regularGrey10,
                         ),
                       ],
                     ),
@@ -149,12 +134,10 @@ class _MainPageState extends State<MainPage> {
                     child: TabBarView(
                   children: [
                     //home page
-                    CartDelivery(),
+                    HomeScreen(),
 
                     //menu
-                    OrderDetailScreen(
-                      orderStatus: orderCompleted,
-                    ),
+                    DeliveryMenuScreen(),
 
                     //stores page
                     StoreListScreen(),

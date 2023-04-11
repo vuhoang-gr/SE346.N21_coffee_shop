@@ -1,7 +1,6 @@
+import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 import '../../../utils/constants/dimension.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -73,10 +72,7 @@ class _StoreDetailCardState extends State<StoreDetailCard> {
                           borderRadius: BorderRadius.circular(16)),
                       child: Text(
                         '${_index + 1}/5',
-                        style: TextStyle(
-                            fontSize: Dimension.font14,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400),
+                        style: AppText.style.regularWhite14,
                       ),
                     ))
               ]),
@@ -99,20 +95,14 @@ class _StoreDetailCardState extends State<StoreDetailCard> {
                           children: [
                             Text(
                               "SB Han Thuyen",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: Dimension.height16,
-                                  height: 1.5),
+                              style: AppText.style.mediumBlack16,
                             ),
                             const SizedBox(
                               height: 2,
                             ),
                             Text(
                               "Open: 07:00 - 22:00",
-                              style: TextStyle(
-                                  fontSize: Dimension.font14,
-                                  height: 1.5,
-                                  fontWeight: FontWeight.normal),
+                              style: AppText.style.regularBlack14,
                             ),
                           ],
                         ),

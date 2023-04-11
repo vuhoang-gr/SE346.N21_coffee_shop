@@ -1,28 +1,53 @@
-import 'package:coffee_shop_app/utils/colors/app_colors.dart';
-import 'package:coffee_shop_app/utils/styles/app_texts.dart';
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../services/models/store.dart';
+import '../temp/data.dart';
+import '../utils/colors/app_colors.dart';
 import '../utils/constants/dimension.dart';
-import '../widgets/feature/store/store_list_item.dart';
+import '../utils/styles/app_texts.dart';
+import '../widgets/feature/store/temp_store_list_item.dart';
 import '../widgets/global/custom_app_bar.dart';
 
-class StoreListScreen extends StatefulWidget {
-  const StoreListScreen(
-      {super.key, this.hasFavoriteStore = false, this.notFoundStore = false});
-  final bool hasFavoriteStore;
-  final bool notFoundStore;
+class StoreSelectionScreen extends StatefulWidget {
+  static const routeName = "/store_selection_screen";
+
+  const StoreSelectionScreen({super.key});
 
   @override
-  State<StoreListScreen> createState() => _StoreListScreenState();
+  State<StoreSelectionScreen> createState() => _StoreSelectionScreenState();
 }
 
-class _StoreListScreenState extends State<StoreListScreen> {
+class _StoreSelectionScreenState extends State<StoreSelectionScreen> {
   final FocusNode _focus = FocusNode();
 
   final TextEditingController _controller = TextEditingController();
 
-  String newString = "";
+  Timer? _debounce;
+
+  List<Store> listStores = Data.storeAddress;
+  List<Store> favoriteStores = Data.favoriteStores;
+
+  void searchStore(String keyword) {
+    List<Store> tempStores = Data.storeAddress
+        .where((store) =>
+            store.sb.contains(keyword) ||
+            store.address.toString().contains(keyword))
+        .toList();
+    List<Store> tempFavoriteStores = Data.favoriteStores
+        .where((store) =>
+            store.sb.contains(keyword) ||
+            store.address.toString().contains(keyword))
+        .toList();
+
+    setState(() {
+      listStores = tempStores;
+      favoriteStores = tempFavoriteStores;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +59,7 @@ class _StoreListScreenState extends State<StoreListScreen> {
     super.dispose();
     _focus.removeListener(_onFocusChange);
     _focus.dispose();
+    _debounce?.cancel();
     _controller.dispose();
   }
 
@@ -48,7 +74,7 @@ class _StoreListScreenState extends State<StoreListScreen> {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: ColoredBox(
-        color: widget.notFoundStore ? Colors.white : AppColors.backgroundColor,
+        color: listStores.isEmpty ? Colors.white : AppColors.backgroundColor,
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: SafeArea(
@@ -56,7 +82,7 @@ class _StoreListScreenState extends State<StoreListScreen> {
               children: [
                 CustomAppBar(
                   leading: Text(
-                    'Stores',
+                    'Select store',
                     style: AppText.style.boldBlack18,
                   ),
                 ),
@@ -72,21 +98,27 @@ class _StoreListScreenState extends State<StoreListScreen> {
                     children: [
                       TextField(
                         onChanged: (String newText) {
-                          setState(() {
-                            newString = newText;
+                          if (_debounce?.isActive ?? false) _debounce?.cancel();
+                          _debounce = Timer(Duration(milliseconds: 500), () {
+                            searchStore(newText);
                           });
                         },
                         controller: _controller,
                         focusNode: _focus,
+                        onSubmitted: (value) {
+                          if (_debounce?.isActive ?? false) _debounce?.cancel();
+                          searchStore(value);
+                        },
                         style: AppText.style.regularBlack14,
                         decoration: InputDecoration(
                             prefixIcon: const Icon(CupertinoIcons.search),
-                            suffixIcon: newString.isNotEmpty
+                            suffixIcon: _controller.text.isNotEmpty
                                 ? IconButton(
                                     onPressed: () {
                                       _controller.clear();
-                                      setState(() {
-                                        newString = "";
+                                      _debounce = Timer(
+                                          Duration(milliseconds: 500), () {
+                                        searchStore("");
                                       });
                                     },
                                     icon: const Icon(CupertinoIcons.clear))
@@ -117,7 +149,7 @@ class _StoreListScreenState extends State<StoreListScreen> {
                         ),
                         child: Builder(
                           builder: (context) {
-                            if (widget.notFoundStore) {
+                            if (listStores.isEmpty) {
                               return Column(
                                 children: [
                                   Image.asset(
@@ -139,65 +171,74 @@ class _StoreListScreenState extends State<StoreListScreen> {
                               return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    SizedBox(
-                                      height: Dimension.height8,
-                                    ),
                                     Builder(builder: (context) {
-                                      if (widget.hasFavoriteStore) {
-                                        return Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            SizedBox(
-                                              height: Dimension.height8,
-                                            ),
-                                            Text(
-                                              'Favorite stores',
-                                              style: AppText.style.boldBlack16,
-                                            ),
-                                            ListView.separated(
-                                              padding: EdgeInsets.only(
-                                                  top: Dimension.height8),
-                                              itemCount: 3,
-                                              physics:
-                                                  const NeverScrollableScrollPhysics(),
-                                              shrinkWrap: true,
-                                              controller: ScrollController(),
-                                              itemBuilder: (context, index) {
-                                                return const StoreListItem();
-                                              },
-                                              separatorBuilder:
-                                                  (context, index) {
-                                                return SizedBox(
-                                                  height: Dimension.height12,
-                                                );
-                                              },
-                                            ),
-                                            SizedBox(
-                                              height: Dimension.height16,
-                                            ),
-                                            Text(
-                                              'Other stores',
-                                              style: AppText.style.boldBlack16,
-                                            ),
-                                          ],
-                                        );
-                                      } else {
-                                        return const SizedBox.shrink();
-                                      }
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            height: Dimension.height16,
+                                          ),
+                                          favoriteStores.isNotEmpty
+                                              ? Text(
+                                                  'Favorite stores',
+                                                  style:
+                                                      AppText.style.boldBlack16,
+                                                )
+                                              : SizedBox.shrink(),
+                                          ListView.separated(
+                                            padding: EdgeInsets.only(
+                                                top: Dimension.height8),
+                                            itemCount: favoriteStores.length,
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            controller: ScrollController(),
+                                            itemBuilder: (context, index) {
+                                              return TempStoreListItem(
+                                                isFavoriteStore: true,
+                                                address: favoriteStores[index]
+                                                    .address
+                                                    .toString(),
+                                                shortName:
+                                                    favoriteStores[index].sb,
+                                              );
+                                            },
+                                            separatorBuilder: (context, index) {
+                                              return SizedBox(
+                                                height: Dimension.height12,
+                                              );
+                                            },
+                                          ),
+                                          favoriteStores.isNotEmpty
+                                              ? SizedBox(
+                                                  height: Dimension.height16,
+                                                )
+                                              : SizedBox.shrink(),
+                                          Text(
+                                            'Other stores',
+                                            style: AppText.style.boldBlack16,
+                                          ),
+                                        ],
+                                      );
                                     }),
 
                                     // all stores
                                     ListView.separated(
                                       padding: EdgeInsets.only(
                                           top: Dimension.height8),
-                                      itemCount: 20,
+                                      itemCount: listStores.length,
                                       physics:
                                           const NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
                                       controller: ScrollController(),
                                       itemBuilder: (context, index) {
-                                        return const StoreListItem();
+                                        return TempStoreListItem(
+                                          address: listStores[index]
+                                              .address
+                                              .toString(),
+                                          shortName: listStores[index].sb,
+                                        );
                                       },
                                       separatorBuilder: (context, index) {
                                         return SizedBox(
@@ -205,6 +246,9 @@ class _StoreListScreenState extends State<StoreListScreen> {
                                         );
                                       },
                                     ),
+                                    SizedBox(
+                                      height: Dimension.height16,
+                                    )
                                   ]);
                             }
                           },

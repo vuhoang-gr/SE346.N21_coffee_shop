@@ -20,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final int durationChange = 200;
+  final int durationChange = 500;
   final ScrollController _scrollController = ScrollController();
   bool _isScrollInTop = true;
 

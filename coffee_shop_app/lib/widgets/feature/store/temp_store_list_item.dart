@@ -7,9 +7,11 @@ import '../../../utils/constants/dimension.dart';
 import '../../global/container_card.dart';
 import 'favorite_store_icon.dart';
 
-class StoreListItem extends StatelessWidget {
+class TempStoreListItem extends StatelessWidget {
+  final String shortName;
+  final String address;
   final bool isFavoriteStore;
-  const StoreListItem({super.key, this.isFavoriteStore = false});
+  const TempStoreListItem({super.key, required this.shortName, required this.address, this.isFavoriteStore = false});
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +39,14 @@ class StoreListItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'SB Van Hanh Mall',
-                style: AppText.style.mediumBlack14,
+                shortName,
+                style: AppText.style.mediumBlack14.copyWith(height: 1),
               ),
               SizedBox(
                 height: Dimension.height4,
               ),
               Text(
-                '11 Su Van Hanh, D.10, HCM city',
+                address,
                 style: AppText.style.regularGrey12,
               ),
             ],

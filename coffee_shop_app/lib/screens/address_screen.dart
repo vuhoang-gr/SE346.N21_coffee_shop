@@ -209,9 +209,7 @@ class _AddressScreenState extends State<AddressScreen> {
                                   TextFormField(
                                     initialValue:
                                         _editedInfo["address"] as String,
-                                    style: TextStyle(
-                                        height: 1.5,
-                                        fontSize: Dimension.font14),
+                                    style: AppText.style.regularBlack14,
                                     textInputAction: TextInputAction.next,
                                     keyboardType: TextInputType.text,
                                     decoration: generateTextDecoration(
@@ -321,9 +319,7 @@ class _AddressScreenState extends State<AddressScreen> {
                                     textInputAction: TextInputAction.next,
                                     keyboardType: TextInputType.name,
                                     focusNode: _nameFocusNode,
-                                    style: TextStyle(
-                                        height: 1.5,
-                                        fontSize: Dimension.font14),
+                                    style: AppText.style.regularBlack14,
                                     decoration: generateTextDecoration(
                                         hintString: "E.g Nguyen Van A"),
                                     onFieldSubmitted: (_) {
@@ -356,9 +352,7 @@ class _AddressScreenState extends State<AddressScreen> {
                                     textInputAction: TextInputAction.done,
                                     keyboardType: TextInputType.phone,
                                     focusNode: _phoneNumberFocusNode,
-                                    style: TextStyle(
-                                        height: 1.5,
-                                        fontSize: Dimension.font14),
+                                    style: AppText.style.regularBlack14,
                                     decoration: generateTextDecoration(
                                         hintString: "11-digit phone number"),
                                     onFieldSubmitted: (_) {

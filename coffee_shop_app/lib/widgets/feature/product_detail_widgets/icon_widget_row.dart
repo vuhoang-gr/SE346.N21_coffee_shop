@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 import '../../../utils/constants/dimension.dart';
 
 class IconWidgetRow extends StatelessWidget {
-  IconWidgetRow(
+  const IconWidgetRow(
       {super.key,
       required this.icon,
       required this.child,
@@ -16,7 +14,7 @@ class IconWidgetRow extends StatelessWidget {
   final Color iconColor;
   final double size;
   final CrossAxisAlignment crossAxisAlignment;
-  Widget child;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
