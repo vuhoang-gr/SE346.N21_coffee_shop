@@ -34,6 +34,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/images/placeholder/
     - assets/icons/
     - assets/
 
@@ -41,7 +42,7 @@ flutter:
     - assets\images\pickup_small_icon.png
     - assets\images\delivery_small_icon.png
     - assets\images\delivery_icon.png
-    - assets/icons/
+    # - assets/icons/
 
   fonts:
     - family: Inter

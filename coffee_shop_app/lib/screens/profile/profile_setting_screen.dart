@@ -1,17 +1,14 @@
 import 'package:coffee_shop_app/utils/constants/dimension.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
-import 'package:coffee_shop_app/utils/validations/confirm_password_validate.dart';
-import 'package:coffee_shop_app/utils/validations/password_validate.dart';
 import 'package:coffee_shop_app/widgets/feature/login_screen/back_header.dart';
+import 'package:coffee_shop_app/widgets/feature/profile_screen/change_password_dialog.dart';
 import 'package:coffee_shop_app/widgets/feature/profile_screen/profile_custom_button.dart';
-import 'package:coffee_shop_app/widgets/global/buttons/rounded_button.dart';
 import 'package:coffee_shop_app/widgets/global/buttons/touchable_opacity.dart';
 import 'package:coffee_shop_app/widgets/global/textForm/custom_text_form.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../services/models/user.dart';
-import '../../widgets/global/dialog/custom_dialog.dart';
 
 class ProfileSettingScreen extends StatefulWidget {
   const ProfileSettingScreen({super.key});
@@ -30,15 +27,10 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
       email: 'fuck@gm.co',
       isActive: true,
       dob: DateTime(2003, 6, 11));
-  bool isPassWordDialogOpen = false;
   bool isChangeInformation = false;
 
   @override
   Widget build(BuildContext context) {
-    //change password handle
-    TextEditingController oldPassController = TextEditingController();
-    TextEditingController newPassController = TextEditingController();
-    TextEditingController confirmPassController = TextEditingController();
     //change infor handle
     TextEditingController nameController =
         TextEditingController(text: userTest.name);
@@ -46,6 +38,7 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
         text: userTest.dob != null
             ? DateFormat('dd/MM/yyyy').format(userTest.dob!)
             : '');
+
     return SafeArea(
       child: Scaffold(
         // resizeToAvoidBottomInset: false,
@@ -210,9 +203,11 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                             ),
                             ProfileCustomButton(
                               onPressed: () {
-                                setState(() {
-                                  isPassWordDialogOpen = true;
-                                });
+                                showGeneralDialog(
+                                    context: context,
+                                    pageBuilder: (_, __, ___) {
+                                      return ChangePasswordDialog();
+                                    });
                               },
                               icon: Icons.security,
                               title: 'Password',
@@ -227,54 +222,6 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                 ),
               ],
             ),
-            isPassWordDialogOpen
-                ? CustomDialog(
-                    onChangeState: () {
-                      setState(() {
-                        isPassWordDialogOpen = !isPassWordDialogOpen;
-                      });
-                    },
-                    // isOpen: isPassWordDialogOpen,
-                    child: Column(
-                      children: [
-                        Text(
-                          "Password Change",
-                          style: AppText.style.mediumBlack16
-                              .copyWith(fontSize: 18),
-                        ),
-                        CustormTextForm(
-                          margin: EdgeInsets.symmetric(vertical: 20),
-                          controller: oldPassController,
-                          label: 'Old Password',
-                          secure: true,
-                          validator: PasswordValidator(),
-                        ),
-                        CustormTextForm(
-                          controller: newPassController,
-                          label: 'New Password',
-                          secure: true,
-                          validator: PasswordValidator(),
-                        ),
-                        CustormTextForm(
-                          margin: EdgeInsets.symmetric(vertical: 20),
-                          controller: confirmPassController,
-                          label: 'Confirm New Password',
-                          secure: true,
-                          validator: ConfirmPasswordValidator(
-                              oldPassword: newPassController),
-                        ),
-                        RoundedButton(
-                          onPressed: () {},
-                          height: Dimension.getHeightFromValue(40),
-                          label: 'SAVE PASSWORD',
-                        ),
-                        SizedBox(
-                          height: Dimension.getHeightFromValue(15),
-                        )
-                      ],
-                    ),
-                  )
-                : SizedBox.shrink(),
           ],
         ),
       ),

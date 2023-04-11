@@ -85,7 +85,7 @@ class _CustormTextFormState extends State<CustormTextForm> {
       ),
       margin: widget.margin,
       child: TextFormField(
-        readOnly: widget.readOnly,
+        readOnly: widget.haveDatePicker ? true : widget.readOnly,
         style: AppText.style.regularWhite16.copyWith(
           color: AppColors.blackColor,
         ),

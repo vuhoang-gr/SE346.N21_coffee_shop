@@ -1,6 +1,8 @@
 import 'package:coffee_shop_app/services/models/user.dart';
 import 'package:coffee_shop_app/utils/constants/dimension.dart';
+import 'package:coffee_shop_app/utils/constants/placeholder_enum.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
+import 'package:coffee_shop_app/widgets/global/aysncImage/async_image.dart';
 import 'package:coffee_shop_app/widgets/global/buttons/touchable_opacity.dart';
 import 'package:flutter/material.dart';
 
@@ -29,9 +31,8 @@ class ProfileScreen extends StatelessWidget {
                       SizedBox(
                         width: double.infinity,
                         height: Dimension.getHeightFromValue(125),
-                        child: Image.network(
-                          userTest.coverUrl,
-                          fit: BoxFit.cover,
+                        child: AsyncImage(
+                          src: userTest.coverUrl,
                         ),
                       ),
                       Container(
@@ -78,9 +79,11 @@ class ProfileScreen extends StatelessWidget {
                             backgroundColor: Color.fromARGB(255, 226, 226, 226),
                             child: Padding(
                               padding: EdgeInsets.all(5),
-                              child: Image.network(
-                                userTest.avatarUrl,
-                                fit: BoxFit.cover,
+                              child: ClipOval(
+                                child: AsyncImage(
+                                  src: userTest.avatarUrl,
+                                  type: PlaceholderType.user,
+                                ),
                               ),
                             ),
                           ),
