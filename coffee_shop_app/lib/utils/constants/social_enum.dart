@@ -1,0 +1,1 @@
+enum Social { google, facebook }

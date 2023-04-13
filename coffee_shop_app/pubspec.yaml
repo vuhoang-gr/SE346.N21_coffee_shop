@@ -2,13 +2,12 @@ name: coffee_shop_app
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.19.3 <3.0.0'
-
+  sdk: ">=2.19.4 <3.0.0"
 
 dependencies:
   flutter:
@@ -19,9 +18,11 @@ dependencies:
   intl: ^0.18.0
   shared_preferences: ^2.0.20
   cached_network_image: ^3.2.3
+  flutter_svg: ^2.0.4
+  equatable: ^2.0.5
+  flutter_keyboard_visibility: ^5.4.0
   # firebase_core: ^1.14.0
   # firebase_auth: ^3.3.13
-  # flutter_svg: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -33,14 +34,16 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/images/placeholder/
     - assets/icons/
     - assets/
-    
+
     - assets\images\pickup_icon.png
     - assets\images\pickup_small_icon.png
     - assets\images\delivery_small_icon.png
     - assets\images\delivery_icon.png
-    
+    # - assets/icons/
+
   fonts:
     - family: Inter
       fonts:
