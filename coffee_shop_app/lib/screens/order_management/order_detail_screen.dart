@@ -2,13 +2,13 @@ import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:flutter/material.dart';
 
-import '../utils/constants/dimension.dart';
-import '../utils/constants/string.dart';
-import '../widgets/feature/order_widgets/order_manage_product_item.dart';
-import '../widgets/feature/order_widgets/store_info_dialog.dart';
-import '../widgets/feature/product_detail_widgets/icon_widget_row.dart';
-import '../widgets/global/container_card.dart';
-import '../widgets/global/custom_app_bar.dart';
+import '../../utils/constants/dimension.dart';
+import '../../utils/constants/string.dart';
+import '../../widgets/feature/order_widgets/order_manage_product_item.dart';
+import '../../widgets/feature/order_widgets/store_info_dialog.dart';
+import '../../widgets/feature/product_detail_widgets/icon_widget_row.dart';
+import '../../widgets/global/container_card.dart';
+import '../../widgets/global/custom_app_bar.dart';
 
 class OrderDetailScreen extends StatelessWidget {
   const OrderDetailScreen({super.key, this.orderStatus = 'Preparing'});
@@ -94,10 +94,9 @@ class OrderDetailScreen extends StatelessWidget {
                                                       return StoreInfoDialog();
                                                     });
                                               },
-                                              child: Text(
-                                                'Contact support',
-                                                style: AppText.style.boldBlack14
-                                              ))
+                                              child: Text('Contact support',
+                                                  style: AppText
+                                                      .style.boldBlack14))
                                         ],
                                       ),
                                       Builder(builder: (context) {
@@ -287,13 +286,16 @@ class OrderDetailScreen extends StatelessWidget {
                                                   ? const SizedBox.shrink()
                                                   : RichText(
                                                       text: TextSpan(
-                                                        style: AppText.style.regularGrey12,
+                                                        style: AppText.style
+                                                            .regularGrey12,
                                                         children: <TextSpan>[
                                                           const TextSpan(
                                                               text: 'Nick'),
                                                           TextSpan(
-                                                              text: ' • ',
-                                                              style: AppText.style.boldBlack14,),
+                                                            text: ' • ',
+                                                            style: AppText.style
+                                                                .boldBlack14,
+                                                          ),
                                                           const TextSpan(
                                                               text:
                                                                   '0969696969'),

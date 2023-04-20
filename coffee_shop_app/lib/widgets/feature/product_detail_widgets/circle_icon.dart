@@ -9,10 +9,10 @@ class CircleIcon extends StatelessWidget {
   final Color disabledColor;
   final double size;
   final double iconSize;
-  bool isEnable;
+  final bool isEnable;
   final VoidCallback onTap;
 
-  CircleIcon(
+  const CircleIcon(
       {super.key,
       required this.icon,
       required this.onTap,

@@ -55,10 +55,7 @@ class OrderCard extends StatelessWidget {
                     backgroundColor: backgroundColor,
                     foregroundColor: labelColor,
                     text: orderStatus),
-                Text(
-                  '20/04/2020, 04:20',
-                  style: AppText.style.regularGrey12
-                ),
+                Text('20/04/2020, 04:20', style: AppText.style.regularGrey12),
               ],
             ),
 
@@ -111,8 +108,7 @@ class OrderCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  width: Dimension.height230,
+                Expanded(
                   child: Column(
                     children: [
                       Text(
