@@ -1,8 +1,12 @@
+import 'package:coffee_shop_app/services/blocs/cart_cubit/cart_cubit.dart';
+import 'package:coffee_shop_app/services/models/topping.dart';
 import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../temp/model_temp.dart';
+import '../services/functions/money_transfer.dart';
+import '../services/models/food.dart';
 import '../utils/constants/dimension.dart';
 import '../utils/styles/app_texts.dart';
 import '../utils/styles/button.dart';
@@ -11,51 +15,43 @@ import '../widgets/feature/product_detail_widgets/product_card.dart';
 import '../widgets/feature/product_detail_widgets/round_image.dart';
 import '../widgets/feature/product_detail_widgets/square_amount_box.dart';
 import '../widgets/global/custom_app_bar.dart';
+import '../services/models/size.dart';
 
 class ProductDetail extends StatefulWidget {
-  const ProductDetail({super.key});
+  final Food product;
+  const ProductDetail({super.key, required this.product});
 
   @override
   State<ProductDetail> createState() => _ProductDetailState();
 }
 
 class _ProductDetailState extends State<ProductDetail> {
-  final listSize = <DrinkSize>[];
-  final listTopping = <Topping>[];
-  late var _selectedToppings;
+  var _selectedToppings = [];
   var _selectedSize;
   int _numberToAdd = 1;
-
+  double _totalPrice = 0;
   bool isEnable = true;
 
   @override
   void initState() {
     super.initState();
 
-    //size values
-    listSize.add(DrinkSize(size: 'Small'));
-    listSize.add(DrinkSize(
-        increasePrice: '10.000',
-        size: 'Large',
-        image:
-            'https://product.hstatic.net/1000075078/product/cold-brew-sua-tuoi_379576_7fd130b7d162497a950503207876ef64.jpg'));
-
-    _selectedSize = listSize[0];
-
-    //topping values
-    listTopping
-        .add(Topping(name: 'Espresso (1 shot)', increasePrice: '10.000'));
-    listTopping.add(Topping(
-      name: 'Caramel',
-      image:
-          'https://product.hstatic.net/1000075078/product/1645969436_caramel-macchiato-nong-lifestyle-1_187d60b2a52244c58a5c2fd24addef78.jpg',
-    ));
+    _selectedSize = widget.product.sizes![0];
 
     _selectedToppings =
-        List<bool>.generate(listTopping.length, (index) => false);
-
+        List<bool>.generate(widget.product.toppings!.length, (index) => false);
+    _totalPrice = widget.product.price + widget.product.sizes![0].price;
     //number to add
     _numberToAdd = 1;
+  }
+
+  final noteTextController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    noteTextController.dispose();
+    super.dispose();
   }
 
   @override
@@ -80,7 +76,12 @@ class _ProductDetailState extends State<ProductDetail> {
                       child: SingleChildScrollView(
                           child: Column(
                     children: [
-                      const ProductCard(),
+                      ProductCard(
+                        image: widget.product.images,
+                        name: widget.product.name,
+                        description: widget.product.description,
+                        price: widget.product.price,
+                      ),
 
                       //size
                       Container(
@@ -111,7 +112,14 @@ class _ProductDetailState extends State<ProductDetail> {
                                   itemBuilder: (context, index) => InkWell(
                                         onTap: () {
                                           setState(() {
-                                            _selectedSize = listSize[index];
+                                            double prevSizePrice =
+                                                (_selectedSize as Size).price;
+                                            _selectedSize =
+                                                widget.product.sizes![index];
+                                            _totalPrice = _totalPrice -
+                                                prevSizePrice +
+                                                widget.product.sizes![index]
+                                                    .price;
                                           });
                                         },
                                         child: Row(
@@ -120,29 +128,40 @@ class _ProductDetailState extends State<ProductDetail> {
                                           children: [
                                             Row(
                                               children: [
-                                                Radio<DrinkSize>(
-                                                  value: listSize[index],
+                                                Radio<Size>(
+                                                  value: widget
+                                                      .product.sizes![index],
                                                   groupValue: _selectedSize,
                                                   onChanged: (value) {
                                                     setState(() {
+                                                      double prevSizePrice =
+                                                          (_selectedSize
+                                                                  as Size)
+                                                              .price;
                                                       _selectedSize = value;
+                                                      _totalPrice =
+                                                          _totalPrice -
+                                                              prevSizePrice +
+                                                              value!.price;
                                                     });
                                                   },
                                                 ),
                                                 RoundImage(
-                                                    imgUrl:
-                                                        listSize[index].image),
+                                                    imgUrl: widget.product
+                                                        .sizes![index].image),
                                                 SizedBox(
                                                   width: Dimension.height8,
                                                 ),
                                                 Text(
-                                                  listSize[index].size,
-                                                  style: AppText.style.regularBlack14,
+                                                  widget.product.sizes![index]
+                                                      .name,
+                                                  style: AppText
+                                                      .style.regularBlack14,
                                                 ),
                                               ],
                                             ),
                                             Text(
-                                              '+${listSize[index].increasePrice} ₫',
+                                              '+${MoneyTransfer.transferFromDouble(widget.product.sizes![index].price)} ₫',
                                               style: AppText.style.boldBlack14,
                                             ),
                                           ],
@@ -152,7 +171,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                         thickness: 2,
                                         color: AppColors.greyBoxColor,
                                       ),
-                                  itemCount: listSize.length),
+                                  itemCount: widget.product.sizes!.length),
                             ]),
                       ),
 
@@ -179,8 +198,9 @@ class _ProductDetailState extends State<ProductDetail> {
                                 children: <TextSpan>[
                                   const TextSpan(text: 'Topping '),
                                   TextSpan(
-                                      text: '(maximum 2)',
-                                      style: AppText.style.regularGrey14,)
+                                    text: '(maximum 2)',
+                                    style: AppText.style.regularGrey14,
+                                  )
                                 ],
                               ),
                             ),
@@ -213,19 +233,20 @@ class _ProductDetailState extends State<ProductDetail> {
                                                 },
                                               ),
                                               RoundImage(
-                                                  imgUrl:
-                                                      listTopping[index].image),
+                                                  imgUrl: widget.product
+                                                      .toppings![index].image),
                                               SizedBox(
                                                 width: Dimension.height8,
                                               ),
                                               Text(
-                                                listTopping[index].name,
-                                                style: AppText.style.regularBlack14
-                                              ),
+                                                  widget.product
+                                                      .toppings![index].name,
+                                                  style: AppText
+                                                      .style.regularBlack14),
                                             ],
                                           ),
                                           Text(
-                                            '+${listTopping[index].increasePrice} ₫',
+                                            '+${MoneyTransfer.transferFromDouble(widget.product.toppings![index].price)} ₫',
                                             style: AppText.style.boldBlack14,
                                           ),
                                         ],
@@ -235,7 +256,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                       thickness: 2,
                                       color: AppColors.greyBoxColor,
                                     ),
-                                itemCount: listSize.length),
+                                itemCount: widget.product.toppings!.length),
                           ],
                         ),
                       ),
@@ -259,6 +280,7 @@ class _ProductDetailState extends State<ProductDetail> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: TextField(
+                            controller: noteTextController,
                             scrollPadding:
                                 EdgeInsets.only(bottom: Dimension.height16),
                             textAlignVertical: TextAlignVertical.top,
@@ -294,7 +316,6 @@ class _ProductDetailState extends State<ProductDetail> {
                               horizontal: Dimension.height16,
                               vertical: Dimension.height8),
                           width: double.maxFinite,
-                          height: Dimension.addToCart108,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             boxShadow: [
@@ -331,7 +352,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                   SquareAmountBox(
                                       child: Text(
                                     '$_numberToAdd',
-                                    style:AppText.style.regularBlack16,
+                                    style: AppText.style.regularBlack16,
                                   )),
                                   SizedBox(
                                     width: Dimension.height8 / 2,
@@ -356,14 +377,50 @@ class _ProductDetailState extends State<ProductDetail> {
                               SizedBox(
                                 width: double.maxFinite,
                                 height: Dimension.height40,
-                                child: ElevatedButton(
-                                  style: roundedButton,
-                                  onPressed: () {},
-                                  child: Text(
-                                    'Add to cart - 69.000 ₫',
-                                    style: AppText.style.regularWhite16,
-                                  ),
-                                ),
+                                child: Builder(builder: (context) {
+                                  double toppingPrice = 0;
+                                  List<Topping> toppingList = [];
+
+                                  for (var i = 0;
+                                      i < _selectedToppings.length;
+                                      i++) {
+                                    if (_selectedToppings[i]) {
+                                      toppingPrice +=
+                                          widget.product.toppings![i].price;
+                                      toppingList
+                                          .add(widget.product.toppings![i]);
+                                    }
+                                  }
+                                  String toppingString = toppingList
+                                      .map((e) => e.name)
+                                      .toList()
+                                      .join(", ");
+
+                                  double finalTotal =
+                                      (_totalPrice + toppingPrice) *
+                                          _numberToAdd;
+                                  return ElevatedButton(
+                                      style: roundedButton,
+                                      onPressed: _numberToAdd == 0
+                                          ? null
+                                          : () {
+                                              BlocProvider.of<CartCubit>(
+                                                      context)
+                                                  .addProduct(
+                                                widget.product,
+                                                _numberToAdd,
+                                                (_selectedSize as Size).id,
+                                                toppingString,
+                                                _totalPrice + toppingPrice,
+                                                noteTextController.text,
+                                              );
+                                              Navigator.pop(context);
+                                            },
+                                      child: Text(
+                                        'Add to cart - ${MoneyTransfer.transferFromDouble(finalTotal)} ₫',
+                                        style: AppText.style.regularWhite16,
+                                      ));
+                                }),
                               )
                             ],
                           ),

@@ -2,12 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import '../../../services/functions/money_transfer.dart';
 import '../../../utils/constants/dimension.dart';
 import '../../../utils/styles/app_texts.dart';
 
 class ProductCard extends StatefulWidget {
-  const ProductCard({super.key});
-
+  const ProductCard(
+      {super.key,
+      required this.image,
+      required this.name,
+      required this.price,
+      required this.description});
+  final List<String> image;
+  final String name;
+  final double price;
+  final String description;
   @override
   State<ProductCard> createState() => _ProductCardState();
 }
@@ -35,13 +44,12 @@ class _ProductCardState extends State<ProductCard> {
                 AspectRatio(
                   aspectRatio: 1,
                   child: PageView.builder(
-                    itemCount: 5,
+                    itemCount: widget.image.length,
                     itemBuilder: (BuildContext context, int index) => Center(
                       child: CachedNetworkImage(
                         alignment: Alignment.center,
                         width: double.maxFinite,
-                        imageUrl:
-                            'https://product.hstatic.net/1000075078/product/1675355354_bg-tch-sua-da-no_ffe5788190bb4639b594372a2794b11e_large.jpg',
+                        imageUrl: widget.image[index],
                         placeholder: (context, url) => Container(
                           alignment: Alignment.center,
                           child: const CircularProgressIndicator(),
@@ -68,10 +76,8 @@ class _ProductCardState extends State<ProductCard> {
                       decoration: BoxDecoration(
                           color: Colors.black.withOpacity(0.4),
                           borderRadius: BorderRadius.circular(16)),
-                      child: Text(
-                        '${_index + 1}/5',
-                        style: AppText.style.regularWhite14
-                      ),
+                      child: Text('${_index + 1}/${widget.image.length}',
+                          style: AppText.style.regularWhite14),
                     ))
               ]),
 
@@ -92,16 +98,15 @@ class _ProductCardState extends State<ProductCard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Capuccino",
+                              widget.name,
                               style: AppText.style.regularBlack16,
                             ),
                             const SizedBox(
                               height: 2,
                             ),
                             Text(
-                              "69.000 ₫",
-                              style: AppText.style.boldBlack14
-                            ),
+                                "${MoneyTransfer.transferFromDouble(widget.price)} ₫",
+                                style: AppText.style.boldBlack14),
                           ],
                         ),
                         IconButton(
@@ -127,7 +132,7 @@ class _ProductCardState extends State<ProductCard> {
                       height: Dimension.height8,
                     ),
                     Text(
-                      "Dark, rich espresso lies in wait under a smoothed and stretched layer of thick milk foam. An alchemy of barista artistry and craft.",
+                      widget.description,
                       style: AppText.style.regularGrey12,
                     ),
                   ],
