@@ -6,8 +6,8 @@ import '../../utils/styles/button.dart';
 import '../../widgets/feature/order_widgets/order_card.dart';
 
 class PickupManagement extends StatelessWidget {
-  PickupManagement({super.key, this.hasOrder = true});
-  bool hasOrder;
+  const PickupManagement({super.key, this.hasOrder = true});
+  final bool hasOrder;
 
   @override
   Widget build(BuildContext context) {

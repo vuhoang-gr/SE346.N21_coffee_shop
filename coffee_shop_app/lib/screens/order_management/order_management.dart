@@ -8,14 +8,9 @@ import '../../utils/constants/dimension.dart';
 import '../../widgets/global/custom_app_bar.dart';
 import 'delivery_management.dart';
 
-class OrderManagement extends StatefulWidget {
+class OrderManagement extends StatelessWidget {
   const OrderManagement({super.key});
 
-  @override
-  State<OrderManagement> createState() => _OrderManagementState();
-}
-
-class _OrderManagementState extends State<OrderManagement> {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
