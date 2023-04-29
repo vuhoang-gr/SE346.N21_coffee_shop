@@ -48,7 +48,7 @@ class StoreDetail extends StatelessWidget {
                                           width: Dimension.width108,
                                           height: Dimension.height72,
                                           child: Image.asset(
-                                            "assets\\images\\pickup_icon.png",
+                                            "assets/images/pickup_icon.png",
                                             fit: BoxFit.fill,
                                           ),
                                         ),
@@ -89,7 +89,7 @@ class StoreDetail extends StatelessWidget {
                                           width: Dimension.width108,
                                           height: Dimension.height72,
                                           child: Image.asset(
-                                            "assets\\images\\delivery_icon.png",
+                                            "assets/images/delivery_icon.png",
                                             fit: BoxFit.fill,
                                           ),
                                         ),

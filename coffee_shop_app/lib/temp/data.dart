@@ -1,20 +1,78 @@
-
-
 import '../services/models/address.dart';
 import '../services/models/delivery_address.dart';
 import '../services/models/food.dart';
+import '../services/models/size.dart';
 import '../services/models/store.dart';
+import '../services/models/topping.dart';
 
 class Data {
   static const name = "Nguyen Van A";
+  static final List<Size> sizes = [
+    Size(
+        name: 'Small',
+        id: '1',
+        image:
+            'https://product.hstatic.net/1000075078/product/cold-brew-sua-tuoi_379576_7fd130b7d162497a950503207876ef64.jpg',
+        price: 10),
+    Size(
+      name: 'Large',
+      image:
+          'https://product.hstatic.net/1000075078/product/cold-brew-sua-tuoi_379576_7fd130b7d162497a950503207876ef64.jpg',
+      id: '2',
+      price: 20,
+    )
+  ];
+  static final List<Topping> toopings = [
+    Topping(
+        name: 'Espresso (1 shot)',
+        price: 10,
+        id: '1',
+        image:
+            'https://product.hstatic.net/1000075078/product/1645969436_caramel-macchiato-nong-lifestyle-1_187d60b2a52244c58a5c2fd24addef78.jpg'),
+    Topping(
+      name: 'Caramel',
+      image:
+          'https://product.hstatic.net/1000075078/product/1645969436_caramel-macchiato-nong-lifestyle-1_187d60b2a52244c58a5c2fd24addef78.jpg',
+      id: '2',
+      price: 5,
+    )
+  ];
   static final List<Food> products = [
     Food(
         id: "food1",
         name: "Food 1",
         price: 1234.53,
         description: "Day la food 1",
-        sizes: null,
-        toppings: null,
+        sizes: [
+          Size(
+              name: 'Small',
+              id: '1',
+              image:
+                  'https://product.hstatic.net/1000075078/product/cold-brew-sua-tuoi_379576_7fd130b7d162497a950503207876ef64.jpg',
+              price: 10),
+          Size(
+            name: 'Large',
+            image:
+                'https://product.hstatic.net/1000075078/product/cold-brew-sua-tuoi_379576_7fd130b7d162497a950503207876ef64.jpg',
+            id: '2',
+            price: 20,
+          )
+        ],
+        toppings: [
+          Topping(
+              name: 'Espresso (1 shot)',
+              price: 10,
+              id: '1',
+              image:
+                  'https://product.hstatic.net/1000075078/product/1645969436_caramel-macchiato-nong-lifestyle-1_187d60b2a52244c58a5c2fd24addef78.jpg'),
+          Topping(
+            name: 'Caramel',
+            image:
+                'https://product.hstatic.net/1000075078/product/1645969436_caramel-macchiato-nong-lifestyle-1_187d60b2a52244c58a5c2fd24addef78.jpg',
+            id: '2',
+            price: 5,
+          )
+        ],
         images: [
           "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
         ]),
@@ -163,25 +221,28 @@ class Data {
 
   static final List<DeliveryAddress> addresses = [
     DeliveryAddress(
-      address: Address(
-          city: "HCM city",
-          district: "Thu Duc",
-          ward: "khong biet",
-          shortName: "123 xa lo Ha Noi"),
-      nameReceiver: "Nguyen Van B", phone: "01234501232"),
+        address: Address(
+            city: "HCM city",
+            district: "Thu Duc",
+            ward: "khong biet",
+            shortName: "123 xa lo Ha Noi"),
+        nameReceiver: "Nguyen Van B",
+        phone: "01234501232"),
     DeliveryAddress(
-      address: Address(
-          city: "HCM city",
-          district: "Binh Thanh",
-          ward: "phuong 25",
-          shortName: "123 xa lo Ha Noi"),
-      nameReceiver: "Nguyen Van B", phone: "01234501232"),
+        address: Address(
+            city: "HCM city",
+            district: "Binh Thanh",
+            ward: "phuong 25",
+            shortName: "123 xa lo Ha Noi"),
+        nameReceiver: "Nguyen Van B",
+        phone: "01234501232"),
     DeliveryAddress(
-      address: Address(
-          city: "HCM city",
-          district: "Binh Thanh",
-          ward: "phuong 26",
-          shortName: "123 xa lo Ha Noi"),
-      nameReceiver: "Nguyen Van C", phone: "01234501232"),
+        address: Address(
+            city: "HCM city",
+            district: "Binh Thanh",
+            ward: "phuong 26",
+            shortName: "123 xa lo Ha Noi"),
+        nameReceiver: "Nguyen Van C",
+        phone: "01234501232"),
   ];
 }
