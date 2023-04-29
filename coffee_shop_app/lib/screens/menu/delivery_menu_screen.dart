@@ -1,20 +1,17 @@
 import 'package:coffee_shop_app/screens/search_product_screen.dart';
+import 'package:coffee_shop_app/widgets/global/cart_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../temp/data.dart';
-import '../utils/colors/app_colors.dart';
-import '../utils/constants/dimension.dart';
-import '../utils/styles/app_texts.dart';
-import '../widgets/feature/component_menu_screen/address_picker.dart';
-import '../widgets/feature/component_menu_screen/delivery_store_picker.dart';
-import '../widgets/global/custom_app_bar.dart';
-import '../widgets/global/product_item.dart';
+import '../../temp/data.dart';
+import '../../utils/constants/dimension.dart';
+import '../../utils/styles/app_texts.dart';
+import '../../widgets/feature/component_menu_screen/address_picker.dart';
+import '../../widgets/feature/component_menu_screen/delivery_store_picker.dart';
+import '../../widgets/global/custom_app_bar.dart';
+import '../../widgets/global/product_item.dart';
 
 class DeliveryMenuScreen extends StatefulWidget {
-  static String routeName = "/delivery_menu_screen";
-
   const DeliveryMenuScreen({super.key});
 
   @override
@@ -53,7 +50,7 @@ class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
         children: [
           CustomAppBar(
             leading: Text(
-              "Store pickup",
+              "Delivery",
               style: AppText.style.boldBlack18,
             ),
             trailing: GestureDetector(
@@ -117,6 +114,7 @@ class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
                               )),
                             ))
                         .toList()),
+                    SizedBox(height: Dimension.height68,)
                   ],
                 ),
                 _isButtonVisible
@@ -130,31 +128,13 @@ class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
                             ),
                             color: Colors.white,
                             child: const DeliveryStorePicker()))
-                    : Container()
+                    : SizedBox.shrink(),
+                CartButton(scrollController: _scrollController)
               ],
             ),
           ),
         ],
       ),
-      floatingActionButton: !_isButtonVisible
-          ? null
-          : CircleAvatar(
-              radius: Dimension.height20,
-              backgroundColor: AppColors.blackSuperblurColor,
-              child: IconButton(
-                  padding: const EdgeInsets.all(0),
-                  icon: const FaIcon(
-                    FontAwesomeIcons.chevronUp,
-                    color: AppColors.greyTextColor,
-                  ),
-                  onPressed: () {
-                    _scrollController.animateTo(
-                      0,
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeInOut,
-                    );
-                  }),
-            ),
     ));
   }
 }
