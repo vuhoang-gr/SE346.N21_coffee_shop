@@ -1,6 +1,8 @@
+import 'package:coffee_shop_app/services/blocs/address_store/address_store_bloc.dart';
+import 'package:coffee_shop_app/services/blocs/address_store/address_store_event.dart';
+import 'package:coffee_shop_app/services/blocs/address_store/address_store_state.dart';
 import 'package:flutter/material.dart';
-
-import '../temp/data.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../utils/colors/app_colors.dart';
 import '../utils/constants/dimension.dart';
 import '../utils/styles/app_texts.dart';
@@ -10,11 +12,15 @@ import '../widgets/global/custom_app_bar.dart';
 import 'address_screen.dart';
 
 class AddressListingScreen extends StatelessWidget {
-  static String routeName = "/address_listing_screen";
+  static const String routeName = "/address_listing_screen";
   const AddressListingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    AddressStoreBloc addressStoreBloc =
+        BlocProvider.of<AddressStoreBloc>(context);
+    addressStoreBloc.add(ListAddressInited());
+
     return SafeArea(
         child: Scaffold(
             backgroundColor: AppColors.backgroundColor,
@@ -41,26 +47,30 @@ class AddressListingScreen extends StatelessWidget {
                         Text("Saved places",
                             textAlign: TextAlign.left,
                             style: AppText.style.boldBlack16),
-                        ListView.separated(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            padding: EdgeInsets.symmetric(
-                                vertical: Dimension.height12),
-                            itemBuilder: (context, index) {
-                              return AddressBlockEdit(
-                                  address:
-                                      Data.addresses[index].address,
-                                  name: Data.addresses[index].nameReceiver,
-                                  phone: Data.addresses[index].phone);
-                            },
-                            separatorBuilder: (_, __) =>
-                                SizedBox(height: Dimension.height12),
-                            itemCount: Data.addresses.length),
+                        BlocBuilder<AddressStoreBloc, AddressStoreState>(
+                            builder: (context, state) {
+                          if (state is LoadingState) {
+                            return CircularProgressIndicator();
+                          } else if(state is LoadedState){
+                            return ListView.separated(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                padding: EdgeInsets.symmetric(
+                                    vertical: Dimension.height12),
+                                itemBuilder: (context, index) {
+                                  return AddressBlockEdit(
+                                    deliveryAddress: state.listDeliveryAddress[index],
+                                    index: index,
+                                  );
+                                },
+                                separatorBuilder: (_, __) =>
+                                    SizedBox(height: Dimension.height12),
+                                itemCount: state.listDeliveryAddress.length);
+                          }
+                          return Container();
+                        }),
                         const SizedBox(
                           height: 8,
-                        ),
-                        SizedBox(
-                          height: Dimension.height12,
                         ),
                         GestureDetector(
                           onTap: () {
