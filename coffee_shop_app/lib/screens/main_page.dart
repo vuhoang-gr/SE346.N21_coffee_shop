@@ -1,5 +1,5 @@
-import 'package:coffee_shop_app/screens/delivery_menu_screen.dart';
 import 'package:coffee_shop_app/screens/home/home_screen.dart';
+import 'package:coffee_shop_app/screens/menu/menu_screen.dart';
 import 'package:coffee_shop_app/screens/order_management/order_management.dart';
 import 'package:coffee_shop_app/screens/profile/profile_screen.dart';
 import 'package:coffee_shop_app/screens/store_list_screen.dart';
@@ -134,7 +134,7 @@ class _MainPageState extends State<MainPage> {
                     HomeScreen(),
 
                     //menu
-                    DeliveryMenuScreen(),
+                    MenuScreen(),
 
                     //stores page
                     StoreListScreen(),

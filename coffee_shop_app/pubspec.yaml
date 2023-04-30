@@ -21,6 +21,7 @@ dependencies:
   flutter_svg: ^2.0.4
   equatable: ^2.0.5
   flutter_keyboard_visibility: ^5.4.0
+  formz: ^0.6.0
   # firebase_core: ^1.14.0
   # firebase_auth: ^3.3.13
 
@@ -37,11 +38,6 @@ flutter:
     - assets/images/placeholder/
     - assets/icons/
     - assets/
-
-    - assets\images\pickup_icon.png
-    - assets\images\pickup_small_icon.png
-    - assets\images\delivery_small_icon.png
-    - assets\images\delivery_icon.png
     # - assets/icons/
 
   fonts:

@@ -1,11 +1,5 @@
 import 'package:coffee_shop_app/services/models/cart_food.dart';
-import 'package:coffee_shop_app/services/models/store.dart';
-import 'package:coffee_shop_app/services/models/user.dart';
 import 'package:equatable/equatable.dart';
-
-import 'address.dart';
-import 'food.dart';
-
 class Cart extends Equatable {
   //TODO: add notes
   final String? id;

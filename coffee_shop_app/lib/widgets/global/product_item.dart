@@ -30,16 +30,16 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(5),
-          color: CupertinoColors.white
-        ),
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(5),
+            color: CupertinoColors.white),
         child: isAvailable
             ? GestureDetector(
-            
-                onTap: () async {
-                  await SharedPreferencesHelper.addProductToSharedPreferences(
-                      id);
+                onTap: () {
+                  SharedPreferencesHelper.addProductToSharedPreferences(id)
+                      .then((_) => Navigator.of(context).pushNamed(
+                          "/product_detail_screen",
+                          arguments: {"id": id}));
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,

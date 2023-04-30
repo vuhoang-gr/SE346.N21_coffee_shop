@@ -1,8 +1,11 @@
+import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_bloc.dart';
+import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../services/functions/shared_preferences_helper.dart';
-import '../../services/models/food.dart';
-import '../../temp/data.dart';
+import '../../services/blocs/recent_see_products/recent_see_products_bloc.dart';
+import '../../services/blocs/recent_see_products/recent_see_products_event.dart';
+import '../../services/blocs/recent_see_products/recent_see_products_state.dart';
 import '../../utils/colors/app_colors.dart';
 import '../../utils/constants/dimension.dart';
 import '../../utils/styles/app_texts.dart';
@@ -12,7 +15,7 @@ import '../../widgets/global/order_type_picker.dart';
 import '../../widgets/global/product_item.dart';
 
 class HomeScreen extends StatefulWidget {
-  static String routeName = "/home_screen";
+  static const String routeName = "/home_screen";
   const HomeScreen({super.key});
 
   @override
@@ -24,27 +27,18 @@ class _HomeScreenState extends State<HomeScreen> {
   final ScrollController _scrollController = ScrollController();
   bool _isScrollInTop = true;
 
-  Future<List<Widget>> _generateProducts() async {
-    List<String> productsid = await SharedPreferencesHelper.getProducts();
-    List<Widget> products = <Widget>[];
-    for (int i = 0; i < productsid.length; i++) {
-      Food? food =
-          Data.products.firstWhere((element) => element.id == productsid[i]);
-//TODO: Check the food is null
-      products.add(ProductItem(
-          id: food.id,
-          productName: food.name,
-          productPrice: food.price,
-          imageProduct: food.images.first,
-          dateRegister: DateTime(2023, 29, 3, 12)));
-    }
-    return products;
-  }
-
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    RecentSeeProductsBloc recentSeeProductsBloc =
+        BlocProvider.of<RecentSeeProductsBloc>(context);
+    recentSeeProductsBloc.add(ListRecentSeeProductLoaded());
   }
 
   @override
@@ -131,59 +125,128 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(
                           height: Dimension.height24,
                         ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: Dimension.width16),
-                          child: Text(
-                            "Used recently",
-                            style: AppText.style.boldBlack16,
-                          ),
-                        ),
-                        SizedBox(
-                          height: Dimension.height12,
-                        ),
-                        FutureBuilder(
-                            future: _generateProducts(),
-                            builder: (context, snapshot) {
+                        BlocBuilder<RecentSeeProductsBloc,
+                            RecentSeeProductsState>(
+                          builder: (context, state) {
+                            if (state is LoadingDataState) {
+                              return CircularProgressIndicator();
+                            } else if (state is LoaddedDataState) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: Dimension.width16),
+                                    child: Text(
+                                      "Used recently",
+                                      style: AppText.style.boldBlack16,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: Dimension.height12,
+                                  ),
+                                  Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: Dimension.width16),
+                                      child: ListView.separated(
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        separatorBuilder: (ctx, index) {
+                                          return SizedBox(
+                                            height: Dimension.height8,
+                                          );
+                                        },
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return ProductItem(
+                                              id: state
+                                                  .recentSeeProducts[index].id,
+                                              productName: state
+                                                  .recentSeeProducts[index]
+                                                  .name,
+                                              productPrice: state
+                                                  .recentSeeProducts[index]
+                                                  .price,
+                                              imageProduct: state
+                                                  .recentSeeProducts[index]
+                                                  .images
+                                                  .first,
+                                              dateRegister:
+                                                  DateTime(2023, 29, 3, 12));
+                                        },
+                                        itemCount:
+                                            state.recentSeeProducts.length,
+                                      ))
+                                ],
+                              );
+                            } else if (state is NotExistDataState) {
                               return Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.white),
+                                margin: EdgeInsets.symmetric(
+                                  horizontal: Dimension.width16,
+                                ),
+                                child: Padding(
                                   padding: EdgeInsets.symmetric(
-                                      horizontal: Dimension.width16),
-                                  child: ListView.separated(
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      itemBuilder: (ctx, index) {
-                                        return snapshot.data == null
-                                            ? const SizedBox()
-                                            : Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                ),
-                                                padding:
-                                                    const EdgeInsets.all(5),
-                                                child: snapshot.data![index]);
-                                      },
-                                      separatorBuilder: (ctx, index) {
-                                        return SizedBox(
-                                          height: Dimension.height8,
+                                    horizontal: Dimension.width16,
+                                    vertical: Dimension.height16,
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        height: Dimension.height24,
+                                      ),
+                                      Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: Dimension.width32,
+                                          ),
+
+                                          //link: https://storyset.com/illustration/cocktail-bartender/rafiki
+                                          child: Image.asset(
+                                              'assets/images/img_getting_started.png')),
+                                              
+                                      SizedBox(
+                                        height: Dimension.height24,
+                                      ),
+                                      BlocBuilder<CartButtonBloc,
+                                              CartButtonState>(
+                                          builder: (context, state) {
+                                        return ElevatedButton(
+                                          onPressed: () {
+                                            DefaultTabController.of(context)
+                                                .animateTo(1);
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Getting started ",
+                                                style: AppText
+                                                    .style.regularWhite16,
+                                              ),
+                                              Icon(Icons.coffee)
+                                            ],
+                                          ),
                                         );
-                                      },
-                                      itemCount: snapshot.data == null
-                                          ? 0
-                                          : snapshot.data!.length)
-                                  // child: Column(
-                                  //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  //   children: snapshot.data ?? <Widget>[],
-                                  // ),
-                                  );
-                            }),
+                                      })
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+                            return Container();
+                          },
+                        ),
                         SizedBox(
-                          height: Dimension.height20,
+                          height: Dimension.height68,
                         )
                       ]),
-                      CartButton(scrollController: _scrollController, money: 56000, amount: 1,)
+                      CartButton(scrollController: _scrollController)
                     ],
                   ),
                 ),
