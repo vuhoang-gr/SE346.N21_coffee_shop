@@ -150,7 +150,16 @@ class CheckoutProdItem extends StatelessWidget {
                                             ),
                                           ),
                                         ],
-                                      ));
+                                      )).then((value) {
+                                if (BlocProvider.of<CartCubit>(context)
+                                    .state
+                                    .products
+                                    .isEmpty) {
+                                  Navigator.of(context).pop();
+                                  // Navigator.of(context)
+                                  //     .pushReplacementNamed("/");
+                                }
+                              });
                             }
                           }),
                       SizedBox(
