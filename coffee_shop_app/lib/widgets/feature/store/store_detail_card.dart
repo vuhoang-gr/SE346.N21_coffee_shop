@@ -2,12 +2,13 @@ import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../services/models/store.dart';
 import '../../../utils/constants/dimension.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class StoreDetailCard extends StatefulWidget {
-  const StoreDetailCard({super.key});
-
+  const StoreDetailCard({super.key, required this.store});
+  final Store store;
   @override
   State<StoreDetailCard> createState() => _StoreDetailCardState();
 }
@@ -24,7 +25,7 @@ class _StoreDetailCardState extends State<StoreDetailCard> {
           margin: EdgeInsets.only(
               left: Dimension.height16,
               right: Dimension.height16,
-              top: Dimension.height150 / 5),
+              top: Dimension.height12),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
@@ -94,7 +95,7 @@ class _StoreDetailCardState extends State<StoreDetailCard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "SB Han Thuyen",
+                              widget.store.sb,
                               style: AppText.style.mediumBlack16,
                             ),
                             const SizedBox(

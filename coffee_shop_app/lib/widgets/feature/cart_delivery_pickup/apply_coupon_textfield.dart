@@ -57,8 +57,9 @@ class ApplyCouponTextfield extends StatelessWidget {
                     children: <TextSpan>[
                       const TextSpan(text: '|  '),
                       TextSpan(
-                          text: 'Apply',
-                          style: AppText.style.regularBlue14,)
+                        text: 'Apply',
+                        style: AppText.style.regularBlue14,
+                      )
                     ],
                   ),
                 ),

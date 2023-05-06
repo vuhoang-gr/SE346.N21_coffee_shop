@@ -10,7 +10,8 @@ import 'package:flutter/material.dart';
 import '../utils/constants/dimension.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+  const MainPage({super.key, this.selectedPage = 0});
+  final int selectedPage;
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -22,6 +23,7 @@ class _MainPageState extends State<MainPage> {
     return ColoredBox(
       color: AppColors.backgroundColor,
       child: DefaultTabController(
+        initialIndex: widget.selectedPage,
         length: 5,
         child: SafeArea(
           child: Scaffold(

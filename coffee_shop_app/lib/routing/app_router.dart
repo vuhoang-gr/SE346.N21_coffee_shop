@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 
 import '../screens/home/home_screen.dart';
 import '../services/models/food.dart';
+import '../services/models/store.dart';
 import '../temp/data.dart';
 
 class AppRouter {
@@ -86,14 +87,17 @@ class AppRouter {
         return _createRoute(SearchProductScreen());
 
       case "/store_detail":
-        return _createRoute(StoreDetail());
+        Store args = settings.arguments as Store;
+        return _createRoute(StoreDetail(
+          store: args,
+        ));
 
       case "/store_list_screen":
         return _createRoute(StoreListScreen());
 
       case StoreSelectionScreen.routeName:
         return _createRoute(StoreSelectionScreen());
-        
+
       default:
         return _createRoute(MainPage());
     }
