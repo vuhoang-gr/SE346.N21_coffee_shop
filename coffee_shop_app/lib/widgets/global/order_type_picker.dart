@@ -1,9 +1,11 @@
-import 'package:coffee_shop_app/screens/store_selection_screen.dart';
+import 'package:coffee_shop_app/main.dart';
+import 'package:coffee_shop_app/screens/store/store_selection_screen.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../services/blocs/cart_button/cart_button_bloc.dart';
 import '../../services/blocs/cart_button/cart_button_state.dart';
+import '../../services/models/store.dart';
 import '../../utils/colors/app_colors.dart';
 import '../../utils/constants/dimension.dart';
 import '../../utils/styles/app_texts.dart';
@@ -32,13 +34,16 @@ class OrderTypePicker extends StatelessWidget {
                         selectedOrderType: OrderType.storePickup));
                 if (state.selectedStore == null) {
                   Navigator.of(context)
-                      .pushNamed(StoreSelectionScreen.routeName)
-                      .then((value) => {
-                            if (value != null)
-                                // Navigator.of(context)
-                                //     .pushNamed(PickupMenuScreen.routeName)
-                                DefaultTabController.of(context).animateTo(1)
-                          });
+                      .pushNamed(StoreSelectionScreen.routeName, arguments: {
+                    "latLng": initLatLng,
+                    "isPurposeForShowDetail": false
+                  }).then((value) {
+                    if (value != null && value is Store) {
+                      BlocProvider.of<CartButtonBloc>(context)
+                          .add(ChangeSelectedStore(selectedStore: value));
+                      DefaultTabController.of(context).animateTo(1);
+                    }
+                  });
                 } else {
                   DefaultTabController.of(context).animateTo(1);
                 }

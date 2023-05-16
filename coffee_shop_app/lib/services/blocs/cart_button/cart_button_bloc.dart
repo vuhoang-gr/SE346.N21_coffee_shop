@@ -7,6 +7,7 @@ class CartButtonBloc extends Bloc<CartButtonEvent, CartButtonState> {
       : super(CartButtonState(
             selectedStore: null, selectedDeliveryAddress: null)) {
     on<ChangeSelectedStore>(_mapChangeSelectedStoreToState);
+    on<ChangeSelectedStoreButNotUse>(_mapChangeSelectedStoreButNotUse);
     on<ChangeSelectedDeliveryAddress>(_mapChangeSelectedAddressToState);
     on<ChangeSelectedOrderType>(_mapChangeSelectedOrderTypeToState);
   }
@@ -17,6 +18,14 @@ class CartButtonBloc extends Bloc<CartButtonEvent, CartButtonState> {
         selectedStore: event.selectedStore,
         selectedDeliveryAddress: state.selectedDeliveryAddress,
         selectedOrderType: OrderType.storePickup));
+  }
+
+  void _mapChangeSelectedStoreButNotUse(
+      ChangeSelectedStoreButNotUse event, Emitter<CartButtonState> emit) {
+    emit(CartButtonState(
+        selectedStore: event.selectedStore,
+        selectedDeliveryAddress: state.selectedDeliveryAddress,
+        selectedOrderType: state.selectedOrderType));
   }
 
   void _mapChangeSelectedAddressToState(
