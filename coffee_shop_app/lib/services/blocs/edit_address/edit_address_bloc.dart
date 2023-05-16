@@ -3,18 +3,18 @@ import 'package:coffee_shop_app/services/blocs/edit_address/edit_address_state.d
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EditAddressBloc extends Bloc<EditAddressEvent, EditAddressState> {
-  EditAddressBloc() : super(const EditAddressState()) {
-    on<SubAddressChanged>(_onSubAddressChanged);
+  EditAddressBloc() : super(EditAddressState()) {
+    on<AddressChanged>(_onAddressChanged);
     on<NameReceiverChanged>(_onNameReceiverChanged);
     on<PhoneChanged>(_onPhoneChanged);
+    on<AddressNoteChanged>(_onAddressNoteChanged);
     on<InitForm>(_onInitForm);
   }
 
-  void _onSubAddressChanged(
-      SubAddressChanged event, Emitter<EditAddressState> emit) {
+  void _onAddressChanged(AddressChanged event, Emitter<EditAddressState> emit) {
     emit(
       state.copyWith(
-        subAddress: event.subAddress,
+        address: event.address,
       ),
     );
   }
@@ -36,10 +36,20 @@ class EditAddressBloc extends Bloc<EditAddressEvent, EditAddressState> {
     );
   }
 
+  void _onAddressNoteChanged(
+      AddressNoteChanged event, Emitter<EditAddressState> emit) {
+    emit(
+      state.copyWith(
+        addressNote: event.addressNote,
+      ),
+    );
+  }
+
   void _onInitForm(InitForm event, Emitter<EditAddressState> emit) {
     emit(
       state.copyWith(
-        subAddress: event.deliveryAddress?.address.shortName ?? "",
+        address: event.deliveryAddress?.address,
+        addressNote: event.deliveryAddress?.addressNote ?? "",
         nameReceiver: event.deliveryAddress?.nameReceiver ?? "",
         phone: event.deliveryAddress?.phone ?? "",
       ),

@@ -1,14 +1,14 @@
 import 'package:coffee_shop_app/services/models/delivery_address.dart';
 
-abstract class AddressStoreState{}
+abstract class AddressStoreState {
+  List<DeliveryAddress> listDeliveryAddress;
+  AddressStoreState({required this.listDeliveryAddress});
+}
 
 class LoadedState extends AddressStoreState {
-  List<DeliveryAddress> listDeliveryAddress;
-  LoadedState({
-    required this.listDeliveryAddress
-  }); 
+  LoadedState({required super.listDeliveryAddress});
 }
 
 class LoadingState extends AddressStoreState {
-  LoadingState(); 
+  LoadingState({required super.listDeliveryAddress});
 }

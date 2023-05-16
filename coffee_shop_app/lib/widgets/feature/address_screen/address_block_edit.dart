@@ -1,10 +1,12 @@
+import 'package:coffee_shop_app/services/blocs/address_store/address_store_bloc.dart';
+import 'package:coffee_shop_app/services/blocs/address_store/address_store_event.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_event.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../screens/address_screen.dart';
+import '../../../screens/customer_address/address_screen.dart';
 import '../../../services/blocs/cart_button/cart_button_bloc.dart';
 import '../../../services/models/delivery_address.dart';
 import '../../../utils/colors/app_colors.dart';
@@ -60,7 +62,7 @@ class AddressBlockEdit extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            deliveryAddress.address.toString(),
+                            deliveryAddress.address.formattedAddress,
                             textAlign: TextAlign.center,
                             style: AppText.style.mediumBlack14,
                             maxLines: 1,
@@ -108,10 +110,17 @@ class AddressBlockEdit extends StatelessWidget {
               IconButton(
                   onPressed: () {
                     Navigator.of(context).pushNamed(AddressScreen.routeName,
-                        arguments: {
-                          "deliveryAddress": deliveryAddress,
-                          "index": index
-                        });
+                        arguments: deliveryAddress).then((value) {
+                      if (value == null) {
+                        BlocProvider.of<AddressStoreBloc>(context)
+                            .add(ListAddressDeletedIndex(index: index));
+                      } else {
+                        BlocProvider.of<AddressStoreBloc>(context).add(
+                            ListAddressUpdatedIndex(
+                                index: index,
+                                deliveryAddress: (value as DeliveryAddress)));
+                      }
+                    });
                   },
                   icon: IconTheme(
                       data: IconThemeData(

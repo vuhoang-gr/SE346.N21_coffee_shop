@@ -1,26 +1,23 @@
-import 'package:coffee_shop_app/services/blocs/address_store/address_store_bloc.dart';
-import 'package:coffee_shop_app/services/blocs/address_store/address_store_event.dart';
-import 'package:coffee_shop_app/services/blocs/address_store/address_store_state.dart';
+import 'package:coffee_shop_app/main.dart';
+import 'package:coffee_shop_app/screens/customer_address/map_screen.dart';
 import 'package:coffee_shop_app/services/blocs/edit_address/edit_address_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/edit_address/edit_address_event.dart';
 import 'package:coffee_shop_app/services/blocs/edit_address/edit_address_state.dart';
+import 'package:coffee_shop_app/services/models/location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../services/models/address.dart';
-import '../services/models/delivery_address.dart';
-import '../utils/colors/app_colors.dart';
-import '../utils/constants/dimension.dart';
-import '../utils/styles/app_texts.dart';
-import '../widgets/global/custom_app_bar.dart';
+import '../../services/models/delivery_address.dart';
+import '../../utils/colors/app_colors.dart';
+import '../../utils/constants/dimension.dart';
+import '../../utils/styles/app_texts.dart';
+import '../../widgets/global/custom_app_bar.dart';
 
 class AddressScreen extends StatefulWidget {
   static const String routeName = "/address_screen";
   final DeliveryAddress? deliveryAddress;
-  final int index;
-  const AddressScreen(
-      {super.key, required this.deliveryAddress, this.index = -1});
+  const AddressScreen({super.key, required this.deliveryAddress});
 
   @override
   State<AddressScreen> createState() => _AddressScreenState();
@@ -32,35 +29,78 @@ class _AddressScreenState extends State<AddressScreen>
 
   bool _isKeyboardOpened = false;
 
+  late TextEditingController _addressController;
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   final _nameFocusNode = FocusNode();
   final _phoneNumberFocusNode = FocusNode();
 
   @override
   void initState() {
-    super.initState();
+    if (widget.deliveryAddress != null) {
+      _isCreatingNewAddress = false;
+    }
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       EditAddressBloc editAddressBloc =
           BlocProvider.of<EditAddressBloc>(context);
       editAddressBloc.add(InitForm(deliveryAddress: widget.deliveryAddress));
-      if (widget.deliveryAddress != null) {
-        _isCreatingNewAddress = false;
-      }
     });
+
+    String initAddress;
+    if (widget.deliveryAddress == null) {
+      initAddress = "";
+    } else {
+      initAddress = widget.deliveryAddress!.address.formattedAddress;
+    }
+    _addressController = TextEditingController(text: initAddress);
+
+    super.initState();
   }
 
   generateTextDecoration({String hintString = ""}) {
     return InputDecoration(
-        counterText: "",
-        contentPadding: EdgeInsets.symmetric(
-            horizontal: Dimension.width16, vertical: Dimension.height8),
-        hintText: hintString,
-        hintStyle: AppText.style.regularGrey14,
-        focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
-            borderSide: const BorderSide(color: AppColors.blackColor)),
-        border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
-            borderSide: const BorderSide(color: AppColors.greyTextField)));
+      counterText: "",
+      contentPadding: EdgeInsets.symmetric(
+          horizontal: Dimension.width16, vertical: Dimension.height8),
+      hintText: hintString,
+      hintStyle: AppText.style.regularGrey14,
+      focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(4),
+          borderSide: const BorderSide(color: AppColors.blackColor)),
+      border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(4),
+          borderSide: const BorderSide(color: AppColors.greyTextField)),
+      errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(4),
+          borderSide: const BorderSide(color: AppColors.redColor)),
+      errorStyle:
+          AppText.style.regularBlack14.copyWith(color: AppColors.redColor),
+    );
+  }
+
+  generateDisableTextDecoration({String hintString = ""}) {
+    return InputDecoration(
+      counterText: "",
+      contentPadding: EdgeInsets.symmetric(
+          horizontal: Dimension.width16, vertical: Dimension.height8),
+      hintText: hintString,
+      fillColor: AppColors.greyBoxColor,
+      filled: true,
+      hintStyle: AppText.style.regularGrey14,
+      disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(4),
+          borderSide: const BorderSide(color: AppColors.greyTextField)),
+      border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(4),
+          borderSide: const BorderSide(color: AppColors.greyTextField)),
+      errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(4),
+          borderSide: const BorderSide(color: AppColors.redColor)),
+      errorStyle:
+          AppText.style.regularBlack14.copyWith(color: AppColors.redColor),
+    );
   }
 
   final _roundedButtonStyle = ButtonStyle(
@@ -84,6 +124,7 @@ class _AddressScreenState extends State<AddressScreen>
   void dispose() {
     _nameFocusNode.dispose();
     _phoneNumberFocusNode.dispose();
+    _addressController.dispose();
     super.dispose();
   }
 
@@ -139,7 +180,7 @@ class _AddressScreenState extends State<AddressScreen>
                                     Expanded(
                                       child: ElevatedButton(
                                           onPressed: () {
-                                            //TODO: need to handle it
+                                            Navigator.of(context).pop();
                                             Navigator.of(context).pop();
                                           },
                                           style: _roundedOutlineButtonStyle,
@@ -205,6 +246,7 @@ class _AddressScreenState extends State<AddressScreen>
                                 vertical: Dimension.height16,
                                 horizontal: Dimension.width16),
                             child: Form(
+                              key: _formKey,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -218,109 +260,89 @@ class _AddressScreenState extends State<AddressScreen>
                                   BlocBuilder<EditAddressBloc,
                                           EditAddressState>(
                                       builder: (context, state) {
-                                    return TextFormField(
-                                      initialValue: widget.deliveryAddress
-                                              ?.address.shortName ??
-                                          "",
-                                      style: AppText.style.regularBlack14,
-                                      textInputAction: TextInputAction.next,
-                                      keyboardType: TextInputType.text,
-                                      decoration: generateTextDecoration(
-                                          hintString:
-                                              "Lot number, street number"),
-                                      onFieldSubmitted: (_) {
-                                        FocusScope.of(context)
-                                            .requestFocus(_nameFocusNode);
-                                      },
-                                      validator: (value) {
-                                        if (isSubAddressValid(value ?? "")) {
-                                          return 'Please provide a value';
+                                    return GestureDetector(
+                                      onTap: () {
+                                        if (state.address != null) {
+                                          Navigator.of(context)
+                                              .pushNamed(MapScreen.routeName,
+                                                  arguments: LatLng(
+                                                      state.address!.lat,
+                                                      state.address!.lng))
+                                              .then((location) {
+                                            MLocation mLocation =
+                                                location as MLocation;
+                                            _addressController.text =
+                                                mLocation.formattedAddress;
+                                            BlocProvider.of<EditAddressBloc>(
+                                                    context)
+                                                .add(AddressChanged(
+                                                    address: mLocation));
+                                          });
+                                        } else {
+                                          Navigator.of(context)
+                                              .pushNamed(MapScreen.routeName,
+                                                  arguments: initLatLng)
+                                              .then((location) =>
+                                                  _addressController.text =
+                                                      (location as MLocation)
+                                                          .formattedAddress);
                                         }
-                                        return null;
                                       },
-                                      onChanged: (value) {
-                                        BlocProvider.of<EditAddressBloc>(
-                                                context)
-                                            .add(SubAddressChanged(
-                                                subAddress: value));
-                                      },
+                                      child: TextFormField(
+                                        controller: _addressController,
+                                        enabled: false,
+                                        textInputAction: TextInputAction.next,
+                                        keyboardType: TextInputType.name,
+                                        style: AppText.style.regularBlack14,
+                                        validator: (value) {
+                                          if (!isAddressValid(value ?? "")) {
+                                            return 'Please choose your address.';
+                                          }
+                                          return null;
+                                        },
+                                        decoration:
+                                            generateDisableTextDecoration(
+                                                hintString:
+                                                    "Select your address"),
+                                      ),
                                     );
                                   }),
                                   SizedBox(
                                     height: Dimension.height16,
                                   ),
                                   Text(
-                                    "City",
+                                    "Address note",
                                     style: AppText.style.boldBlack14,
                                   ),
                                   SizedBox(
                                     height: Dimension.height4,
                                   ),
-                                  DropdownButtonFormField(
-                                      hint: Text(
-                                        "Select city",
-                                        style: AppText.style.regularGrey14,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
+                                  BlocBuilder<EditAddressBloc,
+                                          EditAddressState>(
+                                      builder: (context, state) {
+                                    return TextFormField(
+                                      initialValue:
+                                          widget.deliveryAddress?.addressNote ??
+                                              "",
+                                      textInputAction: TextInputAction.next,
+                                      keyboardType: TextInputType.text,
+                                      style: AppText.style.regularBlack14,
                                       decoration: generateTextDecoration(
-                                          hintString: "Select city"),
-                                      icon: const FaIcon(
-                                        FontAwesomeIcons.chevronDown,
-                                        color: AppColors.greyTextColor,
-                                      ),
-                                      focusColor: Colors.black,
-                                      items: const [],
-                                      onChanged: (_) {}),
-                                  SizedBox(
-                                    height: Dimension.height16,
-                                  ),
-                                  Text(
-                                    "District",
-                                    style: AppText.style.boldBlack14,
-                                  ),
-                                  SizedBox(
-                                    height: Dimension.height4,
-                                  ),
-                                  DropdownButtonFormField(
-                                      hint: Text(
-                                        "Select district",
-                                        style: AppText.style.regularGrey14,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      decoration: generateTextDecoration(
-                                          hintString: "Select city"),
-                                      icon: const FaIcon(
-                                        FontAwesomeIcons.chevronDown,
-                                        color: AppColors.greyTextColor,
-                                      ),
-                                      focusColor: Colors.black,
-                                      items: const [],
-                                      onChanged: (_) {}),
-                                  SizedBox(
-                                    height: Dimension.height16,
-                                  ),
-                                  Text(
-                                    "Ward",
-                                    style: AppText.style.boldBlack14,
-                                  ),
-                                  SizedBox(
-                                    height: Dimension.height4,
-                                  ),
-                                  DropdownButtonFormField(
-                                      hint: Text(
-                                        "Select ward",
-                                        style: AppText.style.regularGrey14,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      decoration: generateTextDecoration(
-                                          hintString: "Select city"),
-                                      icon: const FaIcon(
-                                        FontAwesomeIcons.chevronDown,
-                                        color: AppColors.greyTextColor,
-                                      ),
-                                      focusColor: Colors.black,
-                                      items: const [],
-                                      onChanged: (_) {}),
+                                          hintString:
+                                              "More information about address"),
+                                      maxLines: 2,
+                                      onFieldSubmitted: (_) {
+                                        FocusScope.of(context)
+                                            .requestFocus(_nameFocusNode);
+                                      },
+                                      onChanged: (value) {
+                                        BlocProvider.of<EditAddressBloc>(
+                                                context)
+                                            .add(AddressNoteChanged(
+                                                addressNote: value));
+                                      },
+                                    );
+                                  }),
                                   SizedBox(
                                     height: Dimension.height16,
                                   ),
@@ -340,7 +362,6 @@ class _AddressScreenState extends State<AddressScreen>
                                           "",
                                       textInputAction: TextInputAction.next,
                                       keyboardType: TextInputType.name,
-                                      focusNode: _nameFocusNode,
                                       style: AppText.style.regularBlack14,
                                       decoration: generateTextDecoration(
                                           hintString: "E.g Nguyen Van A"),
@@ -349,8 +370,8 @@ class _AddressScreenState extends State<AddressScreen>
                                             .requestFocus(_nameFocusNode);
                                       },
                                       validator: (value) {
-                                        if (isNameValid(value ?? "")) {
-                                          return 'Please provide a value.';
+                                        if (!isNameValid(value ?? "")) {
+                                          return 'Please input the name.';
                                         }
                                         return null;
                                       },
@@ -385,13 +406,12 @@ class _AddressScreenState extends State<AddressScreen>
                                       decoration: generateTextDecoration(
                                           hintString: "11-digit phone number"),
                                       onFieldSubmitted: (_) {
-                                        FocusScope.of(context)
-                                            .requestFocus(_nameFocusNode);
+                                        _submitForm(state);
                                       },
                                       maxLength: 11,
                                       validator: (value) {
-                                        if (isPhoneValid(value ?? "")) {
-                                          return 'Please provide correct phone number.';
+                                        if (!isPhoneValid(value ?? "")) {
+                                          return 'Please input correct phone number.';
                                         }
                                         return null;
                                       },
@@ -417,51 +437,14 @@ class _AddressScreenState extends State<AddressScreen>
                                   horizontal: Dimension.width16,
                                   vertical: Dimension.height8),
                               child: BlocBuilder<EditAddressBloc,
-                                      EditAddressState>(
-                                  builder: (context, editAddressState) {
-                                return BlocBuilder<AddressStoreBloc,
-                                        AddressStoreState>(
-                                    builder: (context, addressStoreState) {
-                                  return ElevatedButton(
-                                      onPressed: () {
-                                        if (addressStoreState is LoadedState) {
-                                          DeliveryAddress deliveryAddress =
-                                              DeliveryAddress(
-                                                  address: Address(
-                                                      city: "",
-                                                      district: "",
-                                                      ward: "",
-                                                      shortName:
-                                                          editAddressState
-                                                              .subAddress),
-                                                  nameReceiver: editAddressState
-                                                      .nameReceiver,
-                                                  phone:
-                                                      editAddressState.phone);
-                                          if (widget.index == -1) {
-                                            addressStoreState
-                                                .listDeliveryAddress
-                                                .add(deliveryAddress);
-                                          } else {
-                                            addressStoreState
-                                                    .listDeliveryAddress[
-                                                widget.index] = deliveryAddress;
-                                          }
-
-                                          BlocProvider.of<AddressStoreBloc>(
-                                                  context)
-                                              .add(ListAddressUpdated(
-                                                  listDeliveryAddress:
-                                                      addressStoreState
-                                                          .listDeliveryAddress));
-                                        }
-                                      },
-                                      style: _roundedButtonStyle,
-                                      child: Text(
-                                        "Save",
-                                        style: AppText.style.regularWhite16,
-                                      ));
-                                });
+                                  EditAddressState>(builder: (context, state) {
+                                return ElevatedButton(
+                                    onPressed: () => _submitForm(state),
+                                    style: _roundedButtonStyle,
+                                    child: Text(
+                                      "Save",
+                                      style: AppText.style.regularWhite16,
+                                    ));
                               }))
                     ],
                   ),
@@ -469,10 +452,20 @@ class _AddressScreenState extends State<AddressScreen>
               ],
             )));
   }
+
+  void _submitForm(EditAddressState editAddressState) {
+    if (_formKey.currentState?.validate() ?? false) {
+      Navigator.of(context).pop(DeliveryAddress(
+          address: editAddressState.address!,
+          addressNote: editAddressState.addressNote,
+          nameReceiver: editAddressState.nameReceiver,
+          phone: editAddressState.phone));
+    }
+  }
 }
 
 mixin InputValidationMixin {
-  bool isSubAddressValid(String subAddress) => subAddress.isNotEmpty;
+  bool isAddressValid(String address) => address.isNotEmpty;
   bool isNameValid(String name) => name.isNotEmpty;
 
   bool isPhoneValid(String phone) {

@@ -1,28 +1,34 @@
 import 'package:equatable/equatable.dart';
 
+import '../../models/location.dart';
+
 class EditAddressState extends Equatable {
-  const EditAddressState({
-    this.subAddress = "",
+  EditAddressState({
+    this.address,
+    this.addressNote = "",
     this.nameReceiver = "",
     this.phone = "",
   });
 
-  final String subAddress;
+  final MLocation? address;
+  final String addressNote;
   final String nameReceiver;
   final String phone;
 
   EditAddressState copyWith({
-    String? subAddress,
+    MLocation? address,
+    String? addressNote,
     String? nameReceiver,
     String? phone,
   }) {
     return EditAddressState(
-      subAddress: subAddress ?? this.subAddress,
+      address: address ?? this.address,
+      addressNote: addressNote ?? this.addressNote,
       nameReceiver: nameReceiver ?? this.nameReceiver,
       phone: phone ?? this.phone,
     );
   }
 
   @override
-  List<Object> get props => [subAddress, nameReceiver, phone];
+  List<Object?> get props => [address, addressNote, nameReceiver, phone];
 }

@@ -4,7 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../screens/address_listing_screen.dart';
+import '../../../screens/customer_address/address_listing_screen.dart';
+import '../../../temp/data.dart';
 import '../../../utils/colors/app_colors.dart';
 import '../../../utils/constants/dimension.dart';
 import '../../../utils/styles/app_texts.dart';
@@ -21,7 +22,6 @@ class AddressPicker extends StatelessWidget {
           Navigator.of(context).pushNamed(AddressListingScreen.routeName);
         },
         child: Container(
-          height: Dimension.height86,
           alignment: Alignment.center,
           color: CupertinoColors.white,
           padding: EdgeInsets.symmetric(
@@ -54,7 +54,8 @@ class AddressPicker extends StatelessWidget {
                       height: Dimension.height4,
                     ),
                     Text(
-                      state.selectedDeliveryAddress?.address.toString() ?? "Select the address",
+                      state.selectedDeliveryAddress?.address.formattedAddress ??
+                          "Select the address",
                       style: AppText.style.boldBlack14,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -67,7 +68,8 @@ class AddressPicker extends StatelessWidget {
                       children: [
                         Flexible(
                           child: Text(
-                            state.selectedDeliveryAddress?.nameReceiver ?? "User",
+                            state.selectedDeliveryAddress?.nameReceiver ??
+                                Data.name,
                             textAlign: TextAlign.left,
                             style: AppText.style.regularGrey12,
                             maxLines: 1,
@@ -87,7 +89,7 @@ class AddressPicker extends StatelessWidget {
                           width: Dimension.width8,
                         ),
                         Text(
-                          state.selectedDeliveryAddress?.phone ?? "Phone",
+                          state.selectedDeliveryAddress?.phone ?? Data.phone,
                           textAlign: TextAlign.left,
                           style: AppText.style.regularGrey12,
                           maxLines: 1,

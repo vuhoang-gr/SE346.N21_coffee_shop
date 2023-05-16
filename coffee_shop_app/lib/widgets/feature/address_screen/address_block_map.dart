@@ -1,6 +1,14 @@
+import 'package:coffee_shop_app/main.dart';
+import 'package:coffee_shop_app/screens/customer_address/map_screen.dart';
+import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_event.dart';
+import 'package:coffee_shop_app/services/models/delivery_address.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../services/blocs/cart_button/cart_button_bloc.dart';
+import '../../../services/models/location.dart';
+import '../../../temp/data.dart';
 import '../../../utils/colors/app_colors.dart';
 import '../../../utils/constants/dimension.dart';
 import '../../../utils/styles/app_texts.dart';
@@ -12,7 +20,17 @@ class AddressBlock extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        
+        Navigator.of(context).pushNamed(MapScreen.routeName, arguments: initLatLng).then((location) {
+          MLocation mLocation = location as MLocation;
+          BlocProvider.of<CartButtonBloc>(context).add(
+              ChangeSelectedDeliveryAddress(
+                  selectedDeliveryAddress: DeliveryAddress(
+                      address: mLocation,
+                      addressNote: "",
+                      nameReceiver: Data.name,
+                      phone: Data.phone)));
+          Navigator.of(context).pop();
+        });
       },
       child: Container(
         decoration: BoxDecoration(
@@ -47,13 +65,13 @@ class AddressBlock extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Address book",
+                          "Google map",
                           style: AppText.style.mediumBlack14,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
-                          "Use your Tiki's saved address",
+                          "Use google map to select your place",
                           style: AppText.style.regularGrey12,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,

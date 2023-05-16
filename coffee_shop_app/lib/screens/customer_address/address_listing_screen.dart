@@ -1,14 +1,16 @@
 import 'package:coffee_shop_app/services/blocs/address_store/address_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/address_store/address_store_event.dart';
 import 'package:coffee_shop_app/services/blocs/address_store/address_store_state.dart';
+import 'package:coffee_shop_app/services/models/delivery_address.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../utils/colors/app_colors.dart';
-import '../utils/constants/dimension.dart';
-import '../utils/styles/app_texts.dart';
-import '../widgets/feature/component_address_screen/address_block.dart';
-import '../widgets/feature/component_address_screen/address_block_edit.dart';
-import '../widgets/global/custom_app_bar.dart';
+
+import '../../utils/colors/app_colors.dart';
+import '../../utils/constants/dimension.dart';
+import '../../utils/styles/app_texts.dart';
+import '../../widgets/feature/address_screen/address_block_map.dart';
+import '../../widgets/feature/address_screen/address_block_edit.dart';
+import '../../widgets/global/custom_app_bar.dart';
 import 'address_screen.dart';
 
 class AddressListingScreen extends StatelessWidget {
@@ -51,7 +53,7 @@ class AddressListingScreen extends StatelessWidget {
                             builder: (context, state) {
                           if (state is LoadingState) {
                             return CircularProgressIndicator();
-                          } else if(state is LoadedState){
+                          } else if (state is LoadedState) {
                             return ListView.separated(
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
@@ -59,7 +61,8 @@ class AddressListingScreen extends StatelessWidget {
                                     vertical: Dimension.height12),
                                 itemBuilder: (context, index) {
                                   return AddressBlockEdit(
-                                    deliveryAddress: state.listDeliveryAddress[index],
+                                    deliveryAddress:
+                                        state.listDeliveryAddress[index],
                                     index: index,
                                   );
                                 },
@@ -67,15 +70,17 @@ class AddressListingScreen extends StatelessWidget {
                                     SizedBox(height: Dimension.height12),
                                 itemCount: state.listDeliveryAddress.length);
                           }
-                          return Container();
+                          return SizedBox.shrink();
                         }),
-                        const SizedBox(
-                          height: 8,
-                        ),
                         GestureDetector(
                           onTap: () {
                             Navigator.of(context)
-                                .pushNamed(AddressScreen.routeName);
+                                .pushNamed(AddressScreen.routeName)
+                                .then((value) =>
+                                    BlocProvider.of<AddressStoreBloc>(context)
+                                        .add(ListAddressInserted(
+                                            deliveryAddress:
+                                                (value as DeliveryAddress))));
                           },
                           child: Container(
                               decoration: const BoxDecoration(

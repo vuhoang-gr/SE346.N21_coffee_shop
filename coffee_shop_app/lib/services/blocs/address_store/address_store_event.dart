@@ -4,7 +4,18 @@ abstract class AddressStoreEvent {}
 
 class ListAddressInited extends AddressStoreEvent {}
 
-class ListAddressUpdated extends AddressStoreEvent {
-  List<DeliveryAddress> listDeliveryAddress;
-  ListAddressUpdated({required this.listDeliveryAddress});
+class ListAddressUpdatedIndex extends AddressStoreEvent {
+  DeliveryAddress deliveryAddress;
+  int index;
+  ListAddressUpdatedIndex({required this.deliveryAddress, required this.index});
+}
+
+class ListAddressDeletedIndex extends AddressStoreEvent {
+  int index;
+  ListAddressDeletedIndex({required this.index});
+}
+
+class ListAddressInserted extends AddressStoreEvent {
+  DeliveryAddress deliveryAddress;
+  ListAddressInserted({required this.deliveryAddress});
 }
