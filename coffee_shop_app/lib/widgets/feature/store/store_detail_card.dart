@@ -1,7 +1,11 @@
+import 'package:coffee_shop_app/services/blocs/store_store/store_store_bloc.dart';
+import 'package:coffee_shop_app/services/blocs/store_store/store_store_event.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../services/blocs/store_store/store_store_state.dart';
 import '../../../services/models/store.dart';
 import '../../../utils/constants/dimension.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -15,7 +19,7 @@ class StoreDetailCard extends StatefulWidget {
 
 class _StoreDetailCardState extends State<StoreDetailCard> {
   var _index = 0;
-  bool _isLiked = false;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -90,39 +94,46 @@ class _StoreDetailCardState extends State<StoreDetailCard> {
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.store.sb,
-                              style: AppText.style.mediumBlack16,
-                            ),
-                            const SizedBox(
-                              height: 2,
-                            ),
-                            Text(
-                              "Open: 07:00 - 22:00",
-                              style: AppText.style.regularBlack14,
-                            ),
-                          ],
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.store.sb,
+                                softWrap: true,
+                                style: AppText.style.mediumBlack16,
+                              ),
+                              const SizedBox(
+                                height: 2,
+                              ),
+                              Text(
+                                "Open: 07:00 - 22:00",
+                                style: AppText.style.regularBlack14,
+                              ),
+                            ],
+                          ),
                         ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _isLiked = !_isLiked;
-                            });
+                        BlocBuilder<StoreStoreBloc, StoreStoreState>(
+                          builder: (context, state) {
+                            return IconButton(
+                              onPressed: () {
+                                BlocProvider.of<StoreStoreBloc>(context)
+                                    .add(UpdateFavorite(store: widget.store));
+                              },
+                              icon: widget.store.isFavorite
+                                  ? const Icon(
+                                      CupertinoIcons.heart_fill,
+                                      color: Colors.blue,
+                                    )
+                                  : const Icon(
+                                      CupertinoIcons.heart,
+                                      color: Color.fromRGBO(128, 128, 137, 1),
+                                      weight: 10,
+                                    ),
+                            );
                           },
-                          icon: _isLiked
-                              ? const Icon(
-                                  CupertinoIcons.heart_fill,
-                                  color: Colors.blue,
-                                )
-                              : const Icon(
-                                  CupertinoIcons.heart,
-                                  color: Color.fromRGBO(128, 128, 137, 1),
-                                  weight: 10,
-                                ),
                         ),
                       ],
                     ),

@@ -1,10 +1,16 @@
-import 'package:coffee_shop_app/screens/store_selection_screen.dart';
+import 'package:coffee_shop_app/main.dart';
+import 'package:coffee_shop_app/screens/store/store_selection_screen.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_bloc.dart';
+import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_event.dart';
+import 'package:coffee_shop_app/services/models/delivery_address.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../services/blocs/cart_button/cart_button_state.dart';
+import '../../../services/models/location.dart';
+import '../../../services/models/store.dart';
 import '../../../utils/colors/app_colors.dart';
 import '../../../utils/constants/dimension.dart';
 import '../../../utils/styles/app_texts.dart';
@@ -18,7 +24,22 @@ class DeliveryStorePicker extends StatelessWidget {
         builder: (context, state) {
       return GestureDetector(
           onTap: () {
-            Navigator.of(context).pushNamed(StoreSelectionScreen.routeName);
+            LatLng? latLng = initLatLng;
+            if (state.selectedDeliveryAddress != null) {
+              DeliveryAddress deliveryAddress = state.selectedDeliveryAddress!;
+              MLocation address = deliveryAddress.address;
+              latLng = LatLng(address.lat, address.lng);
+            }
+            Navigator.of(context)
+                .pushNamed(StoreSelectionScreen.routeName, arguments: {
+              "latLng": latLng,
+              "isPurposeForShowDetail": false,
+            }).then((value) {
+              if (value != null && value is Store) {
+                BlocProvider.of<CartButtonBloc>(context)
+                    .add(ChangeSelectedStoreButNotUse(selectedStore: value));
+              }
+            });
           },
           child: Container(
               decoration: BoxDecoration(
@@ -52,7 +73,9 @@ class DeliveryStorePicker extends StatelessWidget {
                   width: Dimension.width8,
                 ),
                 Expanded(
-                    child: Text(state.selectedStore?.address.toString()??"Select the store",
+                    child: Text(
+                        state.selectedStore?.address.formattedAddress ??
+                            "Select the store",
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                         style: AppText.style.regular)),

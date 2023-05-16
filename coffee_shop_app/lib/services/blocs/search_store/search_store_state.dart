@@ -1,7 +1,26 @@
 import '../../models/store.dart';
 
-class SearchStoreState {
+abstract class SearchStoreState {
+  final List<Store> initStoreList;
+  SearchStoreState({required this.initStoreList});
+}
+
+class LoadedListStore extends SearchStoreState {
   final List<Store> searchStoreResults;
-  final List<Store> searchFavoritesStoreResults;
-  SearchStoreState({required this.searchStoreResults, required this.searchFavoritesStoreResults});
+  LoadedListStore({
+    required super.initStoreList,
+    required this.searchStoreResults,
+  });
+}
+
+class LoadingListStore extends SearchStoreState {
+  LoadingListStore({
+    required super.initStoreList,
+  });
+}
+
+class EmptyListStore extends SearchStoreState {
+  EmptyListStore({
+    required super.initStoreList,
+  });
 }

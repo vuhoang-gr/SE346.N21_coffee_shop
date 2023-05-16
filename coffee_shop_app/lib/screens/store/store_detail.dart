@@ -5,15 +5,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../services/blocs/cart_button/cart_button_bloc.dart';
-import '../services/blocs/cart_button/cart_button_event.dart';
-import '../services/blocs/cart_button/cart_button_state.dart';
-import '../services/models/store.dart';
-import '../utils/constants/dimension.dart';
-import '../widgets/feature/product_detail_widgets/icon_widget_row.dart';
-import '../widgets/feature/store/store_detail_card.dart';
-import '../widgets/global/container_card.dart';
-import '../widgets/global/custom_app_bar.dart';
+import '../../services/blocs/cart_button/cart_button_bloc.dart';
+import '../../services/blocs/cart_button/cart_button_event.dart';
+import '../../services/blocs/cart_button/cart_button_state.dart';
+import '../../services/models/store.dart';
+import '../../utils/constants/dimension.dart';
+import '../../widgets/feature/product_detail_widgets/icon_widget_row.dart';
+import '../../widgets/feature/store/store_detail_card.dart';
+import '../../widgets/global/container_card.dart';
+import '../../widgets/global/custom_app_bar.dart';
 
 class StoreDetail extends StatelessWidget {
   const StoreDetail({super.key, required this.store});
@@ -121,13 +121,8 @@ class StoreDetail extends StatelessWidget {
                                             onTap: () {
                                               BlocProvider.of<CartButtonBloc>(
                                                       context)
-                                                  .add(ChangeSelectedStore(
+                                                  .add(ChangeSelectedStoreButNotUse(
                                                       selectedStore: store));
-                                              BlocProvider.of<CartButtonBloc>(
-                                                      context)
-                                                  .add(ChangeSelectedOrderType(
-                                                      selectedOrderType:
-                                                          OrderType.delivery));
 
                                               Navigator.push(
                                                   context,
@@ -219,7 +214,7 @@ class StoreDetail extends StatelessWidget {
                                             height: Dimension.height4,
                                           ),
                                           Text(
-                                            store.address.toString(),
+                                            store.address.formattedAddress,
                                             style: AppText.style.boldBlack14,
                                           ),
                                         ],
