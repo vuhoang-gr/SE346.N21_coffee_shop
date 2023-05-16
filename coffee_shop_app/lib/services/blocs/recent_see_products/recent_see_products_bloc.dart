@@ -5,10 +5,11 @@ import 'package:coffee_shop_app/services/models/food.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../temp/data.dart';
+import '../../models/store.dart';
 
 class RecentSeeProductsBloc
     extends Bloc<RecentSeeProductsEvent, RecentSeeProductsState> {
-  RecentSeeProductsBloc() : super(NotExistDataState()) {
+  RecentSeeProductsBloc() : super(LoadingState()) {
     on<ListRecentSeeProductChanged>(_mapListRecentSeeProductChangedToState);
     on<ListRecentSeeProductLoaded>(_mapListRecentSeeProductLoadedToState);
   }
@@ -16,7 +17,7 @@ class RecentSeeProductsBloc
   Future<void> _mapListRecentSeeProductChangedToState(
       ListRecentSeeProductChanged event,
       Emitter<RecentSeeProductsState> emit) async {
-    emit(LoadingDataState());
+    emit(LoadingState());
     await SharedPreferencesHelper.addProductToSharedPreferences(
         event.product.id);
 
@@ -33,13 +34,13 @@ class RecentSeeProductsBloc
 
     state.recentSeeProducts.insert(0, event.product);
 
-    emit(LoaddedDataState(recentSeeProducts: state.recentSeeProducts));
+    emit(LoadedState(recentSeeProducts: state.recentSeeProducts));
   }
 
   Future<void> _mapListRecentSeeProductLoadedToState(
       ListRecentSeeProductLoaded event,
       Emitter<RecentSeeProductsState> emit) async {
-    emit(LoadingDataState());
+    emit(LoadingState());
 
     List<String> productsid = await SharedPreferencesHelper.getProducts();
     List<Food> products = [];
@@ -50,9 +51,9 @@ class RecentSeeProductsBloc
       products.add(food);
     }
     if (products.isEmpty) {
-      emit(NotExistDataState());
+      emit(NotExistState());
     } else {
-      emit(LoaddedDataState(recentSeeProducts: products));
+      emit(LoadedState(recentSeeProducts: products));
     }
   }
 }

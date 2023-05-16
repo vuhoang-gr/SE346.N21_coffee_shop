@@ -5,14 +5,14 @@ abstract class RecentSeeProductsState {
   RecentSeeProductsState({required this.recentSeeProducts});
 }
 
-class LoaddedDataState extends RecentSeeProductsState {
-  LoaddedDataState({required super.recentSeeProducts});
+class LoadedState extends RecentSeeProductsState {
+  LoadedState({required super.recentSeeProducts});
 }
 
-class LoadingDataState extends RecentSeeProductsState {
-  LoadingDataState() : super(recentSeeProducts: []);
+class LoadingState extends RecentSeeProductsState {
+  LoadingState() : super(recentSeeProducts: []);
 }
 
-class NotExistDataState extends RecentSeeProductsState {
-  NotExistDataState() : super(recentSeeProducts: []);
+class NotExistState extends RecentSeeProductsState {
+  NotExistState() : super(recentSeeProducts: []);
 }
