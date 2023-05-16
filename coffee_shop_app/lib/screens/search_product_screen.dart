@@ -1,6 +1,9 @@
 import 'dart:async';
 
-import 'package:coffee_shop_app/screens/store_selection_screen.dart';
+import 'package:coffee_shop_app/main.dart';
+import 'package:coffee_shop_app/screens/store/store_selection_screen.dart';
+import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_event.dart';
+import 'package:coffee_shop_app/services/blocs/product_store/product_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/search_product/search_product_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/search_product/search_product_event.dart';
 import 'package:coffee_shop_app/services/blocs/search_product/search_product_state.dart';
@@ -11,9 +14,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../services/blocs/cart_button/cart_button_state.dart';
+import '../services/blocs/product_store/product_store_state.dart';
+import '../services/models/store.dart';
 import '../utils/colors/app_colors.dart';
 import '../utils/constants/dimension.dart';
 import '../utils/styles/app_texts.dart';
+import '../widgets/feature/menu_screen/skeleton/product_skeleton.dart';
 import '../widgets/global/custom_app_bar.dart';
 
 class SearchProductScreen extends StatefulWidget {
@@ -27,6 +33,14 @@ class SearchProductScreen extends StatefulWidget {
 
 class _SearchProductScreenState extends State<SearchProductScreen> {
   Timer? _debounce;
+
+  @override
+  void initState() {
+    super.initState();
+    ProductStoreState state = BlocProvider.of<ProductStoreBloc>(context).state;
+    BlocProvider.of<SearchProductBloc>(context)
+        .add(UpdateList(initListFood: state.initFoods));
+  }
 
   @override
   void dispose() {
@@ -57,7 +71,15 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
                   ),
                   GestureDetector(
                     onTap: () => Navigator.of(context)
-                        .pushNamed(StoreSelectionScreen.routeName),
+                        .pushNamed(StoreSelectionScreen.routeName, arguments: {
+                      "latLng": initLatLng,
+                      "isPurposeForShowDetail": false,
+                    }).then((value) {
+                      if (value != null && value is Store) {
+                        BlocProvider.of<CartButtonBloc>(context)
+                            .add(ChangeSelectedStore(selectedStore: value));
+                      }
+                    }),
                     child: Container(
                       padding: EdgeInsets.only(
                           left: Dimension.height16,
@@ -83,10 +105,10 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
                                   width: Dimension.width8,
                                 ),
                                 Expanded(child: BlocBuilder<CartButtonBloc,
-                                        CartButtonState>(
-                                    builder: (context, state) {
+                                    CartButtonState>(builder: (context, state) {
                                   return Text(
-                                      state.selectedStore?.address.toString() ??
+                                      state.selectedStore?.address
+                                              .formattedAddress ??
                                           "Select the store",
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
@@ -163,7 +185,7 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
                           ),
                           child: Builder(
                             builder: (context) {
-                              if (state.searchResults.isEmpty) {
+                              if (state is EmptyListFood) {
                                 return Column(
                                   children: [
                                     Image.asset(
@@ -181,7 +203,7 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
                                     ),
                                   ],
                                 );
-                              } else {
+                              } else if (state is LoadedListFood) {
                                 return Builder(builder: (context) {
                                   return Column(
                                     crossAxisAlignment:
@@ -197,26 +219,23 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
                                               style: AppText.style.boldBlack16,
                                             )
                                           : SizedBox.shrink(),
+                                      SizedBox(
+                                        height: Dimension.height12,
+                                      ),
                                       ListView.separated(
                                         padding: EdgeInsets.only(
                                             top: Dimension.height8),
-                                        itemCount: state.searchResults.length,
+                                        itemCount:
+                                            state.searchStoreResults.length,
                                         physics:
                                             const NeverScrollableScrollPhysics(),
                                         shrinkWrap: true,
                                         controller: ScrollController(),
                                         itemBuilder: (context, index) {
                                           return ProductItem(
-                                              id: state.searchResults[index].id,
-                                              productName: state
-                                                  .searchResults[index].name,
-                                              productPrice: state
-                                                  .searchResults[index].price,
-                                              imageProduct: state
-                                                  .searchResults[index]
-                                                  .images[0],
-                                              dateRegister: DateTime(
-                                                  2023, 3, 27, 12, 12));
+                                            product:
+                                                state.searchStoreResults[index],
+                                          );
                                         },
                                         separatorBuilder: (context, index) {
                                           return SizedBox(
@@ -230,6 +249,19 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
                                     ],
                                   );
                                 });
+                              } else if (state is LoadingListFood) {
+                                return ListView.separated(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemBuilder: (_, __) {
+                                      return ProductSkeleton();
+                                    },
+                                    separatorBuilder: (_, __) => SizedBox(
+                                          height: Dimension.height16,
+                                        ),
+                                    itemCount: 5);
+                              } else {
+                                return SizedBox.shrink();
                               }
                             },
                           )),

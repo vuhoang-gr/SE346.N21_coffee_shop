@@ -1,3 +1,4 @@
+import 'package:coffee_shop_app/services/models/food.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../services/functions/money_transfer.dart';
@@ -7,24 +8,12 @@ import '../../utils/constants/dimension.dart';
 import '../../utils/styles/app_texts.dart';
 
 class ProductItem extends StatelessWidget {
-  final String id;
-  final String productName;
-  final double productPrice;
-  final String imageProduct;
-  final bool isAvailable;
-  final DateTime dateRegister;
+  final Food product;
 
-  const ProductItem(
-      {super.key,
-      required this.id,
-      required this.productName,
-      required this.productPrice,
-      required this.imageProduct,
-      required this.dateRegister,
-      this.isAvailable = true});
+  const ProductItem({super.key, required this.product});
 
   bool get isNew =>
-      DateTime.now().difference(dateRegister) < const Duration(days: 7);
+      DateTime.now().difference(product.dateRegister) < const Duration(days: 7);
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +22,14 @@ class ProductItem extends StatelessWidget {
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(5),
             color: CupertinoColors.white),
-        child: isAvailable
+        child: product.isAvailable
             ? GestureDetector(
                 onTap: () {
-                  SharedPreferencesHelper.addProductToSharedPreferences(id)
+                  SharedPreferencesHelper.addProductToSharedPreferences(
+                          product.id)
                       .then((_) => Navigator.of(context).pushNamed(
                           "/product_detail_screen",
-                          arguments: {"id": id}));
+                          arguments: product));
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,7 +43,7 @@ class ProductItem extends StatelessWidget {
                                       Dimension.height68 + Dimension.height8,
                                 ),
                                 Image.network(
-                                  imageProduct,
+                                  product.images[0],
                                   height: Dimension.height68,
                                   width: Dimension.height68,
                                   fit: BoxFit.cover,
@@ -91,7 +81,7 @@ class ProductItem extends StatelessWidget {
                               ]
                             : [
                                 Image.network(
-                                  imageProduct,
+                                  product.images[0],
                                   height: Dimension.height68,
                                   width: Dimension.height68,
                                   fit: BoxFit.cover,
@@ -106,14 +96,14 @@ class ProductItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          productName,
+                          product.name,
                           style: AppText.style.regular,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         SizedBox(height: Dimension.height4),
                         Text(
-                          "${MoneyTransfer.transferFromDouble(productPrice)} đ",
+                          "${MoneyTransfer.transferFromDouble(product.price)} đ",
                           style: AppText.style.boldBlack14,
                         ),
                       ],
@@ -131,7 +121,7 @@ class ProductItem extends StatelessWidget {
                                 height: Dimension.height68 + Dimension.height8,
                               ),
                               Image.network(
-                                imageProduct,
+                                product.images[0],
                                 height: Dimension.height68,
                                 width: Dimension.height68,
                                 fit: BoxFit.cover,
@@ -170,7 +160,7 @@ class ProductItem extends StatelessWidget {
                             ]
                           : [
                               Image.network(
-                                imageProduct,
+                                product.images[0],
                                 height: Dimension.height68,
                                 width: Dimension.height68,
                                 fit: BoxFit.cover,
@@ -183,14 +173,14 @@ class ProductItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        productName,
+                        product.name,
                         style: AppText.style.regularBlack14Blur,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(height: Dimension.height4),
                       Text(
-                        "${MoneyTransfer.transferFromDouble(productPrice)} đ",
+                        "${MoneyTransfer.transferFromDouble(product.price)} đ",
                         style: AppText.style.boldBlack14Blur,
                       ),
                       SizedBox(height: Dimension.height4),

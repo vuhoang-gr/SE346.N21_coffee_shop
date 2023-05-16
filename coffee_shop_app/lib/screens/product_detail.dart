@@ -76,12 +76,7 @@ class _ProductDetailState extends State<ProductDetail> {
                       child: SingleChildScrollView(
                           child: Column(
                     children: [
-                      ProductCard(
-                        image: widget.product.images,
-                        name: widget.product.name,
-                        description: widget.product.description,
-                        price: widget.product.price,
-                      ),
+                      ProductCard(product: widget.product),
 
                       //size
                       Container(
