@@ -1,11 +1,18 @@
 import 'package:coffee_shop_app/services/models/delivery_address.dart';
 
+import '../../models/location.dart';
+
 abstract class EditAddressEvent {}
 
-class SubAddressChanged extends EditAddressEvent {
-  final String subAddress;
+class AddressChanged extends EditAddressEvent {
+  final MLocation address;
 
-  SubAddressChanged({required this.subAddress});
+  AddressChanged({required this.address});
+}
+
+class AddressNoteChanged extends EditAddressEvent {
+  final String addressNote;
+  AddressNoteChanged({required this.addressNote});
 }
 
 class NameReceiverChanged extends EditAddressEvent {
@@ -22,4 +29,3 @@ class InitForm extends EditAddressEvent {
   final DeliveryAddress? deliveryAddress;
   InitForm({required this.deliveryAddress});
 }
-

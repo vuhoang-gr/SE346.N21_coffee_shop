@@ -9,6 +9,12 @@ class ChangeSelectedStore extends CartButtonEvent {
   ChangeSelectedStore({required this.selectedStore});
 }
 
+class ChangeSelectedStoreButNotUse extends CartButtonEvent {
+  final Store selectedStore;
+
+  ChangeSelectedStoreButNotUse({required this.selectedStore});
+}
+
 class ChangeSelectedDeliveryAddress extends CartButtonEvent {
   final DeliveryAddress selectedDeliveryAddress;
 

@@ -2,13 +2,16 @@ import 'size.dart';
 import 'topping.dart';
 
 class Food {
-  String id;
-  String name;
-  double price;
-  String description;
-  List<Size>? sizes;
-  List<Topping>? toppings;
-  List<String> images;
+  final String id;
+  final String name;
+  final double price;
+  final String description;
+  final List<Size>? sizes;
+  final List<Topping>? toppings;
+  final List<String> images;
+  final DateTime dateRegister;
+  final bool isAvailable;
+  bool isFavorite;
 
   Food({
     required this.id,
@@ -18,6 +21,9 @@ class Food {
     required this.sizes,
     required this.toppings,
     required this.images,
+    required this.dateRegister,
+    required this.isAvailable,
+    this.isFavorite = false
   });
 
   Map<String, String> toMap() {

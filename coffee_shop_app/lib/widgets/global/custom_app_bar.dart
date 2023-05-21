@@ -1,10 +1,15 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../../utils/colors/app_colors.dart';
 import '../../utils/constants/dimension.dart';
 
 class CustomAppBar extends StatelessWidget {
-  const CustomAppBar({Key? key, this.leading, this.middle, this.trailing, this.color = CupertinoColors.white})
+  const CustomAppBar(
+      {Key? key,
+      this.leading,
+      this.middle,
+      this.trailing,
+      this.color = Colors.white})
       : super(key: key);
 
   final Widget? middle;
@@ -23,34 +28,30 @@ class CustomAppBar extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(width: Dimension.width16),
               Navigator.of(context).canPop()
-                  ? Container(
-                      margin: EdgeInsets.fromLTRB(0, 0, Dimension.width8, 0),
-                      padding: EdgeInsets.zero,
-                      child: GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: IconTheme(
-                            data: IconThemeData(size: Dimension.height24),
-                            child: const Icon(
-                              CupertinoIcons.back,
-                              color: AppColors.blackColor,
-                            )),
-                      ),
+                  ? IconButton(
+                      icon: IconTheme(
+                          data: IconThemeData(size: Dimension.height32),
+                          child: const Icon(
+                            Icons.chevron_left_rounded,
+                            color: AppColors.blackColor,
+                          )),
+                      onPressed: () => Navigator.of(context).pop(),
                     )
-                  : Container(),
+                  : SizedBox(
+                    width: Dimension.width16,
+                  ),
               if (leading != null) leading!,
             ],
           ),
           SizedBox(
             width: Dimension.width8,
           ),
-          Expanded(child: middle ?? Container()),
+          Expanded(child: middle ?? SizedBox.shrink()),
           SizedBox(
             width: Dimension.width8,
           ),
-          trailing ?? Container(),
-          SizedBox(width: Dimension.width16),
+          trailing ?? SizedBox(width: Dimension.width16,),
         ],
       ),
     );

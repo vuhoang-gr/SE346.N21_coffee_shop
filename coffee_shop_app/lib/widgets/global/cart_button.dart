@@ -74,8 +74,7 @@ class _CartButtonState extends State<CartButton> {
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(
-              horizontal: Dimension.width16, 
-              vertical: Dimension.height8),
+              horizontal: Dimension.width16, vertical: Dimension.height8),
           child: BlocBuilder<CartButtonBloc, CartButtonState>(
               builder: (context, cartButtonState) {
             return cartButtonState.selectedOrderType == OrderType.delivery
@@ -153,8 +152,7 @@ class _CartButtonState extends State<CartButton> {
                                   alignment: Alignment.centerLeft,
                                   child: Text(
                                     cartButtonState
-                                            .selectedDeliveryAddress?.address
-                                            .toString() ??
+                                            .selectedDeliveryAddress?.address.formattedAddress??
                                         "The products will be delivered to your address",
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -171,8 +169,8 @@ class _CartButtonState extends State<CartButton> {
                                   .products
                                   .isNotEmpty
                               ? GestureDetector(
-                                behavior: HitTestBehavior.opaque,
-                                onTap: () {
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
                                     if (cartButtonState.selectedOrderType ==
                                         OrderType.delivery) {
                                       Navigator.of(context)
@@ -182,7 +180,7 @@ class _CartButtonState extends State<CartButton> {
                                           "/cart_store_pickup_screen");
                                     }
                                   },
-                                child: Row(
+                                  child: Row(
                                     children: [
                                       SizedBox(
                                         width: Dimension.width8,
@@ -190,11 +188,12 @@ class _CartButtonState extends State<CartButton> {
                                       Container(
                                         decoration: BoxDecoration(
                                           color: AppColors.blueColor,
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                         ),
                                         child: AnimatedPadding(
-                                          duration:
-                                              Duration(milliseconds: timeChange),
+                                          duration: Duration(
+                                              milliseconds: timeChange),
                                           padding: _isShowAll
                                               ? EdgeInsets.symmetric(
                                                   horizontal: Dimension.width8,
@@ -213,18 +212,21 @@ class _CartButtonState extends State<CartButton> {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             Dimension.height8)),
-                                                child: Text(
-                                                  BlocProvider.of<CartCubit>(
-                                                          context)
-                                                      .state
-                                                      .products
-                                                      .map((e) => e.quantity)
-                                                      .reduce(
-                                                          (value, element) =>
-                                                              value + element)
-                                                      .toString(),
-                                                  style:
-                                                      AppText.style.mediumBlue12,
+                                                child: Center(
+                                                  child: Text(
+                                                    BlocProvider.of<CartCubit>(
+                                                            context)
+                                                        .state
+                                                        .products
+                                                        .map((e) => e.quantity)
+                                                        .reduce(
+                                                            (value, element) =>
+                                                                value + element)
+                                                        .toString(),
+                                                    style: AppText
+                                                        .style.mediumBlue12
+                                                        .copyWith(height: 1),
+                                                  ),
                                                 ),
                                               ),
                                               SizedBox(
@@ -256,7 +258,7 @@ class _CartButtonState extends State<CartButton> {
                                       ),
                                     ],
                                   ),
-                              )
+                                )
                               : SizedBox.shrink();
                         }),
                       ],
@@ -336,7 +338,7 @@ class _CartButtonState extends State<CartButton> {
                                   alignment: Alignment.centerLeft,
                                   child: Text(
                                     cartButtonState.selectedStore?.address
-                                            .toString() ??
+                                            .formattedAddress ??
                                         "You will pick up the product at the store and take it away",
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,

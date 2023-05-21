@@ -4,6 +4,8 @@
         android:label="coffee_shop_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyBosQ4pNoDkbozACtL1XEkyyvkdbwJRqUw"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

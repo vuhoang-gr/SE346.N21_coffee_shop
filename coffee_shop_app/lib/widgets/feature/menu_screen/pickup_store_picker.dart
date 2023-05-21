@@ -1,10 +1,13 @@
+import 'package:coffee_shop_app/screens/store/store_selection_screen.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_bloc.dart';
+import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_event.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../screens/store_selection_screen.dart';
+import '../../../main.dart';
 import '../../../services/blocs/cart_button/cart_button_state.dart';
+import '../../../services/models/store.dart';
 import '../../../utils/colors/app_colors.dart';
 import '../../../utils/constants/dimension.dart';
 import '../../../utils/styles/app_texts.dart';
@@ -18,7 +21,15 @@ class PickupStorePicker extends StatelessWidget {
         builder: (context, state) {
       return GestureDetector(
         onTap: () =>
-            Navigator.of(context).pushNamed(StoreSelectionScreen.routeName),
+            Navigator.of(context).pushNamed(StoreSelectionScreen.routeName, arguments: {
+              "latLng": initLatLng,
+              "isPurposeForShowDetail": false,
+            }).then((value){
+              if (value != null && value is Store) {
+                  BlocProvider.of<CartButtonBloc>(context)
+                      .add(ChangeSelectedStore(selectedStore: value));
+                }
+            }),
         child: Container(
           color: CupertinoColors.white,
           padding: EdgeInsets.symmetric(
@@ -52,7 +63,7 @@ class PickupStorePicker extends StatelessWidget {
                       height: Dimension.height4,
                     ),
                     Text(
-                      state.selectedStore?.address.toString() ??
+                      state.selectedStore?.address.formattedAddress ??
                           "Select the store",
                       style: AppText.style.boldBlack14,
                       maxLines: 1,

@@ -1,15 +1,18 @@
-import 'package:coffee_shop_app/screens/address_listing_screen.dart';
-import 'package:coffee_shop_app/screens/store_selection_screen.dart';
+import 'package:coffee_shop_app/screens/customer_address/address_listing_screen.dart';
+import 'package:coffee_shop_app/screens/store/store_selection_screen.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_event.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_state.dart';
+import 'package:coffee_shop_app/services/functions/calculate_distance.dart';
 import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/constants/dimension.dart';
-import 'package:coffee_shop_app/widgets/global/cart_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../main.dart';
+import '../../services/models/store.dart';
+import '../../temp/data.dart';
 import '../../utils/styles/app_texts.dart';
 
 class OrderTypeModal extends StatelessWidget {
@@ -108,13 +111,14 @@ class OrderTypeModal extends StatelessWidget {
                             style: AppText.style.boldBlack14,
                           ),
                           Text(
-                            state.selectedDeliveryAddress?.address.toString() ??
+                            state.selectedDeliveryAddress?.address
+                                    .formattedAddress ??
                                 "The products will be delivered to your address",
                             style: AppText.style.regularGrey14,
                           ),
                           Text(
                             state.selectedDeliveryAddress == null
-                                ? "User Phone"
+                                ? "${Data.name} ${Data.phone}"
                                 : "${state.selectedDeliveryAddress?.nameReceiver} ${state.selectedDeliveryAddress?.phone}",
                             style: AppText.style.regularBlack14,
                           ),
@@ -149,8 +153,10 @@ class OrderTypeModal extends StatelessWidget {
                 onTap: () {
                   if (state.selectedStore == null) {
                     Navigator.of(context)
-                        .pushNamed(StoreSelectionScreen.routeName)
-                        .then((_) => Navigator.of(context).pop());
+                        .pushNamed(StoreSelectionScreen.routeName, arguments: {
+                      "latLng": initLatLng,
+                      "isPurposeForShowDetail": false,
+                    }).then((_) => Navigator.of(context).pop());
                   } else {
                     BlocProvider.of<CartButtonBloc>(context).add(
                         ChangeSelectedOrderType(
@@ -187,14 +193,16 @@ class OrderTypeModal extends StatelessWidget {
                             style: AppText.style.boldBlack14,
                           ),
                           Text(
-                            state.selectedStore?.address.toString() ??
+                            state.selectedStore?.address.formattedAddress ??
                                 "You will pick up the product at the store and take it away",
                             style: AppText.style.regularGrey14,
                           ),
-                          Text(
-                            "0.01km",
-                            style: AppText.style.regularBlack14,
-                          ),
+                          (state.selectedStore != null && initLatLng != null)
+                              ? Text(
+                                  "${calculateDistance(state.selectedStore!.address.lat, state.selectedStore!.address.lng, initLatLng!.latitude, initLatLng!.longitude).toStringAsFixed(2)} km",
+                                  style: AppText.style.regularBlack14,
+                                )
+                              : SizedBox.shrink(),
                         ],
                       )),
                       SizedBox(
@@ -202,8 +210,16 @@ class OrderTypeModal extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () => Navigator.pushNamed(
-                                context, StoreSelectionScreen.routeName)
-                            .then((_) => Navigator.of(context).pop()),
+                                context, StoreSelectionScreen.routeName,
+                                arguments: initLatLng)
+                            .then((value) {
+                          if (value != null && value is Store) {
+                            BlocProvider.of<CartButtonBloc>(context).add(
+                                ChangeSelectedStore(
+                                    selectedStore: value));
+                          }
+                          Navigator.of(context).pop();
+                        }),
                         style: ButtonStyle(
                             backgroundColor:
                                 MaterialStatePropertyAll(AppColors.blueColor),

@@ -1,3 +1,5 @@
+import '../../models/store.dart';
+
 abstract class SearchStoreEvent {}
 
 class SearchTextChanged extends SearchStoreEvent {
@@ -7,3 +9,8 @@ class SearchTextChanged extends SearchStoreEvent {
 }
 
 class SearchClear extends SearchStoreEvent {}
+
+class UpdateList extends SearchStoreEvent {
+  List<Store> listStore;
+  UpdateList({required this.listStore});
+}
