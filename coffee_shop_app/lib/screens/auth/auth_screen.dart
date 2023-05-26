@@ -42,7 +42,7 @@ class _AuthScreenState extends State<AuthScreen> {
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: Dimension.getWidthFromValue(20),
+                  horizontal: Dimension.getWidthFromValue(15),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

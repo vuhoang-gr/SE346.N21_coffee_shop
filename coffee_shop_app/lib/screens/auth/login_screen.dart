@@ -1,3 +1,4 @@
+import 'package:coffee_shop_app/services/apis/auth_api.dart';
 import 'package:coffee_shop_app/services/blocs/auth_cubit/auth_cubit.dart';
 import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/constants/dimension.dart';
@@ -23,6 +24,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    onLogin() async {
+      await AuthAPI().emailLogin(emailController.text, passwordController.text);
+    }
+
     return Column(
       children: [
         SizedBox(
@@ -72,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         RoundedButton(
-          onPressed: () {},
+          onPressed: onLogin,
           label: "LOGIN",
         ),
       ],

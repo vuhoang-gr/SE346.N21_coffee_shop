@@ -15,7 +15,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_bloc: ^8.1.2
   font_awesome_flutter: ^10.4.0
-  intl: ^0.18.0
+  intl: ^0.17.0
   shared_preferences: ^2.0.20
   cached_network_image: ^3.2.3
   flutter_svg: ^2.0.4
@@ -32,6 +32,8 @@ dependencies:
   skeletons: ^0.0.3
   # firebase_core: ^1.14.0
   # firebase_auth: ^3.3.13
+  firebase_core: ^2.9.0
+  firebase_auth: ^4.4.1
 
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,4 @@
+import 'package:coffee_shop_app/services/apis/auth_api.dart';
 import 'package:coffee_shop_app/services/blocs/auth_cubit/auth_cubit.dart';
 import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/constants/dimension.dart';
@@ -25,6 +26,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool canSignUp() {
+      if (EmailValidator().validate(emailController.text) &&
+          PasswordValidator().validate(passwordController.text) &&
+          ConfirmPasswordValidator(oldPassword: passwordController)
+              .validate(confirmController.text)) {
+        return true;
+      }
+      return false;
+    }
+
+    onSignUp() async {
+      if (!canSignUp()) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Something is wrong. Try again!'),
+          ),
+        );
+        return;
+      }
+      await AuthAPI()
+          .emailSignUp(emailController.text, passwordController.text);
+    }
+
     return Column(
       children: [
         SizedBox(
@@ -82,7 +106,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
         RoundedButton(
-          onPressed: () {},
+          onPressed: onSignUp,
           label: "SIGN UP",
         ),
       ],
