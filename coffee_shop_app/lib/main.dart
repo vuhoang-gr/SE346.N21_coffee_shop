@@ -1,5 +1,11 @@
 import 'package:coffee_shop_app/routing/app_router.dart';
+import 'package:coffee_shop_app/screens/auth/auth_screen.dart';
+import 'package:coffee_shop_app/screens/home/home_screen.dart';
+import 'package:coffee_shop_app/screens/main_page.dart';
+import 'package:coffee_shop_app/services/apis/auth_api.dart';
 import 'package:coffee_shop_app/services/blocs/address_store/address_store_bloc.dart';
+import 'package:coffee_shop_app/services/blocs/auth/auth_bloc.dart';
+import 'package:coffee_shop_app/services/blocs/auth_action/auth_action_cubit.dart';
 import 'package:coffee_shop_app/services/blocs/cart_cubit/cart_cubit.dart';
 import 'package:coffee_shop_app/services/blocs/edit_address/edit_address_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/map_picker/map_picker_bloc.dart';
@@ -10,10 +16,14 @@ import 'package:coffee_shop_app/services/blocs/search_product/search_product_blo
 import 'package:coffee_shop_app/services/blocs/search_store/search_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/store_store/store_store_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'firebase_options.dart';
 
 Future<LatLng> _determineUserCurrentPosition() async {
   LocationPermission locationPermission;
@@ -45,6 +55,12 @@ Future<LatLng> _determineUserCurrentPosition() async {
 late LatLng? initLatLng;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    AuthAPI.currentUser = AuthAPI().toUser(user);
+  });
   initLatLng = await _determineUserCurrentPosition();
   // Data.storeAddress.sort((a, b) {
   //   double distanceA = 0, distanceB = 0;
@@ -114,14 +130,25 @@ class MyApp extends StatelessWidget {
         BlocProvider<MapPickerBloc>(
           create: (BuildContext context) => MapPickerBloc(),
         ),
+        BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
       ],
-      child: MaterialApp(
-        title: 'Coffee Shop',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          fontFamily: "Inter",
-        ),
-        onGenerateRoute: AppRouter.onGenerateRoute,
+      child: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, state) {
+          print(state);
+          return MaterialApp(
+              title: 'Coffee Shop',
+              theme: ThemeData(
+                primarySwatch: Colors.blue,
+                fontFamily: "Inter",
+              ),
+              home: state is Authenticated
+                  ? MainPage()
+                  : BlocProvider<AuthActionCubit>(
+                      create: (context) => AuthActionCubit(),
+                      child: AuthScreen(),
+                    ),
+              onGenerateRoute: AppRouter(authState: state).onGenerateRoute);
+        },
       ),
     );
   }

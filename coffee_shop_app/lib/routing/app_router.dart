@@ -12,17 +12,26 @@ import 'package:coffee_shop_app/screens/profile/profile_setting_screen.dart';
 import 'package:coffee_shop_app/screens/search_product_screen.dart';
 import 'package:coffee_shop_app/screens/store/store_detail.dart';
 import 'package:coffee_shop_app/screens/store/store_search_screen.dart';
+import 'package:coffee_shop_app/services/blocs/auth_action/auth_action_cubit.dart';
 import 'package:coffee_shop_app/services/models/delivery_address.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../screens/home/home_screen.dart';
 import '../screens/store/store_selection_screen.dart';
+import '../services/blocs/auth/auth_bloc.dart';
 import '../services/models/food.dart';
 import '../services/models/store.dart';
 
 class AppRouter {
-  static Route _createRoute(Widget page) {
+  AuthState authState = UnAuthenticated();
+
+  AppRouter({required this.authState});
+
+  AuthActionCubit authActionCubit = AuthActionCubit();
+
+  Route _createRoute(Widget page) {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => page,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -41,13 +50,39 @@ class AppRouter {
     );
   }
 
-  static Route onGenerateRoute(RouteSettings settings) {
+  Route unAuthenticedRoute(RouteSettings settings) {
+    switch (settings.name) {
+      case AuthScreen.routeName:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider.value(
+            value: authActionCubit,
+            child: AuthScreen(),
+          ),
+        );
+      default:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider.value(
+            value: authActionCubit,
+            child: AuthScreen(),
+          ),
+        );
+    }
+  }
+
+  Route onGenerateRoute(RouteSettings settings) {
+    if (authState is UnAuthenticated) {
+      return unAuthenticedRoute(settings);
+    } else if (authState is Authenticated) {
+      return authenticatedRoute(settings);
+    } else {
+      return unAuthenticedRoute(settings);
+    }
+  }
+
+  Route authenticatedRoute(RouteSettings settings) {
     switch (settings.name) {
       case HomeScreen.routeName:
         return _createRoute(HomeScreen());
-
-      case "/auth_screen":
-        return _createRoute(AuthScreen());
 
       case "/cart_delivery_screen":
         return _createRoute(CartDelivery());
@@ -55,10 +90,10 @@ class AppRouter {
       case "/cart_store_pickup_screen":
         return _createRoute(CartStorePickup());
 
-      case "/profile_screen":
+      case ProfileScreen.routeName:
         return _createRoute(ProfileScreen());
 
-      case "/profile_setting_screen":
+      case ProfileSettingScreen.routeName:
         return _createRoute(ProfileSettingScreen());
 
       case AddressListingScreen.routeName:
@@ -81,8 +116,7 @@ class AppRouter {
         return _createRoute(MenuScreen());
 
       case "/product_detail_screen":
-        Food food =
-            settings.arguments as Food;
+        Food food = settings.arguments as Food;
         return _createRoute(ProductDetail(product: food));
 
       case SearchProductScreen.routeName:

@@ -55,7 +55,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAecCC2nsCpAZI5QsWe5oy8A18wlVjHnOE',
-    appId: '1:922590350887:android:74c7e22e35db3e93fac802',
+    appId: '1:922590350887:android:159ef90310b0f1e2fac802',
     messagingSenderId: '922590350887',
     projectId: 'coffee-shop-app-437c7',
     storageBucket: 'coffee-shop-app-437c7.appspot.com',
@@ -63,21 +63,23 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAV6a4WJV2n3wtnY4gtMfeqsd03xgw59qY',
-    appId: '1:922590350887:ios:70cc569f9c5ffc91fac802',
+    appId: '1:922590350887:ios:f6003661f360fd52fac802',
     messagingSenderId: '922590350887',
     projectId: 'coffee-shop-app-437c7',
     storageBucket: 'coffee-shop-app-437c7.appspot.com',
-    iosClientId: '922590350887-bfkvpk21juc350erjhpkkbi2hua595ir.apps.googleusercontent.com',
-    iosBundleId: 'com.example.coffeeShopApp',
+    androidClientId: '922590350887-1thvno8rkq1jgpdmq0cgnflfgrmoe8vk.apps.googleusercontent.com',
+    iosClientId: '922590350887-lghei6tv11r0ei0f1grp5eafu30i273a.apps.googleusercontent.com',
+    iosBundleId: 'com.example.coffeeshop',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyAV6a4WJV2n3wtnY4gtMfeqsd03xgw59qY',
-    appId: '1:922590350887:ios:70cc569f9c5ffc91fac802',
+    appId: '1:922590350887:ios:f6003661f360fd52fac802',
     messagingSenderId: '922590350887',
     projectId: 'coffee-shop-app-437c7',
     storageBucket: 'coffee-shop-app-437c7.appspot.com',
-    iosClientId: '922590350887-bfkvpk21juc350erjhpkkbi2hua595ir.apps.googleusercontent.com',
-    iosBundleId: 'com.example.coffeeShopApp',
+    androidClientId: '922590350887-1thvno8rkq1jgpdmq0cgnflfgrmoe8vk.apps.googleusercontent.com',
+    iosClientId: '922590350887-lghei6tv11r0ei0f1grp5eafu30i273a.apps.googleusercontent.com',
+    iosBundleId: 'com.example.coffeeshop',
   );
 }

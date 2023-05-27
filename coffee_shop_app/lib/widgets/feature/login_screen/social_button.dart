@@ -1,6 +1,8 @@
+import 'package:coffee_shop_app/services/blocs/auth/auth_bloc.dart';
 import 'package:coffee_shop_app/utils/constants/social_enum.dart';
 import 'package:coffee_shop_app/widgets/global/buttons/touchable_opacity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SocialButton extends StatelessWidget {
@@ -15,8 +17,17 @@ class SocialButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    pressed() async {
+      if (onPressed != null) return onPressed;
+      if (type == Social.google) {
+        context.read<AuthBloc>().add(GoogleLogin());
+      } else if (type == Social.facebook) {
+        context.read<AuthBloc>().add(FacebookLogin());
+      }
+    }
+
     return TouchableOpacity(
-      onTap: onPressed,
+      onTap: pressed,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 13),
         decoration: BoxDecoration(
