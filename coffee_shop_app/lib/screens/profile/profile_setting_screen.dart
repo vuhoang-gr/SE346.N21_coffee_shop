@@ -4,13 +4,16 @@ import 'package:coffee_shop_app/widgets/feature/login_screen/back_header.dart';
 import 'package:coffee_shop_app/widgets/feature/profile_screen/change_password_dialog.dart';
 import 'package:coffee_shop_app/widgets/feature/profile_screen/profile_custom_button.dart';
 import 'package:coffee_shop_app/widgets/global/buttons/touchable_opacity.dart';
+import 'package:coffee_shop_app/widgets/global/custom_app_bar.dart';
 import 'package:coffee_shop_app/widgets/global/textForm/custom_text_form.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../services/apis/auth_api.dart';
 import '../../services/models/user.dart';
 
 class ProfileSettingScreen extends StatefulWidget {
+  static const String routeName = '/profile_setting_screen';
   const ProfileSettingScreen({super.key});
 
   @override
@@ -20,24 +23,18 @@ class ProfileSettingScreen extends StatefulWidget {
 // enum AuthState { login, signup, loggedIn }
 
 class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
-  User userTest = User(
-      id: '1',
-      name: 'Yau Boii',
-      phoneNumber: '0101010101',
-      email: 'fuck@gm.co',
-      isActive: true,
-      dob: DateTime(2003, 6, 11));
+  User user = AuthAPI.currentUser!;
+
   bool isChangeInformation = false;
 
   @override
   Widget build(BuildContext context) {
     //change infor handle
     TextEditingController nameController =
-        TextEditingController(text: userTest.name);
+        TextEditingController(text: user.name);
     TextEditingController dobController = TextEditingController(
-        text: userTest.dob != null
-            ? DateFormat('dd/MM/yyyy').format(userTest.dob!)
-            : '');
+        text:
+            user.dob != null ? DateFormat('dd/MM/yyyy').format(user.dob!) : '');
 
     return SafeArea(
       child: Scaffold(
@@ -50,7 +47,7 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
               children: [
                 //Back button
                 Navigator.of(context).canPop()
-                    ? BackHeader()
+                    ? CustomAppBar()
                     : SizedBox(
                         height: Dimension.height32,
                       ),
@@ -111,12 +108,11 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                                                 isChangeInformation = false;
                                                 dobController =
                                                     TextEditingController(
-                                                        text: userTest.dob !=
-                                                                null
+                                                        text: user.dob != null
                                                             ? DateFormat(
                                                                     'dd/MM/yyyy')
-                                                                .format(userTest
-                                                                    .dob!)
+                                                                .format(
+                                                                    user.dob!)
                                                             : '');
                                               });
                                             },
@@ -137,23 +133,20 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                                               setState(() {
                                                 isChangeInformation = false;
                                               });
-                                              userTest.name =
-                                                  nameController.text;
+                                              user.name = nameController.text;
                                               try {
-                                                userTest.dob = DateFormat(
+                                                user.dob = DateFormat(
                                                         'dd/MM/yyyy')
                                                     .parse(dobController.text);
                                               } finally {
                                                 setState(() {
                                                   dobController =
                                                       TextEditingController(
-                                                          text: userTest.dob !=
-                                                                  null
+                                                          text: user.dob != null
                                                               ? DateFormat(
                                                                       'dd/MM/yyyy')
                                                                   .format(
-                                                                      userTest
-                                                                          .dob!)
+                                                                      user.dob!)
                                                               : '');
                                                 });
                                               }
