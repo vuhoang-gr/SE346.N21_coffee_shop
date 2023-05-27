@@ -18,7 +18,7 @@ import '../../widgets/feature/product_detail_widgets/icon_widget_row.dart';
 import '../../widgets/global/container_card.dart';
 import '../../widgets/global/custom_app_bar.dart';
 import '../../widgets/global/order_type_modal.dart';
-import '../address_listing_screen.dart';
+import '../customer_address/address_listing_screen.dart';
 
 class CartDelivery extends StatelessWidget {
   const CartDelivery({super.key});

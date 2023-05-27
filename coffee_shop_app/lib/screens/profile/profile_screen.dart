@@ -1,3 +1,6 @@
+import 'package:coffee_shop_app/screens/profile/profile_setting_screen.dart';
+import 'package:coffee_shop_app/services/apis/auth_api.dart';
+import 'package:coffee_shop_app/services/blocs/auth/auth_bloc.dart';
 import 'package:coffee_shop_app/services/models/user.dart';
 import 'package:coffee_shop_app/utils/constants/dimension.dart';
 import 'package:coffee_shop_app/utils/constants/placeholder_enum.dart';
@@ -5,20 +8,17 @@ import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:coffee_shop_app/widgets/global/aysncImage/async_image.dart';
 import 'package:coffee_shop_app/widgets/global/buttons/touchable_opacity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../widgets/feature/profile_screen/profile_custom_button.dart';
 
 class ProfileScreen extends StatelessWidget {
+  static const String routeName = '/profile_screen';
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    User userTest = User(
-        id: '1',
-        name: 'Yau Boii',
-        phoneNumber: '0101010101',
-        email: 'fuck@gm.co',
-        isActive: true);
+    User user = AuthAPI.currentUser!;
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -32,7 +32,7 @@ class ProfileScreen extends StatelessWidget {
                         width: double.infinity,
                         height: Dimension.getHeightFromValue(125),
                         child: AsyncImage(
-                          src: userTest.coverUrl,
+                          src: user.coverUrl,
                         ),
                       ),
                       Container(
@@ -81,7 +81,7 @@ class ProfileScreen extends StatelessWidget {
                               padding: EdgeInsets.all(5),
                               child: ClipOval(
                                 child: AsyncImage(
-                                  src: userTest.avatarUrl,
+                                  src: user.avatarUrl,
                                   type: PlaceholderType.user,
                                 ),
                               ),
@@ -94,7 +94,7 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
               Text(
-                userTest.name,
+                user.name,
                 style: AppText.style.boldBlack18,
               ),
               SizedBox(
@@ -132,12 +132,23 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       ProfileCustomButton(
                         onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Nav to SettingScreen')));
+                          Navigator.of(context)
+                              .pushNamed(ProfileSettingScreen.routeName);
                         },
                         icon: Icons.settings,
                         title: 'Settings',
                         description: 'Profile, address, password',
+                      ),
+                      SizedBox(
+                        height: Dimension.getHeightFromValue(15),
+                      ),
+                      ProfileCustomButton(
+                        onPressed: () {
+                          context.read<AuthBloc>().add(LogOut());
+                        },
+                        icon: Icons.logout,
+                        title: 'Log out',
+                        description: 'Go back to Login page',
                       ),
                       Expanded(child: SizedBox()),
                       TouchableOpacity(

@@ -1,5 +1,5 @@
 import 'package:coffee_shop_app/services/apis/auth_api.dart';
-import 'package:coffee_shop_app/services/blocs/auth_cubit/auth_cubit.dart';
+import 'package:coffee_shop_app/services/blocs/auth/auth_bloc.dart';
 import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/constants/dimension.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
@@ -8,6 +8,7 @@ import 'package:coffee_shop_app/utils/validations/password_validate.dart';
 import 'package:coffee_shop_app/widgets/global/buttons/touchable_opacity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../services/blocs/auth_action/auth_action_cubit.dart';
 import '../../widgets/global/buttons/rounded_button.dart';
 import '../../widgets/global/textForm/custom_text_form.dart';
 
@@ -25,7 +26,8 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     onLogin() async {
-      await AuthAPI().emailLogin(emailController.text, passwordController.text);
+      context.read<AuthBloc>().add(EmailLogin(
+          email: emailController.text, password: passwordController.text));
     }
 
     return Column(
@@ -56,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: TouchableOpacity(
             onTap: () {
               context
-                  .read<AuthCubit>()
+                  .read<AuthActionCubit>()
                   .changeState(ForgotPassword(email: emailController.text));
             },
             child: Row(

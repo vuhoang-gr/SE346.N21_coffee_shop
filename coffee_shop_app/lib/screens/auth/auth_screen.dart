@@ -1,7 +1,6 @@
 import 'package:coffee_shop_app/screens/auth/forgot_password_screen.dart';
 import 'package:coffee_shop_app/screens/auth/login_screen.dart';
 import 'package:coffee_shop_app/screens/auth/sign_up_screen.dart';
-import 'package:coffee_shop_app/services/blocs/auth_cubit/auth_cubit.dart';
 import 'package:coffee_shop_app/utils/constants/dimension.dart';
 import 'package:coffee_shop_app/utils/constants/social_enum.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
@@ -9,9 +8,11 @@ import 'package:coffee_shop_app/widgets/feature/login_screen/back_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../services/blocs/auth_action/auth_action_cubit.dart';
 import '../../widgets/feature/login_screen/social_button.dart';
 
 class AuthScreen extends StatefulWidget {
+  static const String routeName = '/auth_screen';
   const AuthScreen({super.key});
 
   @override
@@ -23,7 +24,7 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
-    AuthState status = context.watch<AuthCubit>().state;
+    AuthActionState status = context.watch<AuthActionCubit>().state;
 
     return SafeArea(
       child: Scaffold(
