@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coffee_shop_app/services/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -12,6 +13,7 @@ class AuthAPI {
   AuthAPI._internal();
 
   final firebaseAuth = firebase_auth.FirebaseAuth.instance;
+  final firestore = FirebaseFirestore.instance;
 
   static User? currentUser;
 
@@ -21,7 +23,9 @@ class AuthAPI {
         email: email,
         password: password,
       );
-      return toUser(credential.user);
+      var user = await toUser(credential.user);
+      if (user != null) await push(user);
+      return user;
     } on firebase_auth.FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
@@ -39,7 +43,8 @@ class AuthAPI {
       final credential = await firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
       print('Login Success');
-      return toUser(credential.user);
+      var user = await toUser(credential.user);
+      return user;
     } on firebase_auth.FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -51,9 +56,10 @@ class AuthAPI {
   }
 
   Future<User?> googleLogin() async {
-    if (GoogleSignIn().currentUser != null) {
-      await GoogleSignIn().disconnect();
-    }
+    await GoogleSignIn().disconnect().catchError((onError) {
+      print('don\'t need to sign out');
+    });
+
     try {
       GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -65,7 +71,11 @@ class AuthAPI {
         idToken: googleAuth?.idToken,
       );
       var rawUser = await firebaseAuth.signInWithCredential(credential);
-      return toUser(rawUser.user);
+
+      var user = await toUser(rawUser.user);
+      if (user != null && user.phoneNumber == "No Phone Number")
+        await push(user);
+      return user;
     } on firebase_auth.FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -90,7 +100,11 @@ class AuthAPI {
       // Once signed in, return the UserCredential
       var rawUser =
           await firebaseAuth.signInWithCredential(facebookAuthCredential);
-      return toUser(rawUser.user);
+      var user = await toUser(rawUser.user);
+      if (user != null && user.phoneNumber == "No Phone Number") {
+        await push(user);
+      }
+      return user;
     } on firebase_auth.FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -103,23 +117,72 @@ class AuthAPI {
     return null;
   }
 
-  User? toUser(firebase_auth.User? raw) {
-    if (raw == null) return null;
-    var user = User(
-        id: raw.uid,
-        name: raw.displayName != null ? raw.displayName! : 'No Name',
-        phoneNumber:
-            raw.phoneNumber != null ? raw.phoneNumber! : 'No phone number',
-        email: raw.email!,
-        isActive: true);
-    if (raw.photoURL != null) {
-      user.avatarUrl = raw.photoURL!;
-    }
-    return user;
-  }
-
   signOut() async {
     await firebaseAuth.signOut();
     currentUser = null;
+  }
+
+  toFireStore(User user) {
+    final data = <String, dynamic>{
+      "name": user.name,
+      "isActive": user.isActive,
+      "email": user.email,
+      "dob": user.dob,
+      "avatarUrl": user.avatarUrl,
+      "coverUrl": user.coverUrl,
+    };
+    return data;
+  }
+
+  User? fromFireStore(Map<String, dynamic>? data, String id) {
+    if (data == null) return null;
+    return User(
+      email: data['email'],
+      id: id,
+      name: data['name'],
+      phoneNumber: data['phoneNumber'] ?? 'No Phone Number',
+      dob: data['dob'],
+      isActive: data['isActive'],
+      avatarUrl: data['avatarUrl'],
+      coverUrl: data['coverUrl'],
+    );
+  }
+
+  push(User user) async {
+    try {
+      final data = toFireStore(user);
+      await firestore.collection("users").doc(user.id).set(data);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<User?> get(String id) async {
+    var raw = await firestore.collection('users').doc(id).get();
+    var data = raw.data();
+    return fromFireStore(data, id);
+  }
+
+  pop(User user) async {
+    user.isActive = false;
+    await update(user);
+  }
+
+  update(User user) async {
+    await firestore.collection('users').doc(user.id).update(toFireStore(user));
+  }
+
+  Future<User?> toUser(firebase_auth.User? raw) async {
+    if (raw == null) return null;
+    User? user = await get(raw.uid);
+    user ??= User(
+      email: raw.email!,
+      id: raw.uid,
+      isActive: true,
+      name: raw.displayName ?? 'No Name',
+      phoneNumber: 'No Phone Number',
+    );
+    return user;
   }
 }

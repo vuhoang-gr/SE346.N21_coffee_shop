@@ -58,8 +58,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FirebaseAuth.instance.authStateChanges().listen((User? user) {
-    AuthAPI.currentUser = AuthAPI().toUser(user);
+  FirebaseAuth.instance.authStateChanges().listen((User? user) async {
+    AuthAPI.currentUser = await AuthAPI().toUser(user);
   });
   initLatLng = await _determineUserCurrentPosition();
   // Data.storeAddress.sort((a, b) {
