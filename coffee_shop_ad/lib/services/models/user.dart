@@ -1,4 +1,4 @@
-import 'package:coffee_shop_admin/services/models/delivery_address.dart';
+import 'package:coffee_shop_admin/services/models/address.dart';
 import 'package:coffee_shop_admin/services/models/drink.dart';
 import 'package:coffee_shop_admin/services/models/store.dart';
 import 'package:equatable/equatable.dart';
@@ -9,7 +9,7 @@ class User extends Equatable {
   String phoneNumber;
   String email;
   DateTime? dob;
-  List<DeliveryAddress>? addresses;
+  List<Address>? addresses;
   List<Drink>? favoriteFoods;
   List<Store>? favouriteStores;
   bool isActive;

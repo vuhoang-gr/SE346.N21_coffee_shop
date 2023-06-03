@@ -1,6 +1,6 @@
 import 'package:coffee_shop_admin/services/models/location.dart';
 
-import '../services/models/delivery_address.dart';
+import '../services/models/address.dart';
 import '../services/models/drink.dart';
 import '../services/models/size.dart';
 import '../services/models/store.dart';
@@ -167,8 +167,8 @@ class Data {
         phone: "01234567890"),
   ];
 
-  static final List<DeliveryAddress> addresses = [
-    DeliveryAddress(
+  static final List<Address> addresses = [
+    Address(
         address: MLocation(
             formattedAddress:
                 "Đường Hàn Thuyên, khu phố 6 P, Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam",

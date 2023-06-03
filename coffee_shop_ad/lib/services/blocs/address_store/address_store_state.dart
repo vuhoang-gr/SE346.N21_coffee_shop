@@ -1,7 +1,7 @@
-import 'package:coffee_shop_admin/services/models/delivery_address.dart';
+import 'package:coffee_shop_admin/services/models/address.dart';
 
 abstract class AddressStoreState {
-  List<DeliveryAddress> listDeliveryAddress;
+  List<Address> listDeliveryAddress;
   AddressStoreState({required this.listDeliveryAddress});
 }
 

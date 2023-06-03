@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../../services/models/delivery_address.dart';
+import '../../services/models/address.dart';
 import '../../utils/colors/app_colors.dart';
 import '../../utils/constants/dimension.dart';
 import '../../utils/styles/app_texts.dart';
@@ -22,7 +22,7 @@ MLocation _mLocation = MLocation(
 
 class AddressScreen extends StatefulWidget {
   static const String routeName = "/address_screen";
-  final DeliveryAddress? deliveryAddress;
+  final Address? deliveryAddress;
   const AddressScreen({super.key, required this.deliveryAddress});
 
   @override

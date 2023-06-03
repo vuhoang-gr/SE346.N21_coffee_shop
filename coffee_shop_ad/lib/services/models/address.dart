@@ -1,18 +1,14 @@
+import 'package:coffee_shop_admin/services/models/location.dart';
+
 class Address {
-  String city;
-  String district;
-  String ward;
-  String shortName;
-
+  final MLocation address;
+  final String addressNote;
+  final String nameReceiver;
+  final String phone;
   Address({
-    required this.city,
-    required this.district,
-    required this.ward,
-    required this.shortName,
+    required this.address,
+    required this.addressNote,
+    required this.nameReceiver,
+    required this.phone,
   });
-
-  @override
-  String toString() {
-    return "$shortName, $ward, $district, $city";
-  }
 }

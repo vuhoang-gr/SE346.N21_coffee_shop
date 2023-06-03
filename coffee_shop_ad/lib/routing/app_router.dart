@@ -9,7 +9,7 @@ import 'package:coffee_shop_admin/screens/store_address/address_screen.dart';
 import 'package:coffee_shop_admin/screens/store_address/map_screen.dart';
 import 'package:coffee_shop_admin/screens/user/user_screen.dart';
 import 'package:coffee_shop_admin/services/blocs/auth_action/auth_action_cubit.dart';
-import 'package:coffee_shop_admin/services/models/delivery_address.dart';
+import 'package:coffee_shop_admin/services/models/address.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -83,8 +83,7 @@ class AppRouter {
         return _createRoute(ProfileSettingScreen());
 
       case AddressScreen.routeName:
-        DeliveryAddress? deliveryAddress =
-            settings.arguments as DeliveryAddress?;
+        Address? deliveryAddress = settings.arguments as Address?;
         return _createRoute(AddressScreen(
           deliveryAddress: deliveryAddress,
         ));

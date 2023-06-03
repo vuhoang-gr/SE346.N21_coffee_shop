@@ -1,4 +1,4 @@
-import 'package:coffee_shop_admin/services/models/delivery_address.dart';
+import 'package:coffee_shop_admin/services/models/address.dart';
 
 import '../../models/location.dart';
 
@@ -26,6 +26,6 @@ class PhoneChanged extends EditAddressEvent {
 }
 
 class InitForm extends EditAddressEvent {
-  final DeliveryAddress? deliveryAddress;
+  final Address? deliveryAddress;
   InitForm({required this.deliveryAddress});
 }
