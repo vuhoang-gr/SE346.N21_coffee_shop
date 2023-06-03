@@ -1,19 +1,18 @@
-import 'package:coffee_shop_admin/services/models/drink.dart';
+import 'package:coffee_shop_admin/services/models/topping.dart';
 
 abstract class ToppingListState {
-  final List<Drink> initFoods;
-  ToppingListState({required this.initFoods});
+  ToppingListState();
 }
 
 class LoadingState extends ToppingListState {
-  LoadingState({required super.initFoods});
+  LoadingState();
 }
 
 class ErrorState extends ToppingListState {
-  ErrorState({required super.initFoods});
+  ErrorState();
 }
 
 class LoadedState extends ToppingListState {
-  final List<Drink> listFood;
-  LoadedState({required super.initFoods, required this.listFood});
+  final List<Topping> toppingList;
+  LoadedState({required this.toppingList});
 }

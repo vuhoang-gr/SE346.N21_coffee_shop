@@ -29,9 +29,9 @@ class DrinkManagement extends StatelessWidget {
                     'Products',
                     style: AppText.style.boldBlack18,
                   ),
-                  trailing: IconButton(
-                      onPressed: () {},
-                      icon: const FaIcon(FontAwesomeIcons.clockRotateLeft)),
+                  // trailing: IconButton(
+                  //     onPressed: () {},
+                  //     icon: const FaIcon(FontAwesomeIcons.clockRotateLeft)),
                 ),
               ),
             ),

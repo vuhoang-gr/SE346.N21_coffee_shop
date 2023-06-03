@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:skeletons/skeletons.dart';
 
-import '../../../../utils/constants/dimension.dart';
+import '../../../utils/constants/dimension.dart';
 
 class ProductSkeleton extends StatelessWidget {
   const ProductSkeleton({super.key});

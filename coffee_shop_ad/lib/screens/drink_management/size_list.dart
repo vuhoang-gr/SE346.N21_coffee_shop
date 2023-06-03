@@ -1,6 +1,6 @@
 import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_event.dart';
-import 'package:coffee_shop_admin/widgets/feature/menu_screen/skeleton/pickup_menu_skeleton.dart';
+import 'package:coffee_shop_admin/widgets/global/skeleton/list_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -69,7 +69,7 @@ class _SizeListState extends State<SizeList> {
                     ],
                   );
                 } else if (state is LoadingState) {
-                  return PickupMenuSkeleton();
+                  return ListItemSkeleton();
                 } else {
                   return SizedBox.shrink();
                 }

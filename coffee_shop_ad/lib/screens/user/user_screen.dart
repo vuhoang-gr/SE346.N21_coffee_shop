@@ -1,17 +1,14 @@
 import 'package:coffee_shop_admin/services/blocs/user/user_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/user/user_event.dart';
 import 'package:coffee_shop_admin/services/blocs/user/user_state.dart';
-import 'package:coffee_shop_admin/services/models/store.dart';
-import 'package:coffee_shop_admin/services/models/user.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
 import 'package:coffee_shop_admin/widgets/feature/user/user_card.dart';
+import 'package:coffee_shop_admin/widgets/global/skeleton/list_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../utils/constants/dimension.dart';
 import '../../utils/styles/app_texts.dart';
-import '../../widgets/feature/store/store_list_item.dart';
-import '../../widgets/feature/store/store_skeleton.dart';
 import '../../widgets/global/custom_app_bar.dart';
 
 class UserScreen extends StatefulWidget {
@@ -76,24 +73,7 @@ class _UserScreenState extends State<UserScreen> {
                           ),
                         ));
                   } else if (state is LoadingState) {
-                    return Padding(
-                      padding: EdgeInsets.only(
-                          right: Dimension.width16,
-                          left: Dimension.width16,
-                          top: Dimension.height16),
-                      child: ListView.separated(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemBuilder: (_, __) {
-                            return StoreSkeleton();
-                          },
-                          separatorBuilder: (_, __) {
-                            return SizedBox(
-                              height: Dimension.height12,
-                            );
-                          },
-                          itemCount: 8),
-                    );
+                    return ListItemSkeleton();
                   } else {
                     print("err");
                     return SizedBox.shrink();

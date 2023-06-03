@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coffee_shop_admin/routing/app_router.dart';
 import 'package:coffee_shop_admin/screens/auth/auth_screen.dart';
 import 'package:coffee_shop_admin/screens/main_page.dart';
@@ -12,8 +11,8 @@ import 'package:coffee_shop_admin/services/blocs/pickup_timer/pickup_timer_cubit
 import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/recent_see_products/recent_see_products_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/search_store/search_store_bloc.dart';
-// import 'package:coffee_shop_admin/services/blocs/cart_button/cart_button_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/store_store/store_store_bloc.dart';
+import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/user/user_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -44,13 +43,12 @@ class MyApp extends StatelessWidget {
         BlocProvider<DrinkListBloc>(
           create: (BuildContext context) => DrinkListBloc(),
         ),
-        // BlocProvider<CartButtonBloc>(
-        //   create: (BuildContext context) => CartButtonBloc(),
-        // ),
+        BlocProvider<ToppingListBloc>(
+          create: (BuildContext context) => ToppingListBloc(),
+        ),
         BlocProvider<UserBloc>(
           create: (BuildContext context) => UserBloc(),
         ),
-
         BlocProvider<SearchStoreBloc>(
           create: (BuildContext context) => SearchStoreBloc(),
         ),
