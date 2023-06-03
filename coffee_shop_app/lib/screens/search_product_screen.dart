@@ -39,7 +39,7 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
     super.initState();
     ProductStoreState state = BlocProvider.of<ProductStoreBloc>(context).state;
     BlocProvider.of<SearchProductBloc>(context)
-        .add(UpdateList(initListFood: state.initFoods));
+        .add(UpdateList(initListFood: (state as LoadedState).initFoods));
   }
 
   @override

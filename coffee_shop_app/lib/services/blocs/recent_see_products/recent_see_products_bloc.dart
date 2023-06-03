@@ -1,11 +1,9 @@
+import 'package:coffee_shop_app/services/apis/food_api.dart';
 import 'package:coffee_shop_app/services/blocs/recent_see_products/recent_see_products_event.dart';
 import 'package:coffee_shop_app/services/blocs/recent_see_products/recent_see_products_state.dart';
 import 'package:coffee_shop_app/services/functions/shared_preferences_helper.dart';
 import 'package:coffee_shop_app/services/models/food.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../temp/data.dart';
-import '../../models/store.dart';
 
 class RecentSeeProductsBloc
     extends Bloc<RecentSeeProductsEvent, RecentSeeProductsState> {
@@ -45,11 +43,14 @@ class RecentSeeProductsBloc
     List<String> productsid = await SharedPreferencesHelper.getProducts();
     List<Food> products = [];
 
-    for (int i = 0; i < productsid.length; i++) {
-      Food? food =
-          Data.products.firstWhere((element) => element.id == productsid[i]);
-      products.add(food);
+    if (FoodAPI.currentFoods != null) {
+      for (int i = 0; i < productsid.length; i++) {
+        Food? food = FoodAPI.currentFoods!
+            .firstWhere((element) => element.id == productsid[i]);
+        products.add(food);
+      }
     }
+
     if (products.isEmpty) {
       emit(NotExistState());
     } else {

@@ -1,18 +1,19 @@
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_bloc.dart';
-import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_state.dart';
+import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_state.dart'
+    as store_store_state;
+import 'package:coffee_shop_app/widgets/global/aysncImage/async_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../main.dart';
-import '../../services/blocs/cart_button/cart_button_event.dart';
+import '../../services/apis/auth_api.dart';
 import '../../services/blocs/recent_see_products/recent_see_products_bloc.dart';
 import '../../services/blocs/recent_see_products/recent_see_products_event.dart';
-import '../../services/blocs/recent_see_products/recent_see_products_state.dart';
-import '../../services/functions/calculate_distance.dart';
-import '../../services/models/store.dart';
-import '../../temp/data.dart';
+import '../../services/blocs/recent_see_products/recent_see_products_state.dart'
+    as cart_button_state;
+
 import '../../utils/colors/app_colors.dart';
 import '../../utils/constants/dimension.dart';
+import '../../utils/constants/placeholder_enum.dart';
 import '../../utils/styles/app_texts.dart';
 import '../../widgets/feature/menu_screen/skeleton/product_fixed_skeleton.dart';
 import '../../widgets/global/cart_button.dart';
@@ -28,7 +29,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMixin{
   final int durationChange = 500;
   final ScrollController scrollController = ScrollController();
   bool isScrollInTop = true;
@@ -45,28 +46,11 @@ class _HomeScreenState extends State<HomeScreen> {
     RecentSeeProductsBloc recentSeeProductsBloc =
         BlocProvider.of<RecentSeeProductsBloc>(context);
     recentSeeProductsBloc.add(ListRecentSeeProductLoaded());
-
-    if (initLatLng != null &&
-        BlocProvider.of<CartButtonBloc>(context).state.selectedStore == null) {
-      double minDistance = double.maxFinite;
-      Store? nearestSore;
-      for (Store store in Data.stores) {
-        double distance = calculateDistance(store.address.lat,
-            store.address.lng, initLatLng!.latitude, initLatLng!.longitude);
-        if (distance < minDistance) {
-          minDistance = distance;
-          nearestSore = store;
-        }
-      }
-      if (nearestSore != null) {
-        BlocProvider.of<CartButtonBloc>(context)
-            .add(ChangeSelectedStoreButNotUse(selectedStore: nearestSore));
-      }
-    }
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     scrollController.addListener(() {
       if (scrollController.offset <= 0 && !isScrollInTop) {
         setState(() {
@@ -96,11 +80,20 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: Dimension.height40,
                         width: isScrollInTop ? Dimension.height40 : 0,
                         padding: const EdgeInsets.all(0),
-                        decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(Dimension.height20))),
                         duration: Duration(milliseconds: durationChange),
+                        child: CircleAvatar(
+                            radius: Dimension.height20,
+                            backgroundColor: Color.fromARGB(255, 226, 226, 226),
+                            child: Padding(
+                              padding: EdgeInsets.all(5),
+                              child: ClipOval(
+                                child: AsyncImage(
+                                  src: AuthAPI.currentUser!.avatarUrl,
+                                  type: PlaceholderType.user,
+                                ),
+                              ),
+                            ),
+                          ),
                       ),
                       AnimatedContainer(
                         width: isScrollInTop ? Dimension.width12 : 0,
@@ -125,8 +118,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             style: isScrollInTop
                                 ? AppText.style.boldBlack14
                                 : AppText.style.boldBlack18,
-                            child: const Text(
-                              "Sample restaurant",
+                            child: Text(
+                              AuthAPI.currentUser!.name,
                             ),
                           ),
                         ],
@@ -150,9 +143,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: Dimension.height24,
                         ),
                         BlocBuilder<RecentSeeProductsBloc,
-                            RecentSeeProductsState>(
+                            cart_button_state.RecentSeeProductsState>(
                           builder: (context, state) {
-                            if (state is LoadingState) {
+                            if (state is cart_button_state.LoadingState) {
                               return Padding(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: Dimension.width16),
@@ -179,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ],
                                 ),
                               );
-                            } else if (state is LoadedState) {
+                            } else if (state is cart_button_state.LoadedState) {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -218,7 +211,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ))
                                 ],
                               );
-                            } else if (state is NotExistState) {
+                            } else if (state
+                                is cart_button_state.NotExistState) {
                               return Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
@@ -249,8 +243,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       SizedBox(
                                         height: Dimension.height24,
                                       ),
-                                      BlocBuilder<CartButtonBloc,
-                                              CartButtonState>(
+                                      BlocBuilder<
+                                              CartButtonBloc,
+                                              store_store_state
+                                                  .CartButtonState>(
                                           builder: (context, state) {
                                         return ElevatedButton(
                                           onPressed: () {
@@ -290,4 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             )));
   }
+  
+  @override
+  bool get wantKeepAlive => true;
 }
