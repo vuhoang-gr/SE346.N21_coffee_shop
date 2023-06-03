@@ -33,6 +33,8 @@ class AppText {
       fontSize: Dimension.font14, height: 1.5, color: Colors.blue);
   final regularBlue16 = TextStyle(
       fontSize: Dimension.font16, height: 1.5, color: Colors.blue);
+  final regularOrange18 = TextStyle(
+      fontSize: Dimension.font18, height: 1.5, color: AppColors.orangeColor);
   final mediumBlack14 = TextStyle(
       fontSize: Dimension.font14,
       height: 1.5,
