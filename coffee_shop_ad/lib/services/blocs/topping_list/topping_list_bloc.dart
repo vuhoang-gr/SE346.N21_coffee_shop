@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_event.dart';
 import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_state.dart';
 import 'package:coffee_shop_admin/services/models/topping.dart';
@@ -14,24 +15,19 @@ class ToppingListBloc extends Bloc<ToppingListEvent, ToppingListState> {
       FetchData event, Emitter<ToppingListState> emit) async {
     emit(LoadingState());
 
-    await Future.delayed(const Duration(seconds: 1), () {
-      emit(LoadedState(
-        toppingList: [
-          Topping(
-              name: 'Espresso (1 shot)',
-              price: 10,
-              id: '1',
-              image:
-                  'https://product.hstatic.net/1000075078/product/1645969436_caramel-macchiato-nong-lifestyle-1_187d60b2a52244c58a5c2fd24addef78.jpg'),
-          Topping(
-            name: 'Caramel',
-            image:
-                'https://product.hstatic.net/1000075078/product/1645969436_caramel-macchiato-nong-lifestyle-1_187d60b2a52244c58a5c2fd24addef78.jpg',
-            id: '2',
-            price: 5,
-          )
-        ],
-      ));
+    final pro = await FirebaseFirestore.instance.collection("Topping").get();
+    List<Topping> toppingList = [];
+    pro.docs.forEach((doc) {
+      var s = doc.data();
+      toppingList.add(Topping(
+          id: doc.id,
+          name: s["name"] ?? "Unamed Topping",
+          price: s["price"] * 1.0,
+          image: s["image"] ??
+              "https://www.shutterstock.com/image-vector/bubble-tea-on-spoon-add-260nw-1712622337.jpg"));
     });
+    emit(LoadedState(
+      toppingList: toppingList,
+    ));
   }
 }

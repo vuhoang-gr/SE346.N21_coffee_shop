@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../services/blocs/drink_list/drink_list_state.dart';
 import '../../utils/colors/app_colors.dart';
 import '../../utils/constants/dimension.dart';
-import '../../widgets/global/product_item.dart';
+import 'drink_item.dart';
 
 class DrinkList extends StatefulWidget {
   const DrinkList({super.key});
@@ -55,7 +55,7 @@ class _DrinkListState extends State<DrinkList> {
                                           bottom: Dimension.height8,
                                           left: Dimension.width16,
                                           right: Dimension.width16),
-                                      child: (ProductItem(
+                                      child: (DrinkItem(
                                         product: product,
                                       )),
                                     ))

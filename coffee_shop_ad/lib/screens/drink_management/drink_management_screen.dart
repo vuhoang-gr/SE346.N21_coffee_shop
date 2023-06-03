@@ -1,10 +1,9 @@
 import 'package:coffee_shop_admin/screens/drink_management/drink_list.dart';
 import 'package:coffee_shop_admin/screens/drink_management/size_list.dart';
-import 'package:coffee_shop_admin/screens/drink_management/topping_list.dart';
+import 'package:coffee_shop_admin/screens/drink_management/topping_screen.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../utils/constants/dimension.dart';
 import '../../widgets/global/custom_app_bar.dart';
@@ -52,7 +51,7 @@ class DrinkManagement extends StatelessWidget {
                 unselectedLabelStyle: AppText.style.regular,
                 tabs: const [
                   Tab(
-                    text: 'Drinks',
+                    text: 'Drink',
                   ),
                   Tab(
                     text: 'Topping',

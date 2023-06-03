@@ -5,10 +5,10 @@ import '../../services/functions/money_transfer.dart';
 import '../../utils/constants/dimension.dart';
 import '../../utils/styles/app_texts.dart';
 
-class ProductItem extends StatelessWidget {
+class DrinkItem extends StatelessWidget {
   final Drink product;
 
-  const ProductItem({super.key, required this.product});
+  const DrinkItem({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class ProductItem extends StatelessWidget {
         child: GestureDetector(
             onTap: () {
               Navigator.of(context)
-                  .pushNamed("/product_detail_screen", arguments: product);
+                  .pushNamed("/drink_detail_screen", arguments: product);
             },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,

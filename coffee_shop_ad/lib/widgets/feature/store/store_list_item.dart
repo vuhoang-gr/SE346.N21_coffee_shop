@@ -26,11 +26,11 @@ class StoreListItem extends StatelessWidget {
           horizontalPadding: Dimension.width16,
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             SizedBox(
-              height: Dimension.height20,
-              width: Dimension.width20,
+              height: Dimension.height32,
+              width: Dimension.width32,
               child: IconTheme(
                 data: IconThemeData(
-                  size: Dimension.width20,
+                  size: Dimension.width32,
                   color: AppColors.blueColor,
                 ),
                 child: const FaIcon(FontAwesomeIcons.store),
@@ -52,13 +52,20 @@ class StoreListItem extends StatelessWidget {
                   SizedBox(
                     height: Dimension.height4,
                   ),
-                  Center(
-                    child: Text(
-                      store.address.formattedAddress,
-                      softWrap: true,
-                      textAlign: TextAlign.left,
-                      style: AppText.style.regularGrey12,
-                    ),
+                  Text(
+                    store.phone,
+                    softWrap: true,
+                    textAlign: TextAlign.left,
+                    style: AppText.style.mediumGrey12,
+                  ),
+                  SizedBox(
+                    height: Dimension.height4,
+                  ),
+                  Text(
+                    store.address.formattedAddress,
+                    softWrap: true,
+                    textAlign: TextAlign.left,
+                    style: AppText.style.regularGrey12,
                   ),
                   SizedBox(
                     height: Dimension.height4,

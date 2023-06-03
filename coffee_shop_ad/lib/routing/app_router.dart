@@ -1,4 +1,6 @@
 import 'package:coffee_shop_admin/screens/auth/auth_screen.dart';
+import 'package:coffee_shop_admin/screens/drink_management/topping_create.dart';
+import 'package:coffee_shop_admin/screens/drink_management/topping_detail.dart';
 import 'package:coffee_shop_admin/screens/main_page.dart';
 import 'package:coffee_shop_admin/screens/product_detail.dart';
 import 'package:coffee_shop_admin/screens/profile/profile_screen.dart';
@@ -10,6 +12,7 @@ import 'package:coffee_shop_admin/screens/store_address/map_screen.dart';
 import 'package:coffee_shop_admin/screens/user/user_screen.dart';
 import 'package:coffee_shop_admin/services/blocs/auth_action/auth_action_cubit.dart';
 import 'package:coffee_shop_admin/services/models/address.dart';
+import 'package:coffee_shop_admin/services/models/topping.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -82,6 +85,9 @@ class AppRouter {
       case ProfileSettingScreen.routeName:
         return _createRoute(ProfileSettingScreen());
 
+      case CreateToppingScreen.routeName:
+        return _createRoute(CreateToppingScreen());
+
       case AddressScreen.routeName:
         Address? deliveryAddress = settings.arguments as Address?;
         return _createRoute(AddressScreen(
@@ -94,9 +100,13 @@ class AppRouter {
           latLng: latLng,
         ));
 
-      case "/product_detail_screen":
+      case "/drink_detail_screen":
         Drink food = settings.arguments as Drink;
         return _createRoute(ProductDetail(product: food));
+
+      case "/topping_detail_screen":
+        Topping topping = settings.arguments as Topping;
+        return _createRoute(ToppingDetail(product: topping));
 
       case "/store_detail":
         Store args = settings.arguments as Store;
