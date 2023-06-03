@@ -144,36 +144,36 @@ class Data {
         dateRegister: DateTime(2023, 4, 15)),
   ];
 
-  static final List<Store> stores = [
-    Store(
-        id: "st01",
-        sb: "The Coffee House - Hoàng Diệu 2",
-        address: MLocation(
-            formattedAddress:
-                '66E Đ. Hoàng Diệu 2, Phường Linh Trung, Thủ Đức, Thành phố Hồ Chí Minh 700000, Việt Nam',
-            lat: 10.859665592985602,
-            lng: 106.76683457652881),
-        phone: "01234567890",
-        isFavorite: true),
-    Store(
-        id: "st02",
-        sb: "The Coffee House - Tô Ngọc Vân",
-        address: MLocation(
-            formattedAddress:
-                '116 Tô Ngọc Vân, Linh Tây, TP Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam',
-            lat: 10.858316892414416,
-            lng: 106.75172837615054),
-        phone: "01234567890"),
-    Store(
-        id: "st03",
-        sb: "The Coffee House - Đặng Văn Bi",
-        address: MLocation(
-            formattedAddress:
-                '201 Đặng Văn Bi, Bình Thọ, Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam',
-            lat: 10.84348078437171,
-            lng: 106.75722153992446),
-        phone: "01234567890"),
-  ];
+  // static final List<Store> stores = [
+  //   Store(
+  //       id: "st01",
+  //       sb: "The Coffee House - Hoàng Diệu 2",
+  //       address: MLocation(
+  //           formattedAddress:
+  //               '66E Đ. Hoàng Diệu 2, Phường Linh Trung, Thủ Đức, Thành phố Hồ Chí Minh 700000, Việt Nam',
+  //           lat: 10.859665592985602,
+  //           lng: 106.76683457652881),
+  //       phone: "01234567890",
+  //       isFavorite: true),
+  //   Store(
+  //       id: "st02",
+  //       sb: "The Coffee House - Tô Ngọc Vân",
+  //       address: MLocation(
+  //           formattedAddress:
+  //               '116 Tô Ngọc Vân, Linh Tây, TP Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam',
+  //           lat: 10.858316892414416,
+  //           lng: 106.75172837615054),
+  //       phone: "01234567890"),
+  //   Store(
+  //       id: "st03",
+  //       sb: "The Coffee House - Đặng Văn Bi",
+  //       address: MLocation(
+  //           formattedAddress:
+  //               '201 Đặng Văn Bi, Bình Thọ, Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam',
+  //           lat: 10.84348078437171,
+  //           lng: 106.75722153992446),
+  //       phone: "01234567890"),
+  // ];
 
   static final List<DeliveryAddress> addresses = [
     DeliveryAddress(

@@ -1,12 +1,14 @@
 import 'package:coffee_shop_app/screens/search_product_screen.dart';
+import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_state.dart';
 import 'package:coffee_shop_app/services/blocs/product_store/product_store_bloc.dart';
-import 'package:coffee_shop_app/services/blocs/product_store/product_store_event.dart';
 import 'package:coffee_shop_app/services/blocs/product_store/product_store_state.dart';
 import 'package:coffee_shop_app/widgets/feature/menu_screen/skeleton/delivery_menu_skeleton.dart';
 import 'package:coffee_shop_app/widgets/global/cart_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../services/blocs/cart_button/cart_button_bloc.dart';
+import '../../services/blocs/product_store/product_store_event.dart';
 import '../../utils/constants/dimension.dart';
 import '../../utils/styles/app_texts.dart';
 import '../../widgets/feature/menu_screen/address_picker.dart';
@@ -24,12 +26,6 @@ class DeliveryMenuScreen extends StatefulWidget {
 class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
   final ScrollController _scrollController = ScrollController();
   bool _isButtonVisible = false;
-
-  @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<ProductStoreBloc>(context).add(FetchData());
-  }
 
   @override
   void dispose() {
@@ -82,63 +78,79 @@ class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
                   if (state is LoadedState) {
                     return RefreshIndicator(
                       onRefresh: () async {
-                        BlocProvider.of<ProductStoreBloc>(context)
-                            .add(FetchData());
+                        CartButtonState cartButtonState =
+                            BlocProvider.of<CartButtonBloc>(context).state;
+                        BlocProvider.of<ProductStoreBloc>(context).add(
+                            FetchData(
+                                stateFood:
+                                    cartButtonState.selectedStore?.stateFood,
+                                stateTopping: cartButtonState
+                                    .selectedStore?.stateTopping));
                       },
-                      child: ListView(
-                        controller: _scrollController,
-                        children: [
-                          AddressPicker(),
-                          SizedBox(height: Dimension.height8),
-                          const DeliveryStorePicker(),
-                          SizedBox(height: Dimension.height8),
-                          Container(
-                            padding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
-                            child: Text(
-                              "Favorite",
-                              style: AppText.style.mediumBlack14,
-                            ),
+                      child: LayoutBuilder(builder:
+                          (BuildContext context, BoxConstraints constraints) {
+                        return ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: constraints.maxHeight,
                           ),
-                          ...(state.listFavoriteFood
-                              .map((product) => Container(
-                                    padding: EdgeInsets.only(
-                                        bottom: Dimension.height8,
-                                        left: Dimension.width16,
-                                        right: Dimension.width16),
-                                    child: (ProductItem(
-                                      product: product,
-                                    )),
-                                  ))
-                              .toList()),
-                          (state.listFavoriteFood.isNotEmpty &&
-                                  state.listOtherFood.isNotEmpty)
-                              ? Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(16, 12, 0, 12),
-                                  child: Text(
-                                    "Other",
-                                    style: AppText.style.mediumBlack14,
-                                  ),
-                                )
-                              : SizedBox.shrink(),
-                          ...(state.listOtherFood
-                              .map((product) => Container(
-                                    padding: EdgeInsets.only(
-                                        bottom: Dimension.height8,
-                                        left: Dimension.width16,
-                                        right: Dimension.width16),
-                                    child: (ProductItem(
-                                      product: product,
-                                    )),
-                                  ))
-                              .toList()),
-                          SizedBox(
-                            height: Dimension.height68,
-                          )
-                        ],
-                      ),
+                          child: ListView(
+                            controller: _scrollController,
+                            physics: AlwaysScrollableScrollPhysics(),
+                            children: [
+                              AddressPicker(),
+                              SizedBox(height: Dimension.height8),
+                              const DeliveryStorePicker(),
+                              SizedBox(height: Dimension.height8),
+                              Container(
+                                padding:
+                                    const EdgeInsets.fromLTRB(16, 12, 0, 12),
+                                child: Text(
+                                  "Favorite",
+                                  style: AppText.style.mediumBlack14,
+                                ),
+                              ),
+                              ...(state.listFavoriteFood
+                                  .map((product) => Container(
+                                        padding: EdgeInsets.only(
+                                            bottom: Dimension.height8,
+                                            left: Dimension.width16,
+                                            right: Dimension.width16),
+                                        child: (ProductItem(
+                                          product: product,
+                                        )),
+                                      ))
+                                  .toList()),
+                              (state.listFavoriteFood.isNotEmpty &&
+                                      state.listOtherFood.isNotEmpty)
+                                  ? Container(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          16, 12, 0, 12),
+                                      child: Text(
+                                        "Other",
+                                        style: AppText.style.mediumBlack14,
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                              ...(state.listOtherFood
+                                  .map((product) => Container(
+                                        padding: EdgeInsets.only(
+                                            bottom: Dimension.height8,
+                                            left: Dimension.width16,
+                                            right: Dimension.width16),
+                                        child: (ProductItem(
+                                          product: product,
+                                        )),
+                                      ))
+                                  .toList()),
+                              SizedBox(
+                                height: Dimension.height68,
+                              )
+                            ],
+                          ),
+                        );
+                      }),
                     );
-                  } else if (state is LoadingState) {
+                  } else if (state is LoadingState || state is FetchedState) {
                     return DeliveryMenuSkeleton();
                   } else {
                     return SizedBox.shrink();

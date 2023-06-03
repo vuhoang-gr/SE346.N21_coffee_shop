@@ -59,11 +59,11 @@ class AddressBlockEdit extends StatelessWidget {
                     ),
                     Expanded(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
                             deliveryAddress.address.formattedAddress,
-                            textAlign: TextAlign.center,
+                            textAlign: TextAlign.left,
                             style: AppText.style.mediumBlack14,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -109,16 +109,16 @@ class AddressBlockEdit extends StatelessWidget {
               ),
               IconButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed(AddressScreen.routeName,
-                        arguments: deliveryAddress).then((value) {
-                      if (value == null) {
+                    Navigator.of(context)
+                        .pushNamed(AddressScreen.routeName,
+                            arguments: deliveryAddress)
+                        .then((value) {
+                      if (value != null && value is bool && value == true) {
                         BlocProvider.of<AddressStoreBloc>(context)
-                            .add(ListAddressDeletedIndex(index: index));
-                      } else {
+                            .add(DeleteIndex(index: index));
+                      } else if (value != null && value is DeliveryAddress) {
                         BlocProvider.of<AddressStoreBloc>(context).add(
-                            ListAddressUpdatedIndex(
-                                index: index,
-                                deliveryAddress: (value as DeliveryAddress)));
+                            UpdateIndex(index: index, deliveryAddress: value));
                       }
                     });
                   },

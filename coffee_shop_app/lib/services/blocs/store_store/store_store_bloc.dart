@@ -1,8 +1,9 @@
 import 'dart:async';
 
+import 'package:coffee_shop_app/main.dart';
+import 'package:coffee_shop_app/services/apis/store_api.dart';
 import 'package:coffee_shop_app/services/blocs/store_store/store_store_event.dart';
 import 'package:coffee_shop_app/services/blocs/store_store/store_store_state.dart';
-import 'package:coffee_shop_app/temp/data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -10,112 +11,131 @@ import '../../functions/calculate_distance.dart';
 import '../../models/store.dart';
 
 class StoreStoreBloc extends Bloc<StoreStoreEvent, StoreStoreState> {
-  StoreStoreBloc() : super(LoadingState(initStore: [], latLng: null)) {
+  StoreStoreBloc()
+      : super(StoreAPI.currentStores == null
+            ? LoadingState()
+            : FetchedState(
+                initStores: StoreAPI.currentStores!, latLng: initLatLng)) {
     on<FetchData>(_mapFetchData);
     on<UpdateFavorite>(_mapUpdateFavorite);
+    on<ChangeFetchedToLoaded>(_mapChangeFetchedToLoaded);
   }
 
   Future<void> _mapFetchData(
       FetchData event, Emitter<StoreStoreState> emit) async {
-    emit(LoadingState(initStore: state.initStore, latLng: state.latLng));
-    await Future.delayed(const Duration(seconds: 1), () {
-      //tempListStore will get all the store in the db
-      List<Store> tempListStore = Data.stores;
+    emit(LoadingState());
 
-      if (event.location != null) {
-        tempListStore.sort((a, b) {
-          double distanceA = 0, distanceB = 0;
+    List<Store> fetchedData = await StoreAPI().fetchData(event.location);
 
-          if (event.location != null) {
-            distanceA = calculateDistance(a.address.lat, a.address.lng,
-                event.location!.latitude, event.location!.longitude);
-            distanceB = calculateDistance(b.address.lat, b.address.lng,
-                event.location!.latitude, event.location!.longitude);
-          }
+    StoreAPI.currentStores = fetchedData;
+    
+    Store? nearestStore;
+    List<Store> favoriteStores = [];
+    List<Store> otherStores = [];
 
-          return distanceA.compareTo(distanceB);
-        });
+    int i = 0;
+    if (fetchedData.isNotEmpty && event.location != null) {
+      double distanceNearestStore = calculateDistance(
+          fetchedData.first.address.lat,
+          fetchedData.first.address.lng,
+          event.location!.latitude,
+          event.location!.longitude);
+      if (distanceNearestStore < 15) {
+        nearestStore = fetchedData.first;
+        i = 1;
       }
+    }
 
-      Store? nearestStore;
-      List<Store> favoriteStores = [];
-      List<Store> otherStores = [];
-
-      int i = 0;
-      if (tempListStore.isNotEmpty && event.location != null) {
-        double distanceNearestStore = calculateDistance(
-            tempListStore.first.address.lat,
-            tempListStore.first.address.lng,
-            event.location!.latitude,
-            event.location!.longitude);
-        if (distanceNearestStore < 15) {
-          nearestStore = tempListStore.first;
-          i = 1;
-        }
+    for (; i < fetchedData.length; i++) {
+      Store store = fetchedData[i];
+      if (store.isFavorite) {
+        favoriteStores.add(store);
+      } else {
+        otherStores.add(store);
       }
+    }
 
-      for (; i < tempListStore.length; i++) {
-        Store store = tempListStore[i];
-        if (store.isFavorite) {
-          favoriteStores.add(store);
-        } else {
-          otherStores.add(store);
-        }
-      }
-
-      emit(LoadedState(
-        initStore: tempListStore,
-        latLng: event.location,        
-        nearestStore: nearestStore,
-        listFavoriteStore: favoriteStores,
-        listOtherStore: otherStores,
-      ));
-    });
-  }
-
-  Future<void> _mapUpdateFavorite(
-      UpdateFavorite event, Emitter<StoreStoreState> emit) async {
-    emit(LoadingState(initStore: state.initStore, latLng: state.latLng));
-
-    //update favorite
-    event.store.isFavorite = !event.store.isFavorite;
-
-    Map<String, dynamic> storeObject = separateIntoNeededObject(state.latLng);
-
-    Store nearestStore = storeObject["nearestStore"];
-    List<Store> favoriteStores = storeObject["listFavoriteStore"];
-    List<Store> otherStores = storeObject["listOtherStore"];
-
-    //emit LoadedState
     emit(LoadedState(
-      initStore: state.initStore,
-      latLng: state.latLng,
+      initStores: fetchedData,
+      latLng: event.location,
       nearestStore: nearestStore,
       listFavoriteStore: favoriteStores,
       listOtherStore: otherStores,
     ));
   }
 
-  Map<String, dynamic> separateIntoNeededObject(LatLng? location) {
+  Future<void> _mapChangeFetchedToLoaded(
+      ChangeFetchedToLoaded event, Emitter<StoreStoreState> emit) async {
+    if (state is FetchedState) {
+      List<Store> initStores = (state as FetchedState).initStores;
+      LatLng? location = (state as FetchedState).latLng;
+
+      emit(LoadingState());
+
+      Map<String, dynamic> storeObject =
+          _separateIntoNeededObject(initStores, location);
+
+      Store? nearestStore = storeObject["nearestStore"];
+      List<Store> favoriteStores = storeObject["listFavoriteStore"];
+      List<Store> otherStores = storeObject["listOtherStore"];
+
+      emit(LoadedState(
+        initStores: initStores,
+        latLng: location,
+        nearestStore: nearestStore,
+        listFavoriteStore: favoriteStores,
+        listOtherStore: otherStores,
+      ));
+    }
+  }
+
+  Future<void> _mapUpdateFavorite(
+      UpdateFavorite event, Emitter<StoreStoreState> emit) async {
+    if (state is LoadedState) {
+      List<Store> initStores = (state as LoadedState).initStores;
+      LatLng? location = (state as LoadedState).latLng;
+
+      emit(LoadingState());
+
+      //update favorite
+      event.store.isFavorite = !event.store.isFavorite;
+
+      Map<String, dynamic> storeObject =
+          _separateIntoNeededObject(initStores, location);
+
+      Store? nearestStore = storeObject["nearestStore"];
+      List<Store> favoriteStores = storeObject["listFavoriteStore"];
+      List<Store> otherStores = storeObject["listOtherStore"];
+
+      //emit LoadedState
+      emit(LoadedState(
+        initStores: initStores,
+        latLng: location,
+        nearestStore: nearestStore,
+        listFavoriteStore: favoriteStores,
+        listOtherStore: otherStores,
+      ));
+    }
+  }
+
+  Map<String, dynamic> _separateIntoNeededObject(
+      List<Store> stores, LatLng? location) {
     Store? nearestStore;
     List<Store> favoriteStores = [];
     List<Store> otherStores = [];
 
     int i = 0;
-    if (state.initStore.isNotEmpty && location != null) {
-      double distanceNearestStore = calculateDistance(
-          state.initStore.first.address.lat,
-          state.initStore.first.address.lng,
-          location.latitude,
-          location.longitude);
+    if (stores.isNotEmpty && location != null) {
+      double distanceNearestStore = calculateDistance(stores.first.address.lat,
+          stores.first.address.lng, location.latitude, location.longitude);
       if (distanceNearestStore < 15) {
-        nearestStore = state.initStore.first;
+        nearestStore = stores.first;
         i = 1;
       }
     }
 
-    for (; i < state.initStore.length; i++) {
-      Store store = state.initStore[i];
+    for (; i < stores.length; i++) {
+      Store store = stores[i];
       if (store.isFavorite) {
         favoriteStores.add(store);
       } else {

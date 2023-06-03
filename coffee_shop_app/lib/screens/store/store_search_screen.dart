@@ -33,8 +33,11 @@ class _StoreSearchScreenState extends State<StoreSearchScreen> {
   @override
   void initState() {
     StoreStoreState storeState = BlocProvider.of<StoreStoreBloc>(context).state;
-    BlocProvider.of<SearchStoreBloc>(context)
-        .add(UpdateList(listStore: storeState.initStore));
+    if (storeState is LoadedState) {
+      BlocProvider.of<SearchStoreBloc>(context)
+          .add(UpdateList(listStore: storeState.initStores));
+    }
+
     super.initState();
   }
 
