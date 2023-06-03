@@ -14,6 +14,7 @@ import 'package:coffee_shop_admin/services/blocs/recent_see_products/recent_see_
 import 'package:coffee_shop_admin/services/blocs/search_store/search_store_bloc.dart';
 // import 'package:coffee_shop_admin/services/blocs/cart_button/cart_button_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/store_store/store_store_bloc.dart';
+import 'package:coffee_shop_admin/services/blocs/user/user_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +47,10 @@ class MyApp extends StatelessWidget {
         // BlocProvider<CartButtonBloc>(
         //   create: (BuildContext context) => CartButtonBloc(),
         // ),
+        BlocProvider<UserBloc>(
+          create: (BuildContext context) => UserBloc(),
+        ),
+
         BlocProvider<SearchStoreBloc>(
           create: (BuildContext context) => SearchStoreBloc(),
         ),

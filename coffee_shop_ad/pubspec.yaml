@@ -37,6 +37,7 @@ dependencies:
   cloud_firestore: ^4.7.1
   firebase_storage: ^11.2.1
   dropdown_button2: ^2.0.0
+  quickalert: ^1.0.1
 
 dev_dependencies:
   flutter_test:

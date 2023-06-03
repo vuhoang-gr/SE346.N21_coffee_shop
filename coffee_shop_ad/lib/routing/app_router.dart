@@ -7,13 +7,14 @@ import 'package:coffee_shop_admin/screens/store/store_detail.dart';
 import 'package:coffee_shop_admin/screens/store/store_search_screen.dart';
 import 'package:coffee_shop_admin/screens/store_address/address_screen.dart';
 import 'package:coffee_shop_admin/screens/store_address/map_screen.dart';
+import 'package:coffee_shop_admin/screens/user/user_screen.dart';
 import 'package:coffee_shop_admin/services/blocs/auth_action/auth_action_cubit.dart';
 import 'package:coffee_shop_admin/services/models/delivery_address.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../screens/store/store_selection_screen.dart';
+import '../screens/store/store_screen.dart';
 import '../services/blocs/auth/auth_bloc.dart';
 import '../services/models/drink.dart';
 import '../services/models/store.dart';
@@ -112,6 +113,9 @@ class AppRouter {
         return _createRoute(StoreScreen(
           isPurposeForShowDetail: isPurposeForShowDetail,
         ));
+
+      case UserScreen.routeName:
+        return _createRoute(UserScreen());
 
       case StoreSearchScreen.routeName:
         Map<String, dynamic> arguments =

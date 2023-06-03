@@ -1,9 +1,9 @@
 import 'package:coffee_shop_admin/screens/drink_management/drink_list.dart';
 import 'package:coffee_shop_admin/screens/drink_management/drink_management_screen.dart';
 import 'package:coffee_shop_admin/screens/profile/profile_screen.dart';
-import 'package:coffee_shop_admin/screens/store/store_selection_screen.dart';
-import 'package:coffee_shop_admin/services/models/store_product.dart';
-import 'package:coffee_shop_admin/temp/mockData.dart';
+import 'package:coffee_shop_admin/screens/store/store_screen.dart';
+import 'package:coffee_shop_admin/screens/user/user_screen.dart';
+import 'package:coffee_shop_admin/services/models/user.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:flutter/material.dart';
@@ -143,8 +143,8 @@ class _MainPageState extends State<MainPage> {
                     //Promo
                     DrinkList(),
 
-                    //order
-                    DrinkList(),
+                    //user
+                    UserScreen(),
 
                     //profile
                     ProfileScreen(),

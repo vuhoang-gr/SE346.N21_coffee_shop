@@ -7,6 +7,7 @@ import 'package:coffee_shop_admin/utils/validations/password_validate.dart';
 import 'package:coffee_shop_admin/widgets/global/buttons/touchable_opacity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quickalert/quickalert.dart';
 import '../../widgets/global/buttons/rounded_button.dart';
 import '../../widgets/global/textForm/custom_text_form.dart';
 

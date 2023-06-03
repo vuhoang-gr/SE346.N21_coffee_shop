@@ -18,8 +18,6 @@ class DrinkListBloc extends Bloc<DrinkListEvent, DrinkListState> {
     List<Drink> drinkList = [];
     pro.docs.forEach((doc) {
       var s = doc.data();
-      // print(s);
-      // print(s["images"]);
       drinkList.add(Drink(
           id: doc.id,
           name: s["name"],

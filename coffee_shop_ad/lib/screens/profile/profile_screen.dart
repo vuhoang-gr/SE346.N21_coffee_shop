@@ -147,7 +147,7 @@ class ProfileScreen extends StatelessWidget {
                           context.read<AuthBloc>().add(LogOut());
                         },
                         icon: Icons.logout,
-                        title: 'Log out',
+                        title: 'Sign out',
                         description: 'Go back to Login page',
                       ),
                       Expanded(child: SizedBox()),

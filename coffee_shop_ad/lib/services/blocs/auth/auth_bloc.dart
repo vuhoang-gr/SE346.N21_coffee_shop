@@ -5,6 +5,7 @@ import 'package:coffee_shop_admin/services/apis/auth_api.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:quickalert/quickalert.dart';
 
 import '../../models/user.dart';
 
