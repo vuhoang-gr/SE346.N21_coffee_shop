@@ -11,8 +11,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../main.dart';
+import '../../services/apis/auth_api.dart';
 import '../../services/models/store.dart';
-import '../../temp/data.dart';
 import '../../utils/styles/app_texts.dart';
 
 class OrderTypeModal extends StatelessWidget {
@@ -118,7 +118,7 @@ class OrderTypeModal extends StatelessWidget {
                           ),
                           Text(
                             state.selectedDeliveryAddress == null
-                                ? "${Data.name} ${Data.phone}"
+                                ? "${AuthAPI.currentUser!.name} ${AuthAPI.currentUser!.phoneNumber}"
                                 : "${state.selectedDeliveryAddress?.nameReceiver} ${state.selectedDeliveryAddress?.phone}",
                             style: AppText.style.regularBlack14,
                           ),
@@ -210,13 +210,14 @@ class OrderTypeModal extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () => Navigator.pushNamed(
-                                context, StoreSelectionScreen.routeName,
-                                arguments: initLatLng)
-                            .then((value) {
+                            context, StoreSelectionScreen.routeName,
+                            arguments: {
+                              "latLng": initLatLng,
+                              "isPurposeForShowDetail": false,
+                            }).then((value) {
                           if (value != null && value is Store) {
-                            BlocProvider.of<CartButtonBloc>(context).add(
-                                ChangeSelectedStore(
-                                    selectedStore: value));
+                            BlocProvider.of<CartButtonBloc>(context)
+                                .add(ChangeSelectedStore(selectedStore: value));
                           }
                           Navigator.of(context).pop();
                         }),

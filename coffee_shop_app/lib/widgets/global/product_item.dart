@@ -1,10 +1,12 @@
 import 'package:coffee_shop_app/services/models/food.dart';
+import 'package:coffee_shop_app/widgets/global/aysncImage/async_image.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../services/functions/money_transfer.dart';
 import '../../services/functions/shared_preferences_helper.dart';
 import '../../utils/colors/app_colors.dart';
 import '../../utils/constants/dimension.dart';
+import '../../utils/constants/placeholder_enum.dart';
 import '../../utils/styles/app_texts.dart';
 
 class ProductItem extends StatelessWidget {
@@ -42,11 +44,12 @@ class ProductItem extends StatelessWidget {
                                   height:
                                       Dimension.height68 + Dimension.height8,
                                 ),
-                                Image.network(
-                                  product.images[0],
+                                AsyncImage(
+                                  src: product.images[0],
                                   height: Dimension.height68,
                                   width: Dimension.height68,
                                   fit: BoxFit.cover,
+                                  type: PlaceholderType.food,
                                 ),
                                 Positioned(
                                     top: Dimension.height68 - Dimension.height8,
@@ -80,11 +83,12 @@ class ProductItem extends StatelessWidget {
                                     ))
                               ]
                             : [
-                                Image.network(
-                                  product.images[0],
+                                AsyncImage(
+                                  src: product.images[0],
                                   height: Dimension.height68,
                                   width: Dimension.height68,
                                   fit: BoxFit.cover,
+                                  type: PlaceholderType.food,
                                 ),
                                 SizedBox(
                                   height: Dimension.height8,
@@ -116,16 +120,19 @@ class ProductItem extends StatelessWidget {
                   Stack(
                       alignment: Alignment.topCenter,
                       children: isNew
-                          ? [
+                          ? <Widget>[
                               SizedBox(
                                 height: Dimension.height68 + Dimension.height8,
                               ),
-                              Image.network(
-                                product.images[0],
-                                height: Dimension.height68,
-                                width: Dimension.height68,
-                                fit: BoxFit.cover,
-                                opacity: const AlwaysStoppedAnimation(.3),
+                              Opacity(
+                                opacity: 0.3,
+                                child: AsyncImage(
+                                  src: product.images[0],
+                                  height: Dimension.height68,
+                                  width: Dimension.height68,
+                                  fit: BoxFit.cover,
+                                  type: PlaceholderType.food,
+                                ),
                               ),
                               Positioned(
                                   top: Dimension.height68 - Dimension.height8,
@@ -159,12 +166,15 @@ class ProductItem extends StatelessWidget {
                                   ))
                             ]
                           : [
-                              Image.network(
-                                product.images[0],
-                                height: Dimension.height68,
-                                width: Dimension.height68,
-                                fit: BoxFit.cover,
-                                opacity: const AlwaysStoppedAnimation(.3),
+                              Opacity(
+                                opacity: 0.3,
+                                child: AsyncImage(
+                                  src: product.images[0],
+                                  height: Dimension.height68,
+                                  width: Dimension.height68,
+                                  fit: BoxFit.cover,
+                                  type: PlaceholderType.food,
+                                ),
                               ),
                             ]),
                   SizedBox(width: Dimension.width16),
