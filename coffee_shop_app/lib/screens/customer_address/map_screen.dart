@@ -63,10 +63,9 @@ class _MapScreenState extends State<MapScreen> {
         resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
-            Expanded(
-                child: Stack(
-              children: [_getMap(), _getCustomPin(), _showDraggedAddress()],
-            )),
+            _getMap(),
+            _getCustomPin(),
+            _showDraggedAddress(),
             CustomAppBar(
               color: Colors.transparent,
               middle: BlocBuilder<MapPickerBloc, MapPickerState>(
@@ -111,14 +110,18 @@ class _MapScreenState extends State<MapScreen> {
                         style: AppText.style.regularBlack16),
                     suggestionsCallback: (query) {
                       if (query.isNotEmpty) {
-                        return LocationApi.getLocationData(query)
-                            .then((response) {
-                          var data = jsonDecode(response.body.toString());
-                          if (data['status'] == 'OK') {
-                            return MLocation.parseLocationList(data);
-                          }
+                        try {
+                          return LocationApi.getLocationData(query)
+                              .then((response) {
+                            var data = jsonDecode(response.body.toString());
+                            if (data['features'] != []) {
+                              return MLocation.parseLocationList(data);
+                            }
+                            return [];
+                          });
+                        } catch (_) {
                           return [];
-                        });
+                        }
                       } else {
                         return [];
                       }
@@ -246,30 +249,31 @@ class _MapScreenState extends State<MapScreen> {
   Widget _getMap() {
     return IgnorePointer(
       ignoring: isSearching,
-      child: BlocBuilder<MapPickerBloc, MapPickerState>(builder: (context, state) {
-          return GoogleMap(
-      initialCameraPosition: CameraPosition(
-          target: widget.latLng ??
-              LatLng(10.870023145812784, 106.80306064596698),
-          zoom: 20),
-      mapType: MapType.normal,
-      onCameraIdle: () {
-        BlocProvider.of<MapPickerBloc>(context)
-            .add(UpdatedLocation(location: draggedLatlng));
-      },
-      onCameraMove: (cameraPosition) {
-        BlocProvider.of<MapPickerBloc>(context).add(UpdatingLocation());
-        draggedLatlng = cameraPosition.target;
-      },
-      onMapCreated: (GoogleMapController controller) {
-        BlocProvider.of<MapPickerBloc>(context).add(InitController(
-            controller: controller,
-            currentLocation: widget.latLng ??
-                LatLng(10.870023145812784, 106.80306064596698)));
-      },
-      zoomControlsEnabled: false,
-          );
-        }),
+      child:
+          BlocBuilder<MapPickerBloc, MapPickerState>(builder: (context, state) {
+        return GoogleMap(
+          initialCameraPosition: CameraPosition(
+              target: widget.latLng ??
+                  LatLng(10.870023145812784, 106.80306064596698),
+              zoom: 20),
+          mapType: MapType.normal,
+          onCameraIdle: () {
+            BlocProvider.of<MapPickerBloc>(context)
+                .add(UpdatedLocation(location: draggedLatlng));
+          },
+          onCameraMove: (cameraPosition) {
+            BlocProvider.of<MapPickerBloc>(context).add(UpdatingLocation());
+            draggedLatlng = cameraPosition.target;
+          },
+          onMapCreated: (GoogleMapController controller) {
+            BlocProvider.of<MapPickerBloc>(context).add(InitController(
+                controller: controller,
+                currentLocation: widget.latLng ??
+                    LatLng(10.870023145812784, 106.80306064596698)));
+          },
+          zoomControlsEnabled: false,
+        );
+      }),
     );
   }
 
