@@ -9,6 +9,8 @@ import 'package:coffee_shop_app/screens/menu/menu_screen.dart';
 import 'package:coffee_shop_app/screens/product_detail.dart';
 import 'package:coffee_shop_app/screens/profile/profile_screen.dart';
 import 'package:coffee_shop_app/screens/profile/profile_setting_screen.dart';
+import 'package:coffee_shop_app/screens/promo/promo_qr_scan.dart';
+import 'package:coffee_shop_app/screens/promo/promo_screen.dart';
 import 'package:coffee_shop_app/screens/search_product_screen.dart';
 import 'package:coffee_shop_app/screens/store/store_detail.dart';
 import 'package:coffee_shop_app/screens/store/store_search_screen.dart';
@@ -107,7 +109,7 @@ class AppRouter {
         ));
 
       case MapScreen.routeName:
-        LatLng latLng = settings.arguments as LatLng;
+        LatLng? latLng = settings.arguments as LatLng?;
         return _createRoute(MapScreen(
           latLng: latLng,
         ));
@@ -150,7 +152,10 @@ class AppRouter {
                   latLng: latLng,
                   isPurposeForShowDetail: isPurposeForShowDetail,
                 )));
-
+      case PromoScreen.routeName:
+        return _createRoute(PromoScreen());
+      case PromoQRScan.routeName:
+        return _createRoute(PromoQRScan());
       default:
         return _createRoute(MainPage());
     }
