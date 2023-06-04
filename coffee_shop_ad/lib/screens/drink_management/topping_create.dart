@@ -99,6 +99,7 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
         QuickAlert.show(
           context: context,
           type: QuickAlertType.warning,
+          confirmBtnText: "Ok",
           text: 'Please choose an image, input name and price!',
         );
         return false;
