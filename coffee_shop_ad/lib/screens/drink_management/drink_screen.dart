@@ -9,14 +9,14 @@ import '../../utils/colors/app_colors.dart';
 import '../../utils/constants/dimension.dart';
 import 'drink_item.dart';
 
-class SizeList extends StatefulWidget {
-  const SizeList({super.key});
+class DrinkScreen extends StatefulWidget {
+  const DrinkScreen({super.key});
 
   @override
-  State<SizeList> createState() => _SizeListState();
+  State<DrinkScreen> createState() => _DrinkListState();
 }
 
-class _SizeListState extends State<SizeList> {
+class _DrinkListState extends State<DrinkScreen> {
   final ScrollController _scrollController = ScrollController();
 
   @override

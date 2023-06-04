@@ -11,6 +11,7 @@ import 'package:coffee_shop_admin/services/blocs/pickup_timer/pickup_timer_cubit
 import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/recent_see_products/recent_see_products_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/search_store/search_store_bloc.dart';
+import 'package:coffee_shop_admin/services/blocs/size_manage/size_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/store_store/store_store_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/user/user_bloc.dart';
@@ -45,6 +46,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<ToppingListBloc>(
           create: (BuildContext context) => ToppingListBloc(),
+        ),
+        BlocProvider<SizeListBloc>(
+          create: (BuildContext context) => SizeListBloc(),
         ),
         BlocProvider<UserBloc>(
           create: (BuildContext context) => UserBloc(),

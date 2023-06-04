@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:coffee_shop_admin/screens/drink_management/topping_card.dart';
-import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_bloc.dart';
-import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_event.dart';
-import 'package:coffee_shop_admin/services/models/topping.dart';
+import 'package:coffee_shop_admin/screens/drink_management/size_card.dart';
+import 'package:coffee_shop_admin/services/blocs/size_manage/size_list_bloc.dart';
+import 'package:coffee_shop_admin/services/blocs/size_manage/size_list_event.dart';
+import 'package:coffee_shop_admin/services/models/size.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
 import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
@@ -13,15 +13,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quickalert/quickalert.dart';
 
-class ToppingDetail extends StatefulWidget {
-  final Topping product;
-  const ToppingDetail({super.key, required this.product});
+class SizeDetail extends StatefulWidget {
+  static const String routeName = "/size_detail_screen";
+  final Size product;
+  const SizeDetail({super.key, required this.product});
 
   @override
-  State<ToppingDetail> createState() => _ToppingDetailState();
+  State<SizeDetail> createState() => _SizeDetailState();
 }
 
-class _ToppingDetailState extends State<ToppingDetail> {
+class _SizeDetailState extends State<SizeDetail> {
   @override
   void initState() {
     super.initState();
@@ -36,7 +37,7 @@ class _ToppingDetailState extends State<ToppingDetail> {
   Widget build(BuildContext context) {
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
     // ignore: no_leading_underscores_for_local_identifiers
-    void _handleOnTapDeleteTopping() async {
+    void _handleOnTapDeleteSize() async {
       String imgUrl = widget.product.image;
 
       QuickAlert.show(
@@ -48,13 +49,13 @@ class _ToppingDetailState extends State<ToppingDetail> {
 
       try {
         await FirebaseFirestore.instance
-            .collection("Topping")
+            .collection("Size")
             .doc(widget.product.id)
             .delete()
             .then((value) {
           Navigator.of(context).pop();
           Navigator.of(context).pop();
-          BlocProvider.of<ToppingListBloc>(context).add(FetchData());
+          BlocProvider.of<SizeListBloc>(context).add(FetchData());
           FirebaseStorage.instance.refFromURL(imgUrl).delete();
           QuickAlert.show(
             context: context,
@@ -63,7 +64,7 @@ class _ToppingDetailState extends State<ToppingDetail> {
           );
         });
       } catch (e) {
-        print("Something wrong when delete topping");
+        print("Something wrong when delete size");
         print(e);
       }
     }
@@ -81,7 +82,7 @@ class _ToppingDetailState extends State<ToppingDetail> {
                 children: [
                   CustomAppBar(
                     leading: Text(
-                      widget.product.name,
+                      'Size: ${widget.product.name}',
                       style: AppText.style.regularBlack16,
                     ),
                   ),
@@ -93,7 +94,7 @@ class _ToppingDetailState extends State<ToppingDetail> {
                       child: SingleChildScrollView(
                           child: Column(
                     children: [
-                      ToppingCard(product: widget.product),
+                      SizeCard(product: widget.product),
                       SizedBox(height: 16)
                     ],
                   ))),
@@ -127,7 +128,7 @@ class _ToppingDetailState extends State<ToppingDetail> {
                                 child: Builder(builder: (context) {
                                   return ElevatedButton(
                                       style: roundedButton,
-                                      onPressed: _handleOnTapDeleteTopping,
+                                      onPressed: _handleOnTapDeleteSize,
                                       child: Text(
                                         'Delete',
                                         style: AppText.style.regularWhite16,
