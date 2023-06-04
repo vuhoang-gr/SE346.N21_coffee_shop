@@ -26,16 +26,17 @@ class StoreSelectionScreen extends StatefulWidget {
   State<StoreSelectionScreen> createState() => _StoreSelectionScreenState();
 }
 
-class _StoreSelectionScreenState extends State<StoreSelectionScreen> {
+class _StoreSelectionScreenState extends State<StoreSelectionScreen>
+    with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<StoreStoreBloc>(context)
-        .add(FetchData(location: widget.latLng));
+    BlocProvider.of<StoreStoreBloc>(context).add(ChangeFetchedToLoaded());
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return GestureDetector(
         onTap: () {
           FocusManager.instance.primaryFocus?.unfocus();
@@ -111,13 +112,17 @@ class _StoreSelectionScreenState extends State<StoreSelectionScreen> {
                 Expanded(child: BlocBuilder<StoreStoreBloc, StoreStoreState>(
                     builder: (context, state) {
                   if (state is LoadedState) {
-                    return RefreshIndicator(
-                        onRefresh: () async {
-                          BlocProvider.of<StoreStoreBloc>(context)
-                              .add(FetchData(location: widget.latLng));
-                        },
-                        child: SingleChildScrollView(
-                          physics: AlwaysScrollableScrollPhysics(),
+                    return RefreshIndicator(onRefresh: () async {
+                      BlocProvider.of<StoreStoreBloc>(context)
+                          .add(FetchData(location: widget.latLng));
+                    }, child: LayoutBuilder(builder:
+                        (BuildContext context, BoxConstraints constraints) {
+                      return SingleChildScrollView(
+                        physics: AlwaysScrollableScrollPhysics(),
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: constraints.maxHeight,
+                          ),
                           child: Padding(
                             padding: EdgeInsets.symmetric(
                               horizontal: Dimension.width16,
@@ -187,8 +192,10 @@ class _StoreSelectionScreenState extends State<StoreSelectionScreen> {
                                   )
                                 ]),
                           ),
-                        ));
-                  } else if (state is LoadingState) {
+                        ),
+                      );
+                    }));
+                  } else if (state is LoadingState || state is FetchedState) {
                     return Padding(
                       padding: EdgeInsets.only(
                           right: Dimension.width16,
@@ -252,4 +259,7 @@ class _StoreSelectionScreenState extends State<StoreSelectionScreen> {
     }
     return tapHandler;
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

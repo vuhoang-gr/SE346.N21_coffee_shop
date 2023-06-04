@@ -16,7 +16,11 @@ class StoreListItem extends StatelessWidget {
   final Store store;
   final LatLng? latLng;
   final VoidCallback tapHandler;
-  const StoreListItem({super.key, required this.store, required this.latLng, required this.tapHandler});
+  const StoreListItem(
+      {super.key,
+      required this.store,
+      required this.latLng,
+      required this.tapHandler});
 
   @override
   Widget build(BuildContext context) {
@@ -57,13 +61,11 @@ class StoreListItem extends StatelessWidget {
                     SizedBox(
                       height: Dimension.height4,
                     ),
-                    Center(
-                      child: Text(
-                        store.address.formattedAddress,
-                        softWrap: true,
-                        textAlign: TextAlign.left,
-                        style: AppText.style.regularGrey12,
-                      ),
+                    Text(
+                      store.address.formattedAddress,
+                      softWrap: true,
+                      textAlign: TextAlign.left,
+                      style: AppText.style.regularGrey12,
                     ),
                     SizedBox(
                       height: Dimension.height4,

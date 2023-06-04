@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../screens/customer_address/address_listing_screen.dart';
-import '../../../temp/data.dart';
+import '../../../services/apis/auth_api.dart';
 import '../../../utils/colors/app_colors.dart';
 import '../../../utils/constants/dimension.dart';
 import '../../../utils/styles/app_texts.dart';
@@ -69,7 +69,7 @@ class AddressPicker extends StatelessWidget {
                         Flexible(
                           child: Text(
                             state.selectedDeliveryAddress?.nameReceiver ??
-                                Data.name,
+                                AuthAPI.currentUser!.name,
                             textAlign: TextAlign.left,
                             style: AppText.style.regularGrey12,
                             maxLines: 1,
@@ -89,7 +89,7 @@ class AddressPicker extends StatelessWidget {
                           width: Dimension.width8,
                         ),
                         Text(
-                          state.selectedDeliveryAddress?.phone ?? Data.phone,
+                          state.selectedDeliveryAddress?.phone ?? AuthAPI.currentUser!.phoneNumber,
                           textAlign: TextAlign.left,
                           style: AppText.style.regularGrey12,
                           maxLines: 1,

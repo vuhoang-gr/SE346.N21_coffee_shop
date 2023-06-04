@@ -181,7 +181,7 @@ class _AddressScreenState extends State<AddressScreen>
                                       child: ElevatedButton(
                                           onPressed: () {
                                             Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
+                                            Navigator.of(context).pop(true);
                                           },
                                           style: _roundedOutlineButtonStyle,
                                           child: Text(
@@ -269,23 +269,33 @@ class _AddressScreenState extends State<AddressScreen>
                                                       state.address!.lat,
                                                       state.address!.lng))
                                               .then((location) {
-                                            MLocation mLocation =
-                                                location as MLocation;
-                                            _addressController.text =
-                                                mLocation.formattedAddress;
-                                            BlocProvider.of<EditAddressBloc>(
-                                                    context)
-                                                .add(AddressChanged(
-                                                    address: mLocation));
+                                            if (location != null) {
+                                              MLocation mLocation =
+                                                  location as MLocation;
+                                              _addressController.text =
+                                                  mLocation.formattedAddress;
+                                              BlocProvider.of<EditAddressBloc>(
+                                                      context)
+                                                  .add(AddressChanged(
+                                                      address: mLocation));
+                                            }
                                           });
                                         } else {
                                           Navigator.of(context)
                                               .pushNamed(MapScreen.routeName,
                                                   arguments: initLatLng)
-                                              .then((location) =>
-                                                  _addressController.text =
-                                                      (location as MLocation)
-                                                          .formattedAddress);
+                                              .then((location) {
+                                            if (location != null) {
+                                              MLocation mLocation =
+                                                  location as MLocation;
+                                              _addressController.text =
+                                                  mLocation.formattedAddress;
+                                              BlocProvider.of<EditAddressBloc>(
+                                                      context)
+                                                  .add(AddressChanged(
+                                                      address: mLocation));
+                                            }
+                                          });
                                         }
                                       },
                                       child: TextFormField(

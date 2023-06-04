@@ -5,6 +5,8 @@ import 'package:coffee_shop_app/widgets/feature/menu_screen/skeleton/pickup_menu
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../services/blocs/cart_button/cart_button_bloc.dart';
+import '../../services/blocs/cart_button/cart_button_state.dart';
 import '../../services/blocs/product_store/product_store_state.dart';
 import '../../utils/colors/app_colors.dart';
 import '../../utils/constants/dimension.dart';
@@ -23,13 +25,7 @@ class PickupMenuScreen extends StatefulWidget {
 
 class _PickupMenuScreenState extends State<PickupMenuScreen> {
   final ScrollController _scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<ProductStoreBloc>(context).add(FetchData());
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -63,8 +59,14 @@ class _PickupMenuScreenState extends State<PickupMenuScreen> {
                     children: [
                       RefreshIndicator(
                         onRefresh: () async {
-                          BlocProvider.of<ProductStoreBloc>(context)
-                              .add(FetchData());
+                           CartButtonState cartButtonState =
+                            BlocProvider.of<CartButtonBloc>(context).state;
+                        BlocProvider.of<ProductStoreBloc>(context).add(
+                            FetchData(
+                                stateFood:
+                                    cartButtonState.selectedStore?.stateFood,
+                                stateTopping: cartButtonState
+                                    .selectedStore?.stateTopping));
                         },
                         child: ListView(
                           controller: _scrollController,
@@ -116,7 +118,7 @@ class _PickupMenuScreenState extends State<PickupMenuScreen> {
                       CartButton(scrollController: _scrollController),
                     ],
                   );
-                } else if (state is LoadingState) {
+                } else if (state is LoadingState || state is FetchedState) {
                   return PickupMenuSkeleton();
                 } else {
                   return SizedBox.shrink();

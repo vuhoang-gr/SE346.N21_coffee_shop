@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../services/apis/auth_api.dart';
 import '../../../services/blocs/cart_button/cart_button_bloc.dart';
 import '../../../services/models/location.dart';
-import '../../../temp/data.dart';
 import '../../../utils/colors/app_colors.dart';
 import '../../../utils/constants/dimension.dart';
 import '../../../utils/styles/app_texts.dart';
@@ -27,8 +27,8 @@ class AddressBlock extends StatelessWidget {
                   selectedDeliveryAddress: DeliveryAddress(
                       address: mLocation,
                       addressNote: "",
-                      nameReceiver: Data.name,
-                      phone: Data.phone)));
+                      nameReceiver: AuthAPI.currentUser!.name,
+                      phone: AuthAPI.currentUser!.phoneNumber)));
           Navigator.of(context).pop();
         });
       },

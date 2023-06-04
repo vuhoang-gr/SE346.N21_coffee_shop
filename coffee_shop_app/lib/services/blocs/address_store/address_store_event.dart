@@ -2,20 +2,20 @@ import 'package:coffee_shop_app/services/models/delivery_address.dart';
 
 abstract class AddressStoreEvent {}
 
-class ListAddressInited extends AddressStoreEvent {}
+class FetchData extends AddressStoreEvent {}
 
-class ListAddressUpdatedIndex extends AddressStoreEvent {
+class UpdateIndex extends AddressStoreEvent {
   DeliveryAddress deliveryAddress;
   int index;
-  ListAddressUpdatedIndex({required this.deliveryAddress, required this.index});
+  UpdateIndex({required this.deliveryAddress, required this.index});
 }
 
-class ListAddressDeletedIndex extends AddressStoreEvent {
+class DeleteIndex extends AddressStoreEvent {
   int index;
-  ListAddressDeletedIndex({required this.index});
+  DeleteIndex({required this.index});
 }
 
-class ListAddressInserted extends AddressStoreEvent {
+class Insert extends AddressStoreEvent {
   DeliveryAddress deliveryAddress;
-  ListAddressInserted({required this.deliveryAddress});
+  Insert({required this.deliveryAddress});
 }

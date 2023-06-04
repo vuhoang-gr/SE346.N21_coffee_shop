@@ -12,3 +12,7 @@ class UpdateFavorite extends StoreStoreEvent {
   final Store store;
   UpdateFavorite({required this.store});
 }
+
+class ChangeFetchedToLoaded extends StoreStoreEvent {
+  ChangeFetchedToLoaded();
+}

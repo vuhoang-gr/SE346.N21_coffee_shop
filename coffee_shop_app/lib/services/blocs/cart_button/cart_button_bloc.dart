@@ -1,11 +1,17 @@
+import 'package:coffee_shop_app/services/apis/store_api.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_event.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CartButtonBloc extends Bloc<CartButtonEvent, CartButtonState> {
   CartButtonBloc()
-      : super(CartButtonState(
-            selectedStore: null, selectedDeliveryAddress: null)) {
+      : super((StoreAPI.currentStores != null &&
+                StoreAPI.currentStores!.isNotEmpty)
+            ? CartButtonState(
+                selectedStore: StoreAPI.currentStores![0],
+                selectedDeliveryAddress: null)
+            : CartButtonState(
+                selectedStore: null, selectedDeliveryAddress: null)) {
     on<ChangeSelectedStore>(_mapChangeSelectedStoreToState);
     on<ChangeSelectedStoreButNotUse>(_mapChangeSelectedStoreButNotUse);
     on<ChangeSelectedDeliveryAddress>(_mapChangeSelectedAddressToState);
