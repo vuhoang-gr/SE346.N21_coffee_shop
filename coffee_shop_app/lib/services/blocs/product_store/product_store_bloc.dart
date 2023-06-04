@@ -4,68 +4,89 @@ import 'package:coffee_shop_app/services/apis/food_api.dart';
 import 'package:coffee_shop_app/services/blocs/product_store/product_store_event.dart';
 import 'package:coffee_shop_app/services/blocs/product_store/product_store_state.dart';
 import 'package:coffee_shop_app/services/models/food.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import '../../../utils/constants/dimension.dart';
 
 class ProductStoreBloc extends Bloc<ProductStoreEvent, ProductStoreState> {
-  ProductStoreBloc()
-      : super(FoodAPI.currentFoods == null
-            ? LoadingState()
-            : FetchedState(initFoods: FoodAPI.currentFoods!)) {
+  StreamSubscription<List<Food>>? _foodStoreSubscription;
+  ProductStoreBloc() : super(LoadingState(initFoods: [])) {
     on<FetchData>(_mapFetchData);
     on<UpdateFavorite>(_mapUpdateFavorite);
-    on<ChangeFetchedToLoaded>(_mapChangeFetchedToLoaded);
+    on<GetDataFetched>(_mapGetDataFetched);
   }
 
-  Future<void> _mapFetchData(
-      FetchData event, Emitter<ProductStoreState> emit) async {
-    emit(LoadingState());
+  void _mapFetchData(FetchData event, Emitter<ProductStoreState> emit) {
+    emit(LoadingState(initFoods: state.initFoods));
+    _foodStoreSubscription?.cancel();
+    _foodStoreSubscription =
+        FoodAPI().fetchData(event.stateFood).listen((listFoods) {
+      add(GetDataFetched(listFoods: listFoods));
+    }, onError: (_) {
+      Fluttertoast.showToast(
+          msg: "Đã có lỗi xảy ra, hãy thử lại sau.",
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.white,
+          fontSize: Dimension.font14);
+      add(GetDataFetched(listFoods: []));
+    });
+  }
 
-    List<Food> foods = await FoodAPI().fetchData(
-        stateFood: event.stateFood, stateTopping: event.stateTopping);
+  Future<void> _mapGetDataFetched(
+      GetDataFetched event, Emitter<ProductStoreState> emit) async {
+    emit(LoadingState(initFoods: state.initFoods));
 
-    FoodAPI.currentFoods = foods;
-    
-    Map<String, dynamic> foodObject = separateIntoNeededObject(foods);
+    Map<String, dynamic> foodObject = separateIntoNeededObject(event.listFoods);
 
-    emit(LoadedState(
-      initFoods: foods,
+    emit(FetchedState(
+      initFoods: event.listFoods,
       listFavoriteFood: foodObject["listFavoriteFood"],
       listOtherFood: foodObject["listOtherFood"],
     ));
   }
 
-  Future<void> _mapChangeFetchedToLoaded(
-      ChangeFetchedToLoaded event, Emitter<ProductStoreState> emit) async {
-    if (state is FetchedState) {
-      List<Food> foods = (state as FetchedState).initFoods;
-      emit(LoadingState());
-
-      Map<String, dynamic> foodObject = separateIntoNeededObject(foods);
-
-      emit(LoadedState(
-        initFoods: foods,
-        listFavoriteFood: foodObject["listFavoriteFood"],
-        listOtherFood: foodObject["listOtherFood"],
-      ));
-    }
-  }
-
   Future<void> _mapUpdateFavorite(
       UpdateFavorite event, Emitter<ProductStoreState> emit) async {
-    if (state is LoadedState) {
-      List<Food> foods = (state as LoadedState).initFoods;
-      emit(LoadingState());
-
-      //update favorite
+    if (state is HasDataProductStoreState) {
+      List<Food> prevFavFoods =
+          (state as HasDataProductStoreState).listFavoriteFood;
+      List<Food> prevOtherFoods =
+          (state as HasDataProductStoreState).listOtherFood;
       event.food.isFavorite = !event.food.isFavorite;
+      emit(LoadingState(initFoods: state.initFoods));
 
-      Map<String, dynamic> foodObject = separateIntoNeededObject(foods);
+      _foodStoreSubscription?.pause();
+      if (await FoodAPI().updateFavorite(event.food.id)) {
+        //update favorite
 
-      emit(LoadedState(
-        initFoods: foods,
-        listFavoriteFood: foodObject["listFavoriteFood"],
-        listOtherFood: foodObject["listOtherFood"],
-      ));
+        Map<String, dynamic> foodObject =
+            separateIntoNeededObject(state.initFoods);
+
+        emit(LoadedState(
+          initFoods: state.initFoods,
+          listFavoriteFood: foodObject["listFavoriteFood"],
+          listOtherFood: foodObject["listOtherFood"],
+        ));
+      } else {
+        event.food.isFavorite = !event.food.isFavorite;
+        Fluttertoast.showToast(
+            msg: "Đã có lỗi xảy ra, hãy thử lại sau.",
+            toastLength: Toast.LENGTH_SHORT,
+            timeInSecForIosWeb: 1,
+            textColor: Colors.white,
+            fontSize: Dimension.font14);
+        emit(LoadedState(
+          initFoods: state.initFoods,
+          listFavoriteFood: prevFavFoods,
+          listOtherFood: prevOtherFoods,
+        ));
+      }
+      if (_foodStoreSubscription?.isPaused ?? false) {
+        _foodStoreSubscription!.resume();
+      }
     }
   }
 
@@ -85,5 +106,11 @@ class ProductStoreBloc extends Bloc<ProductStoreEvent, ProductStoreState> {
       "listFavoriteFood": favoriteFoods,
       "listOtherFood": otherFoods,
     };
+  }
+
+  @override
+  Future<void> close() {
+    _foodStoreSubscription?.cancel();
+    return super.close();
   }
 }

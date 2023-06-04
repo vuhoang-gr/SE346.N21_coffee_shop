@@ -1,27 +1,37 @@
 import 'package:coffee_shop_app/services/models/food.dart';
 
-abstract class ProductStoreState {}
+abstract class ProductStoreState {
+  final List<Food> initFoods;
+  ProductStoreState({required this.initFoods});
+}
 
 class LoadingState extends ProductStoreState {
-  LoadingState();
+  LoadingState({required super.initFoods});
 }
 
 class ErrorState extends ProductStoreState {
-  ErrorState();
+  ErrorState({required super.initFoods});
 }
 
-class FetchedState extends ProductStoreState {
-  final List<Food> initFoods;
-  FetchedState(
-      {required this.initFoods});
-}
-
-class LoadedState extends ProductStoreState {
-  final List<Food> initFoods;
+abstract class HasDataProductStoreState extends ProductStoreState {
   final List<Food> listFavoriteFood;
   final List<Food> listOtherFood;
+  HasDataProductStoreState(
+      {required this.listFavoriteFood,
+      required this.listOtherFood,
+      required super.initFoods});
+}
+
+class FetchedState extends HasDataProductStoreState {
+  FetchedState(
+      {required super.listFavoriteFood,
+      required super.listOtherFood,
+      required super.initFoods});
+}
+
+class LoadedState extends HasDataProductStoreState {
   LoadedState(
-      {required this.initFoods,
-      required this.listFavoriteFood,
-      required this.listOtherFood});
+      {required super.listFavoriteFood,
+      required super.listOtherFood,
+      required super.initFoods});
 }

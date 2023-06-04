@@ -4,8 +4,7 @@ abstract class ProductStoreEvent {}
 
 class FetchData extends ProductStoreEvent {
   Map<String, List<String>>? stateFood;
-  List<String>? stateTopping;
-  FetchData({this.stateFood, this.stateTopping});
+  FetchData({this.stateFood});
 }
 
 class UpdateFavorite extends ProductStoreEvent {
@@ -13,7 +12,7 @@ class UpdateFavorite extends ProductStoreEvent {
   UpdateFavorite({required this.food});
 }
 
-class ChangeFetchedToLoaded extends ProductStoreEvent {
-  ChangeFetchedToLoaded();
+class GetDataFetched extends ProductStoreEvent {
+  final List<Food> listFoods;
+  GetDataFetched({required this.listFoods});
 }
-
