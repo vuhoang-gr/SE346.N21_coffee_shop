@@ -92,12 +92,12 @@ class StoreDetail extends StatelessWidget {
                                                   height: Dimension.height8,
                                                 ),
                                                 Text(
-                                                  "Store pickup",
+                                                  "Mang đi",
                                                   style: AppText
                                                       .style.mediumBlack16,
                                                 ),
                                                 Text(
-                                                  "Best quality",
+                                                  "Chất lượng tốt nhất",
                                                   style: AppText
                                                       .style.regularGrey14,
                                                 )
@@ -148,12 +148,12 @@ class StoreDetail extends StatelessWidget {
                                                   height: Dimension.height8,
                                                 ),
                                                 Text(
-                                                  "Delivery",
+                                                  "Giao hàng",
                                                   style: AppText
                                                       .style.mediumBlack16,
                                                 ),
                                                 Text(
-                                                  "Always on time",
+                                                  "Luôn đúng giờ",
                                                   style: AppText
                                                       .style.regularGrey14,
                                                 )
@@ -181,7 +181,7 @@ class StoreDetail extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Phone number',
+                                          'Số điện thoại',
                                           style: AppText.style.regular,
                                         ),
                                         SizedBox(
@@ -207,7 +207,7 @@ class StoreDetail extends StatelessWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Address',
+                                            'Địa chỉ',
                                             style: AppText.style.regular,
                                           ),
                                           SizedBox(
