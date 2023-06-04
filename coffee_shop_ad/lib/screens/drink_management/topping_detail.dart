@@ -1,11 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coffee_shop_admin/screens/drink_management/topping_card.dart';
+import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_bloc.dart';
+import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_event.dart';
 import 'package:coffee_shop_admin/services/models/topping.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
 import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:coffee_shop_admin/utils/styles/button.dart';
 import 'package:coffee_shop_admin/widgets/global/custom_app_bar.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quickalert/quickalert.dart';
 
 class ToppingDetail extends StatefulWidget {
   final Topping product;
@@ -29,6 +36,37 @@ class _ToppingDetailState extends State<ToppingDetail> {
   @override
   Widget build(BuildContext context) {
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
+    void _handleOnTapDeleteTopping() async {
+      String imgUrl = widget.product.image;
+
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.loading,
+        title: 'Loading',
+        text: 'Deleting ${widget.product.name}',
+      );
+
+      try {
+        await FirebaseFirestore.instance
+            .collection("Topping")
+            .doc(widget.product.id)
+            .delete()
+            .then((value) {
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+          BlocProvider.of<ToppingListBloc>(context).add(FetchData());
+          FirebaseStorage.instance.refFromURL(imgUrl).delete();
+          QuickAlert.show(
+            context: context,
+            type: QuickAlertType.success,
+            text: 'Completed Successfully!',
+          );
+        });
+      } catch (e) {
+        print("Something wrong when delete topping");
+        print(e);
+      }
+    }
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -89,7 +127,7 @@ class _ToppingDetailState extends State<ToppingDetail> {
                                 child: Builder(builder: (context) {
                                   return ElevatedButton(
                                       style: roundedButton,
-                                      onPressed: () {},
+                                      onPressed: _handleOnTapDeleteTopping,
                                       child: Text(
                                         'Delete',
                                         style: AppText.style.regularWhite16,
