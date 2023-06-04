@@ -55,12 +55,12 @@ class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
         children: [
           CustomAppBar(
             leading: Text(
-              "Delivery",
+              "Giao hàng",
               style: AppText.style.boldBlack18,
             ),
             trailing: BlocBuilder<ProductStoreBloc, ProductStoreState>(
                 builder: (context, state) {
-              if (state is LoadedState) {
+              if (state is HasDataProductStoreState) {
                 return IconButton(
                     onPressed: () => Navigator.of(context)
                         .pushNamed(SearchProductScreen.routeName),
@@ -75,7 +75,7 @@ class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
               children: [
                 BlocBuilder<ProductStoreBloc, ProductStoreState>(
                     builder: (context, state) {
-                  if (state is LoadedState) {
+                  if (state is HasDataProductStoreState) {
                     return RefreshIndicator(
                       onRefresh: () async {
                         CartButtonState cartButtonState =
@@ -83,9 +83,7 @@ class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
                         BlocProvider.of<ProductStoreBloc>(context).add(
                             FetchData(
                                 stateFood:
-                                    cartButtonState.selectedStore?.stateFood,
-                                stateTopping: cartButtonState
-                                    .selectedStore?.stateTopping));
+                                    cartButtonState.selectedStore?.stateFood));
                       },
                       child: LayoutBuilder(builder:
                           (BuildContext context, BoxConstraints constraints) {
@@ -101,14 +99,14 @@ class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
                               SizedBox(height: Dimension.height8),
                               const DeliveryStorePicker(),
                               SizedBox(height: Dimension.height8),
-                              Container(
+                              state.listFavoriteFood.isNotEmpty?Container(
                                 padding:
                                     const EdgeInsets.fromLTRB(16, 12, 0, 12),
                                 child: Text(
-                                  "Favorite",
+                                  "Yêu thích",
                                   style: AppText.style.mediumBlack14,
                                 ),
-                              ),
+                              ):SizedBox.shrink(),
                               ...(state.listFavoriteFood
                                   .map((product) => Container(
                                         padding: EdgeInsets.only(
@@ -126,7 +124,7 @@ class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
                                       padding: const EdgeInsets.fromLTRB(
                                           16, 12, 0, 12),
                                       child: Text(
-                                        "Other",
+                                        "Khác",
                                         style: AppText.style.mediumBlack14,
                                       ),
                                     )

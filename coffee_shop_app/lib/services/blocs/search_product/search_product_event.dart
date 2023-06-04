@@ -10,6 +10,8 @@ class SearchTextChanged extends SearchProductEvent {
 
 class SearchClear extends SearchProductEvent {}
 
+class WaitingUpdateList extends SearchProductEvent {}
+
 class UpdateList extends SearchProductEvent {
   final List<Food> initListFood;
   UpdateList({required this.initListFood});

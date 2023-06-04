@@ -42,19 +42,16 @@ class _AddressScreenState extends State<AddressScreen>
       _isCreatingNewAddress = false;
     }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      EditAddressBloc editAddressBloc =
-          BlocProvider.of<EditAddressBloc>(context);
-      editAddressBloc.add(InitForm(deliveryAddress: widget.deliveryAddress));
-    });
+    EditAddressBloc editAddressBloc = BlocProvider.of<EditAddressBloc>(context);
+    editAddressBloc.add(InitForm(deliveryAddress: widget.deliveryAddress));
 
-    String initAddress;
+    String initAddressString;
     if (widget.deliveryAddress == null) {
-      initAddress = "";
+      initAddressString = "";
     } else {
-      initAddress = widget.deliveryAddress!.address.formattedAddress;
+      initAddressString = widget.deliveryAddress!.address.formattedAddress;
     }
-    _addressController = TextEditingController(text: initAddress);
+    _addressController = TextEditingController(text: initAddressString);
 
     super.initState();
   }
@@ -152,7 +149,7 @@ class _AddressScreenState extends State<AddressScreen>
                               padding: EdgeInsets.symmetric(
                                   horizontal: Dimension.width16),
                               child: Text(
-                                "Confirm",
+                                "Thông báo",
                                 textAlign: TextAlign.center,
                                 style: AppText.style.boldBlack18,
                               ),
@@ -164,7 +161,7 @@ class _AddressScreenState extends State<AddressScreen>
                                 height: Dimension.height37,
                                 alignment: Alignment.center,
                                 child: Text(
-                                  "Do you want to remove this address?",
+                                  "Bạn có chắc muốn xóa địa chỉ này?",
                                   style: AppText.style.regular,
                                 )),
                             SizedBox(
@@ -185,7 +182,7 @@ class _AddressScreenState extends State<AddressScreen>
                                           },
                                           style: _roundedOutlineButtonStyle,
                                           child: Text(
-                                            "Yes",
+                                            "Có",
                                             style: AppText.style.regularBlue16,
                                           )),
                                     ),
@@ -199,7 +196,7 @@ class _AddressScreenState extends State<AddressScreen>
                                           },
                                           style: _roundedButtonStyle,
                                           child: Text(
-                                            "No",
+                                            "Không",
                                             style: AppText.style.regularWhite16,
                                           )),
                                     )
@@ -222,7 +219,9 @@ class _AddressScreenState extends State<AddressScreen>
               children: [
                 CustomAppBar(
                   leading: Text(
-                    _isCreatingNewAddress ? "New address" : "Edit address",
+                    _isCreatingNewAddress
+                        ? "Thêm địa chỉ mới"
+                        : "Thay đổi địa chỉ",
                     style: AppText.style.boldBlack18,
                   ),
                   trailing:
@@ -251,7 +250,7 @@ class _AddressScreenState extends State<AddressScreen>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Address",
+                                    "Địa chỉ",
                                     style: AppText.style.boldBlack14,
                                   ),
                                   SizedBox(
@@ -306,14 +305,13 @@ class _AddressScreenState extends State<AddressScreen>
                                         style: AppText.style.regularBlack14,
                                         validator: (value) {
                                           if (!isAddressValid(value ?? "")) {
-                                            return 'Please choose your address.';
+                                            return 'Vui lòng chọn địa chỉ!';
                                           }
                                           return null;
                                         },
                                         decoration:
                                             generateDisableTextDecoration(
-                                                hintString:
-                                                    "Select your address"),
+                                                hintString: "Chọn địa chỉ"),
                                       ),
                                     );
                                   }),
@@ -321,7 +319,7 @@ class _AddressScreenState extends State<AddressScreen>
                                     height: Dimension.height16,
                                   ),
                                   Text(
-                                    "Address note",
+                                    "Ghi chú",
                                     style: AppText.style.boldBlack14,
                                   ),
                                   SizedBox(
@@ -339,7 +337,7 @@ class _AddressScreenState extends State<AddressScreen>
                                       style: AppText.style.regularBlack14,
                                       decoration: generateTextDecoration(
                                           hintString:
-                                              "More information about address"),
+                                              "Thông tin thêm về địa chỉ"),
                                       maxLines: 2,
                                       onFieldSubmitted: (_) {
                                         FocusScope.of(context)
@@ -357,7 +355,7 @@ class _AddressScreenState extends State<AddressScreen>
                                     height: Dimension.height16,
                                   ),
                                   Text(
-                                    "Recipient's name",
+                                    "Người nhận",
                                     style: AppText.style.boldBlack14,
                                   ),
                                   SizedBox(
@@ -374,14 +372,14 @@ class _AddressScreenState extends State<AddressScreen>
                                       keyboardType: TextInputType.name,
                                       style: AppText.style.regularBlack14,
                                       decoration: generateTextDecoration(
-                                          hintString: "E.g Nguyen Van A"),
+                                          hintString: "Nguyen Van A"),
                                       onFieldSubmitted: (_) {
                                         FocusScope.of(context)
                                             .requestFocus(_nameFocusNode);
                                       },
                                       validator: (value) {
                                         if (!isNameValid(value ?? "")) {
-                                          return 'Please input the name.';
+                                          return 'Xin hãy nhập tên người nhận.';
                                         }
                                         return null;
                                       },
@@ -397,7 +395,7 @@ class _AddressScreenState extends State<AddressScreen>
                                     height: Dimension.height16,
                                   ),
                                   Text(
-                                    "Recipient's phone number",
+                                    "Số điện thoại",
                                     style: AppText.style.boldBlack14,
                                   ),
                                   SizedBox(
@@ -414,14 +412,14 @@ class _AddressScreenState extends State<AddressScreen>
                                       focusNode: _phoneNumberFocusNode,
                                       style: AppText.style.regularBlack14,
                                       decoration: generateTextDecoration(
-                                          hintString: "11-digit phone number"),
+                                          hintString: "0123456789"),
                                       onFieldSubmitted: (_) {
                                         _submitForm(state);
                                       },
                                       maxLength: 11,
                                       validator: (value) {
                                         if (!isPhoneValid(value ?? "")) {
-                                          return 'Please input correct phone number.';
+                                          return 'Vui lòng nhập đúng số điện thoại';
                                         }
                                         return null;
                                       },
@@ -452,7 +450,7 @@ class _AddressScreenState extends State<AddressScreen>
                                     onPressed: () => _submitForm(state),
                                     style: _roundedButtonStyle,
                                     child: Text(
-                                      "Save",
+                                      "Lưu",
                                       style: AppText.style.regularWhite16,
                                     ));
                               }))

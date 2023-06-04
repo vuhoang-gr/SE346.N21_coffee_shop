@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_bloc.dart';
+import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_event.dart';
 import 'package:coffee_shop_app/services/blocs/search_store/search_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/search_store/search_store_state.dart';
 import 'package:coffee_shop_app/services/blocs/store_store/store_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/store_store/store_store_state.dart';
+import 'package:coffee_shop_app/widgets/global/cart_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,10 +36,8 @@ class _StoreSearchScreenState extends State<StoreSearchScreen> {
   @override
   void initState() {
     StoreStoreState storeState = BlocProvider.of<StoreStoreBloc>(context).state;
-    if (storeState is LoadedState) {
-      BlocProvider.of<SearchStoreBloc>(context)
-          .add(UpdateList(listStore: storeState.initStores));
-    }
+    BlocProvider.of<SearchStoreBloc>(context)
+        .add(UpdateList(listStore: storeState.initStores));
 
     super.initState();
   }
@@ -60,7 +61,7 @@ class _StoreSearchScreenState extends State<StoreSearchScreen> {
               children: [
                 CustomAppBar(
                   leading: Text(
-                    'Select store',
+                    'Chọn cửa hàng',
                     style: AppText.style.boldBlack18,
                   ),
                 ),
@@ -114,7 +115,7 @@ class _StoreSearchScreenState extends State<StoreSearchScreen> {
                                   top: Dimension.height8,
                                   left: Dimension.height16,
                                   right: Dimension.height16),
-                              hintText: 'Search store',
+                              hintText: 'Tìm kiếm cửa hàng',
                               hintStyle: AppText.style.regularGrey14,
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(4),
@@ -134,7 +135,7 @@ class _StoreSearchScreenState extends State<StoreSearchScreen> {
                             Navigator.of(context).pop(false);
                           },
                           child: Text(
-                            "Cancel",
+                            "Hủy",
                             style: AppText.style.regularBlue14,
                           ))
                     ],
@@ -157,11 +158,11 @@ class _StoreSearchScreenState extends State<StoreSearchScreen> {
                                     height: 200,
                                   ),
                                   Text(
-                                    'Sorry, we nearly found it!',
+                                    'Xin lỗi, chúng tôi đã gần tìm thấy!',
                                     style: AppText.style.boldBlack16,
                                   ),
                                   Text(
-                                    'Please try again, better luck next time',
+                                    'Xin hãy thử lại, chúc bạn may mắn.',
                                     style: AppText.style.regular,
                                   ),
                                 ],
@@ -191,6 +192,11 @@ class _StoreSearchScreenState extends State<StoreSearchScreen> {
                                         } else {
                                           tapHandler = () {
                                             Navigator.of(context).pop(true);
+                                            context.read<CartButtonBloc>().add(
+                                                ChangeSelectedStoreButNotUse(
+                                                    selectedStore: state
+                                                            .searchStoreResults[
+                                                        index]));
                                           };
                                         }
                                         return StoreListItem(

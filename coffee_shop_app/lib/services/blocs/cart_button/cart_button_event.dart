@@ -27,6 +27,11 @@ class ChangeSelectedOrderType extends CartButtonEvent {
   ChangeSelectedOrderType({required this.selectedOrderType});
 }
 
+class UpdateDataSelectedStore extends CartButtonEvent {
+  final Store? selectedStore;
+  UpdateDataSelectedStore({required this.selectedStore});
+}
+
 enum OrderType {
   delivery,
   storePickup,

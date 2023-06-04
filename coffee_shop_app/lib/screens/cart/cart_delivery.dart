@@ -1,4 +1,6 @@
+import 'package:coffee_shop_app/screens/promo/promo_screen.dart';
 import 'package:coffee_shop_app/services/blocs/cart_cubit/cart_cubit.dart';
+import 'package:coffee_shop_app/services/models/promo.dart';
 import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:flutter/cupertino.dart';
@@ -323,45 +325,54 @@ class CartDelivery extends StatelessWidget {
                                 color: AppColors.greyTextColor,
                               ),
                               onPressed: () {
-                                showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    context: context,
-                                    backgroundColor: Colors.transparent,
-                                    builder: (builder) {
-                                      return SingleChildScrollView(
-                                        padding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom),
-                                        child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: Dimension.height16,
-                                              vertical: 0,
-                                            ),
-                                            width: double.maxFinite,
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(8),
-                                                  topRight: Radius.circular(8)),
-                                              color: Colors.white,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.grey
-                                                      .withOpacity(0.5),
-                                                  spreadRadius: 3,
-                                                  blurRadius: 5,
-                                                  offset: const Offset(0,
-                                                      5), // changes position of shadow
-                                                ),
-                                              ],
-                                            ),
-                                            child: ApplyCouponTextfield(
-                                              closeBox: () {
-                                                Navigator.pop(context);
-                                              },
-                                            )),
-                                      );
-                                    });
+                                // showModalBottomSheet(
+                                //     isScrollControlled: true,
+                                //     context: context,
+                                //     backgroundColor: Colors.transparent,
+                                //     builder: (builder) {
+                                //       return SingleChildScrollView(
+                                //         padding: EdgeInsets.only(
+                                //             bottom: MediaQuery.of(context)
+                                //                 .viewInsets
+                                //                 .bottom),
+                                //         child: Container(
+                                //             padding: EdgeInsets.symmetric(
+                                //               horizontal: Dimension.height16,
+                                //               vertical: 0,
+                                //             ),
+                                //             width: double.maxFinite,
+                                //             decoration: BoxDecoration(
+                                //               borderRadius: BorderRadius.only(
+                                //                   topLeft: Radius.circular(8),
+                                //                   topRight: Radius.circular(8)),
+                                //               color: Colors.white,
+                                //               boxShadow: [
+                                //                 BoxShadow(
+                                //                   color: Colors.grey
+                                //                       .withOpacity(0.5),
+                                //                   spreadRadius: 3,
+                                //                   blurRadius: 5,
+                                //                   offset: const Offset(0,
+                                //                       5), // changes position of shadow
+                                //                 ),
+                                //               ],
+                                //             ),
+                                //             child: ApplyCouponTextfield(
+                                //               closeBox: () {
+                                //                 Navigator.pop(context);
+                                //               },
+                                //             )),
+                                //       );
+                                //     });
+
+                                //Mai: promo
+                                Navigator.of(context)
+                                    .pushNamed(PromoScreen.routeName)
+                                    .then((value) {
+                                  if (value != null && value is Promo) {
+                                    print("Selected promo: ${value.id}");
+                                  }
+                                });
                               },
                             ),
                           ],

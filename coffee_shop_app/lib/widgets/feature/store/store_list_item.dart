@@ -1,3 +1,5 @@
+import 'package:coffee_shop_app/services/blocs/store_store/store_store_bloc.dart';
+import 'package:coffee_shop_app/services/blocs/store_store/store_store_state.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,19 +34,22 @@ class StoreListItem extends StatelessWidget {
             verticalPadding: Dimension.height8,
             horizontalPadding: Dimension.width16,
             child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              store.isFavorite
-                  ? FavoriteStoreIcon()
-                  : SizedBox(
-                      height: Dimension.height20,
-                      width: Dimension.width20,
-                      child: IconTheme(
-                        data: IconThemeData(
-                          size: Dimension.width20,
-                          color: AppColors.greyIconColor,
+              BlocBuilder<StoreStoreBloc, StoreStoreState>(
+                  builder: (context, storeState) {
+                return store.isFavorite
+                    ? FavoriteStoreIcon()
+                    : SizedBox(
+                        height: Dimension.height20,
+                        width: Dimension.width20,
+                        child: IconTheme(
+                          data: IconThemeData(
+                            size: Dimension.width20,
+                            color: AppColors.greyIconColor,
+                          ),
+                          child: const FaIcon(FontAwesomeIcons.store),
                         ),
-                        child: const FaIcon(FontAwesomeIcons.store),
-                      ),
-                    ),
+                      );
+              }),
               SizedBox(
                 width: Dimension.width8,
               ),

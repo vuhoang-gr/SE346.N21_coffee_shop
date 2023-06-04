@@ -49,7 +49,7 @@ class OrderTypeModal extends StatelessWidget {
                       SizedBox(
                         width: Dimension.width,
                         child: Text(
-                          "Choose order type",
+                          "Chọn phương thức mua hàng",
                           style: AppText.style.boldBlack16,
                           textAlign: TextAlign.center,
                         ),
@@ -107,13 +107,13 @@ class OrderTypeModal extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Delivery to",
+                            "Mang đi",
                             style: AppText.style.boldBlack14,
                           ),
                           Text(
                             state.selectedDeliveryAddress?.address
                                     .formattedAddress ??
-                                "The products will be delivered to your address",
+                                "Món ăn sẽ được giao tới bạn",
                             style: AppText.style.regularGrey14,
                           ),
                           Text(
@@ -141,7 +141,7 @@ class OrderTypeModal extends StatelessWidget {
                             ),
                             elevation: MaterialStatePropertyAll(0.0)),
                         child: Text(
-                          "edit",
+                          "sửa",
                           style: AppText.style.regularWhite14,
                         ),
                       ),
@@ -189,12 +189,12 @@ class OrderTypeModal extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Pickup at",
+                            "Tới lấy tại",
                             style: AppText.style.boldBlack14,
                           ),
                           Text(
                             state.selectedStore?.address.formattedAddress ??
-                                "You will pick up the product at the store and take it away",
+                                "Tới cửa hàng lấy món ăn và mang đi",
                             style: AppText.style.regularGrey14,
                           ),
                           (state.selectedStore != null && initLatLng != null)
@@ -231,7 +231,7 @@ class OrderTypeModal extends StatelessWidget {
                             ),
                             elevation: MaterialStatePropertyAll(0.0)),
                         child: Text(
-                          "edit",
+                          "sửa",
                           style: AppText.style.regularWhite14,
                         ),
                       ),

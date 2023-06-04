@@ -58,7 +58,7 @@ class DeliveryStorePicker extends StatelessWidget {
                   width: Dimension.width8,
                 ),
                 Text(
-                  "Store",
+                  "Cửa hàng",
                   style: AppText.style.regular,
                 ),
                 SizedBox(
@@ -75,7 +75,7 @@ class DeliveryStorePicker extends StatelessWidget {
                 Expanded(
                     child: Text(
                         state.selectedStore?.address.formattedAddress ??
-                            "Select the store",
+                            "Chọn cửa hàng",
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                         style: AppText.style.regular)),

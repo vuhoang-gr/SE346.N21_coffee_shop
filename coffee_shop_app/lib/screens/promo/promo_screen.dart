@@ -1,3 +1,4 @@
+import 'package:coffee_shop_app/screens/promo/promo_qr_scan.dart';
 import 'package:coffee_shop_app/services/blocs/promo_store/promo_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/promo_store/promo_store_state.dart';
 import 'package:coffee_shop_app/widgets/feature/promo_screen/promo_item.dart';
@@ -5,14 +6,17 @@ import 'package:coffee_shop_app/widgets/feature/promo_screen/promo_skeleton.dart
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../services/blocs/promo_store/promo_store_event.dart';
+import '../../services/models/promo.dart';
 import '../../utils/colors/app_colors.dart';
 import '../../utils/constants/dimension.dart';
 import '../../utils/styles/app_texts.dart';
 import '../../widgets/global/custom_app_bar.dart';
 
 class PromoScreen extends StatefulWidget {
+  static const String routeName = "/promo_screen";
   const PromoScreen({super.key});
 
   @override
@@ -21,13 +25,6 @@ class PromoScreen extends StatefulWidget {
 
 class _PromoScreenState extends State<PromoScreen> {
   TextEditingController controller = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-
-    BlocProvider.of<PromoStoreBloc>(context).add(FetchData());
-  }
 
   @override
   void dispose() {
@@ -71,7 +68,17 @@ class _PromoScreenState extends State<PromoScreen> {
                               },
                               style: AppText.style.regularBlack14,
                               decoration: InputDecoration(
-                                  prefixIcon: const Icon(CupertinoIcons.search),
+                                  prefixIcon: GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context)
+                                            .pushNamed(PromoQRScan.routeName)
+                                            .then((value) {
+                                          if (value != null) {
+                                            controller.text = value.toString();
+                                          }
+                                        });
+                                      },
+                                      child: const Icon(CupertinoIcons.qrcode)),
                                   contentPadding: EdgeInsets.only(
                                       top: Dimension.height8,
                                       left: Dimension.height16,
@@ -114,8 +121,7 @@ class _PromoScreenState extends State<PromoScreen> {
                               SizedBox(height: Dimension.height8),
                               Padding(
                                 padding: EdgeInsets.symmetric(
-                                  horizontal: Dimension.width16
-                                ),
+                                    horizontal: Dimension.width16),
                                 child: ListView.separated(
                                   padding:
                                       EdgeInsets.only(top: Dimension.height8),
@@ -168,5 +174,19 @@ class _PromoScreenState extends State<PromoScreen> {
     ));
   }
 
-  void _usePromo() {}
+  void _usePromo() {
+    List<Promo> promos = context.read<PromoStoreBloc>().state.initPromos;
+    for (Promo promo in promos) {
+      if (promo.id == controller.text) {
+        Navigator.of(context).pop(promo);
+        return;
+      }
+    }
+    Fluttertoast.showToast(
+          msg: "Mã khuyến mãi không tồn tại hoặc quá hạn sử dụng.",
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.white,
+          fontSize: Dimension.font14);
+  }
 }

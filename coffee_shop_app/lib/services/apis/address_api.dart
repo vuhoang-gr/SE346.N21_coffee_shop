@@ -14,19 +14,19 @@ class AddressAPI {
   final CollectionReference userReference =
       FirebaseFirestore.instance.collection('users');
 
-  Future<List<DeliveryAddress>> fetchData(String userId) async {
-    DocumentSnapshot<Object?> userSnapshot =
-        await userReference.doc(userId).get();
-    List<DeliveryAddress> deliveryAddresses = [];
-
-    if (userSnapshot.exists) {
+  Stream<List<DeliveryAddress>> fetchData(String userId) {
+    return userReference.doc(userId).snapshots().map((snapshot) {
+      List<DeliveryAddress> deliveryAddresses = [];
+      if (!snapshot.exists) {
+        throw Error();
+      }
       List<dynamic> addressData =
-          (userSnapshot.data() as Map<String, dynamic>)['addresses'] ?? [];
+          (snapshot.data() as Map<String, dynamic>)['addresses'] ?? [];
       for (var address in addressData) {
         deliveryAddresses.add(fromFireStore(address));
       }
-    }
-    return deliveryAddresses;
+      return deliveryAddresses;
+    });
   }
 
   Future<bool> push(String userId, DeliveryAddress deliveryAddress) async {

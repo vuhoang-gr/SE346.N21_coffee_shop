@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:coffee_shop_app/services/apis/address_api.dart';
 import 'package:coffee_shop_app/services/blocs/address_store/address_store_event.dart';
 import 'package:coffee_shop_app/services/blocs/address_store/address_store_state.dart';
@@ -10,24 +12,42 @@ import '../../../utils/constants/dimension.dart';
 import '../../apis/auth_api.dart';
 
 class AddressStoreBloc extends Bloc<AddressStoreEvent, AddressStoreState> {
+  StreamSubscription<List<DeliveryAddress>>? _addressSubscription;
   AddressStoreBloc() : super(LoadedState(listDeliveryAddress: [])) {
-    on<FetchData>(_onListAddressInited);
-    on<UpdateIndex>(_onListAddressUpdatedIndex);
-    on<DeleteIndex>(_onListAddressDeletedIndex);
-    on<Insert>(_onListAddressInserted);
+    on<FetchData>(_onFetchData);
+    on<UpdateIndex>(_onUpdateIndex);
+    on<DeleteIndex>(_onDeleteIndex);
+    on<Insert>(_onInsert);
+    on<UpdateAddresses>(_onUpdateAddresses);
   }
 
-  void _onListAddressInited(
-      FetchData event, Emitter<AddressStoreState> emit) async {
+  void _onFetchData(FetchData event, Emitter<AddressStoreState> emit) {
     emit(LoadingState(listDeliveryAddress: []));
-    List<DeliveryAddress> fetchedData =
-        await AddressAPI().fetchData(AuthAPI.currentUser!.id);
-    emit(LoadedState(listDeliveryAddress: fetchedData));
+    _addressSubscription?.cancel();
+    _addressSubscription = AddressAPI()
+        .fetchData(AuthAPI.currentUser!.id)
+        .listen((listDeliveryAddress) {
+      add(UpdateAddresses(listDeliveryAddress: listDeliveryAddress));
+    }, onError: (_) {
+      Fluttertoast.showToast(
+          msg: "Đã có lỗi xảy ra, hãy thử lại sau.",
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.white,
+          fontSize: Dimension.font14);
+      add(UpdateAddresses(listDeliveryAddress: []));
+    });
   }
 
-  void _onListAddressUpdatedIndex(
+  void _onUpdateAddresses(
+      UpdateAddresses event, Emitter<AddressStoreState> emit) {
+    emit(LoadedState(listDeliveryAddress: event.listDeliveryAddress));
+  }
+
+  void _onUpdateIndex(
       UpdateIndex event, Emitter<AddressStoreState> emit) async {
     emit(LoadingState(listDeliveryAddress: state.listDeliveryAddress));
+    _addressSubscription?.pause();
     if (await AddressAPI()
         .update(AuthAPI.currentUser!.id, event.index, event.deliveryAddress)) {
       List<DeliveryAddress> deliveryAddresses = state.listDeliveryAddress;
@@ -42,11 +62,36 @@ class AddressStoreBloc extends Bloc<AddressStoreEvent, AddressStoreState> {
           fontSize: Dimension.font14);
       emit(LoadedState(listDeliveryAddress: state.listDeliveryAddress));
     }
+    if (_addressSubscription?.isPaused ?? false) {
+      _addressSubscription?.resume();
+    }
   }
 
-  void _onListAddressInserted(
-      Insert event, Emitter<AddressStoreState> emit) async {
+  void _onDeleteIndex(
+      DeleteIndex event, Emitter<AddressStoreState> emit) async {
     emit(LoadingState(listDeliveryAddress: state.listDeliveryAddress));
+    _addressSubscription?.pause();
+    if (await AddressAPI().remove(AuthAPI.currentUser!.id, event.index)) {
+      List<DeliveryAddress> deliveryAddresses = state.listDeliveryAddress;
+      deliveryAddresses.removeAt(event.index);
+      emit(LoadedState(listDeliveryAddress: deliveryAddresses));
+    } else {
+      Fluttertoast.showToast(
+          msg: "Đã có lỗi xảy ra, hãy thử lại sau.",
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.white,
+          fontSize: Dimension.font14);
+      emit(LoadedState(listDeliveryAddress: state.listDeliveryAddress));
+    }
+    if (_addressSubscription?.isPaused ?? false) {
+      _addressSubscription?.resume();
+    }
+  }
+
+  void _onInsert(Insert event, Emitter<AddressStoreState> emit) async {
+    emit(LoadingState(listDeliveryAddress: state.listDeliveryAddress));
+    _addressSubscription?.pause();
     if (await AddressAPI()
         .push(AuthAPI.currentUser!.id, event.deliveryAddress)) {
       List<DeliveryAddress> deliveryAddresses = state.listDeliveryAddress;
@@ -61,23 +106,14 @@ class AddressStoreBloc extends Bloc<AddressStoreEvent, AddressStoreState> {
           fontSize: Dimension.font14);
       emit(LoadedState(listDeliveryAddress: state.listDeliveryAddress));
     }
+    if (_addressSubscription?.isPaused ?? false) {
+      _addressSubscription?.resume();
+    }
   }
 
-  void _onListAddressDeletedIndex(
-      DeleteIndex event, Emitter<AddressStoreState> emit) async {
-    emit(LoadingState(listDeliveryAddress: state.listDeliveryAddress));
-    if (await AddressAPI().remove(AuthAPI.currentUser!.id, event.index)) {
-      List<DeliveryAddress> deliveryAddresses = state.listDeliveryAddress;
-      deliveryAddresses.removeAt(event.index);
-      emit(LoadedState(listDeliveryAddress: deliveryAddresses));
-    } else {
-      Fluttertoast.showToast(
-          msg: "Đã có lỗi xảy ra, hãy thử lại sau.",
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 1,
-          textColor: Colors.white,
-          fontSize: Dimension.font14);
-      emit(LoadedState(listDeliveryAddress: state.listDeliveryAddress));
-    }
+  @override
+  Future<void> close() {
+    _addressSubscription?.cancel();
+    return super.close();
   }
 }

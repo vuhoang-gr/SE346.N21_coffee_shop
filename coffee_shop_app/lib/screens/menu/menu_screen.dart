@@ -17,16 +17,9 @@ class MenuScreen extends StatefulWidget {
   State<MenuScreen> createState() => _MenuScreenState();
 }
 
-class _MenuScreenState extends State<MenuScreen> with AutomaticKeepAliveClientMixin {
-  @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<ProductStoreBloc>(context).add(ChangeFetchedToLoaded());
-  }
-
+class _MenuScreenState extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return BlocBuilder<CartButtonBloc, CartButtonState>(
         builder: (context, state) {
       if (state.selectedOrderType == OrderType.delivery) {
@@ -36,7 +29,4 @@ class _MenuScreenState extends State<MenuScreen> with AutomaticKeepAliveClientMi
       }
     });
   }
-  
-  @override
-  bool get wantKeepAlive => true;
 }

@@ -4,25 +4,21 @@ class Promo {
   final double minPrice;
   final double maxPrice;
   final double percent;
-  final int numberTotal;
-  int numberUsed;
-  final DateTime dateBegin;
   final DateTime dateEnd;
+  final String description;
   final List<String> products;
   final List<String> stores;
-  final bool typeCustomer;
+  final bool forNewCustomer ;
 
   Promo({
     required this.id,
     required this.minPrice,
     required this.maxPrice,
     required this.percent,
-    required this.numberTotal,
-    required this.numberUsed,
-    required this.dateBegin,
+    required this.description,
     required this.dateEnd,
     required this.products,
     required this.stores,
-    required this.typeCustomer,
+    required this.forNewCustomer ,
   });
 }
