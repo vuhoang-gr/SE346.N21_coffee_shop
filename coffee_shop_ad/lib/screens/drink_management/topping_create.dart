@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_bloc.dart';
+import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_event.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quickalert/quickalert.dart';
 
@@ -126,6 +128,7 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
           }).then((value) {
             Navigator.of(context).pop();
             Navigator.of(context).pop();
+            BlocProvider.of<ToppingListBloc>(context).add(FetchData());
             QuickAlert.show(
               context: context,
               type: QuickAlertType.success,
