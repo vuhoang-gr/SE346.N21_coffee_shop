@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_event.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
+import 'package:coffee_shop_admin/utils/validations/validator.dart';
+import 'package:coffee_shop_admin/widgets/global/textForm/custom_text_form.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,6 +24,8 @@ class CreateToppingScreen extends StatefulWidget {
 }
 
 class _CreateToppingScreenState extends State<CreateToppingScreen> {
+  TextEditingController toppingNameController = TextEditingController();
+  TextEditingController toppingPriceController = TextEditingController();
   bool _isKeyboardOpened = false;
 
   String imageUrl = "";
@@ -88,11 +92,14 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
   Widget build(BuildContext context) {
     _isKeyboardOpened = MediaQuery.of(context).viewInsets.bottom > 0;
     bool _validateData() {
-      if (image == null) {
+      if (image == null ||
+          toppingNameController.text.isEmpty ||
+          toppingPriceController.text.isEmpty ||
+          int.tryParse(toppingPriceController.text.toString()) == null) {
         QuickAlert.show(
           context: context,
           type: QuickAlertType.warning,
-          text: 'Please choose an image!',
+          text: 'Please choose an image, input name and price!',
         );
         return false;
       }
@@ -101,10 +108,9 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
 
     void _hanldeCreateTopping() async {
       if (!_validateData()) {
-        print("No ok!");
+        print("Invalid data!");
         return;
       }
-
       QuickAlert.show(
         context: context,
         type: QuickAlertType.loading,
@@ -122,8 +128,8 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
           res.ref.getDownloadURL().then((url) {
             FirebaseFirestore.instance.collection("Topping").add({
               "image": url,
-              "name": "Test Add Topping",
-              "price": 5000,
+              "name": toppingNameController.text,
+              "price": int.parse(toppingPriceController.text),
             });
           }).then((value) {
             Navigator.of(context).pop();
@@ -212,8 +218,19 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
                                                         'MaterialIcons'))),
                                           ),
                                         ),
-                                  SizedBox(height: 16),
                                   ElevatedButton(
+                                    style: ButtonStyle(
+                                        elevation:
+                                            const MaterialStatePropertyAll(0),
+                                        shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              Dimension.height20),
+                                        )),
+                                        backgroundColor:
+                                            const MaterialStatePropertyAll(
+                                                AppColors.blueColor)),
                                     onPressed: () {
                                       uploadImageDialog();
                                     },
@@ -231,35 +248,54 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                        // Row(
+                                        //   mainAxisAlignment:
+                                        //       MainAxisAlignment.spaceBetween,
+                                        //   children: [
+                                        //     Column(
+                                        //       crossAxisAlignment:
+                                        //           CrossAxisAlignment.start,
+                                        //       children: [
+                                        //         Text(
+                                        //           "Name",
+                                        //           style: AppText
+                                        //               .style.regularBlack16,
+                                        //         ),
+                                        //         const SizedBox(
+                                        //           height: 2,
+                                        //         ),
+                                        //         Text("Price",
+                                        //             style: AppText
+                                        //                 .style.boldBlack14),
+                                        //       ],
+                                        //     ),
+                                        //   ],
+                                        // ),
+                                        Column(
                                           children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Name",
-                                                  style: AppText
-                                                      .style.regularBlack16,
-                                                ),
-                                                const SizedBox(
-                                                  height: 2,
-                                                ),
-                                                Text("Price",
-                                                    style: AppText
-                                                        .style.boldBlack14),
-                                              ],
+                                            CustormTextForm(
+                                              controller: toppingNameController,
+                                              validator: NullValidator(),
+                                              verifiedCheck: true,
+                                              label: 'Topping Name',
+                                            ),
+                                            SizedBox(height: 8),
+                                            CustormTextForm(
+                                              controller:
+                                                  toppingPriceController,
+                                              validator: PriceValidator(),
+                                              verifiedCheck: true,
+                                              label: 'Price (VND)',
                                             ),
                                           ],
-                                        ),
+                                        )
                                       ],
                                     ),
                                   ),
                                 ],
                               ),
                             ),
+                            SizedBox(height: 20),
                           ],
                         ),
                       )),
@@ -296,9 +332,3 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
             )));
   }
 }
-// return Scaffold(
-//   backgroundColor: AppColors.backgroundColor,
-//   body: SafeArea(
-
-//   ),
-// );
