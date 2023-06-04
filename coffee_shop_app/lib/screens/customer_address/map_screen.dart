@@ -31,7 +31,7 @@ class _MapScreenState extends State<MapScreen> {
 
   bool isShowClearButton = false;
   bool isSearching = false;
-
+  
   @override
   void initState() {
     draggedLatlng =
@@ -77,7 +77,7 @@ class _MapScreenState extends State<MapScreen> {
                           vertical: Dimension.height16,
                           horizontal: Dimension.width16),
                       child: Text(
-                        "No location found",
+                        "Không thể tìm thấy địa chỉ",
                         style: AppText.style.regularBlack14,
                         textAlign: TextAlign.left,
                       ),
@@ -97,7 +97,7 @@ class _MapScreenState extends State<MapScreen> {
                           contentPadding: EdgeInsets.symmetric(
                               horizontal: Dimension.width40,
                               vertical: Dimension.height8),
-                          hintText: 'Search...',
+                          hintText: 'Tìm kiếm...',
                           hintStyle: AppText.style.regularGrey16,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
@@ -220,7 +220,7 @@ class _MapScreenState extends State<MapScreen> {
                           lat: draggedLatlng.latitude,
                           lng: draggedLatlng.longitude)),
                       child: Text(
-                        "Select this address",
+                        "Chọn địa chỉ này",
                         style: AppText.style.regularBlue16,
                       ))
                 ],
@@ -232,7 +232,7 @@ class _MapScreenState extends State<MapScreen> {
                 ),
                 child: Center(
                   child: Text(
-                    "Location not found",
+                    "Không thể tìm thấy địa chỉ",
                     style: AppText.style.mediumBlack14,
                   ),
                 ),
