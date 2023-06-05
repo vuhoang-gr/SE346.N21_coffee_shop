@@ -1,14 +1,13 @@
-import 'package:coffee_shop_admin/services/models/topping.dart';
+import 'package:coffee_shop_admin/services/functions/money_transfer.dart';
+import 'package:coffee_shop_admin/services/models/size.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
+import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../../services/functions/money_transfer.dart';
-import '../../utils/constants/dimension.dart';
-import '../../utils/styles/app_texts.dart';
+class SizeItem extends StatelessWidget {
+  final Size product;
 
-class ToppingItem extends StatelessWidget {
-  final Topping product;
-
-  const ToppingItem({super.key, required this.product});
+  const SizeItem({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +19,7 @@ class ToppingItem extends StatelessWidget {
         child: GestureDetector(
             onTap: () {
               Navigator.of(context)
-                  .pushNamed("/topping_detail_screen", arguments: product);
+                  .pushNamed("/size_detail_screen", arguments: product);
             },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,

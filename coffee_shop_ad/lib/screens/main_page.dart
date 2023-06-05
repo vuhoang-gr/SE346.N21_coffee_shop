@@ -1,5 +1,5 @@
-import 'package:coffee_shop_admin/screens/drink_management/drink_screen.dart';
-import 'package:coffee_shop_admin/screens/drink_management/main_management.dart';
+import 'package:coffee_shop_admin/screens/drink_manage/drink_screen.dart';
+import 'package:coffee_shop_admin/screens/drink_manage/main_screen.dart';
 import 'package:coffee_shop_admin/screens/profile/profile_screen.dart';
 import 'package:coffee_shop_admin/screens/store/store_screen.dart';
 import 'package:coffee_shop_admin/screens/user/user_screen.dart';

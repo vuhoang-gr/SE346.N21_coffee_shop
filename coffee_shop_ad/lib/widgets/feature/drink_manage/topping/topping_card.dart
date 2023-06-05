@@ -1,10 +1,9 @@
+import 'package:coffee_shop_admin/services/functions/money_transfer.dart';
 import 'package:coffee_shop_admin/services/models/topping.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
+import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
-import '../../../services/functions/money_transfer.dart';
-import '../../../utils/constants/dimension.dart';
-import '../../../utils/styles/app_texts.dart';
 
 class ToppingCard extends StatefulWidget {
   const ToppingCard({super.key, required this.product});

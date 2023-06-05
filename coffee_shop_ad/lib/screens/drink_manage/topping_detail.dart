@@ -1,28 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:coffee_shop_admin/screens/drink_management/size_card.dart';
-import 'package:coffee_shop_admin/screens/drink_management/size_edit.dart';
-import 'package:coffee_shop_admin/services/blocs/size_manage/size_list_bloc.dart';
-import 'package:coffee_shop_admin/services/blocs/size_manage/size_list_event.dart';
-import 'package:coffee_shop_admin/services/models/size.dart';
+import 'package:coffee_shop_admin/screens/drink_manage/topping_edit.dart';
+import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_bloc.dart';
+import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_event.dart';
+import 'package:coffee_shop_admin/services/models/topping.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
 import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:coffee_shop_admin/utils/styles/button.dart';
+import 'package:coffee_shop_admin/widgets/feature/drink_manage/topping/topping_card.dart';
 import 'package:coffee_shop_admin/widgets/global/custom_app_bar.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quickalert/quickalert.dart';
 
-class SizeDetail extends StatefulWidget {
-  final Size product;
-  const SizeDetail({super.key, required this.product});
+class ToppingDetail extends StatefulWidget {
+  final Topping product;
+  const ToppingDetail({super.key, required this.product});
 
   @override
-  State<SizeDetail> createState() => _SizeDetailState();
+  State<ToppingDetail> createState() => _ToppingDetailState();
 }
 
-class _SizeDetailState extends State<SizeDetail> {
+class _ToppingDetailState extends State<ToppingDetail> {
   @override
   void initState() {
     super.initState();
@@ -38,13 +38,13 @@ class _SizeDetailState extends State<SizeDetail> {
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
 
     // ignore: no_leading_underscores_for_local_identifiers
-    void _handleOnTapEditSize() async {
+    void _handleOnTapEditTopping() async {
       Navigator.of(context)
-          .pushNamed(EditSizeScreen.routeName, arguments: widget.product);
+          .pushNamed(EditToppingScreen.routeName, arguments: widget.product);
     }
 
     // ignore: no_leading_underscores_for_local_identifiers
-    void _handleOnTapDeleteSize() async {
+    void _handleOnTapDeleteTopping() async {
       await QuickAlert.show(
         context: context,
         type: QuickAlertType.confirm,
@@ -65,13 +65,13 @@ class _SizeDetailState extends State<SizeDetail> {
 
           try {
             await FirebaseFirestore.instance
-                .collection("Size")
+                .collection("Topping")
                 .doc(widget.product.id)
                 .delete()
                 .then((value) {
               Navigator.of(context).pop();
               Navigator.of(context).pop();
-              BlocProvider.of<SizeListBloc>(context).add(FetchData());
+              BlocProvider.of<ToppingListBloc>(context).add(FetchData());
               FirebaseStorage.instance.refFromURL(imgUrl).delete();
               QuickAlert.show(
                 context: context,
@@ -81,7 +81,7 @@ class _SizeDetailState extends State<SizeDetail> {
               );
             });
           } catch (e) {
-            print("Something wrong when delete size");
+            print("Something wrong when delete topping");
             print(e);
           }
         },
@@ -101,7 +101,7 @@ class _SizeDetailState extends State<SizeDetail> {
                 children: [
                   CustomAppBar(
                     leading: Text(
-                      'Size: ${widget.product.name}',
+                      'Topping: ${widget.product.name}',
                       style: AppText.style.regularBlack16,
                     ),
                   ),
@@ -113,7 +113,7 @@ class _SizeDetailState extends State<SizeDetail> {
                       child: SingleChildScrollView(
                           child: Column(
                     children: [
-                      SizeCard(product: widget.product),
+                      ToppingCard(product: widget.product),
                       SizedBox(height: 16)
                     ],
                   ))),
@@ -147,7 +147,7 @@ class _SizeDetailState extends State<SizeDetail> {
                                   width: 140,
                                   child: ElevatedButton.icon(
                                       style: roundedButton,
-                                      onPressed: _handleOnTapEditSize,
+                                      onPressed: _handleOnTapEditTopping,
                                       icon: Icon(
                                         Icons.create_sharp,
                                         size: 28,
@@ -171,7 +171,7 @@ class _SizeDetailState extends State<SizeDetail> {
                                         Icons.delete_forever,
                                         size: 28,
                                       ),
-                                      onPressed: _handleOnTapDeleteSize,
+                                      onPressed: _handleOnTapDeleteTopping,
                                       label: Text(
                                         'Delete',
                                         style: AppText.style.regularWhite16,
