@@ -1,6 +1,7 @@
 import 'package:coffee_shop_admin/screens/auth/auth_screen.dart';
 import 'package:coffee_shop_admin/screens/drink_management/size_create.dart';
 import 'package:coffee_shop_admin/screens/drink_management/size_detail.dart';
+import 'package:coffee_shop_admin/screens/drink_management/size_edit.dart';
 import 'package:coffee_shop_admin/screens/drink_management/topping_create.dart';
 import 'package:coffee_shop_admin/screens/drink_management/topping_detail.dart';
 import 'package:coffee_shop_admin/screens/drink_management/topping_edit.dart';
@@ -99,6 +100,11 @@ class AppRouter {
 
       case CreateSizeScreen.routeName:
         return _createRoute(CreateSizeScreen());
+      case EditSizeScreen.routeName:
+        Size size = settings.arguments as Size;
+        return _createRoute(EditSizeScreen(
+          product: size,
+        ));
 
       case AddressScreen.routeName:
         Address? deliveryAddress = settings.arguments as Address?;

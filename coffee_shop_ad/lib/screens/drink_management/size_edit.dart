@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_bloc.dart';
-import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_event.dart';
-import 'package:coffee_shop_admin/services/models/topping.dart';
+import 'package:coffee_shop_admin/services/blocs/size_manage/size_list_bloc.dart';
+import 'package:coffee_shop_admin/services/blocs/size_manage/size_list_event.dart';
+import 'package:coffee_shop_admin/services/models/size.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
 import 'package:coffee_shop_admin/utils/validations/validator.dart';
 import 'package:coffee_shop_admin/widgets/global/textForm/custom_text_form.dart';
@@ -18,17 +18,17 @@ import '../../utils/constants/dimension.dart';
 import '../../utils/styles/app_texts.dart';
 import '../../widgets/global/custom_app_bar.dart';
 
-class EditToppingScreen extends StatefulWidget {
-  static const routeName = "/edit_topping";
-  final Topping product;
-  const EditToppingScreen({super.key, required this.product});
+class EditSizeScreen extends StatefulWidget {
+  static const routeName = "/edit_size";
+  final Size product;
+  const EditSizeScreen({super.key, required this.product});
   @override
-  State<EditToppingScreen> createState() => _EditToppingScreenState();
+  State<EditSizeScreen> createState() => _EditSizeScreenState();
 }
 
-class _EditToppingScreenState extends State<EditToppingScreen> {
-  TextEditingController toppingNameController = TextEditingController();
-  TextEditingController toppingPriceController = TextEditingController();
+class _EditSizeScreenState extends State<EditSizeScreen> {
+  TextEditingController sizeNameController = TextEditingController();
+  TextEditingController sizePriceController = TextEditingController();
   bool _isKeyboardOpened = false;
   String imageUrl = "";
   XFile? image;
@@ -91,12 +91,12 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
   }
 
   bool _isValidData() {
-    if (toppingPriceController.text.isNotEmpty &&
-        int.tryParse(toppingPriceController.text) == null) return false;
+    if (sizePriceController.text.isNotEmpty &&
+        int.tryParse(sizePriceController.text) == null) return false;
     return true;
   }
 
-  void _hanldeEditTopping() async {
+  void _hanldeEditSize() async {
     if (!_isValidData()) {
       QuickAlert.show(
         context: context,
@@ -111,21 +111,21 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
       context: context,
       type: QuickAlertType.loading,
       title: 'Loading',
-      text: 'Editing your new topping...',
+      text: 'Editing your new Size...',
     );
 
     try {
       // update firestore
       FirebaseFirestore.instance
-          .collection("Topping")
+          .collection("Size")
           .doc(widget.product.id)
           .update({
         "image": image != null ? "" : widget.product.image,
-        "name": toppingNameController.text.isNotEmpty
-            ? toppingNameController.text
+        "name": sizeNameController.text.isNotEmpty
+            ? sizeNameController.text
             : widget.product.name,
-        "price": toppingPriceController.text.isNotEmpty
-            ? int.parse(toppingPriceController.text)
+        "price": sizePriceController.text.isNotEmpty
+            ? int.parse(sizePriceController.text)
             : widget.product.price,
       }).then((value) async {
         if (image != null) {
@@ -134,13 +134,13 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
 
           // upload new img
           final storageRef = FirebaseStorage.instance.ref();
-          final toppingImagesRef = storageRef
-              .child('products/topping/topping${DateTime.now().toString()}');
+          final SizeImagesRef = storageRef
+              .child('products/Size/Size${DateTime.now().toString()}');
 
-          await toppingImagesRef.putFile(File(image!.path)).then((res) {
+          await SizeImagesRef.putFile(File(image!.path)).then((res) {
             res.ref.getDownloadURL().then((url) {
               FirebaseFirestore.instance
-                  .collection("Topping")
+                  .collection("Size")
                   .doc(widget.product.id)
                   .update({
                 "image": url,
@@ -152,7 +152,7 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
         Navigator.of(context).pop();
-        BlocProvider.of<ToppingListBloc>(context).add(FetchData());
+        BlocProvider.of<SizeListBloc>(context).add(FetchData());
         QuickAlert.show(
           context: context,
           type: QuickAlertType.success,
@@ -161,7 +161,7 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
         );
       });
     } catch (e) {
-      print("Something wrong when edit new topping");
+      print("Something wrong when edit new Size");
       print(e);
     }
   }
@@ -169,36 +169,6 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
   @override
   Widget build(BuildContext context) {
     _isKeyboardOpened = MediaQuery.of(context).viewInsets.bottom > 0;
-
-    // final storageRef = FirebaseStorage.instance.ref();
-
-    // final toppingImagesRef = storageRef
-    //     .child('products/topping/topping${DateTime.now().toString()}');
-
-    // try {
-    //   await toppingImagesRef.putFile(File(image!.path)).then((res) {
-    //     res.ref.getDownloadURL().then((url) {
-    //       FirebaseFirestore.instance.collection("Topping").add({
-    //         "image": url,
-    //         "name": toppingNameController.text,
-    //         "price": int.parse(toppingPriceController.text),
-    //       });
-    //     }).then((value) {
-    //       Navigator.of(context).pop();
-    //       Navigator.of(context).pop();
-    //       BlocProvider.of<ToppingListBloc>(context).add(FetchData());
-    //       QuickAlert.show(
-    //         context: context,
-    //         type: QuickAlertType.success,
-    //         text: 'Completed Successfully!',
-    //         confirmBtnText: "Ok",
-    //       );
-    //     });
-    //   });
-    // } catch (e) {
-    //   print("Something wrong when edit new topping");
-    //   print(e);
-    // }
 
     return SafeArea(
         child: Scaffold(
@@ -208,7 +178,7 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
               children: [
                 CustomAppBar(
                   leading: Text(
-                    "Edit Topping",
+                    "Edit Size",
                     style: AppText.style.boldBlack18,
                   ),
                 ),
@@ -307,15 +277,14 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
                                         Column(
                                           children: [
                                             CustormTextForm(
-                                              controller: toppingNameController,
+                                              controller: sizeNameController,
                                               validator: NullValidator(),
                                               verifiedCheck: true,
                                               label: 'New name',
                                             ),
                                             SizedBox(height: 8),
                                             CustormTextForm(
-                                              controller:
-                                                  toppingPriceController,
+                                              controller: sizePriceController,
                                               validator: PriceValidator(),
                                               verifiedCheck: true,
                                               label: 'New price (VND)',
@@ -341,7 +310,7 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
                                   horizontal: Dimension.width16,
                                   vertical: Dimension.height8),
                               child: ElevatedButton(
-                                  onPressed: _hanldeEditTopping,
+                                  onPressed: _hanldeEditSize,
                                   style: ButtonStyle(
                                       elevation:
                                           const MaterialStatePropertyAll(0),
@@ -355,7 +324,7 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
                                           const MaterialStatePropertyAll(
                                               AppColors.blueColor)),
                                   child: Text(
-                                    "Edit Topping",
+                                    "Edit Size",
                                     style: AppText.style.regularWhite16,
                                   )))
                     ],

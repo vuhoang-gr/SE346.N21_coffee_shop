@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coffee_shop_admin/screens/drink_management/size_card.dart';
+import 'package:coffee_shop_admin/screens/drink_management/size_edit.dart';
 import 'package:coffee_shop_admin/services/blocs/size_manage/size_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/size_manage/size_list_event.dart';
 import 'package:coffee_shop_admin/services/models/size.dart';
@@ -14,7 +15,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quickalert/quickalert.dart';
 
 class SizeDetail extends StatefulWidget {
-  static const String routeName = "/size_detail_screen";
   final Size product;
   const SizeDetail({super.key, required this.product});
 
@@ -36,38 +36,56 @@ class _SizeDetailState extends State<SizeDetail> {
   @override
   Widget build(BuildContext context) {
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
+
+    // ignore: no_leading_underscores_for_local_identifiers
+    void _handleOnTapEditSize() async {
+      Navigator.of(context)
+          .pushNamed(EditSizeScreen.routeName, arguments: widget.product);
+    }
+
     // ignore: no_leading_underscores_for_local_identifiers
     void _handleOnTapDeleteSize() async {
-      String imgUrl = widget.product.image;
-
-      QuickAlert.show(
+      await QuickAlert.show(
         context: context,
-        type: QuickAlertType.loading,
-        title: 'Loading',
-        text: 'Deleting ${widget.product.name}',
-      );
+        type: QuickAlertType.confirm,
+        text: 'Do you want to delete ${widget.product.name}?',
+        confirmBtnText: 'Yes',
+        cancelBtnText: 'No',
+        confirmBtnColor: Colors.green,
+        onConfirmBtnTap: () async {
+          Navigator.of(context).pop();
+          String imgUrl = widget.product.image;
 
-      try {
-        await FirebaseFirestore.instance
-            .collection("Size")
-            .doc(widget.product.id)
-            .delete()
-            .then((value) {
-          Navigator.of(context).pop();
-          Navigator.of(context).pop();
-          BlocProvider.of<SizeListBloc>(context).add(FetchData());
-          FirebaseStorage.instance.refFromURL(imgUrl).delete();
           QuickAlert.show(
             context: context,
-            type: QuickAlertType.success,
-            text: 'Completed Successfully!',
-            confirmBtnText: "Ok",
+            type: QuickAlertType.loading,
+            title: 'Loading',
+            text: 'Deleting ${widget.product.name}',
           );
-        });
-      } catch (e) {
-        print("Something wrong when delete size");
-        print(e);
-      }
+
+          try {
+            await FirebaseFirestore.instance
+                .collection("Size")
+                .doc(widget.product.id)
+                .delete()
+                .then((value) {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+              BlocProvider.of<SizeListBloc>(context).add(FetchData());
+              FirebaseStorage.instance.refFromURL(imgUrl).delete();
+              QuickAlert.show(
+                context: context,
+                type: QuickAlertType.success,
+                text: 'Completed Successfully!',
+                confirmBtnText: "Ok",
+              );
+            });
+          } catch (e) {
+            print("Something wrong when delete size");
+            print(e);
+          }
+        },
+      );
     }
 
     return GestureDetector(
@@ -120,22 +138,45 @@ class _SizeDetailState extends State<SizeDetail> {
                               ),
                             ],
                           ),
-                          child: Column(
+                          child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
+                              SizedBox(width: 16),
                               SizedBox(
-                                width: double.maxFinite,
-                                height: Dimension.height40,
-                                child: Builder(builder: (context) {
-                                  return ElevatedButton(
+                                  height: Dimension.height40,
+                                  width: 140,
+                                  child: ElevatedButton.icon(
                                       style: roundedButton,
+                                      onPressed: _handleOnTapEditSize,
+                                      icon: Icon(
+                                        Icons.create_sharp,
+                                        size: 28,
+                                      ),
+                                      label: Text(
+                                        'Edit',
+                                        style: AppText.style.regularWhite16,
+                                      ))),
+                              Spacer(),
+                              SizedBox(
+                                  height: Dimension.height40,
+                                  width: 140,
+                                  child: ElevatedButton.icon(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.red,
+                                          elevation: 0,
+                                          shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(45)))),
+                                      icon: Icon(
+                                        Icons.delete_forever,
+                                        size: 28,
+                                      ),
                                       onPressed: _handleOnTapDeleteSize,
-                                      child: Text(
+                                      label: Text(
                                         'Delete',
                                         style: AppText.style.regularWhite16,
-                                      ));
-                                }),
-                              )
+                                      ))),
+                              SizedBox(width: 16),
                             ],
                           ),
                         ),
