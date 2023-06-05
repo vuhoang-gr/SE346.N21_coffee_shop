@@ -33,19 +33,20 @@ class SearchProductScreen extends StatefulWidget {
 
 class _SearchProductScreenState extends State<SearchProductScreen> {
   Timer? _debounce;
-
+  StreamSubscription? _streamSubscription;
   @override
   void initState() {
     super.initState();
     ProductStoreState state = BlocProvider.of<ProductStoreBloc>(context).state;
-    BlocProvider.of<SearchProductBloc>(context)
-        .add(UpdateList(initListFood: (state as LoadedState).initFoods));
+    BlocProvider.of<SearchProductBloc>(context).add(UpdateList(
+        initListFood: (state as HasDataProductStoreState).initFoods));
   }
 
   @override
   void dispose() {
     super.dispose();
     _debounce?.cancel();
+    _streamSubscription?.cancel();
   }
 
   @override
@@ -65,7 +66,7 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
                 children: [
                   CustomAppBar(
                     leading: Text(
-                      'Search',
+                      'Tìm kiếm',
                       style: AppText.style.boldBlack18,
                     ),
                   ),
@@ -76,8 +77,24 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
                       "isPurposeForShowDetail": false,
                     }).then((value) {
                       if (value != null && value is Store) {
-                        BlocProvider.of<CartButtonBloc>(context)
-                            .add(ChangeSelectedStore(selectedStore: value));
+                        _streamSubscription =
+                            BlocProvider.of<ProductStoreBloc>(context)
+                                .stream
+                                .listen((productStoreState) {
+                          if (productStoreState is FetchedState) {
+                            print("hello");
+                            BlocProvider.of<SearchProductBloc>(context).add(
+                                UpdateList(
+                                    initListFood: productStoreState.initFoods));
+                            _streamSubscription?.cancel();
+                          }
+                        });
+
+                        BlocProvider.of<SearchProductBloc>(context)
+                            .add(WaitingUpdateList());
+
+                        BlocProvider.of<CartButtonBloc>(context).add(
+                            ChangeSelectedStoreButNotUse(selectedStore: value));
                       }
                     }),
                     child: Container(
@@ -109,7 +126,7 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
                                   return Text(
                                       state.selectedStore?.address
                                               .formattedAddress ??
-                                          "Select the store",
+                                          "Chọn cửa hàng",
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
                                       style: AppText.style.regular);
@@ -162,7 +179,7 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
                                     top: Dimension.height8,
                                     left: Dimension.height16,
                                     right: Dimension.height16),
-                                hintText: 'What are you craving for?',
+                                hintText: 'Bạn đang muốn ăn gì?',
                                 hintStyle: AppText.style.regularGrey14,
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(4),
@@ -194,11 +211,11 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
                                       height: 200,
                                     ),
                                     Text(
-                                      'Sorry, we nearly found it!',
+                                      'Xin lỗi, chúng tôi đã gần tìm thấy!',
                                       style: AppText.style.boldBlack16,
                                     ),
                                     Text(
-                                      'Please try again, better luck next time',
+                                      'Xin hãy thử lại, chúc bạn may mắn.',
                                       style: AppText.style.regular,
                                     ),
                                   ],
@@ -214,14 +231,19 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
                                               .controller
                                               .text
                                               .isEmpty
-                                          ? Text(
-                                              'Popular drinks and food',
-                                              style: AppText.style.boldBlack16,
+                                          ? Column(
+                                              children: [
+                                                Text(
+                                                  'Món nước ưu chuộng',
+                                                  style:
+                                                      AppText.style.boldBlack16,
+                                                ),
+                                                SizedBox(
+                                                  height: Dimension.height12,
+                                                ),
+                                              ],
                                             )
                                           : SizedBox.shrink(),
-                                      SizedBox(
-                                        height: Dimension.height12,
-                                      ),
                                       ListView.separated(
                                         padding: EdgeInsets.only(
                                             top: Dimension.height8),

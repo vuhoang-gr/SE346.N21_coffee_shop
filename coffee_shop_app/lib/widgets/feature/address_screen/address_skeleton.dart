@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:skeletons/skeletons.dart';
 
-import '../../../utils/colors/app_colors.dart';
 import '../../../utils/constants/dimension.dart';
 
 class AddressSkeleton extends StatelessWidget {

@@ -9,7 +9,7 @@ import '../../services/apis/auth_api.dart';
 import '../../services/blocs/recent_see_products/recent_see_products_bloc.dart';
 import '../../services/blocs/recent_see_products/recent_see_products_event.dart';
 import '../../services/blocs/recent_see_products/recent_see_products_state.dart'
-    as cart_button_state;
+    as recent_see_state;
 
 import '../../utils/colors/app_colors.dart';
 import '../../utils/constants/dimension.dart';
@@ -29,7 +29,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMixin{
+class _HomeScreenState extends State<HomeScreen>{
   final int durationChange = 500;
   final ScrollController scrollController = ScrollController();
   bool isScrollInTop = true;
@@ -50,7 +50,6 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     scrollController.addListener(() {
       if (scrollController.offset <= 0 && !isScrollInTop) {
         setState(() {
@@ -82,18 +81,18 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                         padding: const EdgeInsets.all(0),
                         duration: Duration(milliseconds: durationChange),
                         child: CircleAvatar(
-                            radius: Dimension.height20,
-                            backgroundColor: Color.fromARGB(255, 226, 226, 226),
-                            child: Padding(
-                              padding: EdgeInsets.all(5),
-                              child: ClipOval(
-                                child: AsyncImage(
-                                  src: AuthAPI.currentUser!.avatarUrl,
-                                  type: PlaceholderType.user,
-                                ),
+                          radius: Dimension.height20,
+                          backgroundColor: Color.fromARGB(255, 226, 226, 226),
+                          child: Padding(
+                            padding: EdgeInsets.all(5),
+                            child: ClipOval(
+                              child: AsyncImage(
+                                src: AuthAPI.currentUser!.avatarUrl,
+                                type: PlaceholderType.user,
                               ),
                             ),
                           ),
+                        ),
                       ),
                       AnimatedContainer(
                         width: isScrollInTop ? Dimension.width12 : 0,
@@ -109,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                             duration: Duration(milliseconds: durationChange),
                             height: isScrollInTop ? Dimension.height20 : 0,
                             child: Text(
-                              "Welcome to",
+                              "Chào mừng đến với",
                               style: AppText.style.regular,
                             ),
                           ),
@@ -118,9 +117,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                             style: isScrollInTop
                                 ? AppText.style.boldBlack14
                                 : AppText.style.boldBlack18,
-                            child: Text(
-                              AuthAPI.currentUser!.name,
-                            ),
+                            child: Text("K U P I"),
                           ),
                         ],
                       )
@@ -143,9 +140,9 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                           height: Dimension.height24,
                         ),
                         BlocBuilder<RecentSeeProductsBloc,
-                            cart_button_state.RecentSeeProductsState>(
+                            recent_see_state.RecentSeeProductsState>(
                           builder: (context, state) {
-                            if (state is cart_button_state.LoadingState) {
+                            if (state is recent_see_state.LoadingState) {
                               return Padding(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: Dimension.width16),
@@ -153,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Used recently",
+                                      "Vừa xem",
                                       style: AppText.style.boldBlack16,
                                     ),
                                     SizedBox(
@@ -172,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                   ],
                                 ),
                               );
-                            } else if (state is cart_button_state.LoadedState) {
+                            } else if (state is recent_see_state.LoadedState) {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -180,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                     padding: EdgeInsets.symmetric(
                                         horizontal: Dimension.width16),
                                     child: Text(
-                                      "Used recently",
+                                      "Vừa xem",
                                       style: AppText.style.boldBlack16,
                                     ),
                                   ),
@@ -212,7 +209,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                 ],
                               );
                             } else if (state
-                                is cart_button_state.NotExistState) {
+                                is recent_see_state.NotExistState) {
                               return Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
@@ -258,7 +255,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                "Getting started ",
+                                                "Bắt đầu ",
                                                 style: AppText
                                                     .style.regularWhite16,
                                               ),
@@ -286,7 +283,4 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
               ],
             )));
   }
-  
-  @override
-  bool get wantKeepAlive => true;
 }

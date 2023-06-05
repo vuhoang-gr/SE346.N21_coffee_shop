@@ -19,3 +19,8 @@ class Insert extends AddressStoreEvent {
   DeliveryAddress deliveryAddress;
   Insert({required this.deliveryAddress});
 }
+
+class UpdateAddresses extends AddressStoreEvent {
+  List<DeliveryAddress> listDeliveryAddress;
+  UpdateAddresses({required this.listDeliveryAddress});
+}

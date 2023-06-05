@@ -26,17 +26,9 @@ class StoreSelectionScreen extends StatefulWidget {
   State<StoreSelectionScreen> createState() => _StoreSelectionScreenState();
 }
 
-class _StoreSelectionScreenState extends State<StoreSelectionScreen>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<StoreStoreBloc>(context).add(ChangeFetchedToLoaded());
-  }
-
+class _StoreSelectionScreenState extends State<StoreSelectionScreen>{
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return GestureDetector(
         onTap: () {
           FocusManager.instance.primaryFocus?.unfocus();
@@ -48,7 +40,7 @@ class _StoreSelectionScreenState extends State<StoreSelectionScreen>
               children: [
                 CustomAppBar(
                   leading: Text(
-                    'Select store',
+                    'Cửa hàng',
                     style: AppText.style.boldBlack18,
                   ),
                 ),
@@ -63,7 +55,7 @@ class _StoreSelectionScreenState extends State<StoreSelectionScreen>
                     onTap: () {
                       StoreStoreState storeState =
                           BlocProvider.of<StoreStoreBloc>(context).state;
-                      if (storeState is LoadedState) {
+                      if (storeState is HasDataStoreStoreState) {
                         Navigator.of(context)
                             .pushNamed(StoreSearchScreen.routeName, arguments: {
                           "latLng": widget.latLng,
@@ -101,7 +93,7 @@ class _StoreSelectionScreenState extends State<StoreSelectionScreen>
                           ),
                           Expanded(
                               child: Text(
-                            "Search store",
+                            "Tìm kiếm cửa hàng",
                             style: AppText.style.regularGrey14,
                           )),
                         ],
@@ -111,7 +103,7 @@ class _StoreSelectionScreenState extends State<StoreSelectionScreen>
                 ),
                 Expanded(child: BlocBuilder<StoreStoreBloc, StoreStoreState>(
                     builder: (context, state) {
-                  if (state is LoadedState) {
+                  if (state is HasDataStoreStoreState) {
                     return RefreshIndicator(onRefresh: () async {
                       BlocProvider.of<StoreStoreBloc>(context)
                           .add(FetchData(location: widget.latLng));
@@ -139,7 +131,7 @@ class _StoreSelectionScreenState extends State<StoreSelectionScreen>
                                               CrossAxisAlignment.stretch,
                                           children: [
                                             Text(
-                                              "Nearest store",
+                                              "Gần nhất",
                                               style:
                                                   AppText.style.mediumBlack16,
                                             ),
@@ -166,7 +158,7 @@ class _StoreSelectionScreenState extends State<StoreSelectionScreen>
                                               CrossAxisAlignment.stretch,
                                           children: [
                                             Text(
-                                              "Favorite stores",
+                                              "Yêu thích",
                                               style:
                                                   AppText.style.mediumBlack16,
                                             ),
@@ -182,7 +174,7 @@ class _StoreSelectionScreenState extends State<StoreSelectionScreen>
                                               state.nearestStore != null) &&
                                           state.listOtherStore.isNotEmpty)
                                       ? Text(
-                                          "Other stores",
+                                          "Khác",
                                           style: AppText.style.mediumBlack16,
                                         )
                                       : SizedBox.shrink(),
@@ -195,7 +187,7 @@ class _StoreSelectionScreenState extends State<StoreSelectionScreen>
                         ),
                       );
                     }));
-                  } else if (state is LoadingState || state is FetchedState) {
+                  } else if (state is LoadingState) {
                     return Padding(
                       padding: EdgeInsets.only(
                           right: Dimension.width16,
@@ -259,7 +251,4 @@ class _StoreSelectionScreenState extends State<StoreSelectionScreen>
     }
     return tapHandler;
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

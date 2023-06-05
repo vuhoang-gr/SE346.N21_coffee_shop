@@ -3,6 +3,7 @@ import 'package:coffee_shop_app/widgets/global/buttons/rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../services/functions/money_transfer.dart';
 import '../../../utils/colors/app_colors.dart';
@@ -61,10 +62,32 @@ class PromoDetailModal extends StatelessWidget {
                   SizedBox(
                     height: Dimension.height16,
                   ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: QrImage(
+                      data: promo.id,
+                      version: QrVersions.auto,
+                      size: Dimension.width108,
+                    ),
+                  ),
+                  SizedBox(
+                    height: Dimension.height8,
+                  ),
+                  Text(
+                    promo.id,
+                    style: AppText.style.regularBlack16,
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: Dimension.height16,
+                  ),
                   SizedBox(
                     width: Dimension.width40,
                     child: RoundedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop(promo);
+                        },
                         height: Dimension.height40,
                         child: Text(
                           "Sử dụng ngay",
@@ -101,6 +124,13 @@ class PromoDetailModal extends StatelessWidget {
                   SizedBox(
                     height: Dimension.height1,
                     child: ColoredBox(color: AppColors.greyBoxColor),
+                  ),
+                  SizedBox(
+                    height: Dimension.height16,
+                  ),
+                  Text(
+                    promo.description,
+                    style: AppText.style.regularBlack14,
                   ),
                   SizedBox(
                     height: Dimension.height16,

@@ -56,7 +56,7 @@ class PickupStorePicker extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Pickup at",
+                      "Tới lấy tại",
                       style: AppText.style.regular,
                     ),
                     SizedBox(
@@ -64,7 +64,7 @@ class PickupStorePicker extends StatelessWidget {
                     ),
                     Text(
                       state.selectedStore?.address.formattedAddress ??
-                          "Select the store",
+                          "Chọn cửa hàng",
                       style: AppText.style.boldBlack14,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

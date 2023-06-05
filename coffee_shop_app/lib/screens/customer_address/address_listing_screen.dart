@@ -1,7 +1,7 @@
+import 'package:coffee_shop_app/main.dart';
 import 'package:coffee_shop_app/services/blocs/address_store/address_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/address_store/address_store_event.dart';
 import 'package:coffee_shop_app/services/blocs/address_store/address_store_state.dart';
-import 'package:coffee_shop_app/services/blocs/map_picker/map_picker_state.dart';
 import 'package:coffee_shop_app/services/models/delivery_address.dart';
 import 'package:coffee_shop_app/widgets/feature/address_screen/address_skeleton.dart';
 import 'package:flutter/material.dart';
@@ -25,12 +25,6 @@ class AddressListingScreen extends StatefulWidget {
 
 class _AddressListingScreenState extends State<AddressListingScreen> {
   @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<AddressStoreBloc>(context).add(FetchData());
-  }
-
-  @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
@@ -39,7 +33,7 @@ class _AddressListingScreenState extends State<AddressListingScreen> {
               children: [
                 CustomAppBar(
                   leading: Text(
-                    "Deliver to",
+                    "Giao hàng đến",
                     style: AppText.style.boldBlack18,
                   ),
                 ),
@@ -72,7 +66,7 @@ class _AddressListingScreenState extends State<AddressListingScreen> {
                                     SizedBox(
                                       height: Dimension.height16,
                                     ),
-                                    Text("Saved places",
+                                    Text("Địa chỉ đã lưu",
                                         textAlign: TextAlign.left,
                                         style: AppText.style.boldBlack16),
                                     ListView.separated(
@@ -95,7 +89,8 @@ class _AddressListingScreenState extends State<AddressListingScreen> {
                                     GestureDetector(
                                       onTap: () {
                                         Navigator.of(context)
-                                            .pushNamed(AddressScreen.routeName)
+                                            .pushNamed(AddressScreen.routeName,
+                                                arguments: null)
                                             .then((value) {
                                           if (value != null &&
                                               value is DeliveryAddress) {
@@ -137,7 +132,7 @@ class _AddressListingScreenState extends State<AddressListingScreen> {
                                               ),
                                               Expanded(
                                                   child: Text(
-                                                "New place",
+                                                "Thêm địa chỉ mới",
                                                 style:
                                                     AppText.style.boldBlack14,
                                               ))

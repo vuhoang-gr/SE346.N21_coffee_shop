@@ -1,4 +1,3 @@
-
 import 'package:coffee_shop_app/services/blocs/search_product/search_product_event.dart';
 import 'package:coffee_shop_app/services/blocs/search_product/search_product_state.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +11,7 @@ class SearchProductBloc extends Bloc<SearchProductEvent, SearchProductState> {
     on<SearchTextChanged>(_mapSearchTextChangedToState);
     on<SearchClear>(_mapSearchClearToState);
     on<UpdateList>(_mapUpdateList);
+    on<WaitingUpdateList>(_mapWaitingUpdateList);
   }
 
   void _mapSearchTextChangedToState(
@@ -28,7 +28,7 @@ class SearchProductBloc extends Bloc<SearchProductEvent, SearchProductState> {
     } else {
       emit(LoadedListFood(
         initProductList: state.initProductList,
-        searchStoreResults: searchFoodResults, 
+        searchStoreResults: searchFoodResults,
       ));
     }
   }
@@ -45,6 +45,11 @@ class SearchProductBloc extends Bloc<SearchProductEvent, SearchProductState> {
         searchStoreResults: state.initProductList,
       ));
     }
+  }
+
+  void _mapWaitingUpdateList(
+      WaitingUpdateList event, Emitter<SearchProductState> emit) {
+    emit(LoadingListFood(initProductList: state.initProductList));
   }
 
   void _mapUpdateList(UpdateList event, Emitter<SearchProductState> emit) {

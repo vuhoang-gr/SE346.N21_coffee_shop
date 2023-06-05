@@ -19,6 +19,7 @@ class PromoItem extends StatelessWidget {
       onTap: () => showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
+        isScrollControlled: true,
         builder: (builder) {
           return PromoDetailModal(
             promo: promo,
@@ -86,10 +87,10 @@ class PromoItem extends StatelessWidget {
   }
 
   String _getImage() {
-    if (promo.typeCustomer) {
+    if (promo.forNewCustomer) {
       return "https://firebasestorage.googleapis.com/v0/b/coffee-shop-app-437c7.appspot.com/o/promo%2FNewCustomer.png?alt=media&token=bd0fde1b-76ce-4a1d-88f7-b9536aeeb767&_gl=1*1e6ij5z*_ga*NjUyMDc4ODQxLjE2Nzc2NjE1OTI.*_ga_CW55HF8NVT*MTY4NTY0Mjk4Mi4yNy4xLjE2ODU2NDMwOTUuMC4wLjA.";
     } else {
-      return "https://firebasestorage.googleapis.com/v0/b/coffee-shop-app-437c7.appspot.com/o/promo%2FAll.png?alt=media&token=38987d2a-b2f8-4e8b-8b42-0db9b887b30d&_gl=1*1v5sdct*_ga*NjUyMDc4ODQxLjE2Nzc2NjE1OTI.*_ga_CW55HF8NVT*MTY4NTY0Mjk4Mi4yNy4xLjE2ODU2NDMwMzYuMC4wLjA.";
+      return "https://firebasestorage.googleapis.com/v0/b/coffee-shop-app-437c7.appspot.com/o/promo%2FAll.png?alt=media&token=c16c732d-5eab-48bc-b111-c84ff835dc00&_gl=1*dqk2qm*_ga*ODY4OTcyNTgyLjE2ODU2OTgxMTU.*_ga_CW55HF8NVT*MTY4NTgzMzY0My4xNi4xLjE2ODU4MzQwMDcuMC4wLjA.";
     }
   }
 }

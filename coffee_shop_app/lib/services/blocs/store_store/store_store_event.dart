@@ -13,6 +13,8 @@ class UpdateFavorite extends StoreStoreEvent {
   UpdateFavorite({required this.store});
 }
 
-class ChangeFetchedToLoaded extends StoreStoreEvent {
-  ChangeFetchedToLoaded();
+class GetDataFetched extends StoreStoreEvent {
+  final List<Store> allStores;
+  final LatLng? latLng;
+  GetDataFetched({required this.allStores, required this.latLng});
 }

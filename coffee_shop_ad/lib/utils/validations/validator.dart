@@ -3,6 +3,7 @@ abstract class Validator {
   String? validator(String? value);
 }
 
+
 class NullValidator extends Validator {
   @override
   bool validate(String? value) {
@@ -37,3 +38,4 @@ class PriceValidator extends Validator {
     }
   }
 }
+

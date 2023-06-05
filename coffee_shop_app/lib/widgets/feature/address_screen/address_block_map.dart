@@ -71,7 +71,7 @@ class AddressBlock extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
-                          "Use google map to select your place",
+                          "Dùng google map để chọn vị trí",
                           style: AppText.style.regularGrey12,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,

@@ -1,7 +1,10 @@
+import 'package:coffee_shop_app/services/blocs/recent_see_products/recent_see_products_bloc.dart';
 import 'package:coffee_shop_app/services/models/food.dart';
 import 'package:coffee_shop_app/widgets/global/aysncImage/async_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../services/blocs/recent_see_products/recent_see_products_event.dart';
 import '../../services/functions/money_transfer.dart';
 import '../../services/functions/shared_preferences_helper.dart';
 import '../../utils/colors/app_colors.dart';
@@ -27,11 +30,11 @@ class ProductItem extends StatelessWidget {
         child: product.isAvailable
             ? GestureDetector(
                 onTap: () {
-                  SharedPreferencesHelper.addProductToSharedPreferences(
-                          product.id)
-                      .then((_) => Navigator.of(context).pushNamed(
-                          "/product_detail_screen",
-                          arguments: product));
+                  context
+                      .read<RecentSeeProductsBloc>()
+                      .add(ListRecentSeeProductChanged(product: product));
+                  Navigator.of(context)
+                      .pushNamed("/product_detail_screen", arguments: product);
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,7 +198,7 @@ class ProductItem extends StatelessWidget {
                       ),
                       SizedBox(height: Dimension.height4),
                       Text(
-                        "Not available at this store",
+                        "Cửa hàng không có sẵn",
                         style: AppText.style.regularBlack10,
                       )
                     ],

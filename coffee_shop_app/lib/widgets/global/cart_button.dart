@@ -136,7 +136,7 @@ class _CartButtonState extends State<CartButton> {
                                   child: Container(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      "Delivery to",
+                                      "Giao hàng đến",
                                       style: AppText.style.mediumGrey12,
                                     ),
                                   ),
@@ -153,7 +153,7 @@ class _CartButtonState extends State<CartButton> {
                                   child: Text(
                                     cartButtonState
                                             .selectedDeliveryAddress?.address.formattedAddress??
-                                        "The products will be delivered to your address",
+                                        "Món ăn sẽ được giao tới bạn",
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: AppText.style.mediumBlack12,
@@ -322,7 +322,7 @@ class _CartButtonState extends State<CartButton> {
                                   child: Container(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      "Pickup at",
+                                      "Tới lấy tại",
                                       style: AppText.style.mediumGrey12,
                                     ),
                                   ),
@@ -339,7 +339,7 @@ class _CartButtonState extends State<CartButton> {
                                   child: Text(
                                     cartButtonState.selectedStore?.address
                                             .formattedAddress ??
-                                        "You will pick up the product at the store and take it away",
+                                        "Tới cửa hàng lấy món ăn và mang đi",
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: AppText.style.mediumBlack12,

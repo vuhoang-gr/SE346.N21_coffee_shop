@@ -47,7 +47,7 @@ class AddressPicker extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Delivery to",
+                      "Giao hàng đến",
                       style: AppText.style.regular,
                     ),
                     SizedBox(
@@ -55,7 +55,7 @@ class AddressPicker extends StatelessWidget {
                     ),
                     Text(
                       state.selectedDeliveryAddress?.address.formattedAddress ??
-                          "Select the address",
+                          "Chọn địa chỉ",
                       style: AppText.style.boldBlack14,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

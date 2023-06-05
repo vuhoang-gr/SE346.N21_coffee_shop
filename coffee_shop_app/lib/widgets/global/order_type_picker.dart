@@ -63,11 +63,11 @@ class OrderTypePicker extends StatelessWidget {
                     height: Dimension.height8,
                   ),
                   Text(
-                    "Store pickup",
+                    "Mang đi",
                     style: AppText.style.mediumBlack16,
                   ),
                   Text(
-                    "Best quality",
+                    "Chất lượng tốt nhất",
                     style: AppText.style.regularGrey14,
                   )
                 ],
@@ -107,11 +107,11 @@ class OrderTypePicker extends StatelessWidget {
                       height: Dimension.height8,
                     ),
                     Text(
-                      "Delivery",
+                      "Giao hàng",
                       style: AppText.style.mediumBlack16,
                     ),
                     Text(
-                      "Always on time",
+                      "Luôn đúng giờ",
                       style: AppText.style.regularGrey14,
                     )
                   ],

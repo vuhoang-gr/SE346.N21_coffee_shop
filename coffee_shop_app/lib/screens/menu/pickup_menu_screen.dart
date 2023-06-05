@@ -25,7 +25,7 @@ class PickupMenuScreen extends StatefulWidget {
 
 class _PickupMenuScreenState extends State<PickupMenuScreen> {
   final ScrollController _scrollController = ScrollController();
-  
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -35,12 +35,12 @@ class _PickupMenuScreenState extends State<PickupMenuScreen> {
         children: [
           CustomAppBar(
               leading: Text(
-                "Store pickup",
+                "Mang đi",
                 style: AppText.style.boldBlack18,
               ),
               trailing: BlocBuilder<ProductStoreBloc, ProductStoreState>(
                   builder: (context, state) {
-                if (state is LoadedState) {
+                if (state is HasDataProductStoreState) {
                   return IconButton(
                       onPressed: () => Navigator.of(context)
                           .pushNamed(SearchProductScreen.routeName),
@@ -54,32 +54,33 @@ class _PickupMenuScreenState extends State<PickupMenuScreen> {
               decoration: const BoxDecoration(color: Colors.white),
               child: BlocBuilder<ProductStoreBloc, ProductStoreState>(
                   builder: (context, state) {
-                if (state is LoadedState) {
+                if (state is HasDataProductStoreState) {
                   return Stack(
                     children: [
                       RefreshIndicator(
                         onRefresh: () async {
-                           CartButtonState cartButtonState =
-                            BlocProvider.of<CartButtonBloc>(context).state;
-                        BlocProvider.of<ProductStoreBloc>(context).add(
-                            FetchData(
-                                stateFood:
-                                    cartButtonState.selectedStore?.stateFood,
-                                stateTopping: cartButtonState
-                                    .selectedStore?.stateTopping));
+                          CartButtonState cartButtonState =
+                              BlocProvider.of<CartButtonBloc>(context).state;
+                          BlocProvider.of<ProductStoreBloc>(context).add(
+                              FetchData(
+                                  stateFood: cartButtonState
+                                      .selectedStore?.stateFood));
                         },
                         child: ListView(
                           controller: _scrollController,
                           children: [
                             const PickupStorePicker(),
                             SizedBox(height: Dimension.height8),
-                            Container(
-                              padding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
-                              child: Text(
-                                "Favorite",
-                                style: AppText.style.mediumBlack14,
-                              ),
-                            ),
+                            state.listFavoriteFood.isNotEmpty
+                                ? Container(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        16, 12, 0, 12),
+                                    child: Text(
+                                      "Yêu thích",
+                                      style: AppText.style.mediumBlack14,
+                                    ),
+                                  )
+                                : SizedBox.shrink(),
                             ...(state.listFavoriteFood
                                 .map((product) => Container(
                                       padding: EdgeInsets.only(
@@ -91,13 +92,17 @@ class _PickupMenuScreenState extends State<PickupMenuScreen> {
                                       )),
                                     ))
                                 .toList()),
-                            Container(
-                              padding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
-                              child: Text(
-                                "Other",
-                                style: AppText.style.mediumBlack14,
-                              ),
-                            ),
+                            (state.listFavoriteFood.isNotEmpty &&
+                                    state.listOtherFood.isNotEmpty)
+                                ? Container(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        16, 12, 0, 12),
+                                    child: Text(
+                                      "Khác",
+                                      style: AppText.style.mediumBlack14,
+                                    ),
+                                  )
+                                : SizedBox.shrink(),
                             ...(state.listOtherFood
                                 .map((product) => Container(
                                       padding: EdgeInsets.only(
