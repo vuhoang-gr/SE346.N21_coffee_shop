@@ -3,6 +3,7 @@ import 'package:coffee_shop_admin/screens/drink_management/size_create.dart';
 import 'package:coffee_shop_admin/screens/drink_management/size_detail.dart';
 import 'package:coffee_shop_admin/screens/drink_management/topping_create.dart';
 import 'package:coffee_shop_admin/screens/drink_management/topping_detail.dart';
+import 'package:coffee_shop_admin/screens/drink_management/topping_edit.dart';
 import 'package:coffee_shop_admin/screens/main_page.dart';
 import 'package:coffee_shop_admin/screens/product_detail.dart';
 import 'package:coffee_shop_admin/screens/profile/profile_screen.dart';
@@ -90,6 +91,11 @@ class AppRouter {
 
       case CreateToppingScreen.routeName:
         return _createRoute(CreateToppingScreen());
+      case EditToppingScreen.routeName:
+        Topping topping = settings.arguments as Topping;
+        return _createRoute(EditToppingScreen(
+          product: topping,
+        ));
 
       case CreateSizeScreen.routeName:
         return _createRoute(CreateSizeScreen());

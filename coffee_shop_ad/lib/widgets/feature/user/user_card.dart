@@ -203,12 +203,14 @@ class _UserCardState extends State<UserCard>
                                     }).then((value) {
                                       Navigator.pop(context);
                                       QuickAlert.show(
-                                          context: context,
-                                          type: QuickAlertType.success,
-                                          title: "Done!",
-                                          text: user.isAdmin
-                                              ? "Removed Admin role!"
-                                              : "This user is Admin now!");
+                                        context: context,
+                                        type: QuickAlertType.success,
+                                        title: "Done!",
+                                        text: user.isAdmin
+                                            ? "Removed Admin role!"
+                                            : "This user is Admin now!",
+                                        confirmBtnText: "Ok",
+                                      );
                                     });
 
                                     setState(() {
@@ -262,12 +264,14 @@ class _UserCardState extends State<UserCard>
                                       }).then((value) {
                                         Navigator.pop(context);
                                         QuickAlert.show(
-                                            context: context,
-                                            type: QuickAlertType.success,
-                                            title: "Done!",
-                                            text: user.isStaff
-                                                ? "Removed Staff role!"
-                                                : "This user is Staff now!");
+                                          context: context,
+                                          type: QuickAlertType.success,
+                                          title: "Done!",
+                                          text: user.isStaff
+                                              ? "Removed Staff role!"
+                                              : "This user is Staff now!",
+                                          confirmBtnText: "Ok",
+                                        );
                                       });
                                       setState(() {
                                         user.isStaff = !user.isStaff;

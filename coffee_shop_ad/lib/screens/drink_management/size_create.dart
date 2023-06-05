@@ -140,6 +140,7 @@ class _CreateSizeScreenState extends State<CreateSizeScreen> {
               context: context,
               type: QuickAlertType.success,
               text: 'Completed Successfully!',
+              confirmBtnText: "Ok",
             );
           });
         });

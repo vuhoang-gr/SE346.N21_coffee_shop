@@ -61,6 +61,7 @@ class _SizeDetailState extends State<SizeDetail> {
             context: context,
             type: QuickAlertType.success,
             text: 'Completed Successfully!',
+            confirmBtnText: "Ok",
           );
         });
       } catch (e) {

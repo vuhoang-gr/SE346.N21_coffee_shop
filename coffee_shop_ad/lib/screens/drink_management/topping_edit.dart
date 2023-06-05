@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_admin/screens/drink_management/topping_card.dart';
 import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_event.dart';
+import 'package:coffee_shop_admin/services/models/topping.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
 import 'package:coffee_shop_admin/utils/validations/validator.dart';
 import 'package:coffee_shop_admin/widgets/global/textForm/custom_text_form.dart';
@@ -16,18 +19,19 @@ import '../../utils/constants/dimension.dart';
 import '../../utils/styles/app_texts.dart';
 import '../../widgets/global/custom_app_bar.dart';
 
-class CreateToppingScreen extends StatefulWidget {
-  static const routeName = "/create_topping";
-  const CreateToppingScreen({super.key});
+class EditToppingScreen extends StatefulWidget {
+  static const routeName = "/edit_topping";
+  final Topping product;
+  const EditToppingScreen({super.key, required this.product});
   @override
-  State<CreateToppingScreen> createState() => _CreateToppingScreenState();
+  State<EditToppingScreen> createState() => _EditToppingScreenState();
 }
 
-class _CreateToppingScreenState extends State<CreateToppingScreen> {
+class _EditToppingScreenState extends State<EditToppingScreen> {
   TextEditingController toppingNameController = TextEditingController();
   TextEditingController toppingPriceController = TextEditingController();
   bool _isKeyboardOpened = false;
-
+  // TODO:
   String imageUrl = "";
   XFile? image;
 
@@ -88,67 +92,115 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
         });
   }
 
+  bool _isValidData() {
+    if (toppingPriceController.text.isNotEmpty &&
+        int.tryParse(toppingPriceController.text) == null) return false;
+    return true;
+  }
+
+  void _hanldeEditTopping() async {
+    if (!_isValidData()) {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.warning,
+        confirmBtnText: "Ok",
+        text: 'Invalid data!',
+      );
+      return;
+    }
+
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.loading,
+      title: 'Loading',
+      text: 'Editing your new topping...',
+    );
+
+    try {
+      // update firestore
+      FirebaseFirestore.instance
+          .collection("Topping")
+          .doc(widget.product.id)
+          .update({
+        "image": image != null ? "" : widget.product.image,
+        "name": toppingNameController.text.isNotEmpty
+            ? toppingNameController.text
+            : widget.product.name,
+        "price": toppingPriceController.text.isNotEmpty
+            ? int.parse(toppingPriceController.text)
+            : widget.product.price,
+      }).then((value) async {
+        if (image != null) {
+          // remove old image
+          FirebaseStorage.instance.refFromURL(widget.product.image).delete();
+
+          // upload new img
+          final storageRef = FirebaseStorage.instance.ref();
+          final toppingImagesRef = storageRef
+              .child('products/topping/topping${DateTime.now().toString()}');
+
+          await toppingImagesRef.putFile(File(image!.path)).then((res) {
+            res.ref.getDownloadURL().then((url) {
+              FirebaseFirestore.instance
+                  .collection("Topping")
+                  .doc(widget.product.id)
+                  .update({
+                "image": url,
+              });
+            });
+          });
+        }
+      }).then((value) {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        BlocProvider.of<ToppingListBloc>(context).add(FetchData());
+        QuickAlert.show(
+          context: context,
+          type: QuickAlertType.success,
+          text: 'Completed Successfully!',
+          confirmBtnText: "Ok",
+        );
+      });
+    } catch (e) {
+      print("Something wrong when edit new topping");
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     _isKeyboardOpened = MediaQuery.of(context).viewInsets.bottom > 0;
-    bool _validateData() {
-      if (image == null ||
-          toppingNameController.text.isEmpty ||
-          toppingPriceController.text.isEmpty ||
-          int.tryParse(toppingPriceController.text.toString()) == null) {
-        QuickAlert.show(
-          context: context,
-          type: QuickAlertType.warning,
-          confirmBtnText: "Ok",
-          text: 'Please choose an image, input name and price!',
-        );
-        return false;
-      }
-      return true;
-    }
 
-    void _hanldeCreateTopping() async {
-      if (!_validateData()) {
-        print("Invalid data!");
-        return;
-      }
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.loading,
-        title: 'Loading',
-        text: 'Creating your new topping...',
-      );
+    // final storageRef = FirebaseStorage.instance.ref();
 
-      final storageRef = FirebaseStorage.instance.ref();
+    // final toppingImagesRef = storageRef
+    //     .child('products/topping/topping${DateTime.now().toString()}');
 
-      final toppingImagesRef = storageRef
-          .child('products/topping/topping${DateTime.now().toString()}');
-
-      try {
-        await toppingImagesRef.putFile(File(image!.path)).then((res) {
-          res.ref.getDownloadURL().then((url) {
-            FirebaseFirestore.instance.collection("Topping").add({
-              "image": url,
-              "name": toppingNameController.text,
-              "price": int.parse(toppingPriceController.text),
-            });
-          }).then((value) {
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
-            BlocProvider.of<ToppingListBloc>(context).add(FetchData());
-            QuickAlert.show(
-              context: context,
-              type: QuickAlertType.success,
-              text: 'Completed Successfully!',
-              confirmBtnText: "Ok",
-            );
-          });
-        });
-      } catch (e) {
-        print("Something wrong when create new topping");
-        print(e);
-      }
-    }
+    // try {
+    //   await toppingImagesRef.putFile(File(image!.path)).then((res) {
+    //     res.ref.getDownloadURL().then((url) {
+    //       FirebaseFirestore.instance.collection("Topping").add({
+    //         "image": url,
+    //         "name": toppingNameController.text,
+    //         "price": int.parse(toppingPriceController.text),
+    //       });
+    //     }).then((value) {
+    //       Navigator.of(context).pop();
+    //       Navigator.of(context).pop();
+    //       BlocProvider.of<ToppingListBloc>(context).add(FetchData());
+    //       QuickAlert.show(
+    //         context: context,
+    //         type: QuickAlertType.success,
+    //         text: 'Completed Successfully!',
+    //         confirmBtnText: "Ok",
+    //       );
+    //     });
+    //   });
+    // } catch (e) {
+    //   print("Something wrong when edit new topping");
+    //   print(e);
+    // }
 
     return SafeArea(
         child: Scaffold(
@@ -158,7 +210,7 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
               children: [
                 CustomAppBar(
                   leading: Text(
-                    "New Topping",
+                    "Edit Topping",
                     style: AppText.style.boldBlack18,
                   ),
                 ),
@@ -210,14 +262,20 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
                                           child: ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(8),
-                                            child: Center(
-                                                widthFactor:
-                                                    MediaQuery.of(context)
-                                                        .size
-                                                        .width,
-                                                child: Icon(IconData(0xee39,
-                                                    fontFamily:
-                                                        'MaterialIcons'))),
+                                            child: CachedNetworkImage(
+                                              alignment: Alignment.center,
+                                              width: double.maxFinite,
+                                              imageUrl: widget.product.image,
+                                              placeholder: (context, url) =>
+                                                  Container(
+                                                alignment: Alignment.center,
+                                                child:
+                                                    const CircularProgressIndicator(),
+                                              ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Container(),
+                                            ),
                                           ),
                                         ),
                                   ElevatedButton(
@@ -236,9 +294,7 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
                                     onPressed: () {
                                       uploadImageDialog();
                                     },
-                                    child: Text(image != null
-                                        ? "Rechoose Photo"
-                                        : "Choose Photo"),
+                                    child: Text("Choose another Photo"),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(
@@ -250,36 +306,13 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        // Row(
-                                        //   mainAxisAlignment:
-                                        //       MainAxisAlignment.spaceBetween,
-                                        //   children: [
-                                        //     Column(
-                                        //       crossAxisAlignment:
-                                        //           CrossAxisAlignment.start,
-                                        //       children: [
-                                        //         Text(
-                                        //           "Name",
-                                        //           style: AppText
-                                        //               .style.regularBlack16,
-                                        //         ),
-                                        //         const SizedBox(
-                                        //           height: 2,
-                                        //         ),
-                                        //         Text("Price",
-                                        //             style: AppText
-                                        //                 .style.boldBlack14),
-                                        //       ],
-                                        //     ),
-                                        //   ],
-                                        // ),
                                         Column(
                                           children: [
                                             CustormTextForm(
                                               controller: toppingNameController,
                                               validator: NullValidator(),
                                               verifiedCheck: true,
-                                              label: 'Topping Name',
+                                              label: 'New name',
                                             ),
                                             SizedBox(height: 8),
                                             CustormTextForm(
@@ -287,7 +320,7 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
                                                   toppingPriceController,
                                               validator: PriceValidator(),
                                               verifiedCheck: true,
-                                              label: 'Price (VND)',
+                                              label: 'New price (VND)',
                                             ),
                                           ],
                                         )
@@ -310,7 +343,7 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
                                   horizontal: Dimension.width16,
                                   vertical: Dimension.height8),
                               child: ElevatedButton(
-                                  onPressed: _hanldeCreateTopping,
+                                  onPressed: _hanldeEditTopping,
                                   style: ButtonStyle(
                                       elevation:
                                           const MaterialStatePropertyAll(0),
@@ -324,7 +357,7 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
                                           const MaterialStatePropertyAll(
                                               AppColors.blueColor)),
                                   child: Text(
-                                    "Create Topping",
+                                    "Edit Topping",
                                     style: AppText.style.regularWhite16,
                                   )))
                     ],
