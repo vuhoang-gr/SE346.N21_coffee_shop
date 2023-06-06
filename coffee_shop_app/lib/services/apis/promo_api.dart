@@ -19,6 +19,7 @@ class PromoAPI {
       List<Promo> promos = [];
 
       DateTime dateTimeNow = DateTime.now();
+      List<QueryDocumentSnapshot?> docs = snapshot.docs;
       for (var doc in snapshot.docs) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         if (data['dateEnd'].toDate().isAfter(dateTimeNow)) {
@@ -28,6 +29,7 @@ class PromoAPI {
           }
         }
       }
+      promos.sort((a, b) => a.dateEnd.compareTo(b.dateEnd));
       return promos;
     });
   }

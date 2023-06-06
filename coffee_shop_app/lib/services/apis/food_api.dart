@@ -10,6 +10,8 @@ class FoodAPI {
   }
   FoodAPI._internal();
 
+  List<Food> currentFoods = [];
+
   final firestore = FirebaseFirestore.instance;
   final CollectionReference foodReference =
       FirebaseFirestore.instance.collection('Food');
@@ -46,6 +48,7 @@ class FoodAPI {
         }
       }
 
+      currentFoods = foods;
       return foods;
     });
   }

@@ -30,7 +30,7 @@ class _PickupMenuScreenState extends State<PickupMenuScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           CustomAppBar(
@@ -50,85 +50,91 @@ class _PickupMenuScreenState extends State<PickupMenuScreen> {
                 }
               })),
           Expanded(
-            child: Container(
-              decoration: const BoxDecoration(color: Colors.white),
-              child: BlocBuilder<ProductStoreBloc, ProductStoreState>(
-                  builder: (context, state) {
-                if (state is HasDataProductStoreState) {
-                  return Stack(
-                    children: [
-                      RefreshIndicator(
-                        onRefresh: () async {
-                          CartButtonState cartButtonState =
-                              BlocProvider.of<CartButtonBloc>(context).state;
-                          BlocProvider.of<ProductStoreBloc>(context).add(
-                              FetchData(
-                                  stateFood: cartButtonState
-                                      .selectedStore?.stateFood));
-                        },
-                        child: ListView(
-                          controller: _scrollController,
-                          children: [
-                            const PickupStorePicker(),
-                            SizedBox(height: Dimension.height8),
-                            state.listFavoriteFood.isNotEmpty
-                                ? Container(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        16, 12, 0, 12),
-                                    child: Text(
-                                      "Yêu thích",
-                                      style: AppText.style.mediumBlack14,
-                                    ),
-                                  )
-                                : SizedBox.shrink(),
-                            ...(state.listFavoriteFood
-                                .map((product) => Container(
-                                      padding: EdgeInsets.only(
-                                          bottom: Dimension.height8,
-                                          left: Dimension.width16,
-                                          right: Dimension.width16),
-                                      child: (ProductItem(
-                                        product: product,
-                                      )),
-                                    ))
-                                .toList()),
-                            (state.listFavoriteFood.isNotEmpty &&
-                                    state.listOtherFood.isNotEmpty)
-                                ? Container(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        16, 12, 0, 12),
-                                    child: Text(
-                                      "Khác",
-                                      style: AppText.style.mediumBlack14,
-                                    ),
-                                  )
-                                : SizedBox.shrink(),
-                            ...(state.listOtherFood
-                                .map((product) => Container(
-                                      padding: EdgeInsets.only(
-                                          bottom: Dimension.height8,
-                                          left: Dimension.width16,
-                                          right: Dimension.width16),
-                                      child: (ProductItem(
-                                        product: product,
-                                      )),
-                                    ))
-                                .toList()),
-                            SizedBox(
-                              height: Dimension.height68,
-                            )
-                          ],
-                        ),
-                      ),
-                      CartButton(scrollController: _scrollController),
-                    ],
-                  );
-                } else if (state is LoadingState || state is FetchedState) {
-                  return PickupMenuSkeleton();
-                } else {
-                  return SizedBox.shrink();
-                }
-              }),
+            child: Stack(
+              children: [
+                BlocBuilder<ProductStoreBloc, ProductStoreState>(
+                    builder: (context, state) {
+                  if (state is HasDataProductStoreState) {
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        CartButtonState cartButtonState =
+                            BlocProvider.of<CartButtonBloc>(context).state;
+                        BlocProvider.of<ProductStoreBloc>(context).add(
+                            FetchData(
+                                stateFood: cartButtonState
+                                    .selectedStore?.stateFood));
+                      },
+                      child: LayoutBuilder(builder:
+                          (BuildContext context, BoxConstraints constraints) {
+                        return ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: constraints.maxHeight,
+                          ),
+                          child: ListView(
+                            controller: _scrollController,
+                            physics: AlwaysScrollableScrollPhysics(),
+                            children: [
+                              const PickupStorePicker(),
+                              SizedBox(height: Dimension.height8),
+                              state.listFavoriteFood.isNotEmpty
+                                  ? Container(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          16, 12, 0, 12),
+                                      child: Text(
+                                        "Yêu thích",
+                                        style: AppText.style.mediumBlack14,
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                              ...(state.listFavoriteFood
+                                  .map((product) => Container(
+                                        padding: EdgeInsets.only(
+                                            bottom: Dimension.height8,
+                                            left: Dimension.width16,
+                                            right: Dimension.width16),
+                                        child: (ProductItem(
+                                          product: product,
+                                        )),
+                                      ))
+                                  .toList()),
+                              (state.listFavoriteFood.isNotEmpty &&
+                                      state.listOtherFood.isNotEmpty)
+                                  ? Container(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          16, 12, 0, 12),
+                                      child: Text(
+                                        "Khác",
+                                        style: AppText.style.mediumBlack14,
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                              ...(state.listOtherFood
+                                  .map((product) => Container(
+                                        padding: EdgeInsets.only(
+                                            bottom: Dimension.height8,
+                                            left: Dimension.width16,
+                                            right: Dimension.width16),
+                                        child: (ProductItem(
+                                          product: product,
+                                        )),
+                                      ))
+                                  .toList()),
+                              SizedBox(
+                                height: Dimension.height68,
+                              )
+                            ],
+                          ),
+                        );
+                      }),
+                    );
+                  } else if (state is LoadingState || state is FetchedState) {
+                    return PickupMenuSkeleton();
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                }),
+                CartButton(scrollController: _scrollController)
+              ],
             ),
           ),
         ],

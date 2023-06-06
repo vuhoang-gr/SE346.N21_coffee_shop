@@ -6,7 +6,6 @@ import 'package:coffee_shop_app/services/blocs/search_store/search_store_bloc.da
 import 'package:coffee_shop_app/services/blocs/search_store/search_store_state.dart';
 import 'package:coffee_shop_app/services/blocs/store_store/store_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/store_store/store_store_state.dart';
-import 'package:coffee_shop_app/widgets/global/cart_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,19 +32,28 @@ class StoreSearchScreen extends StatefulWidget {
 
 class _StoreSearchScreenState extends State<StoreSearchScreen> {
   Timer? _debounce;
+  late StreamSubscription _streamSubscription;
   @override
   void initState() {
+    super.initState();
     StoreStoreState storeState = BlocProvider.of<StoreStoreBloc>(context).state;
     BlocProvider.of<SearchStoreBloc>(context)
         .add(UpdateList(listStore: storeState.initStores));
-
-    super.initState();
+    _streamSubscription = BlocProvider.of<StoreStoreBloc>(context)
+        .stream
+        .listen((storeStoreState) {
+      if (storeStoreState is FetchedState) {
+        BlocProvider.of<SearchStoreBloc>(context)
+            .add(UpdateList(listStore: storeStoreState.initStores));
+      }
+    });
   }
 
   @override
   void dispose() {
     super.dispose();
     _debounce?.cancel();
+    _streamSubscription.cancel();
   }
 
   @override

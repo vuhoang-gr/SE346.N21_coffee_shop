@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:coffee_shop_app/main.dart';
 import 'package:coffee_shop_app/screens/store/store_selection_screen.dart';
+import 'package:coffee_shop_app/services/apis/food_api.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_event.dart';
 import 'package:coffee_shop_app/services/blocs/product_store/product_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/search_product/search_product_bloc.dart';
@@ -33,20 +34,28 @@ class SearchProductScreen extends StatefulWidget {
 
 class _SearchProductScreenState extends State<SearchProductScreen> {
   Timer? _debounce;
-  StreamSubscription? _streamSubscription;
+  late StreamSubscription _streamSubscription;
   @override
   void initState() {
     super.initState();
-    ProductStoreState state = BlocProvider.of<ProductStoreBloc>(context).state;
     BlocProvider.of<SearchProductBloc>(context).add(UpdateList(
-        initListFood: (state as HasDataProductStoreState).initFoods));
+        initListFood: FoodAPI().currentFoods));
+
+    _streamSubscription = BlocProvider.of<ProductStoreBloc>(context)
+        .stream
+        .listen((productStoreState) {
+      if (productStoreState is FetchedState) {
+        BlocProvider.of<SearchProductBloc>(context)
+            .add(UpdateList(initListFood: FoodAPI().currentFoods));
+      }
+    });
   }
 
   @override
   void dispose() {
     super.dispose();
     _debounce?.cancel();
-    _streamSubscription?.cancel();
+    _streamSubscription.cancel();
   }
 
   @override
@@ -77,22 +86,8 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
                       "isPurposeForShowDetail": false,
                     }).then((value) {
                       if (value != null && value is Store) {
-                        _streamSubscription =
-                            BlocProvider.of<ProductStoreBloc>(context)
-                                .stream
-                                .listen((productStoreState) {
-                          if (productStoreState is FetchedState) {
-                            print("hello");
-                            BlocProvider.of<SearchProductBloc>(context).add(
-                                UpdateList(
-                                    initListFood: productStoreState.initFoods));
-                            _streamSubscription?.cancel();
-                          }
-                        });
-
                         BlocProvider.of<SearchProductBloc>(context)
                             .add(WaitingUpdateList());
-
                         BlocProvider.of<CartButtonBloc>(context).add(
                             ChangeSelectedStoreButNotUse(selectedStore: value));
                       }
