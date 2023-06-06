@@ -85,7 +85,6 @@ class PromoDetailModal extends StatelessWidget {
                     child: RoundedButton(
                         onPressed: () {
                           Navigator.of(context).pop();
-                          Navigator.of(context).pop(promo);
                         },
                         height: Dimension.height40,
                         child: Text(

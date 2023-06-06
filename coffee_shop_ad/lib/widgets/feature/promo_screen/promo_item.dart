@@ -72,8 +72,8 @@ class PromoItem extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "Code: ${promo.id}",
-                        style: AppText.style.regularGrey12,
+                        promo.id,
+                        style: AppText.style.mediumBlack14,
                       ),
                       Text(
                         "Hết hạn: ${DateFormat('HH:mm dd/MM/yyyy').format(promo.dateEnd)}",

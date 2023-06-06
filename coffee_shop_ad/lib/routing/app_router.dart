@@ -11,6 +11,7 @@ import 'package:coffee_shop_admin/screens/drink_manage/topping_edit.dart';
 import 'package:coffee_shop_admin/screens/main_page.dart';
 import 'package:coffee_shop_admin/screens/profile/profile_screen.dart';
 import 'package:coffee_shop_admin/screens/profile/profile_setting_screen.dart';
+import 'package:coffee_shop_admin/screens/promo/promo_create.dart';
 import 'package:coffee_shop_admin/screens/promo/promo_screen.dart';
 import 'package:coffee_shop_admin/screens/store/store_detail.dart';
 import 'package:coffee_shop_admin/screens/store/store_search_screen.dart';
@@ -144,6 +145,9 @@ class AppRouter {
 
       case PromoScreen.routeName:
         return _createRoute(PromoScreen());
+      case CreatePromoScreen.routeName:
+        List<String> existCodes = settings.arguments as List<String>;
+        return _createRoute(CreatePromoScreen(existCodeList: existCodes));
 
       case StoreScreen.routeName:
         Map<String, dynamic> arguments =

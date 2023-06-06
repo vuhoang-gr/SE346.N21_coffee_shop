@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_bloc.dart';
-import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_event.dart';
 import 'package:coffee_shop_admin/services/functions/money_transfer.dart';
 import 'package:coffee_shop_admin/services/models/drink.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
@@ -10,9 +8,7 @@ import 'package:coffee_shop_admin/utils/styles/button.dart';
 import 'package:coffee_shop_admin/widgets/feature/drink_detail_widgets/product_card.dart';
 import 'package:coffee_shop_admin/widgets/feature/drink_detail_widgets/round_image.dart';
 import 'package:coffee_shop_admin/widgets/global/custom_app_bar.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quickalert/quickalert.dart';
 
 class DrinkDetail extends StatefulWidget {

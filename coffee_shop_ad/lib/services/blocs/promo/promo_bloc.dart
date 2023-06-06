@@ -12,16 +12,20 @@ import '../../models/promo.dart';
 
 class PromoBloc extends Bloc<PromoEvent, PromoState> {
   StreamSubscription<List<Promo>>? _promoStoreSubscription;
-  PromoBloc() : super(LoadingState(initPromos: [])) {
+  PromoBloc() : super(LoadingState(initPromos: [], listExistCode: [])) {
     on<FetchData>(_mapFetchData);
     on<GetDataFetched>(_mapGetDataFetched);
   }
 
   void _mapFetchData(FetchData event, Emitter<PromoState> emit) {
-    emit(LoadingState(initPromos: []));
+    emit(LoadingState(initPromos: [], listExistCode: []));
     _promoStoreSubscription?.cancel();
     _promoStoreSubscription = PromoAPI().fetchData().listen((listPromos) {
-      add(GetDataFetched(listPromos: listPromos));
+      List<String> codes = [];
+      listPromos.forEach((element) {
+        codes.add(element.id);
+      });
+      add(GetDataFetched(listPromos: listPromos, listCodes: codes));
     }, onError: (_) {
       Fluttertoast.showToast(
           msg: "Đã có lỗi xảy ra, hãy thử lại sau.",
@@ -29,12 +33,13 @@ class PromoBloc extends Bloc<PromoEvent, PromoState> {
           timeInSecForIosWeb: 1,
           textColor: Colors.white,
           fontSize: Dimension.font14);
-      add(GetDataFetched(listPromos: []));
+      add(GetDataFetched(listPromos: [], listCodes: []));
     });
   }
 
   void _mapGetDataFetched(GetDataFetched event, Emitter<PromoState> emit) {
-    emit(LoadedState(initPromos: event.listPromos));
+    emit(LoadedState(
+        initPromos: event.listPromos, listExistCode: event.listCodes));
   }
 
   @override

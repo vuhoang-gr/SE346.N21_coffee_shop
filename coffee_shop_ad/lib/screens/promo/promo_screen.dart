@@ -1,19 +1,18 @@
 // import 'package:coffee_shop_app/screens/promo/promo_qr_scan.dart';
+import 'package:coffee_shop_admin/screens/promo/promo_create.dart';
 import 'package:coffee_shop_admin/services/blocs/promo/promo_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/promo/promo_state.dart';
 import 'package:coffee_shop_admin/services/blocs/promo/promo_event.dart';
+import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
+import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
+import 'package:coffee_shop_admin/utils/styles/button.dart';
 import 'package:coffee_shop_admin/widgets/feature/promo_screen/promo_item.dart';
 import 'package:coffee_shop_admin/widgets/feature/promo_screen/promo_skeleton.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:coffee_shop_admin/widgets/global/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-import '../../services/models/promo.dart';
-import '../../utils/colors/app_colors.dart';
-import '../../utils/constants/dimension.dart';
-import '../../utils/styles/app_texts.dart';
-import '../../widgets/global/custom_app_bar.dart';
 
 class PromoScreen extends StatefulWidget {
   static const String routeName = "/promo_screen";
@@ -60,6 +59,31 @@ class _PromoScreenState extends State<PromoScreen> {
                               Padding(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: Dimension.width16),
+                                child: ElevatedButton(
+                                    style: roundedButton,
+                                    onPressed: () {
+                                      Navigator.of(context).pushNamed(
+                                          CreatePromoScreen.routeName,
+                                          arguments: state.listExistCode);
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.add,
+                                          color: Colors.white,
+                                        ),
+                                        Text(
+                                          'New Promo',
+                                          style: AppText.style.regularWhite16,
+                                        )
+                                      ],
+                                    )),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: Dimension.width16),
                                 child: ListView.separated(
                                   padding:
                                       EdgeInsets.only(top: Dimension.height8),
@@ -79,7 +103,7 @@ class _PromoScreenState extends State<PromoScreen> {
                               ),
                               SizedBox(
                                 height: Dimension.height8,
-                              )
+                              ),
                             ],
                           ),
                         )),
@@ -103,7 +127,7 @@ class _PromoScreenState extends State<PromoScreen> {
                         },
                         itemCount: 10));
               } else {
-                print("Some err in promo screen");
+                print("Something's wrong in promo screen");
                 return SizedBox.shrink();
               }
             }),
