@@ -14,7 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../services/models/store.dart';
 import '../../utils/constants/dimension.dart';
 import '../../utils/styles/button.dart';
-import '../../widgets/feature/product_detail_widgets/icon_widget_row.dart';
+import '../../widgets/feature/drink_detail_widgets/icon_widget_row.dart';
 import '../../widgets/feature/store/store_detail_card.dart';
 import '../../widgets/global/container_card.dart';
 import '../../widgets/global/custom_app_bar.dart';

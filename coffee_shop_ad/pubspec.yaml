@@ -39,6 +39,8 @@ dependencies:
   dropdown_button2: ^2.0.0
   quickalert: ^1.0.1
   image_picker: ^0.8.7+5
+  fluttertoast: ^8.2.2
+  qr_flutter: ^4.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,7 @@
 import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_event.dart';
+import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
+import 'package:coffee_shop_admin/utils/styles/button.dart';
 import 'package:coffee_shop_admin/widgets/global/skeleton/list_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,6 +50,31 @@ class _DrinkListState extends State<DrinkScreen> {
                         child: ListView(
                           controller: _scrollController,
                           children: [
+                            SizedBox(height: Dimension.height8),
+                            Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: Dimension.width16,
+                                ),
+                                child: ElevatedButton(
+                                    style: roundedButton,
+                                    onPressed: () {
+                                      // Navigator.of(context).pushNamed(
+                                      //     CreateSizeScreen.routeName);
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.add,
+                                          color: Colors.white,
+                                        ),
+                                        Text(
+                                          'New Drink',
+                                          style: AppText.style.regularWhite16,
+                                        )
+                                      ],
+                                    ))),
                             SizedBox(height: Dimension.height8),
                             ...(state.listFood
                                 .map((product) => Container(

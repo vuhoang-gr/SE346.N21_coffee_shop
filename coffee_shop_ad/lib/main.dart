@@ -7,9 +7,9 @@ import 'package:coffee_shop_admin/services/blocs/auth/auth_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/auth_action/auth_action_cubit.dart';
 import 'package:coffee_shop_admin/services/blocs/edit_address/edit_address_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/map_picker/map_picker_bloc.dart';
-import 'package:coffee_shop_admin/services/blocs/pickup_timer/pickup_timer_cubit.dart';
 import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_bloc.dart';
-import 'package:coffee_shop_admin/services/blocs/recent_see_products/recent_see_products_bloc.dart';
+import 'package:coffee_shop_admin/services/blocs/promo/promo_bloc.dart';
+import 'package:coffee_shop_admin/services/blocs/promo/promo_event.dart';
 import 'package:coffee_shop_admin/services/blocs/search_store/search_store_bloc.dart';
 
 import 'package:coffee_shop_admin/services/blocs/size_manage/size_list_bloc.dart';
@@ -49,11 +49,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<ToppingListBloc>(
           create: (BuildContext context) => ToppingListBloc(),
         ),
-
         BlocProvider<SizeListBloc>(
           create: (BuildContext context) => SizeListBloc(),
         ),
-
         BlocProvider<UserBloc>(
           create: (BuildContext context) => UserBloc(),
         ),
@@ -63,17 +61,14 @@ class MyApp extends StatelessWidget {
         BlocProvider<StoreStoreBloc>(
           create: (BuildContext context) => StoreStoreBloc(),
         ),
-        BlocProvider<RecentSeeProductsBloc>(
-          create: (BuildContext context) => RecentSeeProductsBloc(),
+        BlocProvider<PromoBloc>(
+          create: (BuildContext context) => PromoBloc()..add(FetchData()),
         ),
         BlocProvider<EditAddressBloc>(
           create: (BuildContext context) => EditAddressBloc(),
         ),
         BlocProvider<AddressStoreBloc>(
           create: (BuildContext context) => AddressStoreBloc(),
-        ),
-        BlocProvider<TimerCubit>(
-          create: (BuildContext context) => TimerCubit(),
         ),
         BlocProvider<MapPickerBloc>(
           create: (BuildContext context) => MapPickerBloc(),

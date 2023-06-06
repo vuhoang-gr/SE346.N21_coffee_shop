@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../../../utils/constants/dimension.dart';
 import '../../../utils/constants/string.dart';
 import '../../global/container_card.dart';
-import '../product_detail_widgets/icon_widget_row.dart';
+import '../drink_detail_widgets/icon_widget_row.dart';
 
 class OrderCard extends StatelessWidget {
   OrderCard({

@@ -1,44 +1,41 @@
-import 'package:coffee_shop_admin/services/models/topping.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_bloc.dart';
+import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_event.dart';
+import 'package:coffee_shop_admin/services/functions/money_transfer.dart';
+import 'package:coffee_shop_admin/services/models/drink.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
+import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
+import 'package:coffee_shop_admin/utils/styles/button.dart';
+import 'package:coffee_shop_admin/widgets/feature/drink_detail_widgets/product_card.dart';
+import 'package:coffee_shop_admin/widgets/feature/drink_detail_widgets/round_image.dart';
+import 'package:coffee_shop_admin/widgets/global/custom_app_bar.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quickalert/quickalert.dart';
 
-import '../services/functions/money_transfer.dart';
-import '../services/models/drink.dart';
-import '../utils/constants/dimension.dart';
-import '../utils/styles/app_texts.dart';
-import '../utils/styles/button.dart';
-import '../widgets/feature/product_detail_widgets/circle_icon.dart';
-import '../widgets/feature/product_detail_widgets/product_card.dart';
-import '../widgets/feature/product_detail_widgets/round_image.dart';
-import '../widgets/feature/product_detail_widgets/square_amount_box.dart';
-import '../widgets/global/custom_app_bar.dart';
-import '../services/models/size.dart';
-
-class ProductDetail extends StatefulWidget {
+class DrinkDetail extends StatefulWidget {
   final Drink product;
-  const ProductDetail({super.key, required this.product});
+  const DrinkDetail({super.key, required this.product});
 
   @override
-  State<ProductDetail> createState() => _ProductDetailState();
+  State<DrinkDetail> createState() => _DrinkDetailState();
 }
 
-class _ProductDetailState extends State<ProductDetail> {
+class _DrinkDetailState extends State<DrinkDetail> {
   var _selectedToppings = [];
-  var _selectedSize;
-  double _totalPrice = 0;
+  var _selectedSizes = [];
 
   @override
   void initState() {
     super.initState();
 
-    _selectedSize = widget.product.sizes![0];
+    _selectedSizes = widget.product.selectedSizes ??
+        List<bool>.generate(Drink.sizes.length, (index) => false);
 
-    _selectedToppings =
-        List<bool>.generate(widget.product.toppings!.length, (index) => false);
-    _totalPrice = widget.product.price + widget.product.sizes![0].price;
-    //number to add
+    _selectedToppings = widget.product.selectedToppings ??
+        List<bool>.generate(Drink.toppings.length, (index) => false);
   }
 
   @override
@@ -49,6 +46,63 @@ class _ProductDetailState extends State<ProductDetail> {
   @override
   Widget build(BuildContext context) {
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
+    // ignore: no_leading_underscores_for_local_identifiers
+    void _handleOnTapDeleteDrink() async {
+      await QuickAlert.show(
+        context: context,
+        type: QuickAlertType.confirm,
+        text: 'Do you want to delete ${widget.product.name}?',
+        confirmBtnText: 'Yes',
+        cancelBtnText: 'No',
+        confirmBtnColor: Colors.green,
+        onConfirmBtnTap: () async {
+          // TODO: Remove all image of drink
+
+          Navigator.of(context).pop();
+          // String imgUrl = widget.product.image;
+
+          QuickAlert.show(
+            context: context,
+            type: QuickAlertType.loading,
+            title: 'Loading',
+            text: 'Deleting ${widget.product.name}',
+          );
+
+          // TODO: remove doc
+          Future.delayed(Duration(seconds: 2), () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            QuickAlert.show(
+              context: context,
+              type: QuickAlertType.success,
+              text: 'Completed Successfully!',
+              confirmBtnText: "Ok",
+            );
+          });
+          // try {
+          //   await FirebaseFirestore.instance
+          //       .collection("Food")
+          //       .doc(widget.product.id)
+          //       .delete()
+          //       .then((value) {
+          //     Navigator.of(context).pop();
+          //     Navigator.of(context).pop();
+          //     BlocProvider.of<DrinkListBloc>(context).add(FetchData());
+          //     // FirebaseStorage.instance.refFromURL(imgUrl).delete();
+          //     QuickAlert.show(
+          //       context: context,
+          //       type: QuickAlertType.success,
+          //       text: 'Completed Successfully!',
+          //       confirmBtnText: "Ok",
+          //     );
+          //   });
+          // } catch (e) {
+          //   print("Something wrong when delete size");
+          //   print(e);
+          // }
+        },
+      );
+    }
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -63,11 +117,16 @@ class _ProductDetailState extends State<ProductDetail> {
                 children: [
                   CustomAppBar(
                     color: AppColors.backgroundColor,
+                    leading: Text(
+                      'Drink: ${widget.product.name}',
+                      style: AppText.style.regularBlack16,
+                    ),
                   ),
                   Expanded(
                       child: SingleChildScrollView(
                           child: Column(
                     children: [
+                      //TODO:
                       ProductCard(product: widget.product),
 
                       //size
@@ -99,14 +158,8 @@ class _ProductDetailState extends State<ProductDetail> {
                                   itemBuilder: (context, index) => InkWell(
                                         onTap: () {
                                           setState(() {
-                                            double prevSizePrice =
-                                                (_selectedSize as Size).price;
-                                            _selectedSize =
-                                                widget.product.sizes![index];
-                                            _totalPrice = _totalPrice -
-                                                prevSizePrice +
-                                                widget.product.sizes![index]
-                                                    .price;
+                                            _selectedSizes[index] =
+                                                !_selectedSizes[index];
                                           });
                                         },
                                         child: Row(
@@ -115,40 +168,30 @@ class _ProductDetailState extends State<ProductDetail> {
                                           children: [
                                             Row(
                                               children: [
-                                                Radio<Size>(
-                                                  value: widget
-                                                      .product.sizes![index],
-                                                  groupValue: _selectedSize,
+                                                Checkbox(
+                                                  value: _selectedSizes[index],
                                                   onChanged: (value) {
                                                     setState(() {
-                                                      double prevSizePrice =
-                                                          (_selectedSize
-                                                                  as Size)
-                                                              .price;
-                                                      _selectedSize = value;
-                                                      _totalPrice =
-                                                          _totalPrice -
-                                                              prevSizePrice +
-                                                              value!.price;
+                                                      _selectedSizes[index] =
+                                                          value;
                                                     });
                                                   },
                                                 ),
                                                 RoundImage(
-                                                    imgUrl: widget.product
-                                                        .sizes![index].image),
+                                                    imgUrl: Drink
+                                                        .sizes[index].image),
                                                 SizedBox(
                                                   width: Dimension.height8,
                                                 ),
                                                 Text(
-                                                  widget.product.sizes![index]
-                                                      .name,
+                                                  Drink.sizes[index].name,
                                                   style: AppText
                                                       .style.regularBlack14,
                                                 ),
                                               ],
                                             ),
                                             Text(
-                                              '+${MoneyTransfer.transferFromDouble(widget.product.sizes![index].price)} ₫',
+                                              '+${MoneyTransfer.transferFromDouble(Drink.sizes[index].price)} ₫',
                                               style: AppText.style.boldBlack14,
                                             ),
                                           ],
@@ -158,7 +201,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                         thickness: 2,
                                         color: AppColors.greyBoxColor,
                                       ),
-                                  itemCount: widget.product.sizes!.length),
+                                  itemCount: Drink.sizes.length),
                             ]),
                       ),
 
@@ -184,10 +227,6 @@ class _ProductDetailState extends State<ProductDetail> {
                                 style: AppText.style.boldBlack16,
                                 children: <TextSpan>[
                                   const TextSpan(text: 'Topping '),
-                                  TextSpan(
-                                    text: '(maximum 2)',
-                                    style: AppText.style.regularGrey14,
-                                  )
                                 ],
                               ),
                             ),
@@ -220,20 +259,18 @@ class _ProductDetailState extends State<ProductDetail> {
                                                 },
                                               ),
                                               RoundImage(
-                                                  imgUrl: widget.product
-                                                      .toppings![index].image),
+                                                  imgUrl: Drink
+                                                      .toppings[index].image),
                                               SizedBox(
                                                 width: Dimension.height8,
                                               ),
-                                              Text(
-                                                  widget.product
-                                                      .toppings![index].name,
+                                              Text(Drink.toppings[index].name,
                                                   style: AppText
                                                       .style.regularBlack14),
                                             ],
                                           ),
                                           Text(
-                                            '+${MoneyTransfer.transferFromDouble(widget.product.toppings![index].price)} ₫',
+                                            '+${MoneyTransfer.transferFromDouble(Drink.toppings[index].price)} ₫',
                                             style: AppText.style.boldBlack14,
                                           ),
                                         ],
@@ -243,11 +280,28 @@ class _ProductDetailState extends State<ProductDetail> {
                                       thickness: 2,
                                       color: AppColors.greyBoxColor,
                                     ),
-                                itemCount: widget.product.toppings!.length),
+                                itemCount: Drink.toppings.length),
                           ],
                         ),
                       ),
 
+                      SizedBox(height: 8),
+                      ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              elevation: 0,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(45)))),
+                          icon: Icon(
+                            Icons.delete_forever,
+                            size: 28,
+                          ),
+                          onPressed: _handleOnTapDeleteDrink,
+                          label: Text(
+                            'Delete drink',
+                            style: AppText.style.regularWhite16,
+                          )),
                       SizedBox(height: 16)
                     ],
                   ))),
@@ -281,9 +335,59 @@ class _ProductDetailState extends State<ProductDetail> {
                                 child: Builder(builder: (context) {
                                   return ElevatedButton(
                                       style: roundedButton,
-                                      onPressed: () {},
+                                      onPressed: () async {
+                                        QuickAlert.show(
+                                          context: context,
+                                          type: QuickAlertType.loading,
+                                          title: 'Loading',
+                                          text:
+                                              'Saving ${widget.product.name}...',
+                                        );
+
+                                        List<String> updatedSizes = [];
+                                        for (int i = 0;
+                                            i < Drink.sizes.length;
+                                            i++) {
+                                          if (_selectedSizes[i]) {
+                                            updatedSizes.add(Drink.sizes[i].id);
+                                          }
+                                        }
+                                        List<String> updatedToppings = [];
+                                        for (int i = 0;
+                                            i < Drink.toppings.length;
+                                            i++) {
+                                          if (_selectedToppings[i]) {
+                                            updatedToppings
+                                                .add(Drink.toppings[i].id);
+                                          }
+                                        }
+
+                                        await FirebaseFirestore.instance
+                                            .collection("Food")
+                                            .doc(widget.product.id)
+                                            .update({
+                                          "sizes": updatedSizes,
+                                          "toppings": updatedToppings
+                                        }).then((value) {
+                                          Navigator.of(context).pop();
+                                          Navigator.of(context).pop();
+                                          QuickAlert.show(
+                                            context: context,
+                                            type: QuickAlertType.success,
+                                            text: 'Completed Successfully!',
+                                            confirmBtnText: "Ok",
+                                          );
+                                        }).catchError((err) {
+                                          QuickAlert.show(
+                                            context: context,
+                                            type: QuickAlertType.error,
+                                            text: 'Error when saving drink!',
+                                            confirmBtnText: "Ok",
+                                          );
+                                        });
+                                      },
                                       child: Text(
-                                        'Delete',
+                                        'Save',
                                         style: AppText.style.regularWhite16,
                                       ));
                                 }),

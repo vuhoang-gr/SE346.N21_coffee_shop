@@ -1,11 +1,9 @@
-
-import 'package:coffee_shop_admin/screens/drink_manage/drink_screen.dart';
 import 'package:coffee_shop_admin/screens/drink_manage/main_screen.dart';
 
 import 'package:coffee_shop_admin/screens/profile/profile_screen.dart';
+import 'package:coffee_shop_admin/screens/promo/promo_screen.dart';
 import 'package:coffee_shop_admin/screens/store/store_screen.dart';
 import 'package:coffee_shop_admin/screens/user/user_screen.dart';
-import 'package:coffee_shop_admin/services/models/user.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:flutter/material.dart';
@@ -135,22 +133,10 @@ class _MainPageState extends State<MainPage> {
                 Expanded(
                     child: TabBarView(
                   children: [
-                    //home page
-                    // HomeScreen(),
                     DrinkManagement(),
-
-                    //stores page
                     StoreScreen(),
-
-                    //Promo
-
-                    DrinkScreen(),
-
-
-                    //user
+                    PromoScreen(),
                     UserScreen(),
-
-                    //profile
                     ProfileScreen(),
                   ],
                 ))

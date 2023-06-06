@@ -51,8 +51,8 @@ class FakeData {
     name: 'Food 1',
     price: 123000,
     description: 'Food description',
-    sizes: List.generate(4, (index) => sizeMock),
-    toppings: List.generate(4, (index) => toppingMock),
+    // sizes: List.generate(4, (index) => sizeMock),
+    // toppings: List.generate(4, (index) => toppingMock),
     images: List.generate(4,
         (index) => 'https://cdn-icons-png.flaticon.com/512/1377/1377194.png'),
   );

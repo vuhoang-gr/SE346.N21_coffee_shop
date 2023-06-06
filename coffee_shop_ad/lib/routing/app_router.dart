@@ -1,4 +1,5 @@
 import 'package:coffee_shop_admin/screens/auth/auth_screen.dart';
+import 'package:coffee_shop_admin/screens/drink_manage/drink_detail.dart';
 
 import 'package:coffee_shop_admin/screens/drink_manage/size_create.dart';
 import 'package:coffee_shop_admin/screens/drink_manage/size_detail.dart';
@@ -8,9 +9,9 @@ import 'package:coffee_shop_admin/screens/drink_manage/topping_detail.dart';
 import 'package:coffee_shop_admin/screens/drink_manage/topping_edit.dart';
 
 import 'package:coffee_shop_admin/screens/main_page.dart';
-import 'package:coffee_shop_admin/screens/product_detail.dart';
 import 'package:coffee_shop_admin/screens/profile/profile_screen.dart';
 import 'package:coffee_shop_admin/screens/profile/profile_setting_screen.dart';
+import 'package:coffee_shop_admin/screens/promo/promo_screen.dart';
 import 'package:coffee_shop_admin/screens/store/store_detail.dart';
 import 'package:coffee_shop_admin/screens/store/store_search_screen.dart';
 import 'package:coffee_shop_admin/screens/store_address/address_screen.dart';
@@ -111,7 +112,6 @@ class AppRouter {
           product: size,
         ));
 
-
       case AddressScreen.routeName:
         Address? deliveryAddress = settings.arguments as Address?;
         return _createRoute(AddressScreen(
@@ -126,23 +126,24 @@ class AppRouter {
 
       case "/drink_detail_screen":
         Drink food = settings.arguments as Drink;
-        return _createRoute(ProductDetail(product: food));
+        return _createRoute(DrinkDetail(product: food));
 
       case "/topping_detail_screen":
         Topping topping = settings.arguments as Topping;
         return _createRoute(ToppingDetail(product: topping));
 
-
       case "/size_detail_screen":
         Size size = settings.arguments as Size;
         return _createRoute(SizeDetail(product: size));
-
 
       case "/store_detail":
         Store args = settings.arguments as Store;
         return _createRoute(StoreDetail(
           store: args,
         ));
+
+      case PromoScreen.routeName:
+        return _createRoute(PromoScreen());
 
       case StoreScreen.routeName:
         Map<String, dynamic> arguments =

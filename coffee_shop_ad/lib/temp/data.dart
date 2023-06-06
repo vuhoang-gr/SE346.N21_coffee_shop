@@ -23,7 +23,14 @@ class Data {
           'https://product.hstatic.net/1000075078/product/cold-brew-sua-tuoi_379576_7fd130b7d162497a950503207876ef64.jpg',
       id: '2',
       price: 20,
-    )
+    ),
+    Size(
+      name: 'Medium',
+      image:
+          'https://product.hstatic.net/1000075078/product/cold-brew-sua-tuoi_379576_7fd130b7d162497a950503207876ef64.jpg',
+      id: '3',
+      price: 15,
+    ),
   ];
   static final List<Topping> toopings = [
     Topping(
@@ -38,6 +45,13 @@ class Data {
           'https://product.hstatic.net/1000075078/product/1645969436_caramel-macchiato-nong-lifestyle-1_187d60b2a52244c58a5c2fd24addef78.jpg',
       id: '2',
       price: 5,
+    ),
+    Topping(
+      name: 'Topping',
+      image:
+          'https://product.hstatic.net/1000075078/product/1645969436_caramel-macchiato-nong-lifestyle-1_187d60b2a52244c58a5c2fd24addef78.jpg',
+      id: '3',
+      price: 15,
     )
   ];
   static final List<Drink> products = [
@@ -46,14 +60,14 @@ class Data {
       name: "Food 1",
       price: 1234.53,
       description: "Day la food 1",
-      sizes: [
-        Data.sizes[0],
-        Data.sizes[1],
-      ],
-      toppings: [
-        Data.toopings[0],
-        Data.toopings[1],
-      ],
+      // sizes: [
+      //   Data.sizes[0],
+      //   Data.sizes[1],
+      // ],
+      // toppings: [
+      //   Data.toopings[0],
+      //   Data.toopings[1],
+      // ],
       images: [
         "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
       ],
@@ -63,13 +77,13 @@ class Data {
       name: "Food 2",
       price: 1234.53,
       description: "Day la food 2",
-      sizes: [
-        Data.sizes[0],
-      ],
-      toppings: [
-        Data.toopings[0],
-        Data.toopings[1],
-      ],
+      // sizes: [
+      //   Data.sizes[0],
+      // ],
+      // toppings: [
+      //   Data.toopings[0],
+      //   Data.toopings[1],
+      // ],
       images: [
         "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
       ],
@@ -79,11 +93,11 @@ class Data {
       name: "Food 3",
       price: 1234.53,
       description: "Day la food 3",
-      sizes: [
-        Data.sizes[0],
-        Data.sizes[1],
-      ],
-      toppings: [],
+      // sizes: [
+      //   Data.sizes[0],
+      //   Data.sizes[1],
+      // ],
+      // toppings: [],
       images: [
         "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
       ],
@@ -93,13 +107,13 @@ class Data {
       name: "Food 4",
       price: 1234.53,
       description: "Day la food 4",
-      sizes: [
-        Data.sizes[1],
-      ],
-      toppings: [
-        Data.toopings[0],
-        Data.toopings[1],
-      ],
+      // sizes: [
+      //   Data.sizes[1],
+      // ],
+      // toppings: [
+      //   Data.toopings[0],
+      //   Data.toopings[1],
+      // ],
       images: [
         "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
       ],
@@ -109,10 +123,10 @@ class Data {
       name: "Food 5",
       price: 1234.53,
       description: "Day la food 5",
-      sizes: [
-        Data.sizes[0],
-      ],
-      toppings: [],
+      // sizes: [
+      //   Data.sizes[0],
+      // ],
+      // toppings: [],
       images: [
         "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
       ],
@@ -122,14 +136,14 @@ class Data {
       name: "Food 6",
       price: 1234.53,
       description: "Day la food 6",
-      sizes: [
-        Data.sizes[0],
-        Data.sizes[1],
-      ],
-      toppings: [
-        Data.toopings[0],
-        Data.toopings[1],
-      ],
+      // sizes: [
+      //   Data.sizes[0],
+      //   Data.sizes[1],
+      // ],
+      // toppings: [
+      //   Data.toopings[0],
+      //   Data.toopings[1],
+      // ],
       images: [
         "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
       ],
