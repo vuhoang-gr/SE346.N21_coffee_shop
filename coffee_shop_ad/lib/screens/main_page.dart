@@ -1,5 +1,7 @@
-import 'package:coffee_shop_admin/screens/drink_management/drink_list.dart';
-import 'package:coffee_shop_admin/screens/drink_management/drink_management_screen.dart';
+
+import 'package:coffee_shop_admin/screens/drink_manage/drink_screen.dart';
+import 'package:coffee_shop_admin/screens/drink_manage/main_screen.dart';
+
 import 'package:coffee_shop_admin/screens/profile/profile_screen.dart';
 import 'package:coffee_shop_admin/screens/store/store_screen.dart';
 import 'package:coffee_shop_admin/screens/user/user_screen.dart';
@@ -141,7 +143,9 @@ class _MainPageState extends State<MainPage> {
                     StoreScreen(),
 
                     //Promo
-                    DrinkList(),
+
+                    DrinkScreen(),
+
 
                     //user
                     UserScreen(),

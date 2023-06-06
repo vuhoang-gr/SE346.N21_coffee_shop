@@ -1,9 +1,8 @@
+import 'package:coffee_shop_admin/services/functions/money_transfer.dart';
 import 'package:coffee_shop_admin/services/models/topping.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
+import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:flutter/cupertino.dart';
-
-import '../../services/functions/money_transfer.dart';
-import '../../utils/constants/dimension.dart';
-import '../../utils/styles/app_texts.dart';
 
 class ToppingItem extends StatelessWidget {
   final Topping product;

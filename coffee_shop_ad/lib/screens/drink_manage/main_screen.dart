@@ -1,6 +1,6 @@
-import 'package:coffee_shop_admin/screens/drink_management/drink_list.dart';
-import 'package:coffee_shop_admin/screens/drink_management/size_list.dart';
-import 'package:coffee_shop_admin/screens/drink_management/topping_screen.dart';
+import 'package:coffee_shop_admin/screens/drink_manage/drink_screen.dart';
+import 'package:coffee_shop_admin/screens/drink_manage/size_screen.dart';
+import 'package:coffee_shop_admin/screens/drink_manage/topping_screen.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:flutter/material.dart';
@@ -65,9 +65,9 @@ class DrinkManagement extends StatelessWidget {
             Expanded(
                 child: TabBarView(
               children: [
-                DrinkList(),
+                DrinkScreen(),
                 ToppingList(),
-                SizeList(),
+                SizeScreen(),
               ],
             ))
           ],

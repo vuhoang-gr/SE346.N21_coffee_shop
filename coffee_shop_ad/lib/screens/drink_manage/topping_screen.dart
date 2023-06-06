@@ -1,10 +1,10 @@
-import 'package:coffee_shop_admin/screens/drink_management/topping_create.dart';
-import 'package:coffee_shop_admin/screens/drink_management/topping_item.dart';
+import 'package:coffee_shop_admin/screens/drink_manage/topping_create.dart';
 import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_event.dart';
 import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_state.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:coffee_shop_admin/utils/styles/button.dart';
+import 'package:coffee_shop_admin/widgets/feature/drink_manage/topping/topping_item.dart';
 import 'package:coffee_shop_admin/widgets/global/skeleton/list_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
