@@ -58,7 +58,7 @@ class RecentSeeProductsBloc
 
     for (int i = 0; i < productsid.length; i++) {
       try {
-        Food? food = _productStoreBloc.state.initFoods
+        Food? food = FoodAPI().currentFoods
             .firstWhere((element) => element.id == productsid[i]);
         products.add(food);
       } catch (e) {

@@ -9,6 +9,7 @@ import 'package:coffee_shop_app/widgets/feature/product_detail_widgets/product_d
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../services/functions/money_transfer.dart';
 import '../services/models/food.dart';
@@ -82,9 +83,12 @@ class _ProductDetailState extends State<ProductDetail> {
         isLoading = false;
       });
     } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
+      Fluttertoast.showToast(
+          msg: "Đã có lỗi xảy ra, hãy thử lại sau",
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.white,
+          fontSize: Dimension.font14);
     }
   }
 

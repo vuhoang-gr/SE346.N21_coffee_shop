@@ -62,13 +62,9 @@ class _StoreSelectionScreenState extends State<StoreSelectionScreen>{
                           "isPurposeForShowDetail":
                               widget.isPurposeForShowDetail,
                         }).then((value) {
-                          if (value == null) {
-                            //The customer don't want to choose store more
+                          if (value != null && value is bool && value == true) {
                             Navigator.of(context).pop();
-                          } else if ((value as bool)) {
-                            //The customer has choosen the store
-                            Navigator.of(context).pop();
-                          }
+                          } 
                         });
                       }
                     },

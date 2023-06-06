@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../services/blocs/recent_see_products/recent_see_products_event.dart';
 import '../../services/functions/money_transfer.dart';
-import '../../services/functions/shared_preferences_helper.dart';
 import '../../utils/colors/app_colors.dart';
 import '../../utils/constants/dimension.dart';
 import '../../utils/constants/placeholder_enum.dart';
@@ -29,6 +28,7 @@ class ProductItem extends StatelessWidget {
             color: CupertinoColors.white),
         child: product.isAvailable
             ? GestureDetector(
+              behavior: HitTestBehavior.opaque,
                 onTap: () {
                   context
                       .read<RecentSeeProductsBloc>()

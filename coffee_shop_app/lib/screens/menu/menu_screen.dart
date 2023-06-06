@@ -1,8 +1,6 @@
 import 'package:coffee_shop_app/screens/menu/delivery_menu_screen.dart';
 import 'package:coffee_shop_app/screens/menu/pickup_menu_screen.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_event.dart';
-import 'package:coffee_shop_app/services/blocs/product_store/product_store_bloc.dart';
-import 'package:coffee_shop_app/services/blocs/product_store/product_store_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
