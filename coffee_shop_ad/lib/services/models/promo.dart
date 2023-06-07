@@ -5,6 +5,7 @@ class Promo {
   final double maxPrice;
   final double percent;
   final DateTime dateEnd;
+  final DateTime dateStart;
   final String description;
   final List<String> products;
   final List<String> stores;
@@ -17,6 +18,7 @@ class Promo {
     required this.percent,
     required this.description,
     required this.dateEnd,
+    required this.dateStart,
     required this.products,
     required this.stores,
     required this.forNewCustomer,

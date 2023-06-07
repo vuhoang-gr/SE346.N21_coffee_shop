@@ -41,6 +41,7 @@ class PromoAPI {
         percent: data['percent'].toDouble(),
         description: data['description'],
         dateEnd: data['dateEnd'].toDate(),
+        dateStart: data['dateStart'].toDate(),
         products: data['products'].cast<String>(),
         stores: data['stores'].cast<String>(),
         forNewCustomer: data['forNewCustomer']);

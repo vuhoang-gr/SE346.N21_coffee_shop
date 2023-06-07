@@ -46,7 +46,7 @@ class PromoDetailModal extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    "Giảm ${MoneyTransfer.transferFromDouble(promo.percent * 100)}% đơn ${MoneyTransfer.transferFromDouble(promo.minPrice)}",
+                    "Discount ${MoneyTransfer.transferFromDouble(promo.percent * 100)}% bill from ${MoneyTransfer.transferFromDouble(promo.minPrice)}",
                     style: AppText.style.mediumBlack16,
                     softWrap: true,
                     textAlign: TextAlign.center,
@@ -88,7 +88,7 @@ class PromoDetailModal extends StatelessWidget {
                         },
                         height: Dimension.height40,
                         child: Text(
-                          "Sử dụng ngay",
+                          "Edit",
                           style: AppText.style.regularWhite16,
                         )),
                   ),
@@ -105,7 +105,24 @@ class PromoDetailModal extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        "Ngày hết hạn",
+                        "Time start",
+                        style: AppText.style.regularBlack14,
+                      ),
+                      Expanded(
+                          child: Text(
+                        DateFormat('HH:mm dd/MM/yyyy').format(promo.dateStart),
+                        style: AppText.style.regularBlack14,
+                        textAlign: TextAlign.right,
+                      )),
+                    ],
+                  ),
+                  SizedBox(
+                    height: Dimension.height6,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Time expired",
                         style: AppText.style.regularBlack14,
                       ),
                       Expanded(
