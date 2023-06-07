@@ -13,6 +13,8 @@ import '../topping_store/topping_store_state.dart';
 class ToppingStoreBloc extends Bloc<ToppingStoreEvent, ToppingStoreState> {
   StreamSubscription<List<Topping>>? _toppingStoreSubscription;
   ToppingStoreBloc() : super(LoadingState()) {
+    print(
+        'stateInit: toppingStore............................................');
     on<FetchData>(_mapFetchData);
     on<GetDataFetched>(_mapGetDataFetched);
   }

@@ -13,6 +13,8 @@ import '../../../utils/constants/dimension.dart';
 class ProductStoreBloc extends Bloc<ProductStoreEvent, ProductStoreState> {
   StreamSubscription<List<Food>>? _foodStoreSubscription;
   ProductStoreBloc() : super(LoadingState()) {
+    print(
+        'stateInit: productStore............................................');
     on<FetchData>(_mapFetchData);
     on<UpdateFavorite>(_mapUpdateFavorite);
     on<GetDataFetched>(_mapGetDataFetched);

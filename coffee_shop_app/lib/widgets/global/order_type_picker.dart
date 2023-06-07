@@ -67,7 +67,7 @@ class OrderTypePicker extends StatelessWidget {
                     style: AppText.style.mediumBlack16,
                   ),
                   Text(
-                    "Chất lượng tốt nhất",
+                    "Phục vụ tốt nhất",
                     style: AppText.style.regularGrey14,
                   )
                 ],

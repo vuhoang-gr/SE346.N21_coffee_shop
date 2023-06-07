@@ -4,6 +4,7 @@ import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../../../services/blocs/store_store/store_store_state.dart';
 import '../../../services/models/store.dart';
@@ -108,7 +109,7 @@ class _StoreDetailCardState extends State<StoreDetailCard> {
                                 height: 2,
                               ),
                               Text(
-                                "Open: 07:00 - 22:00",
+                                "Open: ${DateFormat('hh:mm').format(widget.store.timeOpen)} - ${DateFormat('hh:mm').format(widget.store.timeClose)}",
                                 style: AppText.style.regularBlack14,
                               ),
                             ],
