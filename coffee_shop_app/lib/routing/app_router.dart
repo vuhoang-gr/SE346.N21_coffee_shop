@@ -6,6 +6,9 @@ import 'package:coffee_shop_app/screens/cart/cart_store_pickup.dart';
 import 'package:coffee_shop_app/screens/customer_address/map_screen.dart';
 import 'package:coffee_shop_app/screens/main_page.dart';
 import 'package:coffee_shop_app/screens/menu/menu_screen.dart';
+import 'package:coffee_shop_app/screens/order_management/order_detail_screen.dart';
+import 'package:coffee_shop_app/screens/order_management/order_history.dart';
+import 'package:coffee_shop_app/screens/order_management/order_management.dart';
 import 'package:coffee_shop_app/screens/product_detail.dart';
 import 'package:coffee_shop_app/screens/profile/profile_screen.dart';
 import 'package:coffee_shop_app/screens/profile/profile_setting_screen.dart';
@@ -16,6 +19,7 @@ import 'package:coffee_shop_app/screens/store/store_detail.dart';
 import 'package:coffee_shop_app/screens/store/store_search_screen.dart';
 import 'package:coffee_shop_app/services/blocs/auth_action/auth_action_cubit.dart';
 import 'package:coffee_shop_app/services/models/delivery_address.dart';
+import 'package:coffee_shop_app/services/models/order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -118,7 +122,13 @@ class AppRouter {
 
       case "/product_detail_screen":
         return _createRoute(ProductDetail());
-
+      case "/order_detail_screen":
+        Order order = settings.arguments as Order;
+        return _createRoute(OrderDetailScreen(
+          order: order,
+        ));
+      case "/order_history":
+        return _createRoute(OrderHistory());
       case SearchProductScreen.routeName:
         return _createRoute(SearchProductScreen());
 
