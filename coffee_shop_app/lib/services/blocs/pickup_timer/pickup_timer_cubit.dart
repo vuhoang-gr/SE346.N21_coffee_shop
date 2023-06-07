@@ -1,35 +1,61 @@
 import 'package:coffee_shop_app/services/blocs/pickup_timer/pickup_timer_state.dart';
+import 'package:coffee_shop_app/services/functions/datetime_to_pickup.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TimerCubit extends Cubit<PickupTimerState> {
   TimerCubit()
-      : super(PickupTimerState(
-                hourStartTime: DateTime.now().hour * 2 +
-                    (DateTime.now().minute > 30 ? 2 : 1))
+      : super(PickupTimerState(hourStartTime: dateTimeToHour(DateTime.now()))
             .copyWith());
 
-  setDateTime({DateTime? selectedDate, int? hour, int? minute}) {
-    emit(
-        state.copyWith(selectedDate: selectedDate, hour: hour, minute: minute));
+  setDateTime({DateTime? newDate, int? hour, int? minute}) {
+    var now = DateTime.now();
+    if (newDate != null) {
+      if (newDate.year != now.year ||
+          newDate.month != now.month ||
+          newDate.day != now.day) {
+        emit(state.copyWith(
+            newDate: newDate,
+            hour: hour,
+            minute: minute,
+            hourStartTime: dateTimeToHour(state.openTime!)));
+      } else {
+        emit(state.copyWith(newDate: newDate, hour: hour, minute: minute));
+        setTimer();
+      }
+    }
+    emit(state.copyWith(newDate: newDate, hour: hour, minute: minute));
+  }
+
+  setOpenTime(DateTime? openTime) {
+    emit(state.copyWith(openTime: openTime));
+  }
+
+  setSelectedDate(DateTime? selectedDate) {
+    emit(state.copyWith(selectedDate: selectedDate));
   }
 
   setTimer() {
-    var hourStartTime =
-        DateTime.now().hour * 2 + (DateTime.now().minute > 30 ? 2 : 1);
-    // var hourStartTime = state.hourStartTime + 1;
-
+    var hourStartTime = dateTimeToHour(DateTime.now());
     var startHour = (hourStartTime / 2).floor();
     var startMinute = hourStartTime % 2 * 30;
 
+    if (state.newDate!.day == DateTime.now().day) {
+      if (state.newDate!.hour < startHour ||
+          (state.newDate!.hour == startHour &&
+              state.newDate!.minute < startMinute)) {
+        emit(PickupTimerState(hourStartTime: hourStartTime)
+            .copyWith(openTime: state.openTime));
+        return;
+      }
+    }
     if (state.selectedDate!.day == DateTime.now().day) {
       if (state.selectedDate!.hour < startHour ||
           (state.selectedDate!.hour == startHour &&
               state.selectedDate!.minute < startMinute)) {
-        emit(PickupTimerState(hourStartTime: hourStartTime).copyWith());
+        emit(PickupTimerState(hourStartTime: hourStartTime)
+            .copyWith(openTime: state.openTime));
+        return;
       }
     }
-
-    emit(PickupTimerState(
-        hourStartTime: hourStartTime, selectedDate: state.selectedDate));
   }
 }

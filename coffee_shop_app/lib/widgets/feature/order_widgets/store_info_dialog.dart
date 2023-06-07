@@ -1,3 +1,4 @@
+import 'package:coffee_shop_app/services/models/store.dart';
 import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,8 +11,8 @@ import '../product_detail_widgets/icon_widget_row.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class StoreInfoDialog extends StatelessWidget {
-  const StoreInfoDialog({super.key});
-
+  const StoreInfoDialog({super.key, required this.store});
+  final Store store;
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -27,8 +28,7 @@ class StoreInfoDialog extends StatelessWidget {
                 fit: BoxFit.cover,
                 alignment: Alignment.center,
                 width: double.maxFinite,
-                imageUrl:
-                    'https://images.edrawmind.com/article/swot-analysis-of-coffee-shop/1200_800.jpg',
+                imageUrl: store.images[0],
                 placeholder: (context, url) => Container(
                   alignment: Alignment.center,
                   child: const CircularProgressIndicator(),
@@ -43,10 +43,7 @@ class StoreInfoDialog extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: Dimension.height16),
               child: Column(
                 children: [
-                  Text(
-                    'SB Han Thuyen',
-                    style: AppText.style.boldBlack18
-                  ),
+                  Text(store.sb, style: AppText.style.boldBlack18),
                   SizedBox(
                     height: Dimension.height16,
                   ),
@@ -68,7 +65,7 @@ class StoreInfoDialog extends StatelessWidget {
                             style: AppText.style.regular,
                           ),
                           Text(
-                            '0909090909',
+                            store.phone,
                             style: AppText.style.boldBlack14,
                           ),
                         ],
@@ -79,18 +76,20 @@ class StoreInfoDialog extends StatelessWidget {
                   ),
                   IconWidgetRow(
                       icon: Icons.location_pin,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Address',
-                            style: AppText.style.regular,
-                          ),
-                          Text(
-                            '13 Han Thuyen, D.1, HCM city',
-                            style: AppText.style.boldBlack14,
-                          ),
-                        ],
+                      child: Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Address',
+                              style: AppText.style.regular,
+                            ),
+                            Text(
+                              store.address.formattedAddress,
+                              style: AppText.style.boldBlack14,
+                            ),
+                          ],
+                        ),
                       )),
                   SizedBox(
                     height: Dimension.height24,

@@ -1,7 +1,10 @@
+import 'package:coffee_shop_app/services/functions/datetime_to_pickup.dart';
+import 'package:coffee_shop_app/services/models/order.dart';
 import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:flutter/material.dart';
 
+import '../../services/functions/money_transfer.dart';
 import '../../utils/constants/dimension.dart';
 import '../../utils/constants/string.dart';
 import '../../widgets/feature/order_widgets/order_manage_product_item.dart';
@@ -11,18 +14,11 @@ import '../../widgets/global/container_card.dart';
 import '../../widgets/global/custom_app_bar.dart';
 
 class OrderDetailScreen extends StatelessWidget {
-  const OrderDetailScreen({super.key, this.orderStatus = 'Preparing'});
-  final String orderStatus;
+  const OrderDetailScreen({super.key, required this.order});
+  final Order order;
   @override
   Widget build(BuildContext context) {
-    bool isPickup;
-    if (orderStatus == orderReceived ||
-        orderStatus == orderReadyForPickup ||
-        orderStatus == orderCompleted) {
-      isPickup = true;
-    } else {
-      isPickup = false;
-    }
+    bool isPickup = order.pickupTime != null;
     return ColoredBox(
         color: AppColors.backgroundColor,
         child: Scaffold(
@@ -32,7 +28,7 @@ class OrderDetailScreen extends StatelessWidget {
               children: [
                 CustomAppBar(
                   leading: Text(
-                    'Order  247-96024',
+                    'Order',
                     style: AppText.style.boldBlack18,
                   ),
                 ),
@@ -45,17 +41,17 @@ class OrderDetailScreen extends StatelessWidget {
                           children: [
                             Builder(builder: (context) {
                               String imgUrl;
-                              if (orderStatus == orderDelivering) {
+                              if (order.status == orderDelivering) {
                                 imgUrl = 'assets/images/img_delivering.png';
-                              } else if (orderStatus == orderDelivered ||
-                                  orderStatus == orderCompleted) {
+                              } else if (order.status == orderDelivered ||
+                                  order.status == orderCompleted) {
                                 imgUrl = 'assets/images/img_delivered.png';
-                              } else if (orderStatus == orderReceived) {
+                              } else if (order.status == orderProcessing) {
                                 imgUrl = 'assets/images/img_received.png';
-                              } else if (orderStatus == orderReadyForPickup) {
+                              } else if (order.status == orderReadyForPickup) {
                                 imgUrl =
                                     'assets/images/img_ready_for_pickup.png';
-                              } else if (orderStatus == orderDeliveryFailed) {
+                              } else if (order.status == orderCancelled) {
                                 imgUrl =
                                     'assets/images/img_delivery_failed.png';
                               } else {
@@ -83,7 +79,7 @@ class OrderDetailScreen extends StatelessWidget {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            'Preparing',
+                                            order.status,
                                             style: AppText.style.boldBlack14,
                                           ),
                                           TextButton(
@@ -91,17 +87,21 @@ class OrderDetailScreen extends StatelessWidget {
                                                 showDialog(
                                                     context: context,
                                                     builder: (context) {
-                                                      return StoreInfoDialog();
+                                                      return StoreInfoDialog(
+                                                        store: order.store!,
+                                                      );
                                                     });
                                               },
                                               child: Text('Contact support',
                                                   style: AppText
-                                                      .style.boldBlack14))
+                                                      .style.boldBlack14
+                                                      .copyWith(
+                                                          color: Colors.blue)))
                                         ],
                                       ),
                                       Builder(builder: (context) {
                                         if (isPickup &&
-                                            orderStatus != orderReceived) {
+                                            order.status != orderProcessing) {
                                           return Container(
                                             margin: EdgeInsets.only(
                                                 bottom: Dimension.height8),
@@ -126,8 +126,8 @@ class OrderDetailScreen extends StatelessWidget {
                                                   width: Dimension.height10,
                                                 ),
                                                 Expanded(
-                                                  child: RichText(
-                                                    text: TextSpan(
+                                                  child: Text.rich(
+                                                    TextSpan(
                                                       style:
                                                           AppText.style.regular,
                                                       children: <TextSpan>[
@@ -191,7 +191,7 @@ class OrderDetailScreen extends StatelessWidget {
                                             style: AppText.style.regular,
                                           ),
                                           Text(
-                                            '247-96024',
+                                            '${order.id}',
                                             style: AppText.style.boldBlack14,
                                           ),
                                         ],
@@ -209,7 +209,7 @@ class OrderDetailScreen extends StatelessWidget {
                                             style: AppText.style.regular,
                                           ),
                                           Text(
-                                            '20/04/2020, 04:20',
+                                            datetimeToPickup(order.dateOrder),
                                             style: AppText.style.boldBlack14,
                                           ),
                                         ],
@@ -235,21 +235,26 @@ class OrderDetailScreen extends StatelessWidget {
                                   children: [
                                     IconWidgetRow(
                                       icon: Icons.store_rounded,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                              isPickup
-                                                  ? 'Pick up location'
-                                                  : 'From store',
-                                              style: AppText.style.regular),
-                                          SizedBox(
-                                            height: Dimension.height4,
-                                          ),
-                                          Text('13 Han Thuyen, D.1, HCM city',
-                                              style: AppText.style.boldBlack14)
-                                        ],
+                                      child: Flexible(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                                isPickup
+                                                    ? 'Pick up location'
+                                                    : 'From store',
+                                                style: AppText.style.regular),
+                                            SizedBox(
+                                              height: Dimension.height4,
+                                            ),
+                                            Text(
+                                                order.store!.address
+                                                    .formattedAddress,
+                                                style:
+                                                    AppText.style.boldBlack14)
+                                          ],
+                                        ),
                                       ),
                                     ),
                                     const Divider(
@@ -260,49 +265,66 @@ class OrderDetailScreen extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        IconWidgetRow(
-                                          icon: isPickup
-                                              ? Icons.access_time_filled
-                                              : Icons.location_pin,
-                                          iconColor: isPickup
-                                              ? AppColors.orangeColor
-                                              : AppColors.greenColor,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
+                                        Expanded(
+                                          child: IconWidgetRow(
+                                            icon: isPickup
+                                                ? Icons.access_time_filled
+                                                : Icons.location_pin,
+                                            iconColor: isPickup
+                                                ? AppColors.orangeColor
+                                                : AppColors.greenColor,
+                                            child: Flexible(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      isPickup
+                                                          ? 'Pick up time'
+                                                          : 'To',
+                                                      style: AppText
+                                                          .style.regular),
+                                                  SizedBox(
+                                                    height: Dimension.height4,
+                                                  ),
+                                                  Text(
+                                                      isPickup
+                                                          ? datetimeToPickup(
+                                                              order.pickupTime!)
+                                                          : order
+                                                              .address!
+                                                              .address
+                                                              .formattedAddress,
+                                                      style: AppText
+                                                          .style.boldBlack14),
                                                   isPickup
-                                                      ? 'Pick up time'
-                                                      : 'To',
-                                                  style: AppText.style.regular),
-                                              SizedBox(
-                                                height: Dimension.height4,
-                                              ),
-                                              Text('285 CMT8, D.10, HCM city',
-                                                  style: AppText
-                                                      .style.boldBlack14),
-                                              isPickup
-                                                  ? const SizedBox.shrink()
-                                                  : RichText(
-                                                      text: TextSpan(
-                                                        style: AppText.style
-                                                            .regularGrey12,
-                                                        children: <TextSpan>[
-                                                          const TextSpan(
-                                                              text: 'Nick'),
+                                                      ? const SizedBox.shrink()
+                                                      : Text.rich(
                                                           TextSpan(
-                                                            text: ' • ',
                                                             style: AppText.style
-                                                                .boldBlack14,
+                                                                .regularGrey12,
+                                                            children: <
+                                                                TextSpan>[
+                                                              TextSpan(
+                                                                  text: order
+                                                                      .address!
+                                                                      .nameReceiver),
+                                                              TextSpan(
+                                                                text: ' • ',
+                                                                style: AppText
+                                                                    .style
+                                                                    .boldBlack14,
+                                                              ),
+                                                              TextSpan(
+                                                                  text: order
+                                                                      .address!
+                                                                      .phone),
+                                                            ],
                                                           ),
-                                                          const TextSpan(
-                                                              text:
-                                                                  '0969696969'),
-                                                        ],
-                                                      ),
-                                                    ),
-                                            ],
+                                                        ),
+                                                ],
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -330,14 +352,16 @@ class OrderDetailScreen extends StatelessWidget {
                                           physics:
                                               const NeverScrollableScrollPhysics(),
                                           itemBuilder: (context, index) {
-                                            return const OrderManageProductItem();
+                                            return OrderManageProductItem(
+                                              orderItem: order.products[index],
+                                            );
                                           },
                                           separatorBuilder: (_, __) =>
                                               const Divider(
                                                 color: AppColors.greyBoxColor,
                                                 thickness: 1,
                                               ),
-                                          itemCount: 2),
+                                          itemCount: order.products.length),
                                       SizedBox(
                                         height: Dimension.height24,
                                       )
@@ -370,29 +394,35 @@ class OrderDetailScreen extends StatelessWidget {
                                             style: AppText.style.regular,
                                           ),
                                           Text(
-                                            "319.000 ₫",
+                                            "${MoneyTransfer.transferFromDouble(order.total!)} ₫",
                                             style: AppText.style.boldBlack14,
                                           ),
                                         ],
                                       ),
-                                      SizedBox(
-                                        height: Dimension.height16,
-                                      ),
+                                      isPickup
+                                          ? SizedBox.shrink()
+                                          : SizedBox(
+                                              height: Dimension.height16,
+                                            ),
                                       //shipping fee
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Shipping fee",
-                                            style: AppText.style.regular,
-                                          ),
-                                          Text(
-                                            "15.000 ₫",
-                                            style: AppText.style.boldBlack14,
-                                          ),
-                                        ],
-                                      ),
+                                      isPickup
+                                          ? SizedBox.shrink()
+                                          : Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "Shipping fee",
+                                                  style: AppText.style.regular,
+                                                ),
+                                                Text(
+                                                  "${MoneyTransfer.transferFromDouble(order.deliveryCost!)} ₫",
+                                                  style:
+                                                      AppText.style.boldBlack14,
+                                                ),
+                                              ],
+                                            ),
                                       SizedBox(
                                         height: Dimension.height16,
                                       ),

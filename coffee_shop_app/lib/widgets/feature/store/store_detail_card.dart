@@ -42,13 +42,12 @@ class _StoreDetailCardState extends State<StoreDetailCard> {
                 AspectRatio(
                   aspectRatio: 1,
                   child: PageView.builder(
-                    itemCount: 5,
+                    itemCount: widget.store.images.length,
                     itemBuilder: (BuildContext context, int index) => Center(
                       child: CachedNetworkImage(
                         alignment: Alignment.center,
                         width: double.maxFinite,
-                        imageUrl:
-                            'https://images.edrawmind.com/article/swot-analysis-of-coffee-shop/1200_800.jpg',
+                        imageUrl: widget.store.images[index],
                         placeholder: (context, url) => Container(
                           alignment: Alignment.center,
                           child: const CircularProgressIndicator(),
@@ -76,7 +75,7 @@ class _StoreDetailCardState extends State<StoreDetailCard> {
                           color: Colors.black.withOpacity(0.4),
                           borderRadius: BorderRadius.circular(16)),
                       child: Text(
-                        '${_index + 1}/5',
+                        '${_index + 1}/${widget.store.images.length}',
                         style: AppText.style.regularWhite14,
                       ),
                     ))

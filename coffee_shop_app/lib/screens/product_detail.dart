@@ -357,13 +357,14 @@ class _ProductDetailState extends State<ProductDetail> {
                                             i < state.selectedToppings.length;
                                             i++) {
                                           if (state.selectedToppings[i]) {
-                                            toppingPrice += state.productsTopping[i].price;
-                                            toppingList.add(
-                                                state.productsTopping[i]);
+                                            toppingPrice +=
+                                                state.productsTopping[i].price;
+                                            toppingList
+                                                .add(state.productsTopping[i]);
                                           }
                                         }
                                         String toppingString = toppingList
-                                            .map((e) => e.name)
+                                            .map((e) => e.id)
                                             .toList()
                                             .join(", ");
 
@@ -386,7 +387,8 @@ class _ProductDetailState extends State<ProductDetail> {
                                                           toppingPrice,
                                                       noteTextController.text,
                                                     );
-                                                    Navigator.of(context).maybePop();
+                                                    Navigator.of(context)
+                                                        .maybePop();
                                                   },
                                             child: Text(
                                               'Add to cart - ${MoneyTransfer.transferFromDouble(finalTotal)} ₫',

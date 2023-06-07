@@ -56,7 +56,7 @@ class _MainPageState extends State<MainPage> {
                         ),
                         Text(
                           'Home',
-                          style: AppText.style.regularGrey10,
+                          style: AppText.style.regular10,
                         )
                       ],
                     ),
@@ -72,7 +72,7 @@ class _MainPageState extends State<MainPage> {
                         ),
                         Text(
                           'Menu',
-                          style: AppText.style.regularGrey10,
+                          style: AppText.style.regular10,
                         )
                       ],
                     ),
@@ -88,7 +88,7 @@ class _MainPageState extends State<MainPage> {
                         ),
                         Text(
                           'Stores',
-                          style: AppText.style.regularGrey10,
+                          style: AppText.style.regular10,
                         )
                       ],
                     ),
@@ -104,7 +104,7 @@ class _MainPageState extends State<MainPage> {
                         ),
                         Text(
                           'Order',
-                          style: AppText.style.regularGrey10,
+                          style: AppText.style.regular10,
                         )
                       ],
                     ),
@@ -120,7 +120,7 @@ class _MainPageState extends State<MainPage> {
                         ),
                         Text(
                           'Profile',
-                          style: AppText.style.regularGrey10,
+                          style: AppText.style.regular10,
                         ),
                       ],
                     ),

@@ -1,7 +1,6 @@
-const String orderPreparing = 'Preparing';
-const String orderDelivering = 'Delivering';
-const String orderDelivered = 'Delivered';
-const String orderDeliveryFailed = 'Delivery failed';
-const String orderReceived = 'Order received';
-const String orderReadyForPickup = 'Ready for pickup';
-const String orderCompleted = 'Order completed';
+const String orderProcessing = 'Đang xử lí';
+const String orderDelivering = 'Đang giao';
+const String orderDelivered = 'Đã giao';
+const String orderCancelled = 'Đã huỷ';
+const String orderReadyForPickup = 'Đã chuẩn bị';
+const String orderCompleted = 'Hoàn thành';

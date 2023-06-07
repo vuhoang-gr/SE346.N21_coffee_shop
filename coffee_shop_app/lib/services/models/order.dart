@@ -1,23 +1,21 @@
+import 'package:coffee_shop_app/services/models/delivery_address.dart';
 import 'package:coffee_shop_app/services/models/store.dart';
-import 'package:equatable/equatable.dart';
+import 'order_food.dart';
 
-import 'address.dart';
-import 'cart_food.dart';
-
-class Order extends Equatable {
+class Order {
   //TODO: add notes
-  final String? id;
-  final Store? store; //TODO: store is required
-  final int? discount;
-  final int? total;
-  final int? deliveryCost;
-  final DateTime dateOrder;
-  final List<CartFood> products;
-  final Address? address;
-  final String? status;
-  final DateTime? pickupTime;
+  String? id;
+  Store? store;
+  double? discount;
+  double? total;
+  double? deliveryCost;
+  DateTime dateOrder;
+  List<OrderFood> products;
+  DeliveryAddress? address;
+  String status;
+  DateTime? pickupTime;
 
-  const Order(
+  Order(
       {this.id,
       this.store,
       this.discount,
@@ -25,20 +23,20 @@ class Order extends Equatable {
       this.deliveryCost,
       required this.dateOrder,
       required this.products,
-      this.status,
+      required this.status,
       this.address,
       this.pickupTime});
 
   Order copyWith(
           {String? id,
           Store? store,
-          int? discount,
-          int? total,
-          int? deliveryCost,
+          double? discount,
+          double? total,
+          double? deliveryCost,
           DateTime? dateOrder,
-          List<CartFood>? products,
+          List<OrderFood>? products,
           String? status,
-          Address? address,
+          DeliveryAddress? address,
           DateTime? pickupTime}) =>
       Order(
           dateOrder: dateOrder ?? this.dateOrder,
@@ -51,18 +49,4 @@ class Order extends Equatable {
           status: status ?? this.status,
           address: address ?? this.address,
           pickupTime: pickupTime ?? this.pickupTime);
-
-  @override
-  // TODO: implement props
-  List<Object?> get props => [
-        products,
-        store,
-        discount,
-        total,
-        deliveryCost,
-        dateOrder,
-        address,
-        status,
-        pickupTime
-      ];
 }
