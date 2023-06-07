@@ -14,7 +14,8 @@ class RecentSeeProductsBloc
     extends Bloc<RecentSeeProductsEvent, RecentSeeProductsState> {
   final ProductStoreBloc _productStoreBloc;
   late StreamSubscription _productStoreSubscription;
-  RecentSeeProductsBloc(this._productStoreBloc) : super(LoadingState()) {
+  RecentSeeProductsBloc(this._productStoreBloc)
+      : super(LoadingState(recentSeeProducts: [])) {
     on<ListRecentSeeProductChanged>(_mapListRecentSeeProductChangedToState);
     on<ListRecentSeeProductLoaded>(_mapListRecentSeeProductLoadedToState);
 
@@ -28,12 +29,11 @@ class RecentSeeProductsBloc
   Future<void> _mapListRecentSeeProductChangedToState(
       ListRecentSeeProductChanged event,
       Emitter<RecentSeeProductsState> emit) async {
-    emit(LoadingState());
+    emit(LoadingState(recentSeeProducts: state.recentSeeProducts));
     await SharedPreferencesHelper.addProductToSharedPreferences(
         event.product.id);
-
     if (state.recentSeeProducts
-            .indexWhere((element) => element.id == event.product.id) !=
+            .indexWhere((element) => element.id == event.product.id) ==
         -1) {
       while (state.recentSeeProducts.length >= 8) {
         state.recentSeeProducts.removeLast();
@@ -51,14 +51,15 @@ class RecentSeeProductsBloc
   Future<void> _mapListRecentSeeProductLoadedToState(
       ListRecentSeeProductLoaded event,
       Emitter<RecentSeeProductsState> emit) async {
-    emit(LoadingState());
+    emit(LoadingState(recentSeeProducts: state.recentSeeProducts));
 
     List<String> productsid = await SharedPreferencesHelper.getProducts();
     List<Food> products = [];
 
     for (int i = 0; i < productsid.length; i++) {
       try {
-        Food? food = FoodAPI().currentFoods
+        Food? food = FoodAPI()
+            .currentFoods
             .firstWhere((element) => element.id == productsid[i]);
         products.add(food);
       } catch (e) {
@@ -66,11 +67,7 @@ class RecentSeeProductsBloc
       }
     }
 
-    if (products.isEmpty) {
-      emit(NotExistState());
-    } else {
-      emit(LoadedState(recentSeeProducts: products));
-    }
+    emit(LoadedState(recentSeeProducts: products));
   }
 
   @override

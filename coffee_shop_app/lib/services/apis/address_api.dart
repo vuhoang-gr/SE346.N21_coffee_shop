@@ -10,6 +10,8 @@ class AddressAPI {
   }
   AddressAPI._internal();
 
+  List<DeliveryAddress> currentAddresses = [];
+
   final firestore = FirebaseFirestore.instance;
   final CollectionReference userReference =
       FirebaseFirestore.instance.collection('users');
@@ -25,6 +27,9 @@ class AddressAPI {
       for (var address in addressData) {
         deliveryAddresses.add(fromFireStore(address));
       }
+
+      currentAddresses = deliveryAddresses;
+      
       return deliveryAddresses;
     });
   }

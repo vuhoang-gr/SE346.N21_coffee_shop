@@ -12,13 +12,13 @@ import '../../models/promo.dart';
 
 class PromoStoreBloc extends Bloc<PromoStoreEvent, PromoStoreState> {
   StreamSubscription<List<Promo>>? _promoStoreSubscription;
-  PromoStoreBloc() : super(LoadingState(initPromos: [])) {
+  PromoStoreBloc() : super(LoadingState()) {
     on<FetchData>(_mapFetchData);
     on<GetDataFetched>(_mapGetDataFetched);
   }
 
   void _mapFetchData(FetchData event, Emitter<PromoStoreState> emit) {
-    emit(LoadingState(initPromos: []));
+    emit(LoadingState());
     _promoStoreSubscription?.cancel();
     _promoStoreSubscription = PromoAPI().fetchData().listen((listPromos) {
       add(GetDataFetched(listPromos: listPromos));
@@ -34,7 +34,7 @@ class PromoStoreBloc extends Bloc<PromoStoreEvent, PromoStoreState> {
   }
 
   void _mapGetDataFetched(GetDataFetched event, Emitter<PromoStoreState> emit) {
-    emit(LoadedState(initPromos: event.listPromos));
+    emit(LoadedState());
   }
 
   @override

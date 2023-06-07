@@ -43,10 +43,13 @@ class CheckoutProdItem extends StatelessWidget {
                   SizedBox(
                     height: Dimension.height8 / 2,
                   ),
-                  Text(
-                    'Size: ${cartFood.food.sizes!.firstWhere((size) => size.id == cartFood.size).name}',
-                    style: AppText.style.regularGrey12,
-                  ),
+
+                  // TODO: fix this
+                  // Text(
+                  //   'Size: ${cartFood.food.sizes!.firstWhere((size) => size.id == cartFood.size).name}',
+                  //   style: AppText.style.regularGrey12,
+                  // ),
+                  
                   SizedBox(
                     height: Dimension.height8 / 2,
                   ),

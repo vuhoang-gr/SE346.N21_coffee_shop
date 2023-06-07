@@ -8,6 +8,11 @@ class FetchData extends StoreStoreEvent {
   FetchData({required this.location});
 }
 
+class UpdateLocation extends StoreStoreEvent {
+  final LatLng? latLng;
+  UpdateLocation({required this.latLng});
+}
+
 class UpdateFavorite extends StoreStoreEvent {
   final Store store;
   UpdateFavorite({required this.store});

@@ -1,6 +1,5 @@
-import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_bloc.dart';
-import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_state.dart'
-    as store_store_state;
+import 'package:coffee_shop_app/services/blocs/store_store/store_store_bloc.dart';
+import 'package:coffee_shop_app/services/blocs/store_store/store_store_state.dart';
 import 'package:coffee_shop_app/widgets/global/aysncImage/async_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,7 +28,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>{
+class _HomeScreenState extends State<HomeScreen> {
   final int durationChange = 500;
   final ScrollController scrollController = ScrollController();
   bool isScrollInTop = true;
@@ -170,113 +169,116 @@ class _HomeScreenState extends State<HomeScreen>{
                                 ),
                               );
                             } else if (state is recent_see_state.LoadedState) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: Dimension.width16),
-                                    child: Text(
-                                      "Vừa xem",
-                                      style: AppText.style.boldBlack16,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: Dimension.height12,
-                                  ),
-                                  Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: Dimension.width16),
-                                      child: ListView.separated(
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        separatorBuilder: (ctx, index) {
-                                          return SizedBox(
-                                            height: Dimension.height8,
-                                          );
-                                        },
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return ProductItem(
-                                            product:
-                                                state.recentSeeProducts[index],
-                                          );
-                                        },
-                                        itemCount:
-                                            state.recentSeeProducts.length,
-                                      ))
-                                ],
-                              );
-                            } else if (state
-                                is recent_see_state.NotExistState) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: Colors.white),
-                                margin: EdgeInsets.symmetric(
-                                  horizontal: Dimension.width16,
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: Dimension.width16,
-                                    vertical: Dimension.height16,
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                        height: Dimension.height24,
-                                      ),
-                                      Padding(
+                              return state.recentSeeProducts.isNotEmpty
+                                  ? Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
                                           padding: EdgeInsets.symmetric(
-                                            horizontal: Dimension.width32,
+                                              horizontal: Dimension.width16),
+                                          child: Text(
+                                            "Vừa xem",
+                                            style: AppText.style.boldBlack16,
                                           ),
-
-                                          //link: https://storyset.com/illustration/cocktail-bartender/rafiki
-                                          child: Image.asset(
-                                              'assets/images/img_getting_started.png')),
-                                      SizedBox(
-                                        height: Dimension.height24,
+                                        ),
+                                        SizedBox(
+                                          height: Dimension.height12,
+                                        ),
+                                        Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: Dimension.width16),
+                                            child: ListView.separated(
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              shrinkWrap: true,
+                                              separatorBuilder: (ctx, index) {
+                                                return SizedBox(
+                                                  height: Dimension.height8,
+                                                );
+                                              },
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return ProductItem(
+                                                  product: state
+                                                      .recentSeeProducts[index],
+                                                );
+                                              },
+                                              itemCount: state
+                                                  .recentSeeProducts.length,
+                                            ))
+                                      ],
+                                    )
+                                  : Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          color: Colors.white),
+                                      margin: EdgeInsets.symmetric(
+                                        horizontal: Dimension.width16,
                                       ),
-                                      BlocBuilder<
-                                              CartButtonBloc,
-                                              store_store_state
-                                                  .CartButtonState>(
-                                          builder: (context, state) {
-                                        return ElevatedButton(
-                                          onPressed: () {
-                                            DefaultTabController.of(context)
-                                                .animateTo(1);
-                                          },
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                "Bắt đầu ",
-                                                style: AppText
-                                                    .style.regularWhite16,
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: Dimension.width16,
+                                          vertical: Dimension.height16,
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              height: Dimension.height24,
+                                            ),
+                                            Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: Dimension.width32,
+                                                ),
+
+                                                //link: https://storyset.com/illustration/cocktail-bartender/rafiki
+                                                child: Image.asset(
+                                                    'assets/images/img_getting_started.png')),
+                                            SizedBox(
+                                              height: Dimension.height24,
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                DefaultTabController.of(context)
+                                                    .animateTo(1);
+                                              },
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    "Bắt đầu ",
+                                                    style: AppText
+                                                        .style.regularWhite16,
+                                                  ),
+                                                  Icon(Icons.coffee)
+                                                ],
                                               ),
-                                              Icon(Icons.coffee)
-                                            ],
-                                          ),
-                                        );
-                                      })
-                                    ],
-                                  ),
-                                ),
-                              );
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    );
                             }
-                            return Container();
+                            return SizedBox.shrink();
                           },
                         ),
                         SizedBox(
                           height: Dimension.height68,
                         )
                       ]),
-                      CartButton(scrollController: scrollController)
+                      BlocBuilder<StoreStoreBloc, StoreStoreState>(
+                          builder: (context, state) {
+                        if (state is HasDataStoreStoreState) {
+                          return CartButton(scrollController: scrollController);
+                        } else {
+                          return SizedBox.shrink();
+                        }
+                      })
                     ],
                   ),
                 ),

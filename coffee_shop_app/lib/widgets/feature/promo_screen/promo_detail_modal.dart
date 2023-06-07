@@ -3,7 +3,7 @@ import 'package:coffee_shop_app/widgets/global/buttons/rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:qr_flutter/qr_flutter.dart';
+import 'package:qr_widget/qr_widget.dart';
 
 import '../../../services/functions/money_transfer.dart';
 import '../../../utils/colors/app_colors.dart';
@@ -64,7 +64,7 @@ class PromoDetailModal extends StatelessWidget {
                   ),
                   Align(
                     alignment: Alignment.center,
-                    child: QrImage(
+                    child: QrImageView(
                       data: promo.id,
                       version: QrVersions.auto,
                       size: Dimension.width108,

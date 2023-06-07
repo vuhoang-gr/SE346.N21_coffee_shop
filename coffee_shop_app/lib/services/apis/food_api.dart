@@ -15,10 +15,6 @@ class FoodAPI {
   final firestore = FirebaseFirestore.instance;
   final CollectionReference foodReference =
       FirebaseFirestore.instance.collection('Food');
-  final CollectionReference toppingReference =
-      FirebaseFirestore.instance.collection('Topping');
-  final CollectionReference sizeReference =
-      FirebaseFirestore.instance.collection('Size');
   final CollectionReference userReference =
       FirebaseFirestore.instance.collection('users');
 
@@ -81,8 +77,8 @@ class FoodAPI {
       name: data["name"],
       price: data["price"].toDouble(),
       description: data["description"],
-      sizes: data['sizes'] ?? [],
-      toppings: data['toppings'] ?? [],
+      sizes: data['sizes']?.cast<String>()??[],
+      toppings: data['toppings']?.cast<String>()??[],
       images: data["images"].cast<String>(),
       dateRegister: data["createAt"].toDate(),
       isAvailable: isAvailable,

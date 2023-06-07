@@ -3,7 +3,6 @@ import 'package:coffee_shop_app/screens/store/store_selection_screen.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_event.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_state.dart';
-import 'package:coffee_shop_app/services/functions/calculate_distance.dart';
 import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/constants/dimension.dart';
 import 'package:flutter/material.dart';
@@ -197,9 +196,9 @@ class OrderTypeModal extends StatelessWidget {
                                 "Tới cửa hàng lấy món ăn và mang đi",
                             style: AppText.style.regularGrey14,
                           ),
-                          (state.selectedStore != null && initLatLng != null)
+                          (state.distance != 0)
                               ? Text(
-                                  "${calculateDistance(state.selectedStore!.address.lat, state.selectedStore!.address.lng, initLatLng!.latitude, initLatLng!.longitude).toStringAsFixed(2)} km",
+                                  "${state.distance.toStringAsFixed(2)} km",
                                   style: AppText.style.regularBlack14,
                                 )
                               : SizedBox.shrink(),

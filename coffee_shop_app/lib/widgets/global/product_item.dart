@@ -1,3 +1,6 @@
+import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_bloc.dart';
+import 'package:coffee_shop_app/services/blocs/product_detail/product_detail_bloc.dart';
+import 'package:coffee_shop_app/services/blocs/product_detail/product_detail_event.dart';
 import 'package:coffee_shop_app/services/blocs/recent_see_products/recent_see_products_bloc.dart';
 import 'package:coffee_shop_app/services/models/food.dart';
 import 'package:coffee_shop_app/widgets/global/aysncImage/async_image.dart';
@@ -6,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../services/blocs/recent_see_products/recent_see_products_event.dart';
 import '../../services/functions/money_transfer.dart';
+import '../../services/models/store.dart';
 import '../../utils/colors/app_colors.dart';
 import '../../utils/constants/dimension.dart';
 import '../../utils/constants/placeholder_enum.dart';
@@ -28,13 +32,18 @@ class ProductItem extends StatelessWidget {
             color: CupertinoColors.white),
         child: product.isAvailable
             ? GestureDetector(
-              behavior: HitTestBehavior.opaque,
+                behavior: HitTestBehavior.opaque,
                 onTap: () {
                   context
                       .read<RecentSeeProductsBloc>()
                       .add(ListRecentSeeProductChanged(product: product));
-                  Navigator.of(context)
-                      .pushNamed("/product_detail_screen", arguments: product);
+                  Store? store =
+                      context.read<CartButtonBloc>().state.selectedStore;
+                  context.read<ProductDetailBloc>().add(InitProduct(
+                      selectedProduct: product,
+                      bannedSize: store?.stateFood[product.id] ?? [],
+                      bannedTopping: store?.stateTopping ?? []));
+                  Navigator.of(context).pushNamed("/product_detail_screen");
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,

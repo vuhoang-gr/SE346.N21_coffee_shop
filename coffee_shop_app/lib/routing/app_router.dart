@@ -23,7 +23,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/store/store_selection_screen.dart';
 import '../services/blocs/auth/auth_bloc.dart';
-import '../services/models/food.dart';
 import '../services/models/store.dart';
 
 class AppRouter {
@@ -118,8 +117,7 @@ class AppRouter {
         return _createRoute(MenuScreen());
 
       case "/product_detail_screen":
-        Food food = settings.arguments as Food;
-        return _createRoute(ProductDetail(product: food));
+        return _createRoute(ProductDetail());
 
       case SearchProductScreen.routeName:
         return _createRoute(SearchProductScreen());

@@ -1,9 +1,7 @@
 import 'package:coffee_shop_app/services/models/location.dart';
 
 import '../services/models/delivery_address.dart';
-import '../services/models/food.dart';
 import '../services/models/size.dart';
-import '../services/models/store.dart';
 import '../services/models/topping.dart';
 
 class Data {
@@ -40,109 +38,109 @@ class Data {
       price: 5,
     )
   ];
-  static final List<Food> products = [
-    Food(
-        id: "food1",
-        name: "Food 1",
-        price: 1234.53,
-        description: "Day la food 1",
-        sizes: [
-          Data.sizes[0],
-          Data.sizes[1],
-        ],
-        toppings: [
-          Data.toopings[0],
-          Data.toopings[1],
-        ],
-        images: [
-          "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
-        ],
-        isAvailable: true,
-        isFavorite: true,
-        dateRegister: DateTime(2023, 5, 15)),
-    Food(
-        id: "food2",
-        name: "Food 2",
-        price: 1234.53,
-        description: "Day la food 2",
-        sizes: [
-          Data.sizes[0],
-        ],
-        toppings: [
-          Data.toopings[0],
-          Data.toopings[1],
-        ],
-        images: [
-          "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
-        ],
-        isAvailable: false,
-        dateRegister: DateTime(2023, 5, 15)),
-    Food(
-        id: "food3",
-        name: "Food 3",
-        price: 1234.53,
-        description: "Day la food 3",
-        sizes: [
-          Data.sizes[0],
-          Data.sizes[1],
-        ],
-        toppings: [],
-        images: [
-          "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
-        ],
-        isAvailable: false,
-        isFavorite: true,
-        dateRegister: DateTime(2023, 4, 15)),
-    Food(
-        id: "food4",
-        name: "Food 4",
-        price: 1234.53,
-        description: "Day la food 4",
-        sizes: [
-          Data.sizes[1],
-        ],
-        toppings: [
-          Data.toopings[0],
-          Data.toopings[1],
-        ],
-        images: [
-          "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
-        ],
-        isAvailable: true,
-        dateRegister: DateTime(2023, 4, 15)),
-    Food(
-        id: "food5",
-        name: "Food 5",
-        price: 1234.53,
-        description: "Day la food 5",
-        sizes: [
-          Data.sizes[0],
-        ],
-        toppings: [],
-        images: [
-          "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
-        ],
-        isAvailable: true,
-        dateRegister: DateTime(2023, 4, 15)),
-    Food(
-        id: "food6",
-        name: "Food 6",
-        price: 1234.53,
-        description: "Day la food 6",
-        sizes: [
-          Data.sizes[0],
-          Data.sizes[1],
-        ],
-        toppings: [
-          Data.toopings[0],
-          Data.toopings[1],
-        ],
-        images: [
-          "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
-        ],
-        isAvailable: true,
-        dateRegister: DateTime(2023, 4, 15)),
-  ];
+  // static final List<Food> products = [
+  //   Food(
+  //       id: "food1",
+  //       name: "Food 1",
+  //       price: 1234.53,
+  //       description: "Day la food 1",
+  //       sizes: [
+  //         Data.sizes[0],
+  //         Data.sizes[1],
+  //       ],
+  //       toppings: [
+  //         Data.toopings[0],
+  //         Data.toopings[1],
+  //       ],
+  //       images: [
+  //         "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
+  //       ],
+  //       isAvailable: true,
+  //       isFavorite: true,
+  //       dateRegister: DateTime(2023, 5, 15)),
+  //   Food(
+  //       id: "food2",
+  //       name: "Food 2",
+  //       price: 1234.53,
+  //       description: "Day la food 2",
+  //       sizes: [
+  //         Data.sizes[0],
+  //       ],
+  //       toppings: [
+  //         Data.toopings[0],
+  //         Data.toopings[1],
+  //       ],
+  //       images: [
+  //         "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
+  //       ],
+  //       isAvailable: false,
+  //       dateRegister: DateTime(2023, 5, 15)),
+  //   Food(
+  //       id: "food3",
+  //       name: "Food 3",
+  //       price: 1234.53,
+  //       description: "Day la food 3",
+  //       sizes: [
+  //         Data.sizes[0],
+  //         Data.sizes[1],
+  //       ],
+  //       toppings: [],
+  //       images: [
+  //         "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
+  //       ],
+  //       isAvailable: false,
+  //       isFavorite: true,
+  //       dateRegister: DateTime(2023, 4, 15)),
+  //   Food(
+  //       id: "food4",
+  //       name: "Food 4",
+  //       price: 1234.53,
+  //       description: "Day la food 4",
+  //       sizes: [
+  //         Data.sizes[1],
+  //       ],
+  //       toppings: [
+  //         Data.toopings[0],
+  //         Data.toopings[1],
+  //       ],
+  //       images: [
+  //         "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
+  //       ],
+  //       isAvailable: true,
+  //       dateRegister: DateTime(2023, 4, 15)),
+  //   Food(
+  //       id: "food5",
+  //       name: "Food 5",
+  //       price: 1234.53,
+  //       description: "Day la food 5",
+  //       sizes: [
+  //         Data.sizes[0],
+  //       ],
+  //       toppings: [],
+  //       images: [
+  //         "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
+  //       ],
+  //       isAvailable: true,
+  //       dateRegister: DateTime(2023, 4, 15)),
+  //   Food(
+  //       id: "food6",
+  //       name: "Food 6",
+  //       price: 1234.53,
+  //       description: "Day la food 6",
+  //       sizes: [
+  //         Data.sizes[0],
+  //         Data.sizes[1],
+  //       ],
+  //       toppings: [
+  //         Data.toopings[0],
+  //         Data.toopings[1],
+  //       ],
+  //       images: [
+  //         "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
+  //       ],
+  //       isAvailable: true,
+  //       dateRegister: DateTime(2023, 4, 15)),
+  // ];
 
   // static final List<Store> stores = [
   //   Store(

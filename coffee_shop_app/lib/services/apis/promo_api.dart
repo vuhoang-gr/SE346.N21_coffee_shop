@@ -14,15 +14,16 @@ class PromoAPI {
   final CollectionReference promoReference =
       FirebaseFirestore.instance.collection('Promo');
 
+  List<Promo> currentPromos = [];
+
   Stream<List<Promo>> fetchData() {
     return promoReference.snapshots().map<List<Promo>>((snapshot) {
       List<Promo> promos = [];
 
       DateTime dateTimeNow = DateTime.now();
-      List<QueryDocumentSnapshot?> docs = snapshot.docs;
       for (var doc in snapshot.docs) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        if (data['dateEnd'].toDate().isAfter(dateTimeNow)) {
+        if (data['dateEnd'].toDate().isAfter(dateTimeNow) && data['dateStart'].toDate().isBefore(dateTimeNow)) {
           Promo? promo = fromFireStore(data, doc.id);
           if (promo != null) {
             promos.add(promo);
@@ -30,6 +31,8 @@ class PromoAPI {
         }
       }
       promos.sort((a, b) => a.dateEnd.compareTo(b.dateEnd));
+      
+      currentPromos = promos;
       return promos;
     });
   }
@@ -44,8 +47,9 @@ class PromoAPI {
         percent: data['percent'].toDouble(),
         description: data['description'],
         dateEnd: data['dateEnd'].toDate(),
+        dateStart: data['dateStart'].toDate(),
         products: data['products'].cast<String>(),
         stores: data['stores'].cast<String>(),
-        forNewCustomer: data['forNewCustomer']);
+        forNewCustomer: data['forNewCustomer'],);
   }
 }
