@@ -10,10 +10,7 @@ import 'package:coffee_shop_admin/services/blocs/map_picker/map_picker_bloc.dart
 import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/promo/promo_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/promo/promo_event.dart';
-import 'package:coffee_shop_admin/services/blocs/search_store/search_store_bloc.dart';
-
 import 'package:coffee_shop_admin/services/blocs/size_manage/size_list_bloc.dart';
-
 import 'package:coffee_shop_admin/services/blocs/store_store/store_store_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/user/user_bloc.dart';
@@ -54,9 +51,6 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<UserBloc>(
           create: (BuildContext context) => UserBloc(),
-        ),
-        BlocProvider<SearchStoreBloc>(
-          create: (BuildContext context) => SearchStoreBloc(),
         ),
         BlocProvider<StoreStoreBloc>(
           create: (BuildContext context) => StoreStoreBloc(),

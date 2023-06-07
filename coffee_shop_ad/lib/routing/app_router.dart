@@ -14,7 +14,6 @@ import 'package:coffee_shop_admin/screens/profile/profile_setting_screen.dart';
 import 'package:coffee_shop_admin/screens/promo/promo_create.dart';
 import 'package:coffee_shop_admin/screens/promo/promo_screen.dart';
 import 'package:coffee_shop_admin/screens/store/store_detail.dart';
-import 'package:coffee_shop_admin/screens/store/store_search_screen.dart';
 import 'package:coffee_shop_admin/screens/store_address/address_screen.dart';
 import 'package:coffee_shop_admin/screens/store_address/map_screen.dart';
 import 'package:coffee_shop_admin/screens/user/user_screen.dart';
@@ -160,16 +159,6 @@ class AppRouter {
 
       case UserScreen.routeName:
         return _createRoute(UserScreen());
-
-      case StoreSearchScreen.routeName:
-        Map<String, dynamic> arguments =
-            settings.arguments as Map<String, dynamic>;
-        bool isPurposeForShowDetail =
-            arguments['isPurposeForShowDetail'] ?? false;
-        return MaterialPageRoute(
-            builder: ((context) => StoreSearchScreen(
-                  isPurposeForShowDetail: isPurposeForShowDetail,
-                )));
 
       default:
         return _createRoute(MainPage());

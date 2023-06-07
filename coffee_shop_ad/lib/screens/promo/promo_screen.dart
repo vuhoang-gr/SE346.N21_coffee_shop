@@ -65,7 +65,12 @@ class _PromoScreenState extends State<PromoScreen> {
                                   style: roundedButton,
                                   onPressed: () {
                                     Navigator.of(context)
-                                        .pushNamed(CreatePromoScreen.routeName);
+                                        .pushNamed(CreatePromoScreen.routeName,
+                                            arguments: state.listExistCode)
+                                        .then((value) {
+                                      BlocProvider.of<PromoBloc>(context)
+                                          .add(FetchData());
+                                    });
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
