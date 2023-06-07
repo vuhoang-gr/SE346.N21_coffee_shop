@@ -1,3 +1,4 @@
+import 'package:coffee_shop_app/services/apis/topping_api.dart';
 import 'package:coffee_shop_app/services/models/cart_food.dart';
 import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../services/apis/size_api.dart';
 import '../../../services/blocs/cart_cubit/cart_cubit.dart';
 import '../../../services/functions/money_transfer.dart';
 import '../../../utils/constants/dimension.dart';
@@ -44,21 +46,32 @@ class CheckoutProdItem extends StatelessWidget {
                     height: Dimension.height8 / 2,
                   ),
 
-                  // TODO: fix this
-                  // Text(
-                  //   'Size: ${cartFood.food.sizes!.firstWhere((size) => size.id == cartFood.size).name}',
-                  //   style: AppText.style.regularGrey12,
-                  // ),
-                  
+                  //TODO: fix this
+                  Text(
+                    'Size: ${SizeApi().currentSizes.firstWhere((size) => size.id == cartFood.size).name}',
+                    style: AppText.style.regularGrey12,
+                  ),
+
                   SizedBox(
                     height: Dimension.height8 / 2,
                   ),
                   cartFood.topping == ''
                       ? SizedBox.shrink()
-                      : Text(
-                          'Topping: ${cartFood.topping}',
-                          style: AppText.style.regularGrey12,
-                        ),
+                      : Builder(builder: (context) {
+                          List<String> toppingNames = [];
+                          List<String> toppings = cartFood.topping!.split(',');
+                          for (var t in ToppingApi().currentToppings) {
+                            for (var selected in toppings) {
+                              if (t.id == selected.trim()) {
+                                toppingNames.add(t.name);
+                              }
+                            }
+                          }
+                          return Text(
+                            'Topping: ${toppingNames.join(", ")}',
+                            style: AppText.style.regularGrey12,
+                          );
+                        }),
                   SizedBox(
                     height: Dimension.height8 / 2,
                   ),
