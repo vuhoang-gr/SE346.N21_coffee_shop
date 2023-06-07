@@ -23,6 +23,8 @@ class PromoScreen extends StatefulWidget {
 }
 
 class _PromoScreenState extends State<PromoScreen> {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void dispose() {
     super.dispose();
@@ -45,68 +47,57 @@ class _PromoScreenState extends State<PromoScreen> {
             child:
                 BlocBuilder<PromoBloc, PromoState>(builder: (context, state) {
               if (state is LoadedState) {
-                return Column(
+                return Stack(
                   children: [
                     RefreshIndicator(
-                        onRefresh: () async {
-                          BlocProvider.of<PromoBloc>(context).add(FetchData());
-                        },
-                        child: SingleChildScrollView(
-                          physics: AlwaysScrollableScrollPhysics(),
-                          child: Column(
-                            children: [
-                              SizedBox(height: Dimension.height8),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: Dimension.width16),
-                                child: ElevatedButton(
-                                    style: roundedButton,
-                                    onPressed: () {
-                                      Navigator.of(context).pushNamed(
-                                          CreatePromoScreen.routeName,
-                                          arguments: state.listExistCode);
-                                    },
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.add,
-                                          color: Colors.white,
-                                        ),
-                                        Text(
-                                          'New Promo',
-                                          style: AppText.style.regularWhite16,
-                                        )
-                                      ],
+                      onRefresh: () async {
+                        BlocProvider.of<PromoBloc>(context).add(FetchData());
+                      },
+                      child: ListView(
+                        controller: _scrollController,
+                        children: [
+                          SizedBox(height: Dimension.height8),
+                          Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: Dimension.width16,
+                              ),
+                              child: ElevatedButton(
+                                  style: roundedButton,
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pushNamed(CreatePromoScreen.routeName);
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.add,
+                                        color: Colors.white,
+                                      ),
+                                      Text(
+                                        'New Promo',
+                                        style: AppText.style.regularWhite16,
+                                      )
+                                    ],
+                                  ))),
+                          SizedBox(height: Dimension.height8),
+                          ...(state.initPromos
+                              .map((product) => Container(
+                                    padding: EdgeInsets.only(
+                                        bottom: Dimension.height8,
+                                        left: Dimension.width16,
+                                        right: Dimension.width16),
+                                    child: (PromoItem(
+                                      promo: product,
                                     )),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: Dimension.width16),
-                                child: ListView.separated(
-                                  padding:
-                                      EdgeInsets.only(top: Dimension.height8),
-                                  itemCount: state.initPromos.length,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemBuilder: (context, index) {
-                                    return PromoItem(
-                                        promo: state.initPromos[index]);
-                                  },
-                                  separatorBuilder: (context, index) {
-                                    return SizedBox(
-                                      height: Dimension.height12,
-                                    );
-                                  },
-                                ),
-                              ),
-                              SizedBox(
-                                height: Dimension.height8,
-                              ),
-                            ],
-                          ),
-                        )),
+                                  ))
+                              .toList()),
+                          SizedBox(
+                            height: Dimension.height68,
+                          )
+                        ],
+                      ),
+                    ),
                   ],
                 );
               } else if (state is LoadingState) {

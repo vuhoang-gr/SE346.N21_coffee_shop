@@ -198,12 +198,55 @@ class _CreatePromoScreenState extends State<CreatePromoScreen> {
                                             SizedBox(
                                               height: 12,
                                             ),
-                                            CustormTextForm(
-                                              controller: descriptionController,
-                                              validator: NullValidator(),
-                                              verifiedCheck: true,
-                                              label: 'Description',
-                                            ),
+                                            Container(
+                                                height: Dimension.height12 * 13,
+                                                width: double.maxFinite,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                                child: TextField(
+                                                  controller:
+                                                      descriptionController,
+                                                  scrollPadding:
+                                                      EdgeInsets.only(
+                                                          bottom: Dimension
+                                                              .height16),
+                                                  textAlignVertical:
+                                                      TextAlignVertical.top,
+                                                  expands: true,
+                                                  maxLength: 200,
+                                                  style: AppText
+                                                      .style.regularBlack14,
+                                                  decoration: InputDecoration(
+                                                      contentPadding:
+                                                          EdgeInsets.only(
+                                                              top: Dimension
+                                                                  .height8,
+                                                              left: Dimension
+                                                                  .height16,
+                                                              right: Dimension
+                                                                  .height16),
+                                                      hintText: 'Description',
+                                                      hintStyle: AppText
+                                                          .style.regularGrey14,
+                                                      focusedBorder: OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(4),
+                                                          borderSide:
+                                                              const BorderSide(
+                                                                  color: AppColors
+                                                                      .greyTextColor)),
+                                                      border: OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(4),
+                                                          borderSide: const BorderSide(color: AppColors.greyBoxColor))),
+                                                  keyboardType:
+                                                      TextInputType.multiline,
+                                                  maxLines: null,
+                                                )),
                                             SizedBox(
                                               height: 4,
                                             ),

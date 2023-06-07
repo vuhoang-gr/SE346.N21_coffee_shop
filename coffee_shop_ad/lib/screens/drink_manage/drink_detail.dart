@@ -243,27 +243,30 @@ class _DrinkDetailState extends State<DrinkDetail> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Row(
-                                            children: [
-                                              Checkbox(
-                                                value: _selectedToppings[index],
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _selectedToppings[index] =
-                                                        value;
-                                                  });
-                                                },
-                                              ),
-                                              RoundImage(
-                                                  imgUrl: Drink
-                                                      .toppings[index].image),
-                                              SizedBox(
-                                                width: Dimension.height8,
-                                              ),
-                                              Text(Drink.toppings[index].name,
-                                                  style: AppText
-                                                      .style.regularBlack14),
-                                            ],
+                                          Expanded(
+                                            child: Row(
+                                              children: [
+                                                Checkbox(
+                                                  value:
+                                                      _selectedToppings[index],
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      _selectedToppings[index] =
+                                                          value;
+                                                    });
+                                                  },
+                                                ),
+                                                RoundImage(
+                                                    imgUrl: Drink
+                                                        .toppings[index].image),
+                                                SizedBox(
+                                                  width: Dimension.height8,
+                                                ),
+                                                Text(Drink.toppings[index].name,
+                                                    style: AppText
+                                                        .style.regularBlack14),
+                                              ],
+                                            ),
                                           ),
                                           Text(
                                             '+${MoneyTransfer.transferFromDouble(Drink.toppings[index].price)} ₫',
