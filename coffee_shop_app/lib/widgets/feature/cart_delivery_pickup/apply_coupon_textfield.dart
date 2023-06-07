@@ -51,8 +51,8 @@ class ApplyCouponTextfield extends StatelessWidget {
                 onTap: () {
                   closeBox();
                 },
-                child: RichText(
-                  text: TextSpan(
+                child: Text.rich(
+                  TextSpan(
                     style: AppText.style.regularGrey16,
                     children: <TextSpan>[
                       const TextSpan(text: '|  '),

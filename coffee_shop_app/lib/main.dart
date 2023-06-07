@@ -10,6 +10,7 @@ import 'package:coffee_shop_app/services/blocs/auth_action/auth_action_cubit.dar
 import 'package:coffee_shop_app/services/blocs/cart_cubit/cart_cubit.dart';
 import 'package:coffee_shop_app/services/blocs/edit_address/edit_address_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/map_picker/map_picker_bloc.dart';
+import 'package:coffee_shop_app/services/blocs/order/order_delivery_cubit.dart';
 import 'package:coffee_shop_app/services/blocs/pickup_timer/pickup_timer_cubit.dart';
 import 'package:coffee_shop_app/services/blocs/product_detail/product_detail_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/product_store/product_store_bloc.dart';
@@ -93,9 +94,6 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) =>
               SizeStoreBloc()..add(size_event.FetchData()),
         ),
-        BlocProvider<CartCubit>(
-          create: (BuildContext context) => CartCubit(),
-        ),
         BlocProvider<SearchProductBloc>(
           create: (BuildContext context) => SearchProductBloc(),
         ),
@@ -110,11 +108,13 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) => ProductStoreBloc(),
         ),
         BlocProvider<CartButtonBloc>(
-          create: (BuildContext context) => CartButtonBloc(context.read<ProductStoreBloc>()),
+          create: (BuildContext context) =>
+              CartButtonBloc(context.read<ProductStoreBloc>()),
         ),
         BlocProvider<StoreStoreBloc>(
-          create: (BuildContext context) => StoreStoreBloc(context.read<CartButtonBloc>())
-            ..add(store_event.FetchData(location: initLatLng)),
+          create: (BuildContext context) =>
+              StoreStoreBloc(context.read<CartButtonBloc>())
+                ..add(store_event.FetchData(location: initLatLng)),
         ),
         BlocProvider<RecentSeeProductsBloc>(
           create: (BuildContext context) =>
@@ -134,13 +134,21 @@ class MyApp extends StatelessWidget {
               PromoStoreBloc()..add(promo_event.FetchData()),
         ),
         BlocProvider<ProductDetailBloc>(
-          create: (BuildContext context) =>
-              ProductDetailBloc(
-                productStoreBloc: context.read<ProductStoreBloc>(), 
-                sizeStoreBloc: context.read<SizeStoreBloc>(), 
-                toppingStoreBloc: context.read<ToppingStoreBloc>()),
+          create: (BuildContext context) => ProductDetailBloc(
+              productStoreBloc: context.read<ProductStoreBloc>(),
+              sizeStoreBloc: context.read<SizeStoreBloc>(),
+              toppingStoreBloc: context.read<ToppingStoreBloc>()),
         ),
         BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
+        BlocProvider<OrderDeliveryCubit>(
+          create: (BuildContext context) => OrderDeliveryCubit(),
+        ),
+        BlocProvider<CartCubit>(
+          create: (BuildContext context) => CartCubit(
+              productStoreBloc: context.read<ProductStoreBloc>(),
+              sizeStoreBloc: context.read<SizeStoreBloc>(),
+              toppingStoreBloc: context.read<ToppingStoreBloc>()),
+        ),
       ],
       child: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
