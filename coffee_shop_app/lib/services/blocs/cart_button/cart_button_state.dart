@@ -7,8 +7,10 @@ class CartButtonState {
   final Store? selectedStore;
   final DeliveryAddress? selectedDeliveryAddress;
   final OrderType selectedOrderType;
+  final double distance;
   CartButtonState(
       {required this.selectedStore,
       required this.selectedDeliveryAddress,
+      required this.distance,
       this.selectedOrderType = OrderType.delivery});
 }

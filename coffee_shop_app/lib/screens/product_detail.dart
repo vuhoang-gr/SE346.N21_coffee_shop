@@ -1,45 +1,34 @@
-import 'package:coffee_shop_app/services/apis/size_api.dart';
-import 'package:coffee_shop_app/services/apis/topping_api.dart';
-import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_bloc.dart';
-import 'package:coffee_shop_app/services/blocs/cart_cubit/cart_cubit.dart';
-import 'package:coffee_shop_app/services/models/store.dart';
-import 'package:coffee_shop_app/services/models/topping.dart';
-import 'package:coffee_shop_app/utils/colors/app_colors.dart';
-import 'package:coffee_shop_app/widgets/feature/product_detail_widgets/product_detail_skeleton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
+import '../services/blocs/cart_cubit/cart_cubit.dart';
+import '../services/blocs/product_detail/product_detail_bloc.dart';
+import '../services/blocs/product_detail/product_detail_event.dart';
+import '../services/blocs/product_detail/product_detail_state.dart'
+    as product_detail_bloc;
 import '../services/functions/money_transfer.dart';
-import '../services/models/food.dart';
+import '../services/models/size.dart';
+import '../services/models/topping.dart';
+import '../utils/colors/app_colors.dart';
 import '../utils/constants/dimension.dart';
 import '../utils/styles/app_texts.dart';
 import '../utils/styles/button.dart';
 import '../widgets/feature/product_detail_widgets/circle_icon.dart';
 import '../widgets/feature/product_detail_widgets/product_card.dart';
+import '../widgets/feature/product_detail_widgets/product_detail_skeleton.dart';
 import '../widgets/feature/product_detail_widgets/round_image.dart';
 import '../widgets/feature/product_detail_widgets/square_amount_box.dart';
 import '../widgets/global/custom_app_bar.dart';
-import '../services/models/size.dart';
 
 class ProductDetail extends StatefulWidget {
-  final Food product;
-  const ProductDetail({super.key, required this.product});
+  const ProductDetail({super.key});
 
   @override
   State<ProductDetail> createState() => _ProductDetailState();
 }
 
 class _ProductDetailState extends State<ProductDetail> {
-  var _selectedToppings = [];
-  var _selectedSize;
-  int _numberToAdd = 1;
-  double _totalPrice = 0;
-  bool isEnable = true;
-
-  bool isLoading = false;
-
   final noteTextController = TextEditingController();
 
   @override
@@ -50,54 +39,18 @@ class _ProductDetailState extends State<ProductDetail> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    fetchSizeAndTopping();
-  }
-
-  Future fetchSizeAndTopping() async {
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      Store? store = context.read<CartButtonBloc>().state.selectedStore;
-      if (widget.product.sizes.isNotEmpty && widget.product.sizes[0] is! Size) {
-        widget.product.sizes = await SizeApi().changeRefToObject(
-            widget.product.sizes, store?.stateFood[widget.product.id]);
-      }
-      if (widget.product.toppings.isNotEmpty &&
-          widget.product.toppings[0] is! Topping) {
-        widget.product.toppings = await ToppingApi()
-            .changeRefToObject(widget.product.toppings, store?.stateTopping);
-      }
-      _selectedSize = widget.product.sizes![0];
-
-      _selectedToppings = List<bool>.generate(
-          widget.product.toppings!.length, (index) => false);
-
-      _totalPrice = widget.product.price + widget.product.sizes[0].price;
-
-      //number to add
-      _numberToAdd = 1;
-      setState(() {
-        isLoading = false;
-      });
-    } catch (e) {
-      Fluttertoast.showToast(
-          msg: "Đã có lỗi xảy ra, hãy thử lại sau",
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 1,
-          textColor: Colors.white,
-          fontSize: Dimension.font14);
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
-    return isLoading
-        ? ProductDetailSkeleton()
-        : GestureDetector(
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.of(context).pop();
+        BlocProvider.of<ProductDetailBloc>(context).add(DisposeProduct());
+        return Future.value(false);
+      },
+      child: BlocBuilder<ProductDetailBloc,
+          product_detail_bloc.ProductDetailState>(builder: (context, state) {
+        if (state is product_detail_bloc.LoadedState) {
+          return GestureDetector(
             onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
             child: ColoredBox(
               color: AppColors.backgroundColor,
@@ -114,12 +67,12 @@ class _ProductDetailState extends State<ProductDetail> {
                         Expanded(
                             child: SingleChildScrollView(
                                 child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            ProductCard(product: widget.product),
+                            ProductCard(product: state.selectedFood!),
 
                             //size
                             Container(
-                              width: double.maxFinite,
                               padding: EdgeInsets.symmetric(
                                   horizontal: Dimension.height16,
                                   vertical: Dimension.height16),
@@ -147,17 +100,13 @@ class _ProductDetailState extends State<ProductDetail> {
                                         itemBuilder: (context, index) =>
                                             InkWell(
                                               onTap: () {
-                                                setState(() {
-                                                  double prevSizePrice =
-                                                      (_selectedSize as Size)
-                                                          .price;
-                                                  _selectedSize = widget
-                                                      .product.sizes![index];
-                                                  _totalPrice = _totalPrice -
-                                                      prevSizePrice +
-                                                      widget.product
-                                                          .sizes![index].price;
-                                                });
+                                                BlocProvider.of<
+                                                            ProductDetailBloc>(
+                                                        context)
+                                                    .add(SelectSize(
+                                                        selectedSize:
+                                                            state.productsSize[
+                                                                index]));
                                               },
                                               child: Row(
                                                 mainAxisAlignment:
@@ -167,46 +116,44 @@ class _ProductDetailState extends State<ProductDetail> {
                                                   Row(
                                                     children: [
                                                       Radio<Size>(
-                                                        value: widget.product
-                                                            .sizes![index],
+                                                        value:
+                                                            state.productsSize[
+                                                                index],
                                                         groupValue:
-                                                            _selectedSize,
+                                                            state.selectedSize,
                                                         onChanged: (value) {
                                                           setState(() {
-                                                            double
-                                                                prevSizePrice =
-                                                                (_selectedSize
-                                                                        as Size)
-                                                                    .price;
-                                                            _selectedSize =
-                                                                value;
-                                                            _totalPrice =
-                                                                _totalPrice -
-                                                                    prevSizePrice +
-                                                                    value!
-                                                                        .price;
+                                                            if (value != null) {
+                                                              BlocProvider.of<
+                                                                          ProductDetailBloc>(
+                                                                      context)
+                                                                  .add(SelectSize(
+                                                                      selectedSize:
+                                                                          value));
+                                                            }
                                                           });
                                                         },
                                                       ),
                                                       RoundImage(
-                                                          imgUrl: widget
-                                                              .product
-                                                              .sizes![index]
+                                                          imgUrl: state
+                                                              .productsSize[
+                                                                  index]
                                                               .image),
                                                       SizedBox(
                                                         width:
                                                             Dimension.height8,
                                                       ),
                                                       Text(
-                                                        widget.product
-                                                            .sizes![index].name,
+                                                        state
+                                                            .productsSize[index]
+                                                            .name,
                                                         style: AppText.style
                                                             .regularBlack14,
                                                       ),
                                                     ],
                                                   ),
                                                   Text(
-                                                    '+${MoneyTransfer.transferFromDouble(widget.product.sizes![index].price)} ₫',
+                                                    '+${MoneyTransfer.transferFromDouble(state.productsSize[index].price)} ₫',
                                                     style: AppText
                                                         .style.boldBlack14,
                                                   ),
@@ -218,156 +165,124 @@ class _ProductDetailState extends State<ProductDetail> {
                                               thickness: 2,
                                               color: AppColors.greyBoxColor,
                                             ),
-                                        itemCount:
-                                            widget.product.sizes!.length),
+                                        itemCount: state.productsSize.length),
                                   ]),
                             ),
 
                             //topping
-                            Container(
-                              width: double.maxFinite,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: Dimension.height16,
-                                  vertical: Dimension.height16),
-                              margin: EdgeInsets.only(
-                                  top: Dimension.height12,
-                                  left: Dimension.height16,
-                                  right: Dimension.height16),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  RichText(
-                                    text: TextSpan(
-                                      style: AppText.style.boldBlack16,
-                                      children: <TextSpan>[
-                                        const TextSpan(text: 'Topping '),
-                                        TextSpan(
-                                          text: '(maximum 2)',
-                                          style: AppText.style.regularGrey14,
-                                        )
+                            state.productsTopping.isNotEmpty
+                                ? Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: Dimension.height16,
+                                        vertical: Dimension.height16),
+                                    margin: EdgeInsets.only(
+                                        top: Dimension.height12,
+                                        left: Dimension.height16,
+                                        right: Dimension.height16),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                            style: AppText.style.boldBlack16,
+                                            children: <TextSpan>[
+                                              const TextSpan(text: 'Topping '),
+                                              TextSpan(
+                                                text: '(maximum 2)',
+                                                style:
+                                                    AppText.style.regularGrey14,
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        ListView.separated(
+                                            padding: EdgeInsets.only(
+                                                top: Dimension.height16),
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            controller: ScrollController(),
+                                            itemBuilder: (context, index) =>
+                                                InkWell(
+                                                  onTap: () {
+                                                    BlocProvider.of<
+                                                                ProductDetailBloc>(
+                                                            context)
+                                                        .add(SelectTopping(
+                                                            index: index));
+                                                  },
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Checkbox(
+                                                        value: state
+                                                                .selectedToppings[
+                                                            index],
+                                                        onChanged: (value) {
+                                                          if (value != null) {
+                                                            BlocProvider.of<
+                                                                        ProductDetailBloc>(
+                                                                    context)
+                                                                .add(SelectToppingWithValue(
+                                                                    index:
+                                                                        index,
+                                                                    value:
+                                                                        value));
+                                                          }
+                                                        },
+                                                      ),
+                                                      RoundImage(
+                                                          imgUrl: state
+                                                              .productsTopping[
+                                                                  index]
+                                                              .image),
+                                                      SizedBox(
+                                                        width:
+                                                            Dimension.height8,
+                                                      ),
+                                                      Flexible(
+                                                        child: Text(
+                                                          state
+                                                              .productsTopping[
+                                                                  index]
+                                                              .name,
+                                                          style: AppText.style
+                                                              .regularBlack14,
+                                                          softWrap: true,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        '+${MoneyTransfer.transferFromDouble(state.productsTopping[index].price)} ₫',
+                                                        style: AppText
+                                                            .style.boldBlack14,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                            separatorBuilder: (_, __) =>
+                                                const Divider(
+                                                  thickness: 2,
+                                                  color: AppColors.greyBoxColor,
+                                                ),
+                                            itemCount:
+                                                state.productsTopping.length),
                                       ],
                                     ),
-                                  ),
-                                  ListView.separated(
-                                      padding: EdgeInsets.only(
-                                          top: Dimension.height16),
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      controller: ScrollController(),
-                                      itemBuilder: (context, index) => InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                _selectedToppings[index] =
-                                                    !_selectedToppings[index];
-                                              });
-                                            },
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Checkbox(
-                                                      value: _selectedToppings[
-                                                          index],
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _selectedToppings[
-                                                              index] = value;
-                                                        });
-                                                      },
-                                                    ),
-                                                    RoundImage(
-                                                        imgUrl: widget
-                                                            .product
-                                                            .toppings![index]
-                                                            .image),
-                                                    SizedBox(
-                                                      width: Dimension.height8,
-                                                    ),
-                                                    Text(
-                                                        widget
-                                                            .product
-                                                            .toppings![index]
-                                                            .name,
-                                                        style: AppText.style
-                                                            .regularBlack14),
-                                                  ],
-                                                ),
-                                                Text(
-                                                  '+${MoneyTransfer.transferFromDouble(widget.product.toppings![index].price)} ₫',
-                                                  style:
-                                                      AppText.style.boldBlack14,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                      separatorBuilder: (_, __) =>
-                                          const Divider(
-                                            thickness: 2,
-                                            color: AppColors.greyBoxColor,
-                                          ),
-                                      itemCount:
-                                          widget.product.toppings!.length),
-                                ],
-                              ),
-                            ),
+                                  )
+                                : SizedBox.shrink(),
 
-                            //note to barista
-                            Container(
-                                height: Dimension.height8 * 15,
-                                width: double.maxFinite,
-                                padding: EdgeInsets.only(
-                                    left: Dimension.height16,
-                                    right: Dimension.height16,
-                                    top: Dimension.height16,
-                                    bottom: Dimension.height8),
-                                margin: EdgeInsets.only(
-                                    top: Dimension.height12,
-                                    left: Dimension.height16,
-                                    right: Dimension.height16,
-                                    bottom: Dimension.height16),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: TextField(
-                                  controller: noteTextController,
-                                  scrollPadding: EdgeInsets.only(
-                                      bottom: Dimension.height16),
-                                  textAlignVertical: TextAlignVertical.top,
-                                  expands: true,
-                                  maxLength: 100,
-                                  style: AppText.style.regularBlack14,
-                                  decoration: InputDecoration(
-                                      contentPadding: EdgeInsets.only(
-                                          top: Dimension.height8,
-                                          left: Dimension.height16,
-                                          right: Dimension.height16),
-                                      hintText: 'Your note to barista',
-                                      hintStyle: AppText.style.regularGrey14,
-                                      focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                          borderSide: const BorderSide(
-                                              color: AppColors.greyTextColor)),
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                          borderSide: const BorderSide(
-                                              color: AppColors.greyBoxColor))),
-                                  keyboardType: TextInputType.multiline,
-                                  maxLines: null,
-                                )),
+                            SizedBox(height: 16)
                           ],
                         ))),
 
+                        //add to cart bar
                         //add to cart bar
                         isKeyboard
                             ? const SizedBox()
@@ -396,23 +311,21 @@ class _ProductDetailState extends State<ProductDetail> {
                                           MainAxisAlignment.center,
                                       children: [
                                         CircleIcon(
-                                            isEnable: isEnable,
+                                            isEnable: state.numberToAdd > 0,
                                             icon: CupertinoIcons.minus,
                                             backgroundColor: Colors.transparent,
                                             onTap: () {
-                                              setState(() {
-                                                _numberToAdd--;
-                                                if (_numberToAdd == 0) {
-                                                  isEnable = false;
-                                                }
-                                              });
+                                              BlocProvider.of<
+                                                          ProductDetailBloc>(
+                                                      context)
+                                                  .add(DecreaseAmount());
                                             }),
                                         SizedBox(
                                           width: Dimension.height8 / 2,
                                         ),
                                         SquareAmountBox(
                                             child: Text(
-                                          '$_numberToAdd',
+                                          state.numberToAdd.toString(),
                                           style: AppText.style.regularBlack16,
                                         )),
                                         SizedBox(
@@ -423,13 +336,10 @@ class _ProductDetailState extends State<ProductDetail> {
                                             icon: CupertinoIcons.add,
                                             backgroundColor: Colors.transparent,
                                             onTap: () {
-                                              setState(() {
-                                                _numberToAdd++;
-                                                if (_numberToAdd > 0 &&
-                                                    !isEnable) {
-                                                  isEnable = true;
-                                                }
-                                              });
+                                              BlocProvider.of<
+                                                          ProductDetailBloc>(
+                                                      context)
+                                                  .add(IncreaseAmount());
                                             }),
                                       ],
                                     ),
@@ -444,13 +354,12 @@ class _ProductDetailState extends State<ProductDetail> {
                                         List<Topping> toppingList = [];
 
                                         for (var i = 0;
-                                            i < _selectedToppings.length;
+                                            i < state.selectedToppings.length;
                                             i++) {
-                                          if (_selectedToppings[i]) {
-                                            toppingPrice += widget
-                                                .product.toppings![i].price;
+                                          if (state.selectedToppings[i]) {
+                                            toppingPrice += state.productsTopping[i].price;
                                             toppingList.add(
-                                                widget.product.toppings![i]);
+                                                state.productsTopping[i]);
                                           }
                                         }
                                         String toppingString = toppingList
@@ -459,26 +368,25 @@ class _ProductDetailState extends State<ProductDetail> {
                                             .join(", ");
 
                                         double finalTotal =
-                                            (_totalPrice + toppingPrice) *
-                                                _numberToAdd;
+                                            (state.totalPrice + toppingPrice) *
+                                                state.numberToAdd;
                                         return ElevatedButton(
                                             style: roundedButton,
-                                            onPressed: _numberToAdd == 0
+                                            onPressed: state.numberToAdd == 0
                                                 ? null
                                                 : () {
                                                     BlocProvider.of<CartCubit>(
                                                             context)
                                                         .addProduct(
-                                                      widget.product,
-                                                      _numberToAdd,
-                                                      (_selectedSize as Size)
-                                                          .id,
+                                                      state.selectedFood!,
+                                                      state.numberToAdd,
+                                                      state.selectedSize.id,
                                                       toppingString,
-                                                      _totalPrice +
+                                                      state.totalPrice +
                                                           toppingPrice,
                                                       noteTextController.text,
                                                     );
-                                                    Navigator.pop(context);
+                                                    Navigator.of(context).maybePop();
                                                   },
                                             child: Text(
                                               'Add to cart - ${MoneyTransfer.transferFromDouble(finalTotal)} ₫',
@@ -497,5 +405,10 @@ class _ProductDetailState extends State<ProductDetail> {
               ),
             ),
           );
+        } else {
+          return ProductDetailSkeleton();
+        }
+      }),
+    );
   }
 }

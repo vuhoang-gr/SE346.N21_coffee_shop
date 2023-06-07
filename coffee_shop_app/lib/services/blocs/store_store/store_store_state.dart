@@ -4,30 +4,28 @@ import '../../models/store.dart';
 
 abstract class StoreStoreState {
   final List<Store> initStores;
-  final Store? selectedStore;
-  StoreStoreState({required this.initStores, required this.selectedStore});
+  final LatLng? latLng;
+  StoreStoreState({required this.initStores, required this.latLng});
 }
 
 abstract class HasDataStoreStoreState extends StoreStoreState {
-  final LatLng? latLng;
   Store? nearestStore;
   final List<Store> listFavoriteStore;
   final List<Store> listOtherStore;
   HasDataStoreStoreState(
-      {required this.latLng,
+      {required super.latLng,
       required this.listFavoriteStore,
       required this.listOtherStore,
-      required super.initStores,
-      required super.selectedStore,
-      required this.nearestStore});
+      required this.nearestStore,
+      required super.initStores});
 }
 
 class LoadingState extends StoreStoreState {
-  LoadingState({required super.initStores, required super.selectedStore});
+  LoadingState({required super.initStores, required super.latLng});
 }
 
 class ErrorState extends StoreStoreState {
-  ErrorState({required super.initStores, required super.selectedStore});
+  ErrorState({required super.initStores, required super.latLng});
 }
 
 class LoadedState extends HasDataStoreStoreState {
@@ -35,9 +33,8 @@ class LoadedState extends HasDataStoreStoreState {
       {required super.latLng,
       required super.listFavoriteStore,
       required super.listOtherStore,
-      required super.initStores,
-      required super.selectedStore,
-      required super.nearestStore});
+      required super.nearestStore,
+      required super.initStores});
 }
 
 class FetchedState extends HasDataStoreStoreState {
@@ -45,7 +42,6 @@ class FetchedState extends HasDataStoreStoreState {
       {required super.latLng,
       required super.listFavoriteStore,
       required super.listOtherStore,
-      required super.initStores,
-      required super.selectedStore,
-      required super.nearestStore});
+      required super.nearestStore,
+      required super.initStores});
 }

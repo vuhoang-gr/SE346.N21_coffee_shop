@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../services/blocs/cart_button/cart_button_bloc.dart';
 import '../../services/blocs/cart_button/cart_button_state.dart';
 import '../../services/blocs/product_store/product_store_state.dart';
-import '../../utils/colors/app_colors.dart';
 import '../../utils/constants/dimension.dart';
 import '../../utils/styles/app_texts.dart';
 import '../../widgets/feature/menu_screen/pickup_store_picker.dart';

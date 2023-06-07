@@ -12,14 +12,14 @@ import '../../../utils/constants/dimension.dart';
 
 class ProductStoreBloc extends Bloc<ProductStoreEvent, ProductStoreState> {
   StreamSubscription<List<Food>>? _foodStoreSubscription;
-  ProductStoreBloc() : super(LoadingState(initFoods: [])) {
+  ProductStoreBloc() : super(LoadingState()) {
     on<FetchData>(_mapFetchData);
     on<UpdateFavorite>(_mapUpdateFavorite);
     on<GetDataFetched>(_mapGetDataFetched);
   }
 
   void _mapFetchData(FetchData event, Emitter<ProductStoreState> emit) {
-    emit(LoadingState(initFoods: state.initFoods));
+    emit(LoadingState());
     _foodStoreSubscription?.cancel();
     _foodStoreSubscription =
         FoodAPI().fetchData(event.stateFood).listen((listFoods) {
@@ -37,12 +37,11 @@ class ProductStoreBloc extends Bloc<ProductStoreEvent, ProductStoreState> {
 
   Future<void> _mapGetDataFetched(
       GetDataFetched event, Emitter<ProductStoreState> emit) async {
-    emit(LoadingState(initFoods: state.initFoods));
+    emit(LoadingState());
 
     Map<String, dynamic> foodObject = separateIntoNeededObject(event.listFoods);
 
     emit(FetchedState(
-      initFoods: event.listFoods,
       listFavoriteFood: foodObject["listFavoriteFood"],
       listOtherFood: foodObject["listOtherFood"],
     ));
@@ -56,17 +55,16 @@ class ProductStoreBloc extends Bloc<ProductStoreEvent, ProductStoreState> {
       List<Food> prevOtherFoods =
           (state as HasDataProductStoreState).listOtherFood;
       event.food.isFavorite = !event.food.isFavorite;
-      emit(LoadingState(initFoods: state.initFoods));
+      emit(LoadingState());
 
       _foodStoreSubscription?.pause();
       if (await FoodAPI().updateFavorite(event.food.id)) {
         //update favorite
 
         Map<String, dynamic> foodObject =
-            separateIntoNeededObject(state.initFoods);
+            separateIntoNeededObject(FoodAPI().currentFoods);
 
         emit(LoadedState(
-          initFoods: state.initFoods,
           listFavoriteFood: foodObject["listFavoriteFood"],
           listOtherFood: foodObject["listOtherFood"],
         ));
@@ -79,7 +77,6 @@ class ProductStoreBloc extends Bloc<ProductStoreEvent, ProductStoreState> {
             textColor: Colors.white,
             fontSize: Dimension.font14);
         emit(LoadedState(
-          initFoods: state.initFoods,
           listFavoriteFood: prevFavFoods,
           listOtherFood: prevOtherFoods,
         ));

@@ -13,7 +13,7 @@ import '../../apis/auth_api.dart';
 
 class AddressStoreBloc extends Bloc<AddressStoreEvent, AddressStoreState> {
   StreamSubscription<List<DeliveryAddress>>? _addressSubscription;
-  AddressStoreBloc() : super(LoadedState(listDeliveryAddress: [])) {
+  AddressStoreBloc() : super(LoadedState()) {
     on<FetchData>(_onFetchData);
     on<UpdateIndex>(_onUpdateIndex);
     on<DeleteIndex>(_onDeleteIndex);
@@ -22,7 +22,7 @@ class AddressStoreBloc extends Bloc<AddressStoreEvent, AddressStoreState> {
   }
 
   void _onFetchData(FetchData event, Emitter<AddressStoreState> emit) {
-    emit(LoadingState(listDeliveryAddress: []));
+    emit(LoadingState());
     _addressSubscription?.cancel();
     _addressSubscription = AddressAPI()
         .fetchData(AuthAPI.currentUser!.id)
@@ -41,18 +41,18 @@ class AddressStoreBloc extends Bloc<AddressStoreEvent, AddressStoreState> {
 
   void _onUpdateAddresses(
       UpdateAddresses event, Emitter<AddressStoreState> emit) {
-    emit(LoadedState(listDeliveryAddress: event.listDeliveryAddress));
+    emit(LoadedState());
   }
 
   void _onUpdateIndex(
       UpdateIndex event, Emitter<AddressStoreState> emit) async {
-    emit(LoadingState(listDeliveryAddress: state.listDeliveryAddress));
+    emit(LoadingState());
     _addressSubscription?.pause();
     if (await AddressAPI()
         .update(AuthAPI.currentUser!.id, event.index, event.deliveryAddress)) {
-      List<DeliveryAddress> deliveryAddresses = state.listDeliveryAddress;
+      List<DeliveryAddress> deliveryAddresses = AddressAPI().currentAddresses;
       deliveryAddresses[event.index] = event.deliveryAddress;
-      emit(LoadedState(listDeliveryAddress: deliveryAddresses));
+      emit(LoadedState());
     } else {
       Fluttertoast.showToast(
           msg: "Đã có lỗi xảy ra, hãy thử lại sau.",
@@ -60,7 +60,7 @@ class AddressStoreBloc extends Bloc<AddressStoreEvent, AddressStoreState> {
           timeInSecForIosWeb: 1,
           textColor: Colors.white,
           fontSize: Dimension.font14);
-      emit(LoadedState(listDeliveryAddress: state.listDeliveryAddress));
+      emit(LoadedState());
     }
     if (_addressSubscription?.isPaused ?? false) {
       _addressSubscription?.resume();
@@ -69,12 +69,12 @@ class AddressStoreBloc extends Bloc<AddressStoreEvent, AddressStoreState> {
 
   void _onDeleteIndex(
       DeleteIndex event, Emitter<AddressStoreState> emit) async {
-    emit(LoadingState(listDeliveryAddress: state.listDeliveryAddress));
+    emit(LoadingState());
     _addressSubscription?.pause();
     if (await AddressAPI().remove(AuthAPI.currentUser!.id, event.index)) {
-      List<DeliveryAddress> deliveryAddresses = state.listDeliveryAddress;
+      List<DeliveryAddress> deliveryAddresses = AddressAPI().currentAddresses;
       deliveryAddresses.removeAt(event.index);
-      emit(LoadedState(listDeliveryAddress: deliveryAddresses));
+      emit(LoadedState());
     } else {
       Fluttertoast.showToast(
           msg: "Đã có lỗi xảy ra, hãy thử lại sau.",
@@ -82,7 +82,7 @@ class AddressStoreBloc extends Bloc<AddressStoreEvent, AddressStoreState> {
           timeInSecForIosWeb: 1,
           textColor: Colors.white,
           fontSize: Dimension.font14);
-      emit(LoadedState(listDeliveryAddress: state.listDeliveryAddress));
+      emit(LoadedState());
     }
     if (_addressSubscription?.isPaused ?? false) {
       _addressSubscription?.resume();
@@ -90,13 +90,13 @@ class AddressStoreBloc extends Bloc<AddressStoreEvent, AddressStoreState> {
   }
 
   void _onInsert(Insert event, Emitter<AddressStoreState> emit) async {
-    emit(LoadingState(listDeliveryAddress: state.listDeliveryAddress));
+    emit(LoadingState());
     _addressSubscription?.pause();
     if (await AddressAPI()
         .push(AuthAPI.currentUser!.id, event.deliveryAddress)) {
-      List<DeliveryAddress> deliveryAddresses = state.listDeliveryAddress;
+      List<DeliveryAddress> deliveryAddresses = AddressAPI().currentAddresses;
       deliveryAddresses.add(event.deliveryAddress);
-      emit(LoadedState(listDeliveryAddress: deliveryAddresses));
+      emit(LoadedState());
     } else {
       Fluttertoast.showToast(
           msg: "Đã có lỗi xảy ra, hãy thử lại sau.",
@@ -104,7 +104,7 @@ class AddressStoreBloc extends Bloc<AddressStoreEvent, AddressStoreState> {
           timeInSecForIosWeb: 1,
           textColor: Colors.white,
           fontSize: Dimension.font14);
-      emit(LoadedState(listDeliveryAddress: state.listDeliveryAddress));
+      emit(LoadedState());
     }
     if (_addressSubscription?.isPaused ?? false) {
       _addressSubscription?.resume();

@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import '../../models/location.dart';
 
 class EditAddressState extends Equatable {
-  EditAddressState({
+  const EditAddressState({
     this.address,
     this.addressNote = "",
     this.nameReceiver = "",

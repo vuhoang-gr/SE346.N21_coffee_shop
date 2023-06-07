@@ -11,16 +11,24 @@ import 'package:coffee_shop_app/services/blocs/cart_cubit/cart_cubit.dart';
 import 'package:coffee_shop_app/services/blocs/edit_address/edit_address_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/map_picker/map_picker_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/pickup_timer/pickup_timer_cubit.dart';
+import 'package:coffee_shop_app/services/blocs/product_detail/product_detail_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/product_store/product_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/promo_store/promo_store_bloc.dart';
-import 'package:coffee_shop_app/services/blocs/promo_store/promo_store_event.dart';
+import 'package:coffee_shop_app/services/blocs/promo_store/promo_store_event.dart'
+    as promo_event;
 import 'package:coffee_shop_app/services/blocs/recent_see_products/recent_see_products_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/search_product/search_product_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/search_store/search_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_bloc.dart';
+import 'package:coffee_shop_app/services/blocs/size_store/size_store_bloc.dart';
+import 'package:coffee_shop_app/services/blocs/size_store/size_store_event.dart'
+    as size_event;
 import 'package:coffee_shop_app/services/blocs/store_store/store_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/store_store/store_store_event.dart'
     as store_event;
+import 'package:coffee_shop_app/services/blocs/topping_store/topping_store_bloc.dart';
+import 'package:coffee_shop_app/services/blocs/topping_store/topping_store_event.dart'
+    as topping_event;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +75,6 @@ void main() async {
     AuthAPI.currentUser = await AuthAPI().toUser(user);
   });
   initLatLng = await _determineUserCurrentPosition();
-
   runApp(MyApp());
 }
 
@@ -78,6 +85,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider<ToppingStoreBloc>(
+          create: (BuildContext context) =>
+              ToppingStoreBloc()..add(topping_event.FetchData()),
+        ),
+        BlocProvider<SizeStoreBloc>(
+          create: (BuildContext context) =>
+              SizeStoreBloc()..add(size_event.FetchData()),
+        ),
         BlocProvider<CartCubit>(
           create: (BuildContext context) => CartCubit(),
         ),
@@ -87,10 +102,6 @@ class MyApp extends StatelessWidget {
         BlocProvider<SearchStoreBloc>(
           create: (BuildContext context) => SearchStoreBloc(),
         ),
-        BlocProvider<StoreStoreBloc>(
-          create: (BuildContext context) => StoreStoreBloc()
-            ..add(store_event.FetchData(location: initLatLng)),
-        ),
         BlocProvider<AddressStoreBloc>(
           create: (BuildContext context) =>
               AddressStoreBloc()..add(address_event.FetchData()),
@@ -99,8 +110,11 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) => ProductStoreBloc(),
         ),
         BlocProvider<CartButtonBloc>(
-          create: (BuildContext context) => CartButtonBloc(
-              context.read<StoreStoreBloc>(), context.read<ProductStoreBloc>()),
+          create: (BuildContext context) => CartButtonBloc(context.read<ProductStoreBloc>()),
+        ),
+        BlocProvider<StoreStoreBloc>(
+          create: (BuildContext context) => StoreStoreBloc(context.read<CartButtonBloc>())
+            ..add(store_event.FetchData(location: initLatLng)),
         ),
         BlocProvider<RecentSeeProductsBloc>(
           create: (BuildContext context) =>
@@ -116,7 +130,15 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) => MapPickerBloc(),
         ),
         BlocProvider<PromoStoreBloc>(
-          create: (BuildContext context) => PromoStoreBloc()..add(FetchData()),
+          create: (BuildContext context) =>
+              PromoStoreBloc()..add(promo_event.FetchData()),
+        ),
+        BlocProvider<ProductDetailBloc>(
+          create: (BuildContext context) =>
+              ProductDetailBloc(
+                productStoreBloc: context.read<ProductStoreBloc>(), 
+                sizeStoreBloc: context.read<SizeStoreBloc>(), 
+                toppingStoreBloc: context.read<ToppingStoreBloc>()),
         ),
         BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
       ],

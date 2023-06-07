@@ -26,7 +26,14 @@ class StoreSelectionScreen extends StatefulWidget {
   State<StoreSelectionScreen> createState() => _StoreSelectionScreenState();
 }
 
-class _StoreSelectionScreenState extends State<StoreSelectionScreen>{
+class _StoreSelectionScreenState extends State<StoreSelectionScreen> {
+  @override
+  void didChangeDependencies() {
+    BlocProvider.of<StoreStoreBloc>(context)
+        .add(UpdateLocation(latLng: widget.latLng));
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -64,7 +71,7 @@ class _StoreSelectionScreenState extends State<StoreSelectionScreen>{
                         }).then((value) {
                           if (value != null && value is bool && value == true) {
                             Navigator.of(context).pop();
-                          } 
+                          }
                         });
                       }
                     },
