@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:coffee_shop_admin/main.dart';
 import 'package:coffee_shop_admin/screens/store_address/map_screen.dart';
 import 'package:coffee_shop_admin/services/blocs/edit_address/edit_address_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/edit_address/edit_address_event.dart';
@@ -275,15 +274,17 @@ class _AddressScreenState extends State<AddressScreen>
                                                       state.address!.lat,
                                                       state.address!.lng))
                                               .then((location) {
-                                            MLocation mLocation =
-                                                location as MLocation;
-                                            _mLocation = mLocation;
-                                            _addressController.text =
-                                                mLocation.formattedAddress;
-                                            BlocProvider.of<EditAddressBloc>(
-                                                    context)
-                                                .add(AddressChanged(
-                                                    address: mLocation));
+                                            if (location != null) {
+                                              MLocation mLocation =
+                                                  location as MLocation;
+                                              _mLocation = mLocation;
+                                              _addressController.text =
+                                                  mLocation.formattedAddress;
+                                              BlocProvider.of<EditAddressBloc>(
+                                                      context)
+                                                  .add(AddressChanged(
+                                                      address: mLocation));
+                                            }
                                           });
                                         } else {
                                           Navigator.of(context)
@@ -292,11 +293,13 @@ class _AddressScreenState extends State<AddressScreen>
                                                       10.871759281171983,
                                                       106.80328866625126))
                                               .then((location) {
-                                            _mLocation =
-                                                (location as MLocation);
-                                            _addressController.text =
-                                                (location as MLocation)
-                                                    .formattedAddress;
+                                            if (location != null) {
+                                              _mLocation =
+                                                  (location as MLocation);
+                                              _addressController.text =
+                                                  (location)
+                                                      .formattedAddress;
+                                            }
                                           });
                                         }
                                       },

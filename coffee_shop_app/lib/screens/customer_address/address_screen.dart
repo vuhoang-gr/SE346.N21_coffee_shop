@@ -412,11 +412,11 @@ class _AddressScreenState extends State<AddressScreen>
                                       focusNode: _phoneNumberFocusNode,
                                       style: AppText.style.regularBlack14,
                                       decoration: generateTextDecoration(
-                                          hintString: "0123456789"),
+                                          hintString: "Số điện thoại 10 số"),
                                       onFieldSubmitted: (_) {
                                         _submitForm(state);
                                       },
-                                      maxLength: 11,
+                                      maxLength: 10,
                                       validator: (value) {
                                         if (!isPhoneValid(value ?? "")) {
                                           return 'Vui lòng nhập đúng số điện thoại';
@@ -477,8 +477,7 @@ mixin InputValidationMixin {
   bool isNameValid(String name) => name.isNotEmpty;
 
   bool isPhoneValid(String phone) {
-    RegExp regex = RegExp(
-        r'^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$');
+    RegExp regex = RegExp(r'^(?:[+0]9)?[0-9]{10}$');
     return regex.hasMatch(phone);
   }
 }

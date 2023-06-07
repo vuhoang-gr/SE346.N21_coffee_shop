@@ -113,44 +113,48 @@ class _ProductDetailState extends State<ProductDetail> {
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                                 children: [
-                                                  Row(
-                                                    children: [
-                                                      Radio<Size>(
-                                                        value:
-                                                            state.productsSize[
-                                                                index],
-                                                        groupValue:
-                                                            state.selectedSize,
-                                                        onChanged: (value) {
-                                                          setState(() {
-                                                            if (value != null) {
-                                                              BlocProvider.of<
-                                                                          ProductDetailBloc>(
-                                                                      context)
-                                                                  .add(SelectSize(
-                                                                      selectedSize:
-                                                                          value));
-                                                            }
-                                                          });
-                                                        },
-                                                      ),
-                                                      RoundImage(
-                                                          imgUrl: state
-                                                              .productsSize[
-                                                                  index]
-                                                              .image),
-                                                      SizedBox(
-                                                        width:
-                                                            Dimension.height8,
-                                                      ),
-                                                      Text(
-                                                        state
-                                                            .productsSize[index]
-                                                            .name,
-                                                        style: AppText.style
-                                                            .regularBlack14,
-                                                      ),
-                                                    ],
+                                                  Expanded(
+                                                    child: Row(
+                                                      children: [
+                                                        Radio<Size>(
+                                                          value:
+                                                              state.productsSize[
+                                                                  index],
+                                                          groupValue:
+                                                              state.selectedSize,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              if (value != null) {
+                                                                BlocProvider.of<
+                                                                            ProductDetailBloc>(
+                                                                        context)
+                                                                    .add(SelectSize(
+                                                                        selectedSize:
+                                                                            value));
+                                                              }
+                                                            });
+                                                          },
+                                                        ),
+                                                        RoundImage(
+                                                            imgUrl: state
+                                                                .productsSize[
+                                                                    index]
+                                                                .image),
+                                                        SizedBox(
+                                                          width:
+                                                              Dimension.height8,
+                                                        ),
+                                                        Expanded(
+                                                          child: Text(
+                                                            state
+                                                                .productsSize[index]
+                                                                .name,
+                                                            style: AppText.style
+                                                                .regularBlack14,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                   Text(
                                                     '+${MoneyTransfer.transferFromDouble(state.productsSize[index].price)} ₫',
@@ -187,18 +191,21 @@ class _ProductDetailState extends State<ProductDetail> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        RichText(
-                                          text: TextSpan(
-                                            style: AppText.style.boldBlack16,
-                                            children: <TextSpan>[
-                                              const TextSpan(text: 'Topping '),
-                                              TextSpan(
-                                                text: '(maximum 2)',
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Topping",
+                                              style:
+                                                  AppText.style.boldBlack16,
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                ' (maximum 2)',
                                                 style:
                                                     AppText.style.regularGrey14,
-                                              )
-                                            ],
-                                          ),
+                                              ),
+                                            )
+                                          ],
                                         ),
                                         ListView.separated(
                                             padding: EdgeInsets.only(
@@ -247,7 +254,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                                         width:
                                                             Dimension.height8,
                                                       ),
-                                                      Flexible(
+                                                      Expanded(
                                                         child: Text(
                                                           state
                                                               .productsTopping[

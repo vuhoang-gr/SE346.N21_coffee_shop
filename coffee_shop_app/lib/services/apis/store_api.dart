@@ -80,6 +80,7 @@ class StoreAPI {
       }
     });
 
+    print(sizeIds);
     return Store(
         id: id,
         sb: data['shortName'],
