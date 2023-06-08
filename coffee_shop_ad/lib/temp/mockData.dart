@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:coffee_shop_admin/services/models/user.dart';
-import 'package:coffee_shop_admin/utils/constants/order_enum.dart';
 import 'package:coffee_shop_admin/services/models/location.dart';
 
 import '../services/models/drink.dart';
@@ -25,8 +24,7 @@ class FakeData {
     id: "st01",
     sb: "The Coffee House - Hoàng Diệu 2",
     address: MLocation(
-        formattedAddress:
-            '66E Đ. Hoàng Diệu 2, Phường Linh Trung, Thủ Đức, Thành phố Hồ Chí Minh 700000, Việt Nam',
+        formattedAddress: '66E Đ. Hoàng Diệu 2, Phường Linh Trung, Thủ Đức, Thành phố Hồ Chí Minh 700000, Việt Nam',
         lat: 10.859665592985602,
         lng: 106.76683457652881),
     phone: "01234567890",
@@ -53,8 +51,7 @@ class FakeData {
     description: 'Food description',
     // sizes: List.generate(4, (index) => sizeMock),
     // toppings: List.generate(4, (index) => toppingMock),
-    images: List.generate(4,
-        (index) => 'https://cdn-icons-png.flaticon.com/512/1377/1377194.png'),
+    images: List.generate(4, (index) => 'https://cdn-icons-png.flaticon.com/512/1377/1377194.png'),
   );
 
   // static Order orderMock = Order(

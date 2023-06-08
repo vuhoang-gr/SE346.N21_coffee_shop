@@ -13,6 +13,7 @@ import 'package:coffee_shop_admin/screens/main_page.dart';
 import 'package:coffee_shop_admin/screens/profile/profile_screen.dart';
 import 'package:coffee_shop_admin/screens/profile/profile_setting_screen.dart';
 import 'package:coffee_shop_admin/screens/promo/promo_create.dart';
+import 'package:coffee_shop_admin/screens/promo/promo_edit.dart';
 import 'package:coffee_shop_admin/screens/promo/promo_screen.dart';
 import 'package:coffee_shop_admin/screens/store/store_detail.dart';
 import 'package:coffee_shop_admin/screens/store_address/address_screen.dart';
@@ -20,6 +21,7 @@ import 'package:coffee_shop_admin/screens/store_address/map_screen.dart';
 import 'package:coffee_shop_admin/screens/user/user_screen.dart';
 import 'package:coffee_shop_admin/services/blocs/auth_action/auth_action_cubit.dart';
 import 'package:coffee_shop_admin/services/models/address.dart';
+import 'package:coffee_shop_admin/services/models/promo.dart';
 import 'package:coffee_shop_admin/services/models/topping.dart';
 
 import 'package:coffee_shop_admin/services/models/size.dart';
@@ -150,6 +152,9 @@ class AppRouter {
       case CreatePromoScreen.routeName:
         List<String> existCodes = settings.arguments as List<String>;
         return _createRoute(CreatePromoScreen(existCodeList: existCodes));
+      case EditPromoScreen.routeName:
+        Promo promo = settings.arguments as Promo;
+        return _createRoute(EditPromoScreen(promo: promo));
 
       case StoreScreen.routeName:
         Map<String, dynamic> arguments = settings.arguments as Map<String, dynamic>;

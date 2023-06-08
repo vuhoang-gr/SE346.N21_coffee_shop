@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_admin/screens/promo/promo_edit.dart';
 import 'package:coffee_shop_admin/services/functions/money_transfer.dart';
 import 'package:coffee_shop_admin/services/models/promo.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
@@ -95,7 +96,11 @@ class PromoDetailModal extends StatelessWidget {
                                 shape:
                                     const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(45)))),
                             onPressed: () {
-                              print("Press EDIT promo");
+                              Navigator.of(context)
+                                  .pushNamed(EditPromoScreen.routeName, arguments: promo)
+                                  .then((value) {
+                                Navigator.of(context).pop();
+                              });
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
