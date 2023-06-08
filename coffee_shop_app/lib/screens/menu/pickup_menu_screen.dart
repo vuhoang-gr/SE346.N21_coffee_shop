@@ -8,6 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../services/blocs/cart_button/cart_button_bloc.dart';
 import '../../services/blocs/cart_button/cart_button_state.dart';
 import '../../services/blocs/product_store/product_store_state.dart';
+import '../../services/blocs/store_store/store_store_bloc.dart';
+import '../../services/blocs/store_store/store_store_state.dart' as store_state;
 import '../../utils/constants/dimension.dart';
 import '../../utils/styles/app_texts.dart';
 import '../../widgets/feature/menu_screen/pickup_store_picker.dart';
@@ -60,8 +62,8 @@ class _PickupMenuScreenState extends State<PickupMenuScreen> {
                             BlocProvider.of<CartButtonBloc>(context).state;
                         BlocProvider.of<ProductStoreBloc>(context).add(
                             FetchData(
-                                stateFood: cartButtonState
-                                    .selectedStore?.stateFood));
+                                stateFood:
+                                    cartButtonState.selectedStore?.stateFood));
                       },
                       child: LayoutBuilder(builder:
                           (BuildContext context, BoxConstraints constraints) {
@@ -132,7 +134,14 @@ class _PickupMenuScreenState extends State<PickupMenuScreen> {
                     return SizedBox.shrink();
                   }
                 }),
-                CartButton(scrollController: _scrollController)
+                BlocBuilder<StoreStoreBloc, store_state.StoreStoreState>(
+                    builder: (context, state) {
+                  if (state is store_state.HasDataStoreStoreState) {
+                    return CartButton(scrollController: _scrollController);
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                })
               ],
             ),
           ),

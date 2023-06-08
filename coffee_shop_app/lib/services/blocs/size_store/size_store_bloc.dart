@@ -13,6 +13,7 @@ import '../../models/size.dart';
 class SizeStoreBloc extends Bloc<SizeStoreEvent, SizeStoreState> {
   StreamSubscription<List<Size>>? _sizeStoreSubscription;
   SizeStoreBloc() : super(LoadingState()) {
+    print('stateInit: sizeStore............................................');
     on<FetchData>(_mapFetchData);
     on<GetDataFetched>(_mapGetDataFetched);
   }

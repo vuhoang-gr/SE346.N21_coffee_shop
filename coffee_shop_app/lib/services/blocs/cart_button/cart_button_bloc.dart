@@ -16,6 +16,7 @@ class CartButtonBloc extends Bloc<CartButtonEvent, CartButtonState> {
   CartButtonBloc(this._foodStoreBloc)
       : super(CartButtonState(
             selectedStore: null, selectedDeliveryAddress: null, distance: 0)) {
+    print('stateInit: cartButton............................................');
     on<ChangeSelectedStore>(_mapChangeSelectedStoreToState);
     on<ChangeSelectedStoreButNotUse>(_mapChangeSelectedStoreButNotUse);
     on<ChangeSelectedDeliveryAddress>(_mapChangeSelectedAddressToState);
@@ -25,7 +26,8 @@ class CartButtonBloc extends Bloc<CartButtonEvent, CartButtonState> {
 
   void _mapChangeSelectedStoreToState(
       ChangeSelectedStore event, Emitter<CartButtonState> emit) {
-    double distance = calculateDistanceStoreAndLatLng(event.selectedStore, initLatLng);
+    double distance =
+        calculateDistanceStoreAndLatLng(event.selectedStore, initLatLng);
 
     emit(CartButtonState(
         selectedStore: event.selectedStore,

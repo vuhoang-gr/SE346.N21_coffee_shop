@@ -200,9 +200,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                               itemBuilder:
                                                   (BuildContext context,
                                                       int index) {
-                                                return ProductItem(
-                                                  product: state
-                                                      .recentSeeProducts[index],
+                                                return Card(
+                                                  margin: EdgeInsets.zero,
+                                                  child: Padding(
+                                                    padding: EdgeInsets.symmetric(
+                                                      vertical: Dimension.height4,
+                                                      horizontal: Dimension.width4
+                                                    ),
+                                                    child: ProductItem(
+                                                      product: state
+                                                          .recentSeeProducts[index],
+                                                    ),
+                                                  ),
                                                 );
                                               },
                                               itemCount: state

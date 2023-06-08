@@ -19,6 +19,7 @@ class StoreStoreBloc extends Bloc<StoreStoreEvent, StoreStoreState> {
   final CartButtonBloc _cartButtonBloc;
   StoreStoreBloc(this._cartButtonBloc)
       : super(LoadingState(initStores: [], latLng: null)) {
+    print('stateInit: storeStore............................................');
     on<FetchData>(_mapFetchData);
     on<UpdateFavorite>(_mapUpdateFavorite);
     on<UpdateLocation>(_mapUpdateLocation);

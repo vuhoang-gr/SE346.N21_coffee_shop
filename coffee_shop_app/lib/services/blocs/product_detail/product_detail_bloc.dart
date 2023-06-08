@@ -15,8 +15,11 @@ import 'package:coffee_shop_app/services/blocs/topping_store/topping_store_state
 import 'package:coffee_shop_app/services/blocs/size_store/size_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/topping_store/topping_store_bloc.dart';
 import 'package:coffee_shop_app/services/models/food.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../utils/constants/dimension.dart';
 import '../../models/size.dart';
 import '../../models/topping.dart';
 
@@ -409,7 +412,23 @@ class ProductDetailBloc extends Bloc<ProductDetailEvent, ProductDetailState> {
     if (state is LoadedState) {
       LoadedState loadedState = state as LoadedState;
 
-      loadedState.selectedToppings[event.index] = !loadedState.selectedToppings[event.index];
+      if (loadedState.selectedToppings[event.index] == false) {
+        int numberSelected = loadedState.selectedToppings
+            .map((e) => e ? 1 : 0)
+            .reduce((value, element) => value + element);
+        if (numberSelected >= 2) {
+          Fluttertoast.showToast(
+              msg: "Chỉ được phép chọn nhiều nhất 2 topping.",
+              toastLength: Toast.LENGTH_SHORT,
+              timeInSecForIosWeb: 1,
+              textColor: Colors.white,
+              fontSize: Dimension.font14);
+          return;
+        }
+      }
+
+      loadedState.selectedToppings[event.index] =
+          !loadedState.selectedToppings[event.index];
 
       emit(LoadedState(
           selectedFood: loadedState.selectedFood,
@@ -428,6 +447,21 @@ class ProductDetailBloc extends Bloc<ProductDetailEvent, ProductDetailState> {
       SelectToppingWithValue event, Emitter<ProductDetailState> emit) {
     if (state is LoadedState) {
       LoadedState loadedState = state as LoadedState;
+
+      if (event.value == true) {
+        int numberSelected = loadedState.selectedToppings
+            .map((e) => e ? 1 : 0)
+            .reduce((value, element) => value + element);
+        if (numberSelected >= 2) {
+          Fluttertoast.showToast(
+              msg: "Chỉ được phép chọn nhiều nhất 2 topping.",
+              toastLength: Toast.LENGTH_SHORT,
+              timeInSecForIosWeb: 1,
+              textColor: Colors.white,
+              fontSize: Dimension.font14);
+          return;
+        }
+      }
 
       loadedState.selectedToppings[event.index] = event.value;
 

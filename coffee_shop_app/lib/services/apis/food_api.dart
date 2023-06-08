@@ -20,6 +20,10 @@ class FoodAPI {
 
   Stream<List<Food>> fetchData(Map<String, List<String>>? stateFood) {
     return foodReference.snapshots().asyncMap<List<Food>>((snapshot) async {
+      if (stateFood == null) {
+        return [];
+      }
+      
       List<dynamic> favoriteFoods = [];
       if (AuthAPI.currentUser != null) {
         DocumentSnapshot userData =
@@ -32,8 +36,7 @@ class FoodAPI {
 
       List<Food> foods = [];
       for (var doc in snapshot.docs) {
-        bool isAvailable = (stateFood == null ||
-            stateFood[doc.id] == null ||
+        bool isAvailable = (stateFood[doc.id] == null ||
             stateFood[doc.id]!.isNotEmpty);
         Food? food = await fromFireStore(
             doc.data() as Map<String, dynamic>, doc.id, isAvailable);
@@ -77,8 +80,8 @@ class FoodAPI {
       name: data["name"],
       price: data["price"].toDouble(),
       description: data["description"],
-      sizes: data['sizes']?.cast<String>()??[],
-      toppings: data['toppings']?.cast<String>()??[],
+      sizes: data['sizes']?.cast<String>() ?? [],
+      toppings: data['toppings']?.cast<String>() ?? [],
       images: data["images"].cast<String>(),
       dateRegister: data["createAt"].toDate(),
       isAvailable: isAvailable,
