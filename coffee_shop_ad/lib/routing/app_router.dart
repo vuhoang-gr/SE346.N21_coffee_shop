@@ -1,4 +1,5 @@
 import 'package:coffee_shop_admin/screens/auth/auth_screen.dart';
+import 'package:coffee_shop_admin/screens/drink_manage/drink_create.dart';
 import 'package:coffee_shop_admin/screens/drink_manage/drink_detail.dart';
 
 import 'package:coffee_shop_admin/screens/drink_manage/size_create.dart';
@@ -47,8 +48,7 @@ class AppRouter {
         const end = Offset.zero;
         const curve = Curves.ease;
 
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
         return SlideTransition(
           position: animation.drive(tween),
@@ -94,6 +94,9 @@ class AppRouter {
 
       case ProfileSettingScreen.routeName:
         return _createRoute(ProfileSettingScreen());
+
+      case CreateDrinkScreen.routeName:
+        return _createRoute(CreateDrinkScreen());
 
       case CreateToppingScreen.routeName:
         return _createRoute(CreateToppingScreen());
@@ -149,10 +152,8 @@ class AppRouter {
         return _createRoute(CreatePromoScreen(existCodeList: existCodes));
 
       case StoreScreen.routeName:
-        Map<String, dynamic> arguments =
-            settings.arguments as Map<String, dynamic>;
-        bool isPurposeForShowDetail =
-            arguments['isPurposeForShowDetail'] ?? false;
+        Map<String, dynamic> arguments = settings.arguments as Map<String, dynamic>;
+        bool isPurposeForShowDetail = arguments['isPurposeForShowDetail'] ?? false;
         return _createRoute(StoreScreen(
           isPurposeForShowDetail: isPurposeForShowDetail,
         ));

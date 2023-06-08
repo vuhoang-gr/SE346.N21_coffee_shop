@@ -1,3 +1,4 @@
+import 'package:coffee_shop_admin/screens/drink_manage/drink_create.dart';
 import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_event.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
@@ -37,15 +38,13 @@ class _DrinkListState extends State<DrinkScreen> {
           Expanded(
             child: Container(
               decoration: const BoxDecoration(color: Colors.white),
-              child: BlocBuilder<DrinkListBloc, DrinkListState>(
-                  builder: (context, state) {
+              child: BlocBuilder<DrinkListBloc, DrinkListState>(builder: (context, state) {
                 if (state is LoadedState) {
                   return Stack(
                     children: [
                       RefreshIndicator(
                         onRefresh: () async {
-                          BlocProvider.of<DrinkListBloc>(context)
-                              .add(FetchData());
+                          BlocProvider.of<DrinkListBloc>(context).add(FetchData());
                         },
                         child: ListView(
                           controller: _scrollController,
@@ -58,12 +57,12 @@ class _DrinkListState extends State<DrinkScreen> {
                                 child: ElevatedButton(
                                     style: roundedButton,
                                     onPressed: () {
-                                      // Navigator.of(context).pushNamed(
-                                      //     CreateSizeScreen.routeName);
+                                      Navigator.of(context).pushNamed(CreateDrinkScreen.routeName).then((value) {
+                                        BlocProvider.of<DrinkListBloc>(context).add(FetchData());
+                                      });
                                     },
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Icon(
                                           Icons.add,
@@ -79,9 +78,7 @@ class _DrinkListState extends State<DrinkScreen> {
                             ...(state.listFood
                                 .map((product) => Container(
                                       padding: EdgeInsets.only(
-                                          bottom: Dimension.height8,
-                                          left: Dimension.width16,
-                                          right: Dimension.width16),
+                                          bottom: Dimension.height8, left: Dimension.width16, right: Dimension.width16),
                                       child: (DrinkItem(
                                         product: product,
                                       )),
