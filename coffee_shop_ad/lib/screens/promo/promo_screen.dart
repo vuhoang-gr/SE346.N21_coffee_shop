@@ -121,7 +121,7 @@ class _PromoScreenState extends State<PromoScreen> {
                             height: Dimension.height8,
                           );
                         },
-                        itemCount: 10));
+                        itemCount: 6));
               } else {
                 print("Something's wrong in promo screen");
                 return SizedBox.shrink();
