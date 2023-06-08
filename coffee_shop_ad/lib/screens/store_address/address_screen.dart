@@ -5,16 +5,16 @@ import 'package:coffee_shop_admin/services/blocs/edit_address/edit_address_event
 import 'package:coffee_shop_admin/services/blocs/edit_address/edit_address_state.dart';
 import 'package:coffee_shop_admin/services/blocs/store_store/store_store_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/store_store/store_store_event.dart';
+import 'package:coffee_shop_admin/services/models/address.dart';
 import 'package:coffee_shop_admin/services/models/location.dart';
+import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
+import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
+import 'package:coffee_shop_admin/widgets/global/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-import '../../services/models/address.dart';
-import '../../utils/colors/app_colors.dart';
-import '../../utils/constants/dimension.dart';
-import '../../utils/styles/app_texts.dart';
-import '../../widgets/global/custom_app_bar.dart';
+import 'package:quickalert/quickalert.dart';
 
 MLocation _mLocation = MLocation(formattedAddress: "HCM", lat: 10.871759281171983, lng: 106.80328866625126);
 
@@ -209,7 +209,7 @@ class _AddressScreenState extends State<AddressScreen> with InputValidationMixin
               children: [
                 CustomAppBar(
                   leading: Text(
-                    _isCreatingNewAddress ? "New address" : "Edit address",
+                    _isCreatingNewAddress ? "Create store" : "Edit store",
                     style: AppText.style.boldBlack18,
                   ),
                   trailing: !_isCreatingNewAddress ? dialogButton : const SizedBox(),
@@ -379,16 +379,29 @@ class _AddressScreenState extends State<AddressScreen> with InputValidationMixin
 
   void _submitForm(EditAddressState editAddressState) async {
     if (_formKey.currentState?.validate() ?? false) {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.loading,
+        title: 'Loading',
+        text: 'Creating your new store...',
+      );
+      await Future.delayed(Duration(seconds: 1));
       await FirebaseFirestore.instance.collection("Store").add({
         "address": {"formattedAddress": _mLocation.formattedAddress, "lat": _mLocation.lat, "lng": _mLocation.lng},
         "images": ["https://lh5.googleusercontent.com/p/AF1QipNIXjtOoJOOUiV7gx3oXW0Kcesi_GWmoy20gZz_=w408-h306-k-no"],
         "phone": editAddressState.phone,
         "shortName": editAddressState.nameReceiver,
+      }).then((value) {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        BlocProvider.of<StoreStoreBloc>(context).add(FetchData());
+        QuickAlert.show(
+          context: context,
+          type: QuickAlertType.success,
+          text: 'Completed Successfully!',
+          confirmBtnText: "Ok",
+        );
       });
-      // ignore: use_build_context_synchronously
-      Navigator.of(context).pop();
-      // ignore: use_build_context_synchronously
-      BlocProvider.of<StoreStoreBloc>(context).add(FetchData());
     }
   }
 }

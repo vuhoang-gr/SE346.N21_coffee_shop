@@ -47,14 +47,12 @@ class _StoreScreenState extends State<StoreScreen> {
                     style: AppText.style.boldBlack18,
                   ),
                 ),
-                Expanded(child: BlocBuilder<StoreStoreBloc, StoreStoreState>(
-                    builder: (context, state) {
+                Expanded(child: BlocBuilder<StoreStoreBloc, StoreStoreState>(builder: (context, state) {
                   if (state is LoadedState) {
                     print("loaded");
                     return RefreshIndicator(
                         onRefresh: () async {
-                          BlocProvider.of<StoreStoreBloc>(context)
-                              .add(FetchData());
+                          BlocProvider.of<StoreStoreBloc>(context).add(FetchData());
                         },
                         child: SingleChildScrollView(
                           physics: AlwaysScrollableScrollPhysics(),
@@ -62,49 +60,41 @@ class _StoreScreenState extends State<StoreScreen> {
                             padding: EdgeInsets.symmetric(
                               horizontal: Dimension.width16,
                             ),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    height: Dimension.height16,
-                                  ),
-                                  ElevatedButton(
-                                      style: roundedButton,
-                                      onPressed: () {
-                                        // Navigator.of(context)
-                                        //     .pushNamed(AddNewStore.routeName);
-                                        Navigator.of(context)
-                                            .pushNamed(AddressScreen.routeName);
-                                      },
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.add,
-                                            color: Colors.white,
-                                          ),
-                                          Text(
-                                            'New store...',
-                                            style: AppText.style.regularWhite16,
-                                          )
-                                        ],
-                                      )),
-                                  generateListView(state.stores),
-                                  SizedBox(
-                                    height: Dimension.height16,
-                                  )
-                                ]),
+                            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                              SizedBox(
+                                height: Dimension.height16,
+                              ),
+                              ElevatedButton(
+                                  style: roundedButton,
+                                  onPressed: () {
+                                    Navigator.of(context).pushNamed(AddressScreen.routeName);
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.add,
+                                        color: Colors.white,
+                                      ),
+                                      Text(
+                                        'New store...',
+                                        style: AppText.style.regularWhite16,
+                                      )
+                                    ],
+                                  )),
+                              generateListView(state.stores),
+                              SizedBox(
+                                height: Dimension.height16,
+                              )
+                            ]),
                           ),
                         ));
                   } else if (state is LoadingState) {
                     print("loading");
 
                     return Padding(
-                      padding: EdgeInsets.only(
-                          right: Dimension.width16,
-                          left: Dimension.width16,
-                          top: Dimension.height16),
+                      padding:
+                          EdgeInsets.only(right: Dimension.width16, left: Dimension.width16, top: Dimension.height16),
                       child: ListView.separated(
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
