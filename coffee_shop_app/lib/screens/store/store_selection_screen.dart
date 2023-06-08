@@ -1,3 +1,4 @@
+import 'package:coffee_shop_app/screens/store/store_detail.dart';
 import 'package:coffee_shop_app/screens/store/store_search_screen.dart';
 import 'package:coffee_shop_app/services/blocs/store_store/store_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/store_store/store_store_event.dart';
@@ -70,7 +71,12 @@ class _StoreSelectionScreenState extends State<StoreSelectionScreen> {
                               widget.isPurposeForShowDetail,
                         }).then((value) {
                           if (value != null && value is bool && value == true) {
-                            Navigator.of(context).pop();
+                            if (widget.isPurposeForShowDetail) {
+                              //change to menu 
+                              DefaultTabController.of(context).index = 1;
+                            } else {
+                              Navigator.of(context).pop();
+                            }
                           }
                         });
                       }
@@ -245,7 +251,14 @@ class _StoreSelectionScreenState extends State<StoreSelectionScreen> {
     VoidCallback tapHandler;
     if (isPurposeForShowDetail) {
       tapHandler = () {
-        Navigator.of(context).pushNamed("/store_detail", arguments: store);
+        Navigator.of(context)
+            .pushNamed(StoreDetail.routeName, arguments: store)
+            .then((value) {
+          if (value != null && value is bool && value == true) {
+            //pop to menu
+            DefaultTabController.of(context).index = 1;
+          }
+        });
       };
     } else {
       tapHandler = () {

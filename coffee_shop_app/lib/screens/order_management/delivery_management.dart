@@ -31,38 +31,41 @@ class DeliveryManagement extends StatelessWidget {
                   onRefresh: () async {
                     BlocProvider.of<OrderDeliveryCubit>(context).needLoad();
                   },
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: ListView.separated(
-                            padding: EdgeInsets.symmetric(
-                                vertical: Dimension.height16),
-                            shrinkWrap: true,
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              return OrderCard(
-                                order: state.listDeliveryOrders[index],
-                              );
-                            },
-                            separatorBuilder: (_, __) => SizedBox(
-                                  height: Dimension.height12,
-                                ),
-                            itemCount: state.listDeliveryOrders.length),
+                  child: LayoutBuilder(builder:
+                      (BuildContext context, BoxConstraints constraints) {
+                    return ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
                       ),
-                    ],
-                  ),
+                      child: ListView.separated(
+                          padding: EdgeInsets.symmetric(
+                              vertical: Dimension.height16),
+                          shrinkWrap: true,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return OrderCard(
+                              order: state.listDeliveryOrders[index],
+                            );
+                          },
+                          separatorBuilder: (_, __) => SizedBox(
+                                height: Dimension.height12,
+                              ),
+                          itemCount: state.listDeliveryOrders.length),
+                    );
+                  }),
                 ))
             : RefreshIndicator(
                 onRefresh: () async {
                   BlocProvider.of<OrderDeliveryCubit>(context).needLoad();
                 },
-                child: SingleChildScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  child: ColoredBox(
-                    color: Colors.white,
-                    child: SizedBox(
-                      height: double.maxFinite,
-                      width: double.maxFinite,
+                child: LayoutBuilder(builder:
+                    (BuildContext context, BoxConstraints constraints) {
+                  return ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
+                    child: SingleChildScrollView(
+                      physics: AlwaysScrollableScrollPhysics(),
                       child: Column(
                         children: [
                           SizedBox(
@@ -114,8 +117,8 @@ class DeliveryManagement extends StatelessWidget {
                         ],
                       ),
                     ),
-                  ),
-                ),
+                  );
+                }),
               );
       }
     });

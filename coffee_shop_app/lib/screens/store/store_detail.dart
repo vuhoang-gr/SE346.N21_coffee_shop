@@ -21,6 +21,7 @@ import '../../widgets/global/container_card.dart';
 import '../../widgets/global/custom_app_bar.dart';
 
 class StoreDetail extends StatefulWidget {
+  static const String routeName = "/store_detail";
   const StoreDetail({super.key, required this.store});
   final Store store;
 
@@ -104,25 +105,11 @@ class _StoreDetailState extends State<StoreDetail> {
                                                     BlocProvider.of<
                                                                 CartButtonBloc>(
                                                             context)
-                                                        .add(ChangeSelectedOrderType(
-                                                            selectedOrderType:
-                                                                OrderType
-                                                                    .storePickup));
-                                                    BlocProvider.of<
-                                                                CartButtonBloc>(
-                                                            context)
                                                         .add(ChangeSelectedStore(
                                                             selectedStore:
                                                                 selectedStore!));
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    MainPage(
-                                                                      selectedPage:
-                                                                          1,
-                                                                    )));
+                                                    Navigator.of(context)
+                                                        .pop(true);
                                                   },
                                                   child: Column(
                                                     crossAxisAlignment:
@@ -177,16 +164,15 @@ class _StoreDetailState extends State<StoreDetail> {
                                                         .add(ChangeSelectedStoreButNotUse(
                                                             selectedStore:
                                                                 selectedStore!));
-
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    MainPage(
-                                                                      selectedPage:
-                                                                          1,
-                                                                    )));
+                                                    BlocProvider.of<
+                                                                CartButtonBloc>(
+                                                            context)
+                                                        .add(ChangeSelectedOrderType(
+                                                            selectedOrderType:
+                                                                OrderType
+                                                                    .delivery));
+                                                    Navigator.of(context)
+                                                        .pop(true);
                                                   },
                                                   child: Column(
                                                     crossAxisAlignment:
