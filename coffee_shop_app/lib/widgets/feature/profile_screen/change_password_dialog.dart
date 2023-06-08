@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../../utils/constants/dimension.dart';
@@ -21,37 +23,81 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
   TextEditingController confirmPassController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    bool canChangePassword() {
+      if (PasswordValidator().validate(oldPassController.text) &&
+          PasswordValidator().validate(newPassController.text) &&
+          ConfirmPasswordValidator(oldPassword: newPassController)
+              .validate(confirmPassController.text)) {
+        return true;
+      }
+      return false;
+    }
+
+    onSubmit() async {
+      if (!canChangePassword()) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Something is wrong. Try again!'),
+          ),
+        );
+        return false;
+      }
+      var rawUser = FirebaseAuth.instance.currentUser;
+      final credential = EmailAuthProvider.credential(
+          email: rawUser!.email!, password: oldPassController.text);
+      try {
+        await rawUser.reauthenticateWithCredential(credential);
+        await rawUser.updatePassword(newPassController.text);
+        return true;
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Wrong password. Try again!'),
+          ),
+        );
+        return false;
+      }
+    }
+
     return SwipeUpDialog(
+      context: context,
       child: Column(
         children: [
           Text(
-            "Password Change",
+            "Thay đổi mật khẩu",
             style: AppText.style.mediumBlack16.copyWith(fontSize: 18),
           ),
           CustormTextForm(
             margin: EdgeInsets.symmetric(vertical: 20),
             controller: oldPassController,
-            label: 'Old Password',
+            label: 'Mật khẩu cũ',
             secure: true,
             validator: PasswordValidator(),
           ),
           CustormTextForm(
             controller: newPassController,
-            label: 'New Password',
+            label: 'Mật khẩu mới',
             secure: true,
             validator: PasswordValidator(),
           ),
           CustormTextForm(
             margin: EdgeInsets.symmetric(vertical: 20),
             controller: confirmPassController,
-            label: 'Confirm New Password',
+            label: 'Nhập lại mật khẩu mới',
             secure: true,
             validator: ConfirmPasswordValidator(oldPassword: newPassController),
           ),
           RoundedButton(
-            onPressed: () {},
+            onPressed: () async {
+              bool changed = await onSubmit();
+              if (changed) {
+                if (context.mounted) {
+                  Navigator.pop(context, true);
+                }
+              }
+            },
             height: Dimension.getHeightFromValue(40),
-            label: 'SAVE PASSWORD',
+            label: 'LƯU MẬT KHẨU',
           ),
           SizedBox(
             height: Dimension.getHeightFromValue(15),
@@ -59,6 +105,5 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
         ],
       ),
     );
-    ;
   }
 }

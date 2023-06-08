@@ -32,15 +32,17 @@ class CustomAppBar extends StatelessWidget {
                   ? IconButton(
                       icon: IconTheme(
                           data: IconThemeData(size: Dimension.height32),
-                          child: const Icon(
+                          child: Icon(
                             Icons.chevron_left_rounded,
-                            color: AppColors.blackColor,
+                            color: color != Color.fromARGB(221, 71, 71, 71)
+                                ? AppColors.blackColor
+                                : Colors.white,
                           )),
                       onPressed: () => Navigator.of(context).maybePop(),
                     )
                   : SizedBox(
-                    width: Dimension.width16,
-                  ),
+                      width: Dimension.width16,
+                    ),
               if (leading != null) leading!,
             ],
           ),
@@ -51,7 +53,10 @@ class CustomAppBar extends StatelessWidget {
           SizedBox(
             width: Dimension.width8,
           ),
-          trailing ?? SizedBox(width: Dimension.width16,),
+          trailing ??
+              SizedBox(
+                width: Dimension.width16,
+              ),
         ],
       ),
     );
