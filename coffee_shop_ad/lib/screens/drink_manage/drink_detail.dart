@@ -8,6 +8,7 @@ import 'package:coffee_shop_admin/utils/styles/button.dart';
 import 'package:coffee_shop_admin/widgets/feature/drink_detail_widgets/product_card.dart';
 import 'package:coffee_shop_admin/widgets/feature/drink_detail_widgets/round_image.dart';
 import 'package:coffee_shop_admin/widgets/global/custom_app_bar.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:quickalert/quickalert.dart';
 
@@ -50,21 +51,17 @@ class _DrinkDetailState extends State<DrinkDetail> {
         cancelBtnText: 'No',
         confirmBtnColor: Colors.green,
         onConfirmBtnTap: () async {
-          // TODO: Remove all image of drink
-
           Navigator.of(context).pop();
-          // String imgUrl = widget.product.image;
-
           QuickAlert.show(
             context: context,
             type: QuickAlertType.loading,
             title: 'Loading',
             text: 'Deleting ${widget.product.name}',
           );
+          List imgUrls = widget.product.images;
 
           try {
             await FirebaseFirestore.instance.collection("Food").doc(widget.product.id).delete().then((value) {
-              // TODO: remove img on Storage
               Navigator.of(context).pop();
               Navigator.of(context).pop();
               QuickAlert.show(
@@ -73,6 +70,10 @@ class _DrinkDetailState extends State<DrinkDetail> {
                 text: 'Completed Successfully!',
                 confirmBtnText: "Ok",
               );
+
+              for (final img in imgUrls) {
+                FirebaseStorage.instance.refFromURL(img).delete();
+              }
             });
           } catch (e) {
             print("Something wrong when delete size");

@@ -12,7 +12,6 @@ import 'package:coffee_shop_admin/widgets/feature/promo_screen/promo_skeleton.da
 import 'package:coffee_shop_admin/widgets/global/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class PromoScreen extends StatefulWidget {
   static const String routeName = "/promo_screen";
@@ -44,8 +43,7 @@ class _PromoScreenState extends State<PromoScreen> {
             ),
           ),
           Expanded(
-            child:
-                BlocBuilder<PromoBloc, PromoState>(builder: (context, state) {
+            child: BlocBuilder<PromoBloc, PromoState>(builder: (context, state) {
               if (state is LoadedState) {
                 return Stack(
                   children: [
@@ -65,11 +63,9 @@ class _PromoScreenState extends State<PromoScreen> {
                                   style: roundedButton,
                                   onPressed: () {
                                     Navigator.of(context)
-                                        .pushNamed(CreatePromoScreen.routeName,
-                                            arguments: state.listExistCode)
+                                        .pushNamed(CreatePromoScreen.routeName, arguments: state.listExistCode)
                                         .then((value) {
-                                      BlocProvider.of<PromoBloc>(context)
-                                          .add(FetchData());
+                                      BlocProvider.of<PromoBloc>(context).add(FetchData());
                                     });
                                   },
                                   child: Row(
@@ -89,9 +85,7 @@ class _PromoScreenState extends State<PromoScreen> {
                           ...(state.initPromos
                               .map((product) => Container(
                                     padding: EdgeInsets.only(
-                                        bottom: Dimension.height8,
-                                        left: Dimension.width16,
-                                        right: Dimension.width16),
+                                        bottom: Dimension.height8, left: Dimension.width16, right: Dimension.width16),
                                     child: (PromoItem(
                                       promo: product,
                                     )),
@@ -107,9 +101,7 @@ class _PromoScreenState extends State<PromoScreen> {
                 );
               } else if (state is LoadingState) {
                 return Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: Dimension.width16,
-                        vertical: Dimension.height16),
+                    padding: EdgeInsets.symmetric(horizontal: Dimension.width16, vertical: Dimension.height16),
                     child: ListView.separated(
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
