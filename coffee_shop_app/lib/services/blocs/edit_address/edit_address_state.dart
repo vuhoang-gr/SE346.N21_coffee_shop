@@ -22,7 +22,7 @@ class EditAddressState extends Equatable {
     String? phone,
   }) {
     return EditAddressState(
-      address: address,
+      address: address ?? this.address,
       addressNote: addressNote ?? this.addressNote,
       nameReceiver: nameReceiver ?? this.nameReceiver,
       phone: phone ?? this.phone,

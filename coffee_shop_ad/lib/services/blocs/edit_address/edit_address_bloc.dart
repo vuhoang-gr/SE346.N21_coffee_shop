@@ -46,13 +46,17 @@ class EditAddressBloc extends Bloc<EditAddressEvent, EditAddressState> {
   }
 
   void _onInitForm(InitForm event, Emitter<EditAddressState> emit) {
-    emit(
-      state.copyWith(
-        address: event.deliveryAddress?.address,
-        addressNote: event.deliveryAddress?.addressNote ?? "",
-        nameReceiver: event.deliveryAddress?.nameReceiver ?? "",
-        phone: event.deliveryAddress?.phone ?? "",
-      ),
-    );
+    if (event.deliveryAddress == null) {
+      emit(EditAddressState());
+    } else {
+      emit(
+        state.copyWith(
+          address: event.deliveryAddress!.address,
+          addressNote: event.deliveryAddress!.addressNote,
+          nameReceiver: event.deliveryAddress!.nameReceiver,
+          phone: event.deliveryAddress!.phone,
+        ),
+      );
+    }
   }
 }

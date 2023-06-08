@@ -154,7 +154,7 @@ class AppRouter {
       case SearchProductScreen.routeName:
         return _createRoute(SearchProductScreen());
 
-      case "/store_detail":
+      case StoreDetail.routeName:
         Store args = settings.arguments as Store;
         return _createRoute(StoreDetail(
           store: args,
