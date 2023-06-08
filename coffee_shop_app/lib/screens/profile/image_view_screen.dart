@@ -58,14 +58,12 @@ class ImageViewScreen extends StatelessWidget {
         if (context.mounted) {
           context.read<AppCubit>().changeState(AppLoaded());
           Navigator.pop(context);
-          Navigator.pop(context);
         }
 
         return url;
       } catch (e) {
         print('Image upload failed: $e');
         context.read<AppCubit>().changeState(AppLoaded());
-        Navigator.pop(context);
         Navigator.pop(context);
       }
     }

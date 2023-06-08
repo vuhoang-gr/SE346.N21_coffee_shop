@@ -190,6 +190,7 @@ class MyApp extends StatelessWidget {
                   BlocListener<AppCubit, AppState>(
                     listener: (context, state) {
                       if (state is AppLoading) {
+                        isDialogOpen = true;
                         showDialog(
                                 context: context,
                                 builder: (context) => LoadingScreen())
