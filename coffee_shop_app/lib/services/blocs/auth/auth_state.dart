@@ -6,7 +6,15 @@ abstract class AuthState extends Equatable {
   List<Object?> get props => [];
 }
 
-class UnAuthenticated extends AuthState {}
+class UnAuthenticated extends AuthState {
+  final String? message;
+  UnAuthenticated({this.message, pageState}) {
+    authActionState = pageState ?? SignIn();
+  }
+  late AuthActionState authActionState;
+  @override
+  List<Object?> get props => [message, authActionState];
+}
 
 class Authenticated extends AuthState {
   final User user;

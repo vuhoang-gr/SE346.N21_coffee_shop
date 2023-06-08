@@ -130,6 +130,7 @@ class AuthAPI {
       "dob": user.dob,
       "avatarUrl": user.avatarUrl,
       "coverUrl": user.coverUrl,
+      "phoneNumber": user.phoneNumber
     };
     return data;
   }
@@ -141,7 +142,9 @@ class AuthAPI {
       id: id,
       name: data['name'],
       phoneNumber: data['phoneNumber'] ?? 'No Phone Number',
-      dob: data['dob'],
+      dob: DateTime.tryParse(
+              (data['dob'] ?? Timestamp.now()).toDate().toString()) ??
+          DateTime.now(),
       isActive: data['isActive'],
       avatarUrl: data['avatarUrl'],
       coverUrl: data['coverUrl'],
@@ -171,6 +174,7 @@ class AuthAPI {
 
   update(User user) async {
     await firestore.collection('users').doc(user.id).update(toFireStore(user));
+    currentUser = user;
   }
 
   Future<User?> toUser(firebase_auth.User? raw) async {
