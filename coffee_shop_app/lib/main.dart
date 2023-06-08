@@ -1,10 +1,14 @@
 import 'package:coffee_shop_app/routing/app_router.dart';
 import 'package:coffee_shop_app/screens/auth/auth_screen.dart';
+import 'package:coffee_shop_app/screens/loading/loading_screen.dart';
+import 'package:coffee_shop_app/screens/loading/splash_screen.dart';
 import 'package:coffee_shop_app/screens/main_page.dart';
+import 'package:coffee_shop_app/screens/profile/image_view_screen.dart';
 import 'package:coffee_shop_app/services/apis/auth_api.dart';
 import 'package:coffee_shop_app/services/blocs/address_store/address_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/address_store/address_store_event.dart'
     as address_event;
+import 'package:coffee_shop_app/services/blocs/app_cubit/app_cubit.dart';
 import 'package:coffee_shop_app/services/blocs/auth/auth_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/auth_action/auth_action_cubit.dart';
 import 'package:coffee_shop_app/services/blocs/cart_cubit/cart_cubit.dart';
@@ -36,6 +40,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
 
@@ -72,18 +77,27 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FirebaseAuth.instance.authStateChanges().listen((User? user) async {
-    AuthAPI.currentUser = await AuthAPI().toUser(user);
-  });
   initLatLng = await _determineUserCurrentPosition();
-  runApp(MyApp());
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  var isRmb = prefs.getBool('isRemember') ?? false;
+
+  if (!isRmb) {
+    AuthAPI().signOut();
+  }
+  bool isOpened = true;
+  runApp(MyApp(
+    isOpened: isOpened,
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key, required this.isOpened});
+  bool isOpened;
 
   @override
   Widget build(BuildContext context) {
+    bool isDialogOpen = false;
+
     return MultiBlocProvider(
       providers: [
         BlocProvider<ToppingStoreBloc>(
@@ -149,22 +163,54 @@ class MyApp extends StatelessWidget {
               sizeStoreBloc: context.read<SizeStoreBloc>(),
               toppingStoreBloc: context.read<ToppingStoreBloc>()),
         ),
+        BlocProvider<AppCubit>(create: (context) => AppCubit())
       ],
       child: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
-          print(state);
+          var appState = context.read<AppCubit>().state;
+
+          FirebaseAuth.instance.userChanges().listen((User? user) async {
+            AuthAPI.currentUser = await AuthAPI().toUser(user);
+            if (context.mounted && isOpened) {
+              isOpened = false;
+              context
+                  .read<AuthBloc>()
+                  .add(UserChanged(user: AuthAPI.currentUser));
+            }
+          });
+          // print(state);
           return MaterialApp(
               title: 'Coffee Shop',
               theme: ThemeData(
                 primarySwatch: Colors.blue,
                 fontFamily: "Inter",
               ),
-              home: state is Authenticated
-                  ? MainPage()
-                  : BlocProvider<AuthActionCubit>(
-                      create: (context) => AuthActionCubit(),
-                      child: AuthScreen(),
-                    ),
+              home: MultiBlocListener(
+                listeners: [
+                  BlocListener<AppCubit, AppState>(
+                    listener: (context, state) {
+                      if (state is AppLoading) {
+                        isDialogOpen = true;
+                        showDialog(
+                                context: context,
+                                builder: (context) => LoadingScreen())
+                            .then((value) => isDialogOpen = false);
+                      } else if (state is AppLoaded && isDialogOpen) {
+                        Navigator.pop(context);
+                      }
+                    },
+                  ),
+                ],
+                child: state is Authenticated
+                    ? MainPage()
+                    : state is Loading
+                        ? SplashScreen()
+                        : BlocProvider<AuthActionCubit>(
+                            create: (context) => AuthActionCubit(),
+                            child: AuthScreen(),
+                          ),
+              ),
+              // home: LoadingScreen(),
               onGenerateRoute: AppRouter(authState: state).onGenerateRoute);
         },
       ),

@@ -73,77 +73,82 @@ class _CustormTextFormState extends State<CustormTextForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.05),
-            spreadRadius: 5,
-            blurRadius: 6,
-          ),
-        ],
-      ),
-      margin: widget.margin,
-      child: TextFormField(
-        readOnly: widget.haveDatePicker ? true : widget.readOnly,
-        style: AppText.style.regularWhite16.copyWith(
-          color: AppColors.blackColor,
-        ),
-        onTapOutside: (event) {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        onChanged: (value) {
-          if (!widget.verifiedCheck) return;
-          if (widget.validator!.validate(value)) {
-            setState(() {
-              _isValidate = true;
-            });
-          } else {
-            setState(() {
-              _isValidate = false;
-            });
-          }
-        },
-        controller: widget.controller,
-        validator:
-            widget.validator != null ? widget.validator!.validator : null,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        obscureText: widget.secure,
-        enableSuggestions: !widget.secure,
-        autocorrect: !widget.secure,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.white,
-          labelText: widget.label,
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: Dimension.getWidthFromValue(20),
-            vertical: Dimension.getHeightFromValue(10),
-          ),
-          alignLabelWithHint: false,
-          suffixIcon: widget.haveDatePicker
-              ? TouchableOpacity(
-                  unable: widget.readOnly,
-                  onTap: () {
-                    _selectDate(context);
-                  },
-                  child: Icon(Icons.calendar_month),
-                )
-              : _isValidate
-                  ? Icon(Icons.check)
-                  : null,
-          suffixIconColor: widget.haveDatePicker
-              ? AppColors.greyTextColor
-              : AppColors.greenColor,
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: AppColors.blackColor,
-              width: 0.2,
+    return Padding(
+      padding: const EdgeInsets.all(0.5),
+      child: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.05),
+              spreadRadius: 5,
+              blurRadius: 6,
             ),
+          ],
+        ),
+        margin: widget.margin,
+        child: TextFormField(
+          readOnly: widget.haveDatePicker ? true : widget.readOnly,
+          style: AppText.style.regularWhite16.copyWith(
+            color: AppColors.blackColor,
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: AppColors.blackColor,
-              width: 0.4,
+          onTapOutside: (event) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
+          onChanged: (value) {
+            if (!widget.verifiedCheck) return;
+            if (context.mounted) {
+              if (widget.validator!.validate(value)) {
+                setState(() {
+                  _isValidate = true;
+                });
+              } else {
+                setState(() {
+                  _isValidate = false;
+                });
+              }
+            }
+          },
+          controller: widget.controller,
+          validator:
+              widget.validator != null ? widget.validator!.validator : null,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          obscureText: widget.secure,
+          enableSuggestions: !widget.secure,
+          autocorrect: !widget.secure,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            labelText: widget.label,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: Dimension.getWidthFromValue(20),
+              vertical: Dimension.getHeightFromValue(10),
+            ),
+            alignLabelWithHint: false,
+            suffixIcon: widget.haveDatePicker
+                ? TouchableOpacity(
+                    unable: widget.readOnly,
+                    onTap: () {
+                      _selectDate(context);
+                    },
+                    child: Icon(Icons.calendar_month),
+                  )
+                : _isValidate && widget.verifiedCheck
+                    ? Icon(Icons.check)
+                    : null,
+            suffixIconColor: widget.haveDatePicker
+                ? AppColors.greyTextColor
+                : AppColors.greenColor,
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: AppColors.blackColor,
+                width: 0.2,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: AppColors.blackColor,
+                width: 0.4,
+              ),
             ),
           ),
         ),

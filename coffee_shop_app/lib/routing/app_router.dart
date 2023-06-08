@@ -10,6 +10,7 @@ import 'package:coffee_shop_app/screens/order_management/order_detail_screen.dar
 import 'package:coffee_shop_app/screens/order_management/order_history.dart';
 import 'package:coffee_shop_app/screens/order_management/order_management.dart';
 import 'package:coffee_shop_app/screens/product_detail.dart';
+import 'package:coffee_shop_app/screens/profile/image_view_screen.dart';
 import 'package:coffee_shop_app/screens/profile/profile_screen.dart';
 import 'package:coffee_shop_app/screens/profile/profile_setting_screen.dart';
 import 'package:coffee_shop_app/screens/promo/promo_qr_scan.dart';
@@ -20,6 +21,7 @@ import 'package:coffee_shop_app/screens/store/store_search_screen.dart';
 import 'package:coffee_shop_app/services/blocs/auth_action/auth_action_cubit.dart';
 import 'package:coffee_shop_app/services/models/delivery_address.dart';
 import 'package:coffee_shop_app/services/models/order.dart';
+import 'package:coffee_shop_app/utils/constants/firestorage_bucket.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -100,6 +102,26 @@ class AppRouter {
 
       case ProfileSettingScreen.routeName:
         return _createRoute(ProfileSettingScreen());
+
+      case ImageViewScreen.routeName:
+        Set<Object> args = settings.arguments as Set<Object>;
+        String image = args.elementAt(0) as String;
+        ImageStatus imageStatus = ImageStatus.view;
+        BUCKET? bucket;
+        Function? onSubmit;
+        try {
+          imageStatus = args.elementAt(1) as ImageStatus;
+          bucket = args.elementAt(2) as BUCKET;
+          onSubmit = args.elementAt(3) as Function;
+        } catch (e) {
+          print(e);
+        }
+        return _createRoute(ImageViewScreen(
+          image: image,
+          imgStatus: imageStatus,
+          bucket: bucket,
+          onSubmit: onSubmit,
+        ));
 
       case AddressListingScreen.routeName:
         return _createRoute(AddressListingScreen());

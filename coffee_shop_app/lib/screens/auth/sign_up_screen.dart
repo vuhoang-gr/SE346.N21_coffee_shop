@@ -1,4 +1,5 @@
 import 'package:coffee_shop_app/services/apis/auth_api.dart';
+import 'package:coffee_shop_app/services/blocs/app_cubit/app_cubit.dart';
 import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/constants/dimension.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
@@ -45,12 +46,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
         );
         return;
       }
+
+      if (context.mounted) {
+        context.read<AppCubit>().changeState(AppLoading());
+      }
+
       await AuthAPI()
           .emailSignUp(emailController.text, passwordController.text);
       if (context.mounted) {
         context
             .read<AuthActionCubit>()
             .changeState(Login(email: emailController.text));
+        context.read<AppCubit>().changeState(AppLoaded());
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Sign up successed!'),
+          ),
+        );
       }
     }
 
@@ -70,7 +82,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           validator: PasswordValidator(),
           verifiedCheck: true,
           secure: true,
-          label: 'Password',
+          label: 'Mật khẩu',
           margin:
               EdgeInsets.symmetric(vertical: Dimension.getHeightFromValue(15)),
         ),
@@ -79,7 +91,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           validator: ConfirmPasswordValidator(oldPassword: passwordController),
           verifiedCheck: true,
           secure: true,
-          label: 'Confirm password',
+          label: 'Nhập lại mật khẩu',
           margin: EdgeInsets.only(bottom: Dimension.getHeightFromValue(15)),
         ),
         Container(
@@ -97,9 +109,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  'Already have an account?',
+                  'Bạn đã có tài khoản?',
                   style: AppText.style.regularBlack10.copyWith(
-                    fontSize: 15,
+                    fontSize: Dimension.getWidthFromValue(15),
                   ),
                 ),
                 Icon(
@@ -112,7 +124,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         RoundedButton(
           onPressed: onSignUp,
-          label: "SIGN UP",
+          label: "Đăng ký",
         ),
       ],
     );

@@ -7,7 +7,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.19.4 <3.0.0"
+  sdk: ">=2.19.6 <3.0.0"
 
 dependencies:
   flutter:
@@ -41,6 +41,7 @@ dependencies:
   fluttertoast: ^8.2.2
   qr_code_scanner: ^1.0.1
   qr_widget: ^4.1.0
+  image_picker: ^0.8.7+5
 
 dev_dependencies:
   flutter_test:

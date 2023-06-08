@@ -30,9 +30,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           height: Dimension.getHeightFromValue(72),
         ),
         Text(
-          'Please, enter your email address. You will receive a link to create a new password via email.',
+          'Vui lòng nhập email phía bên dưới, chúng tôi sẽ gửi cho bạn một hướng dẫn đổi mật khẩu mới thông qua email!',
           style: AppText.style.regularBlack10.copyWith(
-            fontSize: 15,
+            fontSize: Dimension.getWidthFromValue(15),
           ),
         ),
         CustormTextForm(
@@ -50,7 +50,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         ),
         RoundedButton(
           onPressed: () {},
-          label: "SEND",
+          label: "GỬI",
         ),
       ],
     );
