@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coffee_shop_app/services/apis/auth_api.dart';
 import 'package:coffee_shop_app/services/models/location.dart';
 import 'package:coffee_shop_app/services/models/store.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class StoreAPI {
   //singleton
@@ -12,13 +11,15 @@ class StoreAPI {
   }
   StoreAPI._internal();
 
+  List<Store> currentStores = [];
+
   final firestore = FirebaseFirestore.instance;
   final CollectionReference storeReference =
       FirebaseFirestore.instance.collection('Store');
   final CollectionReference userReference =
       FirebaseFirestore.instance.collection('users');
 
-  Stream<List<Store>> fetchData(LatLng? location) {
+  Stream<List<Store>> fetchData() {
     return storeReference.snapshots().asyncMap<List<Store>>((snapshot) async {
       List<dynamic> favoriteStores = [];
       if (AuthAPI.currentUser != null) {
@@ -39,6 +40,8 @@ class StoreAPI {
           stores.add(store);
         }
       }
+
+      currentStores = stores;
 
       return stores;
     });
@@ -77,6 +80,7 @@ class StoreAPI {
       }
     });
 
+    print("sizeIds: ${sizeIds}");
     return Store(
         id: id,
         sb: data['shortName'],

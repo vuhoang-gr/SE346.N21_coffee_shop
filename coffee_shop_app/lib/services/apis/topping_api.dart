@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../models/topping.dart';
 
 class ToppingApi {
@@ -8,27 +10,32 @@ class ToppingApi {
   }
   ToppingApi._internal();
 
+  List<Topping> currentToppings = [];
+
+  final CollectionReference toppingReference =
+      FirebaseFirestore.instance.collection('Topping');
+
+  Stream<List<Topping>> fetchData() {
+    return toppingReference.snapshots().map<List<Topping>>((snapshot) {
+      List<Topping> toppings = [];
+      for (var doc in snapshot.docs) {
+        Topping? topping =
+            fromFireStore(doc.data() as Map<String, dynamic>?, doc.id);
+        if (topping != null) {
+          toppings.add(topping);
+        }
+      }
+      currentToppings = toppings;
+      return toppings;
+    });
+  }
+
   Topping? fromFireStore(Map<String, dynamic>? data, String id) {
     if (data == null) return null;
     return Topping(
-        name: data['name'], image: data['image'], price: data['price'].toDouble(), id: id);
-  }
-
-  Future<List<Topping>> changeRefToObject(
-      List<dynamic> toppings, List<String>? bannedTopping) async {
-    List<Topping> results = [];
-    for (var toppingRef in toppings) {
-      var doc = await toppingRef.get();
-      if (doc != null) {
-        if (bannedTopping != null && bannedTopping.contains(doc.id)) {
-          continue;
-        }
-        Topping? topping = fromFireStore(doc.data() as Map<String, dynamic>, doc.id);
-        if (topping != null) {
-          results.add(topping);
-        }
-      }
-    }
-    return results;
+        name: data['name'],
+        image: data['image'],
+        price: data['price'].toDouble(),
+        id: id);
   }
 }

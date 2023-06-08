@@ -10,9 +10,5 @@ class LoadedState extends RecentSeeProductsState {
 }
 
 class LoadingState extends RecentSeeProductsState {
-  LoadingState() : super(recentSeeProducts: []);
-}
-
-class NotExistState extends RecentSeeProductsState {
-  NotExistState() : super(recentSeeProducts: []);
+  LoadingState({required super.recentSeeProducts});
 }

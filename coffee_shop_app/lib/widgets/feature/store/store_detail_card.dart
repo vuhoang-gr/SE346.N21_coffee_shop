@@ -4,6 +4,7 @@ import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../../../services/blocs/store_store/store_store_state.dart';
 import '../../../services/models/store.dart';
@@ -42,13 +43,12 @@ class _StoreDetailCardState extends State<StoreDetailCard> {
                 AspectRatio(
                   aspectRatio: 1,
                   child: PageView.builder(
-                    itemCount: 5,
+                    itemCount: widget.store.images.length,
                     itemBuilder: (BuildContext context, int index) => Center(
                       child: CachedNetworkImage(
                         alignment: Alignment.center,
                         width: double.maxFinite,
-                        imageUrl:
-                            'https://images.edrawmind.com/article/swot-analysis-of-coffee-shop/1200_800.jpg',
+                        imageUrl: widget.store.images[index],
                         placeholder: (context, url) => Container(
                           alignment: Alignment.center,
                           child: const CircularProgressIndicator(),
@@ -76,7 +76,7 @@ class _StoreDetailCardState extends State<StoreDetailCard> {
                           color: Colors.black.withOpacity(0.4),
                           borderRadius: BorderRadius.circular(16)),
                       child: Text(
-                        '${_index + 1}/5',
+                        '${_index + 1}/${widget.store.images.length}',
                         style: AppText.style.regularWhite14,
                       ),
                     ))
@@ -109,7 +109,7 @@ class _StoreDetailCardState extends State<StoreDetailCard> {
                                 height: 2,
                               ),
                               Text(
-                                "Open: 07:00 - 22:00",
+                                "Open: ${DateFormat('hh:mm').format(widget.store.timeOpen)} - ${DateFormat('hh:mm').format(widget.store.timeClose)}",
                                 style: AppText.style.regularBlack14,
                               ),
                             ],

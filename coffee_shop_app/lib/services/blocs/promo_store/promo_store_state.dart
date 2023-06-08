@@ -1,18 +1,15 @@
-import 'package:coffee_shop_app/services/models/promo.dart';
-
 abstract class PromoStoreState {
-  final List<Promo> initPromos;
-  PromoStoreState({required this.initPromos});
+  PromoStoreState();
 }
 
 class LoadingState extends PromoStoreState {
-  LoadingState({required super.initPromos});
+  LoadingState();
 }
 
 class ErrorState extends PromoStoreState {
-  ErrorState({required super.initPromos});
+  ErrorState();
 }
 
 class LoadedState extends PromoStoreState {
-  LoadedState({required super.initPromos});
+  LoadedState();
 }

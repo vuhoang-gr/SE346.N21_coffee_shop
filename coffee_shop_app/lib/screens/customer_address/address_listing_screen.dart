@@ -1,4 +1,4 @@
-import 'package:coffee_shop_app/main.dart';
+import 'package:coffee_shop_app/services/apis/address_api.dart';
 import 'package:coffee_shop_app/services/blocs/address_store/address_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/address_store/address_store_event.dart';
 import 'package:coffee_shop_app/services/blocs/address_store/address_store_state.dart';
@@ -77,15 +77,16 @@ class _AddressListingScreenState extends State<AddressListingScreen> {
                                             vertical: Dimension.height12),
                                         itemBuilder: (context, index) {
                                           return AddressBlockEdit(
-                                            deliveryAddress: state
-                                                .listDeliveryAddress[index],
+                                            deliveryAddress: AddressAPI()
+                                                .currentAddresses[index],
                                             index: index,
                                           );
                                         },
                                         separatorBuilder: (_, __) => SizedBox(
                                             height: Dimension.height12),
-                                        itemCount:
-                                            state.listDeliveryAddress.length),
+                                        itemCount: AddressAPI()
+                                            .currentAddresses
+                                            .length),
                                     GestureDetector(
                                       onTap: () {
                                         Navigator.of(context)

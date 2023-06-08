@@ -245,19 +245,23 @@ class _AddressScreenState extends State<AddressScreen> with InputValidationMixin
                                               .pushNamed(MapScreen.routeName,
                                                   arguments: LatLng(state.address!.lat, state.address!.lng))
                                               .then((location) {
-                                            MLocation mLocation = location as MLocation;
-                                            _mLocation = mLocation;
-                                            _addressController.text = mLocation.formattedAddress;
-                                            BlocProvider.of<EditAddressBloc>(context)
-                                                .add(AddressChanged(address: mLocation));
+                                            if (location != null) {
+                                              MLocation mLocation = location as MLocation;
+                                              _mLocation = mLocation;
+                                              _addressController.text = mLocation.formattedAddress;
+                                              BlocProvider.of<EditAddressBloc>(context)
+                                                  .add(AddressChanged(address: mLocation));
+                                            }
                                           });
                                         } else {
                                           Navigator.of(context)
                                               .pushNamed(MapScreen.routeName,
                                                   arguments: LatLng(10.871759281171983, 106.80328866625126))
                                               .then((location) {
-                                            _mLocation = (location as MLocation);
-                                            _addressController.text = (location as MLocation).formattedAddress;
+                                            if (location != null) {
+                                              _mLocation = (location as MLocation);
+                                              _addressController.text = (location).formattedAddress;
+                                            }
                                           });
                                         }
                                       },

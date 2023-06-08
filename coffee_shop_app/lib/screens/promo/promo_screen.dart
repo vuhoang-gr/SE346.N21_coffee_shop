@@ -1,4 +1,5 @@
 import 'package:coffee_shop_app/screens/promo/promo_qr_scan.dart';
+import 'package:coffee_shop_app/services/apis/promo_api.dart';
 import 'package:coffee_shop_app/services/blocs/promo_store/promo_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/promo_store/promo_store_state.dart';
 import 'package:coffee_shop_app/widgets/feature/promo_screen/promo_item.dart';
@@ -125,12 +126,12 @@ class _PromoScreenState extends State<PromoScreen> {
                                 child: ListView.separated(
                                   padding:
                                       EdgeInsets.only(top: Dimension.height8),
-                                  itemCount: state.initPromos.length,
+                                  itemCount: PromoAPI().currentPromos.length,
                                   physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   itemBuilder: (context, index) {
                                     return PromoItem(
-                                        promo: state.initPromos[index]);
+                                        promo: PromoAPI().currentPromos[index]);
                                   },
                                   separatorBuilder: (context, index) {
                                     return SizedBox(
@@ -175,7 +176,7 @@ class _PromoScreenState extends State<PromoScreen> {
   }
 
   void _usePromo() {
-    List<Promo> promos = context.read<PromoStoreBloc>().state.initPromos;
+    List<Promo> promos = PromoAPI().currentPromos;
     for (Promo promo in promos) {
       if (promo.id == controller.text) {
         Navigator.of(context).pop(promo);

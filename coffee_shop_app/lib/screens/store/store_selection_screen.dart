@@ -1,3 +1,4 @@
+import 'package:coffee_shop_app/screens/store/store_detail.dart';
 import 'package:coffee_shop_app/screens/store/store_search_screen.dart';
 import 'package:coffee_shop_app/services/blocs/store_store/store_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/store_store/store_store_event.dart';
@@ -26,7 +27,14 @@ class StoreSelectionScreen extends StatefulWidget {
   State<StoreSelectionScreen> createState() => _StoreSelectionScreenState();
 }
 
-class _StoreSelectionScreenState extends State<StoreSelectionScreen>{
+class _StoreSelectionScreenState extends State<StoreSelectionScreen> {
+  @override
+  void didChangeDependencies() {
+    BlocProvider.of<StoreStoreBloc>(context)
+        .add(UpdateLocation(latLng: widget.latLng));
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -62,12 +70,13 @@ class _StoreSelectionScreenState extends State<StoreSelectionScreen>{
                           "isPurposeForShowDetail":
                               widget.isPurposeForShowDetail,
                         }).then((value) {
-                          if (value == null) {
-                            //The customer don't want to choose store more
-                            Navigator.of(context).pop();
-                          } else if ((value as bool)) {
-                            //The customer has choosen the store
-                            Navigator.of(context).pop();
+                          if (value != null && value is bool && value == true) {
+                            if (widget.isPurposeForShowDetail) {
+                              //change to menu 
+                              DefaultTabController.of(context).index = 1;
+                            } else {
+                              Navigator.of(context).pop();
+                            }
                           }
                         });
                       }
@@ -242,7 +251,14 @@ class _StoreSelectionScreenState extends State<StoreSelectionScreen>{
     VoidCallback tapHandler;
     if (isPurposeForShowDetail) {
       tapHandler = () {
-        Navigator.of(context).pushNamed("/store_detail", arguments: store);
+        Navigator.of(context)
+            .pushNamed(StoreDetail.routeName, arguments: store)
+            .then((value) {
+          if (value != null && value is bool && value == true) {
+            //pop to menu
+            DefaultTabController.of(context).index = 1;
+          }
+        });
       };
     } else {
       tapHandler = () {

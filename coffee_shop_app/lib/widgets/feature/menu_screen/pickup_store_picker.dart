@@ -20,16 +20,18 @@ class PickupStorePicker extends StatelessWidget {
     return BlocBuilder<CartButtonBloc, CartButtonState>(
         builder: (context, state) {
       return GestureDetector(
-        onTap: () =>
-            Navigator.of(context).pushNamed(StoreSelectionScreen.routeName, arguments: {
-              "latLng": initLatLng,
-              "isPurposeForShowDetail": false,
-            }).then((value){
-              if (value != null && value is Store) {
-                  BlocProvider.of<CartButtonBloc>(context)
-                      .add(ChangeSelectedStore(selectedStore: value));
-                }
-            }),
+        onTap: () {
+          Navigator.of(context)
+              .pushNamed(StoreSelectionScreen.routeName, arguments: {
+            "latLng": initLatLng,
+            "isPurposeForShowDetail": false,
+          }).then((value) {
+            if (value != null && value is Store) {
+              BlocProvider.of<CartButtonBloc>(context)
+                  .add(ChangeSelectedStore(selectedStore: value));
+            }
+          });
+        },
         child: Container(
           color: CupertinoColors.white,
           padding: EdgeInsets.symmetric(

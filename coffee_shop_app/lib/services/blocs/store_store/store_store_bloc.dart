@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:coffee_shop_app/services/apis/store_api.dart';
+import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_bloc.dart';
+import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_event.dart';
 import 'package:coffee_shop_app/services/blocs/store_store/store_store_event.dart';
 import 'package:coffee_shop_app/services/blocs/store_store/store_store_state.dart';
 import 'package:flutter/material.dart';
@@ -14,17 +16,20 @@ import '../../models/store.dart';
 
 class StoreStoreBloc extends Bloc<StoreStoreEvent, StoreStoreState> {
   StreamSubscription<List<Store>>? _storeSubscription;
-  StoreStoreBloc() : super(LoadingState(initStores: [], selectedStore: null)) {
+  final CartButtonBloc _cartButtonBloc;
+  StoreStoreBloc(this._cartButtonBloc)
+      : super(LoadingState(initStores: [], latLng: null)) {
+    print('stateInit: storeStore............................................');
     on<FetchData>(_mapFetchData);
     on<UpdateFavorite>(_mapUpdateFavorite);
+    on<UpdateLocation>(_mapUpdateLocation);
     on<GetDataFetched>(_mapGetDataFetched);
   }
 
   void _mapFetchData(FetchData event, Emitter<StoreStoreState> emit) {
-    emit(LoadingState(initStores: [], selectedStore: null));
+    emit(LoadingState(initStores: state.initStores, latLng: state.latLng));
     _storeSubscription?.cancel();
-    _storeSubscription =
-        StoreAPI().fetchData(event.location).listen((listStore) {
+    _storeSubscription = StoreAPI().fetchData().listen((listStore) {
       add(GetDataFetched(allStores: listStore, latLng: event.location));
     }, onError: (_) {
       Fluttertoast.showToast(
@@ -37,13 +42,36 @@ class StoreStoreBloc extends Bloc<StoreStoreEvent, StoreStoreState> {
     });
   }
 
+  void _mapUpdateLocation(UpdateLocation event, Emitter<StoreStoreState> emit) {
+    if ((event.latLng == null && state.latLng != null) ||
+        (event.latLng != null && state.latLng == null) ||
+        (event.latLng != null &&
+            state.latLng != null &&
+            event.latLng != state.latLng)) {
+      emit(LoadingState(initStores: state.initStores, latLng: state.latLng));
+      sortStore(state.initStores, event.latLng);
+      Map<String, dynamic> storeObject =
+          _separateIntoNeededObject(state.initStores, event.latLng);
+
+      Store? nearestStore = storeObject["nearestStore"];
+      List<Store> favoriteStores = storeObject["listFavoriteStore"];
+      List<Store> otherStores = storeObject["listOtherStore"];
+      emit(LoadedState(
+        latLng: event.latLng,
+        nearestStore: nearestStore,
+        listFavoriteStore: favoriteStores,
+        listOtherStore: otherStores,
+        initStores: state.initStores,
+      ));
+    }
+  }
+
   Future<void> _mapGetDataFetched(
       GetDataFetched event, Emitter<StoreStoreState> emit) async {
-    List<Store> initStores = event.allStores;
+    List<Store> initStores = List.from(event.allStores);
     LatLng? location = event.latLng;
 
-    emit(LoadingState(
-        initStores: state.initStores, selectedStore: state.selectedStore));
+    emit(LoadingState(initStores: state.initStores, latLng: state.latLng));
 
     sortStore(initStores, location);
 
@@ -55,11 +83,11 @@ class StoreStoreBloc extends Bloc<StoreStoreEvent, StoreStoreState> {
     List<Store> otherStores = storeObject["listOtherStore"];
 
     //update SelectedStore
-    Store? storeUpdated = state.selectedStore;
-    if (state.selectedStore != null) {
+    Store? storeUpdated = _cartButtonBloc.state.selectedStore;
+    if (storeUpdated != null) {
       try {
-        storeUpdated = initStores
-            .firstWhere((element) => element.id == state.selectedStore!.id);
+        storeUpdated =
+            initStores.firstWhere((element) => element.id == storeUpdated!.id);
       } catch (e) {
         //Db has this store has been deleted
         storeUpdated = null;
@@ -69,14 +97,14 @@ class StoreStoreBloc extends Bloc<StoreStoreEvent, StoreStoreState> {
         storeUpdated = initStores.first;
       }
     }
+    _cartButtonBloc.add(UpdateDataSelectedStore(selectedStore: storeUpdated));
 
     emit(FetchedState(
-      initStores: initStores,
       latLng: location,
       nearestStore: nearestStore,
       listFavoriteStore: favoriteStores,
       listOtherStore: otherStores,
-      selectedStore: storeUpdated,
+      initStores: initStores,
     ));
   }
 
@@ -92,8 +120,7 @@ class StoreStoreBloc extends Bloc<StoreStoreEvent, StoreStoreState> {
 
       event.store.isFavorite = !event.store.isFavorite;
 
-      emit(LoadingState(
-          initStores: state.initStores, selectedStore: state.selectedStore));
+      emit(LoadingState(initStores: state.initStores, latLng: state.latLng));
 
       _storeSubscription?.pause();
       if (await StoreAPI().updateFavorite(event.store.id)) {
@@ -106,12 +133,11 @@ class StoreStoreBloc extends Bloc<StoreStoreEvent, StoreStoreState> {
 
         //emit LoadedState
         emit(LoadedState(
-          initStores: state.initStores,
           latLng: location,
           nearestStore: nearestStore,
           listFavoriteStore: favoriteStores,
           listOtherStore: otherStores,
-          selectedStore: state.selectedStore,
+          initStores: state.initStores,
         ));
       } else {
         event.store.isFavorite = !event.store.isFavorite;
@@ -122,12 +148,11 @@ class StoreStoreBloc extends Bloc<StoreStoreEvent, StoreStoreState> {
             textColor: Colors.white,
             fontSize: Dimension.font14);
         emit(LoadedState(
-          initStores: state.initStores,
           latLng: location,
           nearestStore: nearestStore,
           listFavoriteStore: prevFavStores,
           listOtherStore: prevOtherStores,
-          selectedStore: state.selectedStore,
+          initStores: state.initStores,
         ));
       }
       if (_storeSubscription?.isPaused ?? false) {

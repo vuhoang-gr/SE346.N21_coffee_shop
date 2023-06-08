@@ -3,8 +3,8 @@ class Food {
   final String name;
   final double price;
   final String description;
-  List<dynamic> sizes;
-  List<dynamic> toppings;
+  List<String> sizes;
+  List<String> toppings;
   final List<String> images;
   final DateTime dateRegister;
   final bool isAvailable;

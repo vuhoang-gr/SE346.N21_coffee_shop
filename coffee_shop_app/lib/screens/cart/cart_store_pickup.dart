@@ -4,7 +4,6 @@ import 'package:coffee_shop_app/services/blocs/cart_cubit/cart_cubit.dart';
 import 'package:coffee_shop_app/services/blocs/pickup_timer/pickup_timer_state.dart';
 import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
-import 'package:coffee_shop_app/widgets/feature/cart_delivery_pickup/time_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,6 +18,8 @@ import '../../services/models/cart.dart';
 import '../../utils/constants/dimension.dart';
 import '../../utils/styles/button.dart';
 import '../../widgets/feature/cart_delivery_pickup/apply_coupon_textfield.dart';
+import '../../widgets/feature/cart_delivery_pickup/timer_picker.dart';
+
 import '../../widgets/feature/cart_delivery_pickup/checkout_prod_item.dart';
 import '../../widgets/feature/product_detail_widgets/icon_widget_row.dart';
 import '../../widgets/global/container_card.dart';
@@ -35,19 +36,28 @@ class _CartStorePickupState extends State<CartStorePickup> {
   Timer? _timer;
 
   @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 5), onTick);
+  }
+
+  @override
   void dispose() {
-    _timer!.cancel();
+    _timer?.cancel();
     super.dispose();
   }
 
   onTick(Timer timer) {
-    BlocProvider.of<TimerCubit>(context).setTimer();
-    print('Timer ${timer.tick}: ${DateTime.now().toLocal()}');
+    if (mounted) {
+      BlocProvider.of<TimerCubit>(context).setTimer();
+      print('Timer ${timer.tick}: ${DateTime.now().toLocal()}');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    _timer = Timer.periodic(const Duration(seconds: 5), onTick);
+    BlocProvider.of<TimerCubit>(context).setOpenTime(
+        BlocProvider.of<CartButtonBloc>(context).state.selectedStore!.timeOpen);
     BlocProvider.of<TimerCubit>(context).setTimer();
 
     return BlocBuilder<CartCubit, Cart>(builder: (context, state) {
@@ -145,7 +155,10 @@ class _CartStorePickupState extends State<CartStorePickup> {
                                               height: Dimension.height8 / 2,
                                             ),
                                             Text(
-                                              '${state.selectedStore}',
+                                              state.selectedStore == null
+                                                  ? 'Không có cửa hàng phù hợp'
+                                                  : state.selectedStore!.address
+                                                      .formattedAddress,
                                               style: AppText.style.boldBlack14,
                                             ),
                                           ],
@@ -197,7 +210,7 @@ class _CartStorePickupState extends State<CartStorePickup> {
                                                   }
                                                 }
                                                 return Text(
-                                                  '${state.selectedDate!.hour}:${state.selectedDate!.minute == 0 ? '00' : '30'}, ${day}',
+                                                  '${state.selectedDate!.hour}:${state.selectedDate!.minute == 0 ? '00' : '30'}, $day',
                                                   style:
                                                       AppText.style.boldBlack14,
                                                 );
@@ -219,7 +232,7 @@ class _CartStorePickupState extends State<CartStorePickup> {
                                                 backgroundColor:
                                                     Colors.transparent,
                                                 builder: (builder) {
-                                                  return TimePicker();
+                                                  return TimerPicker();
                                                 });
                                           },
                                         ),
@@ -252,12 +265,27 @@ class _CartStorePickupState extends State<CartStorePickup> {
                                       shrinkWrap: true,
                                       controller: ScrollController(),
                                       itemBuilder: (context, index) {
-                                        return CheckoutProdItem(
-                                          cartFood: BlocProvider.of<CartCubit>(
-                                                  context)
-                                              .state
-                                              .products[index],
-                                        );
+                                        if (state.cannotOrderFoods!.contains(
+                                            state.products[index].food.id)) {
+                                          return Opacity(
+                                            opacity: 0.5,
+                                            child: CheckoutProdItem(
+                                              cartFood:
+                                                  BlocProvider.of<CartCubit>(
+                                                          context)
+                                                      .state
+                                                      .products[index],
+                                            ),
+                                          );
+                                        } else {
+                                          return CheckoutProdItem(
+                                            cartFood:
+                                                BlocProvider.of<CartCubit>(
+                                                        context)
+                                                    .state
+                                                    .products[index],
+                                          );
+                                        }
                                       },
                                       separatorBuilder: (_, __) =>
                                           const Divider(
@@ -309,6 +337,9 @@ class _CartStorePickupState extends State<CartStorePickup> {
                                   ),
                                 ],
                               ),
+                            ),
+                            SizedBox(
+                              height: Dimension.height12,
                             ),
                           ]),
                     ),
@@ -409,7 +440,117 @@ class _CartStorePickupState extends State<CartStorePickup> {
                           height: Dimension.height40,
                           child: ElevatedButton(
                             style: roundedButton,
-                            onPressed: () {},
+                            onPressed: () {
+                              var canOrder = BlocProvider.of<CartCubit>(context)
+                                  .checkCanOrderFoods(
+                                store: BlocProvider.of<CartButtonBloc>(context)
+                                    .state
+                                    .selectedStore!,
+                                address:
+                                    BlocProvider.of<CartButtonBloc>(context)
+                                        .state
+                                        .selectedDeliveryAddress,
+                              );
+                              if (!canOrder) {
+                                showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        CupertinoAlertDialog(
+                                          title: const Text(
+                                            'Lỗi',
+                                          ),
+                                          content: Text(
+                                            'Có vài sản phẩm không hợp lệ trong giỏ hàng, vui lòng kiểm tra lại.',
+                                            style: AppText.style.regular,
+                                          ),
+                                          actions: <Widget>[
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: Dimension.height8,
+                                                  horizontal:
+                                                      Dimension.height8),
+                                              child: OutlinedButton(
+                                                style: outlinedButton,
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text('OK',
+                                                    style: AppText
+                                                        .style.regularBlack16
+                                                        .copyWith(
+                                                            color:
+                                                                Colors.blue)),
+                                              ),
+                                            ),
+                                          ],
+                                        ));
+                              } else if (canOrder) {
+                                showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        CupertinoAlertDialog(
+                                          title: const Text(
+                                            'Lưu ý',
+                                          ),
+                                          content: Text(
+                                            'Bạn sẽ không được huỷ đơn nếu xác nhận đặt hàng',
+                                            style: AppText.style.regular,
+                                          ),
+                                          actions: <Widget>[
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: Dimension.height8,
+                                                  horizontal:
+                                                      Dimension.height8),
+                                              child: OutlinedButton(
+                                                style: outlinedButton,
+                                                onPressed: () {
+                                                  BlocProvider.of<CartCubit>(
+                                                          context)
+                                                      .placeOrder(
+                                                    store: BlocProvider.of<
+                                                                CartButtonBloc>(
+                                                            context)
+                                                        .state
+                                                        .selectedStore!,
+                                                    pickupTime: BlocProvider.of<
+                                                            TimerCubit>(context)
+                                                        .state
+                                                        .selectedDate,
+                                                  );
+                                                  Navigator.of(context).pop();
+                                                  Navigator.pop(
+                                                      context, 'Đặt hàng');
+                                                },
+                                                child: Text('Đặt hàng',
+                                                    style: AppText
+                                                        .style.regularBlack16
+                                                        .copyWith(
+                                                            color:
+                                                                Colors.blue)),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: Dimension.height8,
+                                                  horizontal:
+                                                      Dimension.height8),
+                                              child: ElevatedButton(
+                                                style: roundedButton,
+                                                onPressed: () => Navigator.pop(
+                                                    context, 'Huỷ bỏ'),
+                                                child: Text('Huỷ bỏ',
+                                                    style: AppText
+                                                        .style.regularBlack16
+                                                        .copyWith(
+                                                            color:
+                                                                Colors.white)),
+                                              ),
+                                            ),
+                                          ],
+                                        ));
+                              }
+                            },
                             child: Text(
                               'Pay ${MoneyTransfer.transferFromDouble(total)} ₫',
                               style: AppText.style.regularWhite16,

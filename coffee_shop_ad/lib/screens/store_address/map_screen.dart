@@ -63,10 +63,9 @@ class _MapScreenState extends State<MapScreen> {
         resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
-            Expanded(
-                child: Stack(
-              children: [_getMap(), _getCustomPin(), _showDraggedAddress()],
-            )),
+            _getMap(),
+            _getCustomPin(),
+            _showDraggedAddress(),
             CustomAppBar(
               color: Colors.transparent,
               middle: BlocBuilder<MapPickerBloc, MapPickerState>(
@@ -111,14 +110,18 @@ class _MapScreenState extends State<MapScreen> {
                         style: AppText.style.regularBlack16),
                     suggestionsCallback: (query) {
                       if (query.isNotEmpty) {
-                        return LocationApi.getLocationData(query)
-                            .then((response) {
-                          var data = jsonDecode(response.body.toString());
-                          if (data['status'] == 'OK') {
-                            return MLocation.parseLocationList(data);
-                          }
+                        try {
+                          return LocationApi.getLocationData(query)
+                              .then((response) {
+                            var data = jsonDecode(response.body.toString());
+                            if (data['features'] != []) {
+                              return MLocation.parseLocationList(data);
+                            }
+                            return [];
+                          });
+                        } catch (_) {
                           return [];
-                        });
+                        }
                       } else {
                         return [];
                       }
@@ -213,9 +216,6 @@ class _MapScreenState extends State<MapScreen> {
                   ),
                   TextButton(
                       onPressed: () async {
-                        print(draggedLatlng.latitude);
-                        print(draggedLatlng.longitude);
-                        print(state.currentLocation);
                         Navigator.of(context).pop(MLocation(
                             formattedAddress: state.currentLocation,
                             lat: draggedLatlng.latitude,

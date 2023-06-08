@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:coffee_shop_app/utils/constants/placeholder_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -45,7 +47,7 @@ class _AsyncImageState extends State<AsyncImage> {
               )
             : widget.type == PlaceholderType.user
                 ? Image.asset(
-                    'assets/images/placeholder/placeholder_user.png',
+                    'assets/images/placeholder/placeholder_user.jpg',
                     fit: BoxFit.cover,
                   )
                 : widget.type == PlaceholderType.food
@@ -61,17 +63,24 @@ class _AsyncImageState extends State<AsyncImage> {
 
   @override
   Widget build(BuildContext context) {
-    return CachedNetworkImage(
-      width: widget.width,
-      height: widget.height,
-      imageUrl: widget.src,
-      fit: widget.fit,
-      placeholder: (context, url) {
-        return Container(child: _placeholder);
-      },
-      errorWidget: (context, url, error) {
-        return _placeholder;
-      },
-    );
+    bool isLink = Uri.parse(widget.src).host.isNotEmpty || widget.src.isEmpty;
+
+    return isLink
+        ? CachedNetworkImage(
+            width: widget.width,
+            height: widget.height,
+            imageUrl: widget.src,
+            fit: widget.fit,
+            placeholder: (context, url) {
+              return Container(child: _placeholder);
+            },
+            errorWidget: (context, url, error) {
+              return _placeholder;
+            },
+          )
+        : Image.file(
+            File(widget.src),
+            fit: widget.fit,
+          );
   }
 }

@@ -6,7 +6,11 @@ import 'package:coffee_shop_app/screens/cart/cart_store_pickup.dart';
 import 'package:coffee_shop_app/screens/customer_address/map_screen.dart';
 import 'package:coffee_shop_app/screens/main_page.dart';
 import 'package:coffee_shop_app/screens/menu/menu_screen.dart';
+import 'package:coffee_shop_app/screens/order_management/order_detail_screen.dart';
+import 'package:coffee_shop_app/screens/order_management/order_history.dart';
+import 'package:coffee_shop_app/screens/order_management/order_management.dart';
 import 'package:coffee_shop_app/screens/product_detail.dart';
+import 'package:coffee_shop_app/screens/profile/image_view_screen.dart';
 import 'package:coffee_shop_app/screens/profile/profile_screen.dart';
 import 'package:coffee_shop_app/screens/profile/profile_setting_screen.dart';
 import 'package:coffee_shop_app/screens/promo/promo_qr_scan.dart';
@@ -16,6 +20,8 @@ import 'package:coffee_shop_app/screens/store/store_detail.dart';
 import 'package:coffee_shop_app/screens/store/store_search_screen.dart';
 import 'package:coffee_shop_app/services/blocs/auth_action/auth_action_cubit.dart';
 import 'package:coffee_shop_app/services/models/delivery_address.dart';
+import 'package:coffee_shop_app/services/models/order.dart';
+import 'package:coffee_shop_app/utils/constants/firestorage_bucket.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -23,7 +29,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/store/store_selection_screen.dart';
 import '../services/blocs/auth/auth_bloc.dart';
-import '../services/models/food.dart';
 import '../services/models/store.dart';
 
 class AppRouter {
@@ -98,6 +103,26 @@ class AppRouter {
       case ProfileSettingScreen.routeName:
         return _createRoute(ProfileSettingScreen());
 
+      case ImageViewScreen.routeName:
+        Set<Object> args = settings.arguments as Set<Object>;
+        String image = args.elementAt(0) as String;
+        ImageStatus imageStatus = ImageStatus.view;
+        BUCKET? bucket;
+        Function? onSubmit;
+        try {
+          imageStatus = args.elementAt(1) as ImageStatus;
+          bucket = args.elementAt(2) as BUCKET;
+          onSubmit = args.elementAt(3) as Function;
+        } catch (e) {
+          print(e);
+        }
+        return _createRoute(ImageViewScreen(
+          image: image,
+          imgStatus: imageStatus,
+          bucket: bucket,
+          onSubmit: onSubmit,
+        ));
+
       case AddressListingScreen.routeName:
         return _createRoute(AddressListingScreen());
 
@@ -118,13 +143,18 @@ class AppRouter {
         return _createRoute(MenuScreen());
 
       case "/product_detail_screen":
-        Food food = settings.arguments as Food;
-        return _createRoute(ProductDetail(product: food));
-
+        return _createRoute(ProductDetail());
+      case "/order_detail_screen":
+        Order order = settings.arguments as Order;
+        return _createRoute(OrderDetailScreen(
+          order: order,
+        ));
+      case "/order_history":
+        return _createRoute(OrderHistory());
       case SearchProductScreen.routeName:
         return _createRoute(SearchProductScreen());
 
-      case "/store_detail":
+      case StoreDetail.routeName:
         Store args = settings.arguments as Store;
         return _createRoute(StoreDetail(
           store: args,

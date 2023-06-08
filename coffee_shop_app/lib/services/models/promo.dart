@@ -1,14 +1,14 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 class Promo {
   final String id;
   final double minPrice;
   final double maxPrice;
   final double percent;
+  final DateTime dateStart;
   final DateTime dateEnd;
   final String description;
   final List<String> products;
   final List<String> stores;
-  final bool forNewCustomer ;
+  final bool forNewCustomer;
 
   Promo({
     required this.id,
@@ -16,9 +16,10 @@ class Promo {
     required this.maxPrice,
     required this.percent,
     required this.description,
+    required this.dateStart,
     required this.dateEnd,
     required this.products,
     required this.stores,
-    required this.forNewCustomer ,
+    required this.forNewCustomer,
   });
 }

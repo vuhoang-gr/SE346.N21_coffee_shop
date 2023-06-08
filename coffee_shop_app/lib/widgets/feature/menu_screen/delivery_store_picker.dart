@@ -30,6 +30,7 @@ class DeliveryStorePicker extends StatelessWidget {
               MLocation address = deliveryAddress.address;
               latLng = LatLng(address.lat, address.lng);
             }
+            
             Navigator.of(context)
                 .pushNamed(StoreSelectionScreen.routeName, arguments: {
               "latLng": latLng,

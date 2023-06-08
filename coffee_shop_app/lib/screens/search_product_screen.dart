@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:coffee_shop_app/main.dart';
 import 'package:coffee_shop_app/screens/store/store_selection_screen.dart';
+import 'package:coffee_shop_app/services/apis/food_api.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_event.dart';
 import 'package:coffee_shop_app/services/blocs/product_store/product_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/search_product/search_product_bloc.dart';
@@ -13,6 +14,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../services/blocs/cart_button/cart_button_state.dart';
 import '../services/blocs/product_store/product_store_state.dart';
 import '../services/models/store.dart';
@@ -33,20 +35,28 @@ class SearchProductScreen extends StatefulWidget {
 
 class _SearchProductScreenState extends State<SearchProductScreen> {
   Timer? _debounce;
-  StreamSubscription? _streamSubscription;
+  late StreamSubscription _streamSubscription;
   @override
   void initState() {
     super.initState();
-    ProductStoreState state = BlocProvider.of<ProductStoreBloc>(context).state;
-    BlocProvider.of<SearchProductBloc>(context).add(UpdateList(
-        initListFood: (state as HasDataProductStoreState).initFoods));
+    BlocProvider.of<SearchProductBloc>(context)
+        .add(UpdateList(initListFood: FoodAPI().currentFoods));
+
+    _streamSubscription = BlocProvider.of<ProductStoreBloc>(context)
+        .stream
+        .listen((productStoreState) {
+      if (productStoreState is FetchedState) {
+        BlocProvider.of<SearchProductBloc>(context)
+            .add(UpdateList(initListFood: FoodAPI().currentFoods));
+      }
+    });
   }
 
   @override
   void dispose() {
     super.dispose();
     _debounce?.cancel();
-    _streamSubscription?.cancel();
+    _streamSubscription.cancel();
   }
 
   @override
@@ -71,32 +81,36 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => Navigator.of(context)
-                        .pushNamed(StoreSelectionScreen.routeName, arguments: {
-                      "latLng": initLatLng,
-                      "isPurposeForShowDetail": false,
-                    }).then((value) {
-                      if (value != null && value is Store) {
-                        _streamSubscription =
-                            BlocProvider.of<ProductStoreBloc>(context)
-                                .stream
-                                .listen((productStoreState) {
-                          if (productStoreState is FetchedState) {
-                            print("hello");
-                            BlocProvider.of<SearchProductBloc>(context).add(
-                                UpdateList(
-                                    initListFood: productStoreState.initFoods));
-                            _streamSubscription?.cancel();
-                          }
-                        });
-
-                        BlocProvider.of<SearchProductBloc>(context)
-                            .add(WaitingUpdateList());
-
-                        BlocProvider.of<CartButtonBloc>(context).add(
-                            ChangeSelectedStoreButNotUse(selectedStore: value));
+                    onTap: () {
+                      CartButtonState cartButtonState =
+                          BlocProvider.of<CartButtonBloc>(context).state;
+                      LatLng? location;
+                      if (cartButtonState.selectedOrderType ==
+                              OrderType.delivery &&
+                          cartButtonState.selectedDeliveryAddress != null) {
+                        location = LatLng(
+                            cartButtonState
+                                .selectedDeliveryAddress!.address.lat,
+                            cartButtonState
+                                .selectedDeliveryAddress!.address.lng);
+                      } else {
+                        location = initLatLng;
                       }
-                    }),
+                      Navigator.of(context).pushNamed(
+                          StoreSelectionScreen.routeName,
+                          arguments: {
+                            "latLng": location,
+                            "isPurposeForShowDetail": false,
+                          }).then((value) {
+                        if (value != null && value is Store) {
+                          BlocProvider.of<SearchProductBloc>(context)
+                              .add(WaitingUpdateList());
+                          BlocProvider.of<CartButtonBloc>(context).add(
+                              ChangeSelectedStoreButNotUse(
+                                  selectedStore: value));
+                        }
+                      });
+                    },
                     child: Container(
                       padding: EdgeInsets.only(
                           left: Dimension.height16,

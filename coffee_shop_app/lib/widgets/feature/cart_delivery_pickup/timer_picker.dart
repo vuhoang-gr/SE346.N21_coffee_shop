@@ -2,31 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../../../services/blocs/cart_button/cart_button_bloc.dart';
 import '../../../services/blocs/pickup_timer/pickup_timer_cubit.dart';
 import '../../../services/blocs/pickup_timer/pickup_timer_state.dart';
+import '../../../services/functions/datetime_to_pickup.dart';
 import '../../../utils/colors/app_colors.dart';
 import '../../../utils/constants/dimension.dart';
 import '../../../utils/styles/app_texts.dart';
 import '../../../utils/styles/button.dart';
 
-class TimePicker extends StatefulWidget {
-  const TimePicker({super.key});
-
-  @override
-  State<TimePicker> createState() => _TimePickerState();
-}
-
-class _TimePickerState extends State<TimePicker> {
-  String indexToTime(int index) {
-    int hour = (index / 2).floor();
-    return '${hour < 10 ? '0$hour' : hour}:${index % 2 * 30 == 0 ? '00' : index % 2 * 30}';
-  }
-
-  final int timeClose = 22 * 2;
+class TimerPicker extends StatelessWidget {
+  const TimerPicker({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TimerCubit, PickupTimerState>(builder: (context, state) {
+      var timeClose = dateTimeToHour(BlocProvider.of<CartButtonBloc>(context)
+          .state
+          .selectedStore!
+          .timeClose);
       return Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -90,7 +84,7 @@ class _TimePickerState extends State<TimePicker> {
                               var date =
                                   (DateTime.now().add(Duration(days: value)));
                               BlocProvider.of<TimerCubit>(context)
-                                  .setDateTime(selectedDate: date);
+                                  .setDateTime(newDate: date);
                             },
                             physics: const FixedExtentScrollPhysics(),
                             itemExtent: Dimension.height24,
@@ -124,7 +118,7 @@ class _TimePickerState extends State<TimePicker> {
                               int hour = (time / 2).floor();
                               int minute = time % 2 * 30;
                               BlocProvider.of<TimerCubit>(context).setDateTime(
-                                  selectedDate: state.selectedDate,
+                                  newDate: state.newDate,
                                   hour: hour,
                                   minute: minute);
                             },
@@ -159,7 +153,11 @@ class _TimePickerState extends State<TimePicker> {
               height: Dimension.height40,
               child: ElevatedButton(
                 style: roundedButton,
-                onPressed: () {},
+                onPressed: () {
+                  BlocProvider.of<TimerCubit>(context).setSelectedDate(
+                      BlocProvider.of<TimerCubit>(context).state.newDate);
+                  Navigator.pop(context);
+                },
                 child: Text(
                   'Apply',
                   style: AppText.style.regularWhite16,

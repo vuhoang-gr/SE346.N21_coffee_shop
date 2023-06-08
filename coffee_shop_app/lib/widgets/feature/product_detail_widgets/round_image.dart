@@ -1,5 +1,7 @@
+import 'package:coffee_shop_app/utils/constants/placeholder_enum.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+
+import '../../global/aysncImage/async_image.dart';
 
 class RoundImage extends StatelessWidget {
   const RoundImage({super.key, required this.imgUrl});
@@ -10,7 +12,10 @@ class RoundImage extends StatelessWidget {
       radius: 20,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(45),
-        child: CachedNetworkImage(imageUrl: imgUrl),
+        child: AsyncImage(
+          src: imgUrl,
+          type: PlaceholderType.food,
+        ),
       ),
     );
   }

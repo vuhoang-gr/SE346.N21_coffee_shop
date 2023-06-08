@@ -9,6 +9,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../services/blocs/cart_button/cart_button_bloc.dart';
 import '../../services/blocs/product_store/product_store_event.dart';
+import '../../services/blocs/store_store/store_store_bloc.dart';
+import '../../services/blocs/store_store/store_store_state.dart' as store_state;
 import '../../utils/constants/dimension.dart';
 import '../../utils/styles/app_texts.dart';
 import '../../widgets/feature/menu_screen/address_picker.dart';
@@ -99,14 +101,16 @@ class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
                               SizedBox(height: Dimension.height8),
                               const DeliveryStorePicker(),
                               SizedBox(height: Dimension.height8),
-                              state.listFavoriteFood.isNotEmpty?Container(
-                                padding:
-                                    const EdgeInsets.fromLTRB(16, 12, 0, 12),
-                                child: Text(
-                                  "Yêu thích",
-                                  style: AppText.style.mediumBlack14,
-                                ),
-                              ):SizedBox.shrink(),
+                              state.listFavoriteFood.isNotEmpty
+                                  ? Container(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          16, 12, 0, 12),
+                                      child: Text(
+                                        "Yêu thích",
+                                        style: AppText.style.mediumBlack14,
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
                               ...(state.listFavoriteFood
                                   .map((product) => Container(
                                         padding: EdgeInsets.only(
@@ -166,7 +170,14 @@ class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
                             color: Colors.white,
                             child: const DeliveryStorePicker()))
                     : SizedBox.shrink(),
-                CartButton(scrollController: _scrollController)
+                BlocBuilder<StoreStoreBloc, store_state.StoreStoreState>(
+                    builder: (context, state) {
+                  if (state is store_state.HasDataStoreStoreState) {
+                    return CartButton(scrollController: _scrollController);
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                })
               ],
             ),
           ),
