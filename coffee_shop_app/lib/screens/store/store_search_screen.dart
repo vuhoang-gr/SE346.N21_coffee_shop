@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:coffee_shop_app/screens/store/store_detail.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_event.dart';
 import 'package:coffee_shop_app/services/blocs/search_store/search_store_bloc.dart';
@@ -191,10 +192,20 @@ class _StoreSearchScreenState extends State<StoreSearchScreen> {
                                         VoidCallback tapHandler;
                                         if (widget.isPurposeForShowDetail) {
                                           tapHandler = () {
-                                            Navigator.of(context).pushNamed(
-                                                "/store_detail",
-                                                arguments: state
-                                                    .searchStoreResults[index]);
+                                            Navigator.of(context)
+                                                .pushNamed(
+                                                    StoreDetail.routeName,
+                                                    arguments: state
+                                                            .searchStoreResults[
+                                                        index])
+                                                .then((value) {
+                                              if (value != null &&
+                                                  value is bool) {
+                                                //pop to menu
+                                                Navigator.of(context)
+                                                    .pop(value);
+                                              }
+                                            });
                                           };
                                         } else {
                                           tapHandler = () {
