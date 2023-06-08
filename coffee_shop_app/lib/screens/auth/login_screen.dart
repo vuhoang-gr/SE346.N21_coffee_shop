@@ -25,11 +25,30 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool canLogin() {
+      if (EmailValidator().validate(emailController.text) &&
+          PasswordValidator().validate(passwordController.text)) {
+        return true;
+      }
+      return false;
+    }
+
     onLogin() async {
+      if (!canLogin()) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Something is wrong! Try again!')));
+        return;
+      }
       context.read<AuthBloc>().add(EmailLogin(
           email: emailController.text, password: passwordController.text));
     }
 
+    var status = context.watch<AuthActionCubit>().state;
+    if (status is Login) {
+      if (status.email != null && status.email!.isNotEmpty) {
+        emailController.text = status.email!;
+      }
+    }
     return Column(
       children: [
         SizedBox(
@@ -46,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
           validator: PasswordValidator(),
           verifiedCheck: true,
           secure: true,
-          label: 'Password',
+          label: 'Mật khẩu',
           margin:
               EdgeInsets.symmetric(vertical: Dimension.getHeightFromValue(15)),
         ),
@@ -65,9 +84,9 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  'Forgot your password?',
+                  'Quên mật khẩu?',
                   style: AppText.style.regularBlack10.copyWith(
-                    fontSize: 15,
+                    fontSize: Dimension.getWidthFromValue(15),
                   ),
                 ),
                 Icon(
@@ -80,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         RoundedButton(
           onPressed: onLogin,
-          label: "LOGIN",
+          label: "Đăng nhập",
         ),
       ],
     );
