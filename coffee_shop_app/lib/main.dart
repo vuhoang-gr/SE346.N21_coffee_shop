@@ -40,6 +40,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
 
@@ -76,18 +77,27 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FirebaseAuth.instance.userChanges().listen((User? user) async {
-    AuthAPI.currentUser = await AuthAPI().toUser(user);
-  });
   initLatLng = await _determineUserCurrentPosition();
-  runApp(MyApp());
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  var isRmb = prefs.getBool('isRemember') ?? false;
+
+  if (!isRmb) {
+    AuthAPI().signOut();
+  }
+  bool isOpened = true;
+  runApp(MyApp(
+    isOpened: isOpened,
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key, required this.isOpened});
+  bool isOpened;
 
   @override
   Widget build(BuildContext context) {
+    bool isDialogOpen = false;
+
     return MultiBlocProvider(
       providers: [
         BlocProvider<ToppingStoreBloc>(
@@ -157,6 +167,17 @@ class MyApp extends StatelessWidget {
       ],
       child: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
+          var appState = context.read<AppCubit>().state;
+
+          FirebaseAuth.instance.userChanges().listen((User? user) async {
+            AuthAPI.currentUser = await AuthAPI().toUser(user);
+            if (context.mounted && isOpened) {
+              isOpened = false;
+              context
+                  .read<AuthBloc>()
+                  .add(UserChanged(user: AuthAPI.currentUser));
+            }
+          });
           // print(state);
           return MaterialApp(
               title: 'Coffee Shop',
@@ -164,16 +185,21 @@ class MyApp extends StatelessWidget {
                 primarySwatch: Colors.blue,
                 fontFamily: "Inter",
               ),
-              home: BlocListener<AppCubit, AppState>(
-                listener: (context, state) {
-                  if (state is AppLoading) {
-                    showDialog(
-                        context: context,
-                        builder: (context) => LoadingScreen());
-                  } else {
-                    Navigator.pop(context);
-                  }
-                },
+              home: MultiBlocListener(
+                listeners: [
+                  BlocListener<AppCubit, AppState>(
+                    listener: (context, state) {
+                      if (state is AppLoading) {
+                        showDialog(
+                                context: context,
+                                builder: (context) => LoadingScreen())
+                            .then((value) => isDialogOpen = false);
+                      } else if (state is AppLoaded && isDialogOpen) {
+                        Navigator.pop(context);
+                      }
+                    },
+                  ),
+                ],
                 child: state is Authenticated
                     ? MainPage()
                     : state is Loading

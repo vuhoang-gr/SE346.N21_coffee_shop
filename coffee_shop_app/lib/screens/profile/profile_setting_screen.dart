@@ -47,6 +47,9 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
             user.dob != null ? DateFormat('dd/MM/yyyy').format(user.dob!) : '');
     TextEditingController phoneController =
         TextEditingController(text: user.phoneNumber);
+
+    fireAuth.User? rawUser = fireAuth.FirebaseAuth.instance.currentUser;
+
     onSaveInformation() {
       setState(() {
         isChangeInformation = false;
@@ -217,25 +220,27 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                             SizedBox(
                               height: Dimension.getHeightFromValue(15),
                             ),
-                            ProfileCustomButton(
-                              onPressed: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (_) {
-                                      return ChangePasswordDialog();
-                                    }).then((value) {
-                                  if (value as bool) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content:
-                                                Text('Password Changed!')));
-                                  }
-                                });
-                              },
-                              icon: Icons.security,
-                              title: 'Mật khẩu',
-                              description: 'Thay đổi mật khẩu',
-                            ),
+                            rawUser!.providerData[0].providerId == 'password'
+                                ? ProfileCustomButton(
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) {
+                                            return ChangePasswordDialog();
+                                          }).then((value) {
+                                        if (value as bool) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  content: Text(
+                                                      'Password Changed!')));
+                                        }
+                                      });
+                                    },
+                                    icon: Icons.security,
+                                    title: 'Mật khẩu',
+                                    description: 'Thay đổi mật khẩu',
+                                  )
+                                : SizedBox.shrink(),
                           ],
                         ),
                         //Footer

@@ -16,10 +16,7 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthAPI _authAPI = AuthAPI();
 
-  AuthBloc()
-      : super(AuthAPI.currentUser != null
-            ? Authenticated(user: AuthAPI.currentUser!)
-            : UnAuthenticated()) {
+  AuthBloc() : super(Loading()) {
     on<EmailLogin>((event, emit) async {
       emit(Loading());
       var user = await _authAPI.emailLogin(event.email, event.password);
@@ -54,8 +51,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<LogOut>(
       (event, emit) {
-        unawaited(_authAPI.signOut());
-        emit(UnAuthenticated(message: 'Log out', pageState: Login()));
+        emit(UnAuthenticated(message: 'Logged out', pageState: Login()));
+        _authAPI.signOut();
       },
     );
 

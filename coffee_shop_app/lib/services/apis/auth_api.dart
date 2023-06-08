@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_app/services/blocs/auth/auth_bloc.dart';
 import 'package:coffee_shop_app/services/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -15,7 +17,12 @@ class AuthAPI {
   final firebaseAuth = firebase_auth.FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
 
-  static User? currentUser;
+  static User? get currentUser => userSubscription.value;
+  static set currentUser(User? value) {
+    userSubscription = ValueNotifier(value);
+  }
+
+  static ValueNotifier<User?> userSubscription = ValueNotifier<User?>(null);
 
   Future<User?> emailSignUp(String email, String password) async {
     try {
@@ -73,8 +80,9 @@ class AuthAPI {
       var rawUser = await firebaseAuth.signInWithCredential(credential);
 
       var user = await toUser(rawUser.user);
-      if (user != null && user.phoneNumber == "No Phone Number")
+      if (user != null && user.phoneNumber == "No Phone Number") {
         await push(user);
+      }
       return user;
     } on firebase_auth.FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {

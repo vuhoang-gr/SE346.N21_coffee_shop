@@ -10,6 +10,7 @@ import 'package:coffee_shop_app/widgets/feature/profile_screen/change_password_d
 import 'package:coffee_shop_app/widgets/feature/profile_screen/image_dialog.dart';
 import 'package:coffee_shop_app/widgets/global/aysncImage/async_image.dart';
 import 'package:coffee_shop_app/widgets/global/buttons/touchable_opacity.dart';
+import 'package:coffee_shop_app/widgets/global/dialog/custom_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -149,8 +150,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     ProfileCustomButton(
                       onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Show dialog')));
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return CustomDialog(
+                                header: 'Liên hệ với chúng tôi',
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 15.0, left: 15, bottom: 15),
+                                  child: SizedBox(
+                                    width: double.infinity,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Hotline: 1900 1091',
+                                          style: AppText.style.regularBlack14,
+                                        ),
+                                        Text(
+                                          'Email: KAPI.support@kapi.com',
+                                          style: AppText.style.regularBlack14,
+                                        ),
+                                        Container(
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: 10),
+                                            child: RoundedButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              label: 'OK',
+                                            ))
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            });
                       },
                       icon: Icons.support_agent,
                       title: 'Hỗ trợ',
