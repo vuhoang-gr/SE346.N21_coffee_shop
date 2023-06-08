@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/blocs/auth_action/auth_action_cubit.dart';
+import '../../widgets/feature/login_screen/information_dialog.dart';
 import '../../widgets/global/buttons/rounded_button.dart';
 import '../../widgets/global/textForm/custom_text_form.dart';
 
@@ -52,10 +53,35 @@ class _LoginScreenState extends State<LoginScreen> {
             SnackBar(content: Text('Something is wrong! Try again!')));
         return;
       }
-      context.read<AuthBloc>().add(EmailLogin(
-          email: emailController.text, password: passwordController.text));
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isRemember', isRemember);
+      var user = await AuthAPI()
+          .emailLogin(emailController.text, passwordController.text);
+      if (user == null) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Something is wrong! Try again!')));
+          return;
+        }
+      }
+
+      if (context.mounted) {
+        if (user!.name == "No Name") {
+          var check = await showDialog(
+              context: context, builder: (context) => InformationDialog());
+          if (!check) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Please fill the information!')));
+              return;
+            }
+          }
+        }
+        if (context.mounted) {
+          context.read<AuthBloc>().add(EmailLogin(
+              email: emailController.text, password: passwordController.text));
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('isRemember', isRemember);
+        }
+      }
     }
 
     var status = context.watch<AuthActionCubit>().state;

@@ -121,7 +121,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) {
-                print(state);
+                // print(state);
                 return Text(
                   (state as Authenticated).user.name,
                   style: AppText.style.boldBlack18,
