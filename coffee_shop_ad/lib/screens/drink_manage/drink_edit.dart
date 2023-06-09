@@ -1,38 +1,42 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:coffee_shop_admin/services/functions/money_transfer.dart';
 import 'package:coffee_shop_admin/services/models/drink.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
 import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:coffee_shop_admin/utils/validations/validator.dart';
-import 'package:coffee_shop_admin/widgets/feature/drink_detail_widgets/round_image.dart';
 import 'package:coffee_shop_admin/widgets/global/custom_app_bar.dart';
 import 'package:coffee_shop_admin/widgets/global/textForm/custom_text_form.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import 'package:quickalert/quickalert.dart';
 
-class CreateDrinkScreen extends StatefulWidget {
-  static const routeName = "/create_drink";
-
-  const CreateDrinkScreen({super.key});
+class EditDrinkScreen extends StatefulWidget {
+  static const routeName = "/edit_drink";
+  final Drink product;
+  const EditDrinkScreen({super.key, required this.product});
   @override
-  State<CreateDrinkScreen> createState() => _CreateDrinkScreenState();
+  State<EditDrinkScreen> createState() => _EditDrinkScreenState();
 }
 
-class _CreateDrinkScreenState extends State<CreateDrinkScreen> {
-  var _selectedToppings = [];
-  var _selectedSizes = [];
+class _EditDrinkScreenState extends State<EditDrinkScreen> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  List<dynamic> _imageUrls = [];
 
   @override
   void initState() {
+    nameController.text = widget.product.name;
+    priceController.text = widget.product.price.toInt().toString();
+    descriptionController.text = widget.product.description;
+    _imageUrls = widget.product.images;
     super.initState();
-
-    _selectedSizes = List<bool>.generate(Drink.sizes.length, (index) => false);
-    _selectedToppings = List<bool>.generate(Drink.toppings.length, (index) => false);
   }
 
   final imgController = MultiImagePickerController(
@@ -42,10 +46,6 @@ class _CreateDrinkScreenState extends State<CreateDrinkScreen> {
       withReadStream: false,
       images: <ImageFile>[]);
 
-  TextEditingController nameController = TextEditingController();
-  TextEditingController priceController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-
   bool _isKeyboardOpened = false;
 
   @override
@@ -54,7 +54,7 @@ class _CreateDrinkScreenState extends State<CreateDrinkScreen> {
     // ignore: no_leading_underscores_for_local_identifiers
     bool _validateData() {
       final images = imgController.images;
-      if (images.isEmpty) {
+      if (images.isEmpty && _imageUrls.isEmpty) {
         QuickAlert.show(
           context: context,
           type: QuickAlertType.warning,
@@ -79,7 +79,7 @@ class _CreateDrinkScreenState extends State<CreateDrinkScreen> {
     }
 
     // ignore: no_leading_underscores_for_local_identifiers
-    void _hanldeCreateDrink() async {
+    void _hanldeEditDrink() async {
       if (!_validateData()) {
         print("Invalid data!");
         return;
@@ -88,21 +88,8 @@ class _CreateDrinkScreenState extends State<CreateDrinkScreen> {
         context: context,
         type: QuickAlertType.loading,
         title: 'Loading',
-        text: 'Creating your new drink...',
+        text: 'Saving your drink...',
       );
-
-      List<String> sizes = [];
-      for (int i = 0; i < _selectedSizes.length; i++) {
-        if (_selectedSizes[i] == true) {
-          sizes.add(Drink.sizes[i].id);
-        }
-      }
-      List<String> toppings = [];
-      for (int i = 0; i < _selectedToppings.length; i++) {
-        if (_selectedToppings[i] == true) {
-          toppings.add(Drink.toppings[i].id);
-        }
-      }
 
       try {
         final imagePaths = imgController.images;
@@ -116,15 +103,20 @@ class _CreateDrinkScreenState extends State<CreateDrinkScreen> {
             imgUrlList.add(url);
           });
         }
-        FirebaseFirestore.instance.collection("Food").add({
+        for (final img in widget.product.images) {
+          if (_imageUrls.contains(img) == false) FirebaseStorage.instance.refFromURL(img).delete();
+        }
+        for (int i = 0; i < widget.product.images.length; i++) {
+          var url = widget.product.images[i].toString();
+          if (_imageUrls.contains(url)) imgUrlList.add(url);
+        }
+        FirebaseFirestore.instance.collection("Food").doc(widget.product.id).update({
           "name": nameController.text,
           "price": int.parse(priceController.text),
           "description": descriptionController.text,
-          "createAt": FieldValue.serverTimestamp(),
-          "sizes": sizes,
-          "toppings": toppings,
           "images": imgUrlList,
         }).then((value) {
+          Navigator.of(context).pop();
           Navigator.of(context).pop();
           Navigator.of(context).pop();
           QuickAlert.show(
@@ -140,10 +132,10 @@ class _CreateDrinkScreenState extends State<CreateDrinkScreen> {
         QuickAlert.show(
           context: context,
           type: QuickAlertType.error,
-          text: 'Something\'s wrong when create new drink!',
+          text: 'Something\'s wrong when edit drink!',
           confirmBtnText: "Ok",
         );
-        print("Something's wrong when create new drink");
+        print("Something's wrong when edit drink");
         print(e);
       }
     }
@@ -156,7 +148,7 @@ class _CreateDrinkScreenState extends State<CreateDrinkScreen> {
               children: [
                 CustomAppBar(
                   leading: Text(
-                    "New Drink",
+                    "Edit Drink",
                     style: AppText.style.boldBlack18,
                   ),
                 ),
@@ -247,6 +239,74 @@ class _CreateDrinkScreenState extends State<CreateDrinkScreen> {
                               ),
                             ),
 
+                            Container(
+                              width: double.maxFinite,
+                              padding:
+                                  EdgeInsets.symmetric(horizontal: Dimension.height16, vertical: Dimension.height16),
+                              margin: EdgeInsets.only(
+                                  top: Dimension.height12, left: Dimension.height16, right: Dimension.height16),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Drink Images",
+                                      style: AppText.style.boldBlack16,
+                                    ),
+                                    SizedBox(height: 8),
+                                    _imageUrls.isEmpty
+                                        ? SizedBox()
+                                        : CarouselSlider(
+                                            options: CarouselOptions(
+                                              enableInfiniteScroll: false,
+                                              enlargeCenterPage: true,
+                                              scrollDirection: Axis.horizontal,
+                                            ),
+                                            items: _imageUrls.map((e) {
+                                              // return CachedNetworkImage(imageUrl: e);
+                                              return Stack(
+                                                children: [
+                                                  Card(
+                                                    semanticContainer: true,
+                                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(4.0),
+                                                    ),
+                                                    margin: EdgeInsets.all(10),
+                                                    child: CachedNetworkImage(imageUrl: e),
+                                                  ),
+                                                  Positioned(
+                                                    top: 0,
+                                                    right: 0,
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        _imageUrls.remove(e);
+                                                        Fluttertoast.showToast(
+                                                            msg: "Image removed!",
+                                                            toastLength: Toast.LENGTH_SHORT,
+                                                            gravity: ToastGravity.CENTER,
+                                                            timeInSecForIosWeb: 1,
+                                                            backgroundColor: Colors.black,
+                                                            textColor: Colors.white,
+                                                            fontSize: 16.0);
+                                                        setState(() {});
+                                                      },
+                                                      child: Icon(
+                                                        Icons.close_rounded,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            }).toList(),
+                                          ),
+                                  ]),
+                            ),
+
                             //images
                             Container(
                               width: double.maxFinite,
@@ -263,7 +323,7 @@ class _CreateDrinkScreenState extends State<CreateDrinkScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Images",
+                                      "Upload more images",
                                       style: AppText.style.boldBlack16,
                                     ),
                                     MultiImagePickerView(
@@ -272,145 +332,6 @@ class _CreateDrinkScreenState extends State<CreateDrinkScreen> {
                                       padding: const EdgeInsets.all(10),
                                     ),
                                   ]),
-                            ),
-
-                            //size
-                            Container(
-                              width: double.maxFinite,
-                              padding:
-                                  EdgeInsets.symmetric(horizontal: Dimension.height16, vertical: Dimension.height16),
-                              margin: EdgeInsets.only(
-                                  top: Dimension.height12, left: Dimension.height16, right: Dimension.height16),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Size",
-                                      style: AppText.style.boldBlack16,
-                                    ),
-                                    ListView.separated(
-                                        physics: const NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        controller: ScrollController(),
-                                        itemBuilder: (context, index) => InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  _selectedSizes[index] = !_selectedSizes[index];
-                                                });
-                                              },
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Checkbox(
-                                                        value: _selectedSizes[index],
-                                                        onChanged: (value) {
-                                                          setState(() {
-                                                            _selectedSizes[index] = value;
-                                                          });
-                                                        },
-                                                      ),
-                                                      RoundImage(imgUrl: Drink.sizes[index].image),
-                                                      SizedBox(
-                                                        width: Dimension.height8,
-                                                      ),
-                                                      Text(
-                                                        Drink.sizes[index].name,
-                                                        style: AppText.style.regularBlack14,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Text(
-                                                    '+${MoneyTransfer.transferFromDouble(Drink.sizes[index].price)} ₫',
-                                                    style: AppText.style.boldBlack14,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                        separatorBuilder: (_, __) => const Divider(
-                                              thickness: 2,
-                                              color: AppColors.greyBoxColor,
-                                            ),
-                                        itemCount: Drink.sizes.length),
-                                  ]),
-                            ),
-
-                            //topping
-                            Container(
-                              width: double.maxFinite,
-                              padding:
-                                  EdgeInsets.symmetric(horizontal: Dimension.height16, vertical: Dimension.height16),
-                              margin: EdgeInsets.only(
-                                  top: Dimension.height12, left: Dimension.height16, right: Dimension.height16),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  RichText(
-                                    text: TextSpan(
-                                      style: AppText.style.boldBlack16,
-                                      children: <TextSpan>[
-                                        const TextSpan(text: 'Topping '),
-                                      ],
-                                    ),
-                                  ),
-                                  ListView.separated(
-                                      padding: EdgeInsets.only(top: Dimension.height16),
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      controller: ScrollController(),
-                                      itemBuilder: (context, index) => InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                _selectedToppings[index] = !_selectedToppings[index];
-                                              });
-                                            },
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Expanded(
-                                                  child: Row(
-                                                    children: [
-                                                      Checkbox(
-                                                        value: _selectedToppings[index],
-                                                        onChanged: (value) {
-                                                          setState(() {
-                                                            _selectedToppings[index] = value;
-                                                          });
-                                                        },
-                                                      ),
-                                                      RoundImage(imgUrl: Drink.toppings[index].image),
-                                                      SizedBox(
-                                                        width: Dimension.height8,
-                                                      ),
-                                                      Text(Drink.toppings[index].name,
-                                                          style: AppText.style.regularBlack14),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Text(
-                                                  '+${MoneyTransfer.transferFromDouble(Drink.toppings[index].price)} ₫',
-                                                  style: AppText.style.boldBlack14,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                      separatorBuilder: (_, __) => const Divider(
-                                            thickness: 2,
-                                            color: AppColors.greyBoxColor,
-                                          ),
-                                      itemCount: Drink.toppings.length),
-                                ],
-                              ),
                             ),
                             SizedBox(height: 20),
                           ],
@@ -423,7 +344,7 @@ class _CreateDrinkScreenState extends State<CreateDrinkScreen> {
                               color: Colors.white,
                               padding: EdgeInsets.symmetric(horizontal: Dimension.width16, vertical: Dimension.height8),
                               child: ElevatedButton(
-                                  onPressed: _hanldeCreateDrink,
+                                  onPressed: _hanldeEditDrink,
                                   style: ButtonStyle(
                                       elevation: const MaterialStatePropertyAll(0),
                                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
@@ -431,7 +352,7 @@ class _CreateDrinkScreenState extends State<CreateDrinkScreen> {
                                       )),
                                       backgroundColor: const MaterialStatePropertyAll(AppColors.blueColor)),
                                   child: Text(
-                                    "Create Drink",
+                                    "Save",
                                     style: AppText.style.regularWhite16,
                                   )))
                     ],

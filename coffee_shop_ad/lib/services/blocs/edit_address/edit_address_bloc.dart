@@ -19,8 +19,7 @@ class EditAddressBloc extends Bloc<EditAddressEvent, EditAddressState> {
     );
   }
 
-  void _onNameReceiverChanged(
-      NameReceiverChanged event, Emitter<EditAddressState> emit) {
+  void _onNameReceiverChanged(NameReceiverChanged event, Emitter<EditAddressState> emit) {
     emit(
       state.copyWith(
         nameReceiver: event.nameReceiver,
@@ -36,8 +35,7 @@ class EditAddressBloc extends Bloc<EditAddressEvent, EditAddressState> {
     );
   }
 
-  void _onAddressNoteChanged(
-      AddressNoteChanged event, Emitter<EditAddressState> emit) {
+  void _onAddressNoteChanged(AddressNoteChanged event, Emitter<EditAddressState> emit) {
     emit(
       state.copyWith(
         addressNote: event.addressNote,

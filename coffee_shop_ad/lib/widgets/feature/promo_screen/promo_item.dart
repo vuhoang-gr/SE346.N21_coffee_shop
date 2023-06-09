@@ -1,3 +1,4 @@
+import 'package:coffee_shop_admin/services/functions/money_transfer.dart';
 import 'package:coffee_shop_admin/services/models/promo.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
 import 'package:coffee_shop_admin/utils/constants/dimension.dart';
@@ -6,8 +7,6 @@ import 'package:coffee_shop_admin/widgets/feature/promo_screen/promo_detail_moda
 import 'package:coffee_shop_admin/widgets/global/aysncImage/async_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-import '../../../services/functions/money_transfer.dart';
 
 class PromoItem extends StatelessWidget {
   final Promo promo;
