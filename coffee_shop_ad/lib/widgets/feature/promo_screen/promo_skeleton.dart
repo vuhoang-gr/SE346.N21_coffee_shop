@@ -1,7 +1,6 @@
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:flutter/material.dart';
 import 'package:skeletons/skeletons.dart';
-
-import '../../../../utils/constants/dimension.dart';
 
 class PromoSkeleton extends StatelessWidget {
   const PromoSkeleton({super.key});
@@ -17,9 +16,7 @@ class PromoSkeleton extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.all(Dimension.height8),
-            child: SkeletonAvatar(
-                style: SkeletonAvatarStyle(
-                    width: Dimension.height68, height: Dimension.height68)),
+            child: SkeletonAvatar(style: SkeletonAvatarStyle(width: Dimension.height68, height: Dimension.height68)),
           ),
           Expanded(
               child: Padding(

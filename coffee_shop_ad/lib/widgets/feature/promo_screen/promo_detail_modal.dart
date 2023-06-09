@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coffee_shop_admin/screens/promo/promo_edit.dart';
+import 'package:coffee_shop_admin/services/blocs/promo/promo_bloc.dart';
+import 'package:coffee_shop_admin/services/blocs/promo/promo_event.dart';
 import 'package:coffee_shop_admin/services/functions/money_transfer.dart';
 import 'package:coffee_shop_admin/services/models/promo.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
 import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
-import 'package:coffee_shop_admin/widgets/global/buttons/rounded_button.dart';
 import 'package:coffee_shop_admin/widgets/global/container_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -185,6 +187,7 @@ class PromoDetailModal extends StatelessWidget {
                                                                   Navigator.of(context).pop();
                                                                   Navigator.of(context).pop();
                                                                   Navigator.of(context).pop();
+                                                                  BlocProvider.of<PromoBloc>(context).add(FetchData());
                                                                 });
                                                               },
                                                               style: _roundedOutlineButtonStyle,

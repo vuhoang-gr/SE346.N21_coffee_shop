@@ -1,50 +1,63 @@
 import 'dart:async';
 
-import 'package:coffee_shop_admin/services/apis/promo_api.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coffee_shop_admin/services/blocs/promo/promo_event.dart';
 import 'package:coffee_shop_admin/services/blocs/promo/promo_state.dart';
+import 'package:coffee_shop_admin/services/models/promo.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../../../utils/constants/dimension.dart';
-import '../../models/promo.dart';
-
 class PromoBloc extends Bloc<PromoEvent, PromoState> {
-  StreamSubscription<List<Promo>>? _promoStoreSubscription;
-  PromoBloc() : super(LoadingState(initPromos: [], listExistCode: [])) {
+  PromoBloc() : super(LoadingState(initPromos: [], listExistCode: [], stores: [], drinks: [])) {
     on<FetchData>(_mapFetchData);
-    on<GetDataFetched>(_mapGetDataFetched);
   }
 
-  void _mapFetchData(FetchData event, Emitter<PromoState> emit) {
-    emit(LoadingState(initPromos: [], listExistCode: []));
-    _promoStoreSubscription?.cancel();
-    _promoStoreSubscription = PromoAPI().fetchData().listen((listPromos) {
-      List<String> codes = [];
-      listPromos.forEach((element) {
-        codes.add(element.id);
+  void _mapFetchData(FetchData event, Emitter<PromoState> emit) async {
+    emit(LoadingState(initPromos: [], listExistCode: [], stores: [], drinks: []));
+    try {
+      final CollectionReference promoReference = FirebaseFirestore.instance.collection('Promo');
+      final promoDocs = await promoReference.get();
+      List<Promo> promoList = [];
+      List<String> existCodeList = [];
+      promoDocs.docs.forEach((doc) {
+        var curPromo = fromFireStore(doc.data() as Map<String, dynamic>?, doc.id);
+        if (curPromo is Promo) {
+          existCodeList.add(curPromo.id);
+          promoList.add(curPromo);
+        }
       });
-      add(GetDataFetched(listPromos: listPromos, listCodes: codes));
-    }, onError: (_) {
+      emit(LoadedState(initPromos: promoList, listExistCode: existCodeList, stores: [], drinks: []));
+    } catch (_) {
       Fluttertoast.showToast(
           msg: "Đã có lỗi xảy ra, hãy thử lại sau.",
           toastLength: Toast.LENGTH_SHORT,
           timeInSecForIosWeb: 1,
           textColor: Colors.white,
           fontSize: Dimension.font14);
-      add(GetDataFetched(listPromos: [], listCodes: []));
-    });
+      emit(LoadedState(initPromos: [], listExistCode: [], stores: [], drinks: []));
+    }
   }
 
-  void _mapGetDataFetched(GetDataFetched event, Emitter<PromoState> emit) {
-    emit(LoadedState(
-        initPromos: event.listPromos, listExistCode: event.listCodes));
+  Promo? fromFireStore(Map<String, dynamic>? data, String id) {
+    if (data == null) return null;
+
+    return Promo(
+        id: id,
+        minPrice: data['minPrice'].toDouble(),
+        maxPrice: data['maxPrice'].toDouble(),
+        percent: data['percent'].toDouble(),
+        description: data['description'],
+        dateEnd: data['dateEnd'].toDate(),
+        dateStart: data['dateStart'].toDate(),
+        products: data['products'].cast<String>(),
+        stores: data['stores'].cast<String>(),
+        forNewCustomer: data['forNewCustomer']);
   }
 
   @override
   Future<void> close() {
-    _promoStoreSubscription?.cancel();
     return super.close();
   }
 }

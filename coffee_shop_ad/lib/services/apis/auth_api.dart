@@ -137,7 +137,7 @@ class AuthAPI {
       id: id,
       name: data['name'],
       phoneNumber: data['phoneNumber'] ?? 'No Phone Number',
-      dob: data['dob'],
+      dob: data['dob'] ?? DateTime(0),
       isActive: data['isActive'],
       avatarUrl: data['avatarUrl'],
       coverUrl: data['coverUrl'],

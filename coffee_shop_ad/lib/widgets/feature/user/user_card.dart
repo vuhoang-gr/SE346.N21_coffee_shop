@@ -2,12 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coffee_shop_admin/services/models/user.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:coffee_shop_admin/widgets/global/buttons/touchable_opacity.dart';
 import 'package:flutter/material.dart';
 import 'package:quickalert/quickalert.dart';
-
-import '../../../utils/constants/dimension.dart';
 
 class UserCard extends StatefulWidget {
   UserCard({super.key, required this.user});
@@ -108,21 +107,18 @@ class _UserCardState extends State<UserCard> with SingleTickerProviderStateMixin
                         Row(
                           children: [
                             Text(
-                              (user.isAdmin || user.isStaff) ? "Role: " : "Role: User",
+                              (user.isAdmin || user.isStaff) ? "Role: " : "Role: Normal User",
                               style: AppText.style.regularGrey14.copyWith(
                                 color: Colors.grey,
                               ),
                             ),
                             Text(
-                              user.isAdmin
-                                  ? 'Admin${user.isStaff ? " | Staff" : ""}'
-                                  : user.isStaff
-                                      ? "Staff"
-                                      : "",
-                              style: AppText.style.regularGrey14.copyWith(
-                                color: Colors.black,
-                              ),
-                            )
+                                user.isAdmin
+                                    ? 'Admin${user.isStaff ? " | Staff" : ""}'
+                                    : user.isStaff
+                                        ? "Staff"
+                                        : "",
+                                style: AppText.style.boldBlack14)
                           ],
                         ),
                       ],
