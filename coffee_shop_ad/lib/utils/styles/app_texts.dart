@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../colors/app_colors.dart';
@@ -25,14 +24,16 @@ class AppText {
       fontSize: Dimension.font10, height: 1.5, color: AppColors.greyTextColor);
   final regularBlack10 = TextStyle(
       fontSize: Dimension.font10, height: 1.5, color: AppColors.blackColor);
-  final regularWhite14 = TextStyle(
-      fontSize: Dimension.font14, height: 1.5, color: Colors.white);
-  final regularWhite16 = TextStyle(
-      fontSize: Dimension.font16, height: 1.5, color: Colors.white);
-  final regularBlue14 = TextStyle(
-      fontSize: Dimension.font14, height: 1.5, color: Colors.blue);
-  final regularBlue16 = TextStyle(
-      fontSize: Dimension.font16, height: 1.5, color: Colors.blue);
+  final regularWhite14 =
+      TextStyle(fontSize: Dimension.font14, height: 1.5, color: Colors.white);
+  final regularWhite16 =
+      TextStyle(fontSize: Dimension.font16, height: 1.5, color: Colors.white);
+  final regularBlue14 =
+      TextStyle(fontSize: Dimension.font14, height: 1.5, color: Colors.blue);
+  final regularBlue16 =
+      TextStyle(fontSize: Dimension.font16, height: 1.5, color: Colors.blue);
+  final regularOrange18 = TextStyle(
+      fontSize: Dimension.font18, height: 1.5, color: AppColors.orangeColor);
   final mediumBlack14 = TextStyle(
       fontSize: Dimension.font14,
       height: 1.5,

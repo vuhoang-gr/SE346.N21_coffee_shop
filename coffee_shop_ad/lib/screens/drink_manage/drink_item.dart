@@ -1,5 +1,8 @@
+import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_bloc.dart';
+import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_event.dart';
 import 'package:coffee_shop_admin/services/models/drink.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../services/functions/money_transfer.dart';
 import '../../utils/constants/dimension.dart';
@@ -20,7 +23,10 @@ class DrinkItem extends StatelessWidget {
         child: GestureDetector(
             onTap: () {
               Navigator.of(context)
-                  .pushNamed("/drink_detail_screen", arguments: product);
+                  .pushNamed("/drink_detail_screen", arguments: product)
+                  .then((value) {
+                BlocProvider.of<DrinkListBloc>(context).add(FetchData());
+              });
             },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,

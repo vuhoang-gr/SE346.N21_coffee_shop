@@ -3,7 +3,7 @@ import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utils/constants/dimension.dart';
-import '../product_detail_widgets/round_image.dart';
+import '../drink_detail_widgets/round_image.dart';
 
 class OrderManageProductItem extends StatelessWidget {
   const OrderManageProductItem({super.key});

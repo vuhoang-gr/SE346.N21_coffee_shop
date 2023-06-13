@@ -40,8 +40,7 @@ class AuthAPI {
 
   Future<User?> emailLogin(String email, String password) async {
     try {
-      final credential = await firebaseAuth.signInWithEmailAndPassword(
-          email: email, password: password);
+      final credential = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
       print('Login Success');
       var user = await toUser(credential.user);
       return user;
@@ -57,6 +56,7 @@ class AuthAPI {
 
   Future<User?> googleLogin() async {
     await GoogleSignIn().disconnect().catchError((onError) {
+      print(onError);
       print('don\'t need to sign out');
     });
 
@@ -65,16 +65,14 @@ class AuthAPI {
 
       GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
-      firebase_auth.AuthCredential credential =
-          firebase_auth.GoogleAuthProvider.credential(
+      firebase_auth.AuthCredential credential = firebase_auth.GoogleAuthProvider.credential(
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
       var rawUser = await firebaseAuth.signInWithCredential(credential);
 
       var user = await toUser(rawUser.user);
-      if (user != null && user.phoneNumber == "No Phone Number")
-        await push(user);
+      if (user != null && user.phoneNumber == "No Phone Number") await push(user);
       return user;
     } on firebase_auth.FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -94,12 +92,10 @@ class AuthAPI {
 
       // Create a credential from the access token
       final firebase_auth.OAuthCredential facebookAuthCredential =
-          firebase_auth.FacebookAuthProvider.credential(
-              loginResult.accessToken!.token);
+          firebase_auth.FacebookAuthProvider.credential(loginResult.accessToken!.token);
 
       // Once signed in, return the UserCredential
-      var rawUser =
-          await firebaseAuth.signInWithCredential(facebookAuthCredential);
+      var rawUser = await firebaseAuth.signInWithCredential(facebookAuthCredential);
       var user = await toUser(rawUser.user);
       if (user != null && user.phoneNumber == "No Phone Number") {
         await push(user);
@@ -141,7 +137,7 @@ class AuthAPI {
       id: id,
       name: data['name'],
       phoneNumber: data['phoneNumber'] ?? 'No Phone Number',
-      dob: data['dob'],
+      dob: data['dob'] ?? DateTime(0),
       isActive: data['isActive'],
       avatarUrl: data['avatarUrl'],
       coverUrl: data['coverUrl'],

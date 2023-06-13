@@ -1,6 +1,5 @@
 import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
-import 'package:coffee_shop_admin/widgets/feature/login_screen/back_header.dart';
 import 'package:coffee_shop_admin/widgets/feature/profile_screen/change_password_dialog.dart';
 import 'package:coffee_shop_admin/widgets/feature/profile_screen/profile_custom_button.dart';
 import 'package:coffee_shop_admin/widgets/global/buttons/touchable_opacity.dart';
@@ -30,11 +29,9 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
   @override
   Widget build(BuildContext context) {
     //change infor handle
-    TextEditingController nameController =
-        TextEditingController(text: user.name);
-    TextEditingController dobController = TextEditingController(
-        text:
-            user.dob != null ? DateFormat('dd/MM/yyyy').format(user.dob!) : '');
+    TextEditingController nameController = TextEditingController(text: user.name);
+    TextEditingController dobController =
+        TextEditingController(text: user.dob != null ? DateFormat('dd/MM/yyyy').format(user.dob!) : '');
 
     return SafeArea(
       child: Scaffold(
@@ -94,8 +91,7 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                                         },
                                         child: Text(
                                           'Change',
-                                          style: AppText.style.regularBlue16
-                                              .copyWith(
+                                          style: AppText.style.regularBlue16.copyWith(
                                             fontSize: 14,
                                           ),
                                         ),
@@ -106,27 +102,21 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                                             onTap: () {
                                               setState(() {
                                                 isChangeInformation = false;
-                                                dobController =
-                                                    TextEditingController(
-                                                        text: user.dob != null
-                                                            ? DateFormat(
-                                                                    'dd/MM/yyyy')
-                                                                .format(
-                                                                    user.dob!)
-                                                            : '');
+                                                dobController = TextEditingController(
+                                                    text: user.dob != null
+                                                        ? DateFormat('dd/MM/yyyy').format(user.dob!)
+                                                        : '');
                                               });
                                             },
                                             child: Text(
                                               'Cancel',
-                                              style: AppText.style.regularGrey14
-                                                  .copyWith(
+                                              style: AppText.style.regularGrey14.copyWith(
                                                 fontSize: 14,
                                               ),
                                             ),
                                           ),
                                           SizedBox(
-                                            width:
-                                                Dimension.getWidthFromValue(15),
+                                            width: Dimension.getWidthFromValue(15),
                                           ),
                                           TouchableOpacity(
                                             onTap: () {
@@ -135,26 +125,19 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                                               });
                                               user.name = nameController.text;
                                               try {
-                                                user.dob = DateFormat(
-                                                        'dd/MM/yyyy')
-                                                    .parse(dobController.text);
+                                                user.dob = DateFormat('dd/MM/yyyy').parse(dobController.text);
                                               } finally {
                                                 setState(() {
-                                                  dobController =
-                                                      TextEditingController(
-                                                          text: user.dob != null
-                                                              ? DateFormat(
-                                                                      'dd/MM/yyyy')
-                                                                  .format(
-                                                                      user.dob!)
-                                                              : '');
+                                                  dobController = TextEditingController(
+                                                      text: user.dob != null
+                                                          ? DateFormat('dd/MM/yyyy').format(user.dob!)
+                                                          : '');
                                                 });
                                               }
                                             },
                                             child: Text(
                                               'Save',
-                                              style: AppText.style.regularBlue16
-                                                  .copyWith(
+                                              style: AppText.style.regularBlue16.copyWith(
                                                 fontSize: 14,
                                               ),
                                             ),
@@ -182,10 +165,8 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                             //Button
                             ProfileCustomButton(
                               onPressed: () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            'Nav to AddressListingScreen')));
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(content: Text('Nav to AddressListingScreen')));
                               },
                               icon: Icons.home,
                               title: 'Shipping address',

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../../../utils/constants/dimension.dart';
 import '../../../utils/styles/button.dart';
 import '../../global/container_card.dart';
-import '../product_detail_widgets/icon_widget_row.dart';
+import '../drink_detail_widgets/icon_widget_row.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class StoreInfoDialog extends StatelessWidget {

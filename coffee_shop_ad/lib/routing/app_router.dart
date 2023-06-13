@@ -1,4 +1,7 @@
 import 'package:coffee_shop_admin/screens/auth/auth_screen.dart';
+import 'package:coffee_shop_admin/screens/drink_manage/drink_create.dart';
+import 'package:coffee_shop_admin/screens/drink_manage/drink_detail.dart';
+import 'package:coffee_shop_admin/screens/drink_manage/drink_edit.dart';
 
 import 'package:coffee_shop_admin/screens/drink_manage/size_create.dart';
 import 'package:coffee_shop_admin/screens/drink_manage/size_detail.dart';
@@ -8,16 +11,18 @@ import 'package:coffee_shop_admin/screens/drink_manage/topping_detail.dart';
 import 'package:coffee_shop_admin/screens/drink_manage/topping_edit.dart';
 
 import 'package:coffee_shop_admin/screens/main_page.dart';
-import 'package:coffee_shop_admin/screens/product_detail.dart';
 import 'package:coffee_shop_admin/screens/profile/profile_screen.dart';
 import 'package:coffee_shop_admin/screens/profile/profile_setting_screen.dart';
+import 'package:coffee_shop_admin/screens/promo/promo_create.dart';
+import 'package:coffee_shop_admin/screens/promo/promo_edit.dart';
+import 'package:coffee_shop_admin/screens/promo/promo_screen.dart';
 import 'package:coffee_shop_admin/screens/store/store_detail.dart';
-import 'package:coffee_shop_admin/screens/store/store_search_screen.dart';
 import 'package:coffee_shop_admin/screens/store_address/address_screen.dart';
 import 'package:coffee_shop_admin/screens/store_address/map_screen.dart';
 import 'package:coffee_shop_admin/screens/user/user_screen.dart';
 import 'package:coffee_shop_admin/services/blocs/auth_action/auth_action_cubit.dart';
 import 'package:coffee_shop_admin/services/models/address.dart';
+import 'package:coffee_shop_admin/services/models/promo.dart';
 import 'package:coffee_shop_admin/services/models/topping.dart';
 
 import 'package:coffee_shop_admin/services/models/size.dart';
@@ -46,8 +51,7 @@ class AppRouter {
         const end = Offset.zero;
         const curve = Curves.ease;
 
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
         return SlideTransition(
           position: animation.drive(tween),
@@ -94,6 +98,14 @@ class AppRouter {
       case ProfileSettingScreen.routeName:
         return _createRoute(ProfileSettingScreen());
 
+      case CreateDrinkScreen.routeName:
+        return _createRoute(CreateDrinkScreen());
+      case EditDrinkScreen.routeName:
+        Drink drink = settings.arguments as Drink;
+        return _createRoute(EditDrinkScreen(
+          product: drink,
+        ));
+
       case CreateToppingScreen.routeName:
         return _createRoute(CreateToppingScreen());
 
@@ -111,7 +123,6 @@ class AppRouter {
           product: size,
         ));
 
-
       case AddressScreen.routeName:
         Address? deliveryAddress = settings.arguments as Address?;
         return _createRoute(AddressScreen(
@@ -126,17 +137,15 @@ class AppRouter {
 
       case "/drink_detail_screen":
         Drink food = settings.arguments as Drink;
-        return _createRoute(ProductDetail(product: food));
+        return _createRoute(DrinkDetail(product: food));
 
       case "/topping_detail_screen":
         Topping topping = settings.arguments as Topping;
         return _createRoute(ToppingDetail(product: topping));
 
-
       case "/size_detail_screen":
         Size size = settings.arguments as Size;
         return _createRoute(SizeDetail(product: size));
-
 
       case "/store_detail":
         Store args = settings.arguments as Store;
@@ -144,27 +153,24 @@ class AppRouter {
           store: args,
         ));
 
+      case PromoScreen.routeName:
+        return _createRoute(PromoScreen());
+      case CreatePromoScreen.routeName:
+        List<String> existCodes = settings.arguments as List<String>;
+        return _createRoute(CreatePromoScreen(existCodeList: existCodes));
+      case EditPromoScreen.routeName:
+        Promo promo = settings.arguments as Promo;
+        return _createRoute(EditPromoScreen(promo: promo));
+
       case StoreScreen.routeName:
-        Map<String, dynamic> arguments =
-            settings.arguments as Map<String, dynamic>;
-        bool isPurposeForShowDetail =
-            arguments['isPurposeForShowDetail'] ?? false;
+        Map<String, dynamic> arguments = settings.arguments as Map<String, dynamic>;
+        bool isPurposeForShowDetail = arguments['isPurposeForShowDetail'] ?? false;
         return _createRoute(StoreScreen(
           isPurposeForShowDetail: isPurposeForShowDetail,
         ));
 
       case UserScreen.routeName:
         return _createRoute(UserScreen());
-
-      case StoreSearchScreen.routeName:
-        Map<String, dynamic> arguments =
-            settings.arguments as Map<String, dynamic>;
-        bool isPurposeForShowDetail =
-            arguments['isPurposeForShowDetail'] ?? false;
-        return MaterialPageRoute(
-            builder: ((context) => StoreSearchScreen(
-                  isPurposeForShowDetail: isPurposeForShowDetail,
-                )));
 
       default:
         return _createRoute(MainPage());

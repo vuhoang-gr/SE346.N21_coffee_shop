@@ -1,12 +1,11 @@
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
+import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
+import 'package:coffee_shop_admin/utils/validations/confirm_password_validate.dart';
+import 'package:coffee_shop_admin/utils/validations/password_validate.dart';
+import 'package:coffee_shop_admin/widgets/global/buttons/rounded_button.dart';
+import 'package:coffee_shop_admin/widgets/global/dialog/swipe_up_dialog.dart';
+import 'package:coffee_shop_admin/widgets/global/textForm/custom_text_form.dart';
 import 'package:flutter/widgets.dart';
-
-import '../../../utils/constants/dimension.dart';
-import '../../../utils/styles/app_texts.dart';
-import '../../../utils/validations/confirm_password_validate.dart';
-import '../../../utils/validations/password_validate.dart';
-import '../../global/buttons/rounded_button.dart';
-import '../../global/dialog/swipe_up_dialog.dart';
-import '../../global/textForm/custom_text_form.dart';
 
 class ChangePasswordDialog extends StatefulWidget {
   const ChangePasswordDialog({super.key});
@@ -59,6 +58,5 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
         ],
       ),
     );
-    ;
   }
 }

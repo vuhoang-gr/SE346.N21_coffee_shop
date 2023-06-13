@@ -29,6 +29,14 @@ class EditToppingScreen extends StatefulWidget {
 class _EditToppingScreenState extends State<EditToppingScreen> {
   TextEditingController toppingNameController = TextEditingController();
   TextEditingController toppingPriceController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    toppingNameController.text = widget.product.name;
+    toppingPriceController.text = (widget.product.price.toInt()).toString();
+  }
+
   bool _isKeyboardOpened = false;
   String imageUrl = "";
   XFile? image;
@@ -50,8 +58,7 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             title: Text('Please choose media to select'),
             content: SizedBox(
               height: MediaQuery.of(context).size.height / 6,
@@ -91,8 +98,7 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
   }
 
   bool _isValidData() {
-    if (toppingPriceController.text.isNotEmpty &&
-        int.tryParse(toppingPriceController.text) == null) return false;
+    if (toppingPriceController.text.isNotEmpty && int.tryParse(toppingPriceController.text) == null) return false;
     return true;
   }
 
@@ -116,17 +122,10 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
 
     try {
       // update firestore
-      FirebaseFirestore.instance
-          .collection("Topping")
-          .doc(widget.product.id)
-          .update({
+      FirebaseFirestore.instance.collection("Topping").doc(widget.product.id).update({
         "image": image != null ? "" : widget.product.image,
-        "name": toppingNameController.text.isNotEmpty
-            ? toppingNameController.text
-            : widget.product.name,
-        "price": toppingPriceController.text.isNotEmpty
-            ? int.parse(toppingPriceController.text)
-            : widget.product.price,
+        "name": toppingNameController.text.isNotEmpty ? toppingNameController.text : widget.product.name,
+        "price": toppingPriceController.text.isNotEmpty ? int.parse(toppingPriceController.text) : widget.product.price,
       }).then((value) async {
         if (image != null) {
           // remove old image
@@ -134,15 +133,11 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
 
           // upload new img
           final storageRef = FirebaseStorage.instance.ref();
-          final toppingImagesRef = storageRef
-              .child('products/topping/topping${DateTime.now().toString()}');
+          final toppingImagesRef = storageRef.child('products/topping/topping${DateTime.now().toString()}');
 
           await toppingImagesRef.putFile(File(image!.path)).then((res) {
             res.ref.getDownloadURL().then((url) {
-              FirebaseFirestore.instance
-                  .collection("Topping")
-                  .doc(widget.product.id)
-                  .update({
+              FirebaseFirestore.instance.collection("Topping").doc(widget.product.id).update({
                 "image": url,
               });
             });
@@ -225,10 +220,7 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
                             ),
                             Container(
                               clipBehavior: Clip.hardEdge,
-                              margin: EdgeInsets.only(
-                                  left: Dimension.height16,
-                                  right: Dimension.height16,
-                                  top: 3),
+                              margin: EdgeInsets.only(left: Dimension.height16, right: Dimension.height16, top: 3),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(8),
@@ -239,56 +231,40 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
                                   SizedBox(height: 16),
                                   image != null
                                       ? Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 20),
+                                          padding: const EdgeInsets.symmetric(horizontal: 20),
                                           child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
+                                            borderRadius: BorderRadius.circular(8),
                                             child: Image.file(
                                               File(image!.path),
                                               fit: BoxFit.cover,
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
+                                              width: MediaQuery.of(context).size.width,
                                               height: 300,
                                             ),
                                           ),
                                         )
                                       : Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 20),
+                                          padding: const EdgeInsets.symmetric(horizontal: 20),
                                           child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
+                                            borderRadius: BorderRadius.circular(8),
                                             child: CachedNetworkImage(
                                               alignment: Alignment.center,
                                               width: double.maxFinite,
                                               imageUrl: widget.product.image,
-                                              placeholder: (context, url) =>
-                                                  Container(
+                                              placeholder: (context, url) => Container(
                                                 alignment: Alignment.center,
-                                                child:
-                                                    const CircularProgressIndicator(),
+                                                child: const CircularProgressIndicator(),
                                               ),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      Container(),
+                                              errorWidget: (context, url, error) => Container(),
                                             ),
                                           ),
                                         ),
                                   ElevatedButton(
                                     style: ButtonStyle(
-                                        elevation:
-                                            const MaterialStatePropertyAll(0),
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              Dimension.height20),
+                                        elevation: const MaterialStatePropertyAll(0),
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(Dimension.height20),
                                         )),
-                                        backgroundColor:
-                                            const MaterialStatePropertyAll(
-                                                AppColors.blueColor)),
+                                        backgroundColor: const MaterialStatePropertyAll(AppColors.blueColor)),
                                     onPressed: () {
                                       uploadImageDialog();
                                     },
@@ -301,8 +277,7 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
                                         top: Dimension.height12,
                                         bottom: Dimension.height16),
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Column(
                                           children: [
@@ -314,8 +289,7 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
                                             ),
                                             SizedBox(height: 8),
                                             CustormTextForm(
-                                              controller:
-                                                  toppingPriceController,
+                                              controller: toppingPriceController,
                                               validator: PriceValidator(),
                                               verifiedCheck: true,
                                               label: 'New price (VND)',
@@ -337,23 +311,15 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
                           : Container(
                               height: Dimension.height56,
                               color: Colors.white,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: Dimension.width16,
-                                  vertical: Dimension.height8),
+                              padding: EdgeInsets.symmetric(horizontal: Dimension.width16, vertical: Dimension.height8),
                               child: ElevatedButton(
                                   onPressed: _hanldeEditTopping,
                                   style: ButtonStyle(
-                                      elevation:
-                                          const MaterialStatePropertyAll(0),
-                                      shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            Dimension.height20),
+                                      elevation: const MaterialStatePropertyAll(0),
+                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(Dimension.height20),
                                       )),
-                                      backgroundColor:
-                                          const MaterialStatePropertyAll(
-                                              AppColors.blueColor)),
+                                      backgroundColor: const MaterialStatePropertyAll(AppColors.blueColor)),
                                   child: Text(
                                     "Edit Topping",
                                     style: AppText.style.regularWhite16,

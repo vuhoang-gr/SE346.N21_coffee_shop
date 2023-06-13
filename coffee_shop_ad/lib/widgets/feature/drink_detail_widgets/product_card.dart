@@ -1,15 +1,9 @@
-import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_bloc.dart';
-import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_event.dart';
+import 'package:coffee_shop_admin/services/functions/money_transfer.dart';
 import 'package:coffee_shop_admin/services/models/drink.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
+import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../services/blocs/drink_list/drink_list_state.dart';
-import '../../../services/functions/money_transfer.dart';
-import '../../../utils/constants/dimension.dart';
-import '../../../utils/styles/app_texts.dart';
 
 class ProductCard extends StatefulWidget {
   const ProductCard({super.key, required this.product});
@@ -27,8 +21,7 @@ class _ProductCardState extends State<ProductCard> {
       children: [
         Container(
           clipBehavior: Clip.hardEdge,
-          margin: EdgeInsets.only(
-              left: Dimension.height16, right: Dimension.height16, top: 3),
+          margin: EdgeInsets.only(left: Dimension.height16, right: Dimension.height16, top: 3),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
@@ -70,12 +63,9 @@ class _ProductCardState extends State<ProductCard> {
                           bottom: Dimension.height8,
                           left: Dimension.height12,
                           right: Dimension.height12),
-                      decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.4),
-                          borderRadius: BorderRadius.circular(16)),
-                      child: Text(
-                          '${_index + 1}/${widget.product.images.length}',
-                          style: AppText.style.regularWhite14),
+                      decoration:
+                          BoxDecoration(color: Colors.black.withOpacity(0.4), borderRadius: BorderRadius.circular(16)),
+                      child: Text('${_index + 1}/${widget.product.images.length}', style: AppText.style.regularWhite14),
                     ))
               ]),
 
@@ -102,23 +92,9 @@ class _ProductCardState extends State<ProductCard> {
                             const SizedBox(
                               height: 2,
                             ),
-                            Text(
-                                "${MoneyTransfer.transferFromDouble(widget.product.price)} ₫",
+                            Text("${MoneyTransfer.transferFromDouble(widget.product.price)} ₫",
                                 style: AppText.style.boldBlack14),
                           ],
-                        ),
-                        BlocBuilder<DrinkListBloc, DrinkListState>(
-                          builder: (context, state) {
-                            return IconButton(
-                                onPressed: () {
-                                  BlocProvider.of<DrinkListBloc>(context).add(
-                                      UpdateFavorite(food: widget.product));
-                                },
-                                icon: const Icon(
-                                  CupertinoIcons.heart_fill,
-                                  color: Colors.blue,
-                                ));
-                          },
                         ),
                       ],
                     ),
