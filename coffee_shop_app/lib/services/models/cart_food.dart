@@ -14,15 +14,18 @@ class CartFood extends Equatable {
   final String? topping;
   final String? note;
   final double unitPrice;
-  const CartFood({
-    required this.id,
-    required this.food,
-    required this.quantity,
-    required this.size,
-    this.topping,
-    this.note,
-    required this.unitPrice,
-  });
+  final bool isToppingAvailable;
+  final bool isSizeAvailable;
+  const CartFood(
+      {required this.id,
+      required this.food,
+      required this.quantity,
+      required this.size,
+      this.topping,
+      this.note,
+      required this.unitPrice,
+      required this.isSizeAvailable,
+      required this.isToppingAvailable});
   CartFood copyWith({
     int? id,
     Food? food,
@@ -31,24 +34,35 @@ class CartFood extends Equatable {
     String? topping,
     String? note,
     double? unitPrice,
+    bool? isToppingAvailable,
+    bool? isSizeAvailable,
   }) =>
       CartFood(
-        id: id ?? this.id,
-        food: food ?? this.food,
-        quantity: quantity ?? this.quantity,
-        size: size ?? this.size,
-        topping: topping ?? this.topping,
-        note: note ?? this.note,
-        unitPrice: unitPrice ?? this.unitPrice,
-      );
+          id: id ?? this.id,
+          food: food ?? this.food,
+          quantity: quantity ?? this.quantity,
+          size: size ?? this.size,
+          topping: topping ?? this.topping,
+          note: note ?? this.note,
+          unitPrice: unitPrice ?? this.unitPrice,
+          isSizeAvailable: isSizeAvailable ?? this.isSizeAvailable,
+          isToppingAvailable: isToppingAvailable ?? this.isToppingAvailable);
   @override
   // TODO: implement props
-  List<Object?> get props => [food, quantity, size, topping, note];
+  List<Object?> get props => [
+        food,
+        quantity,
+        size,
+        topping,
+        note,
+        isToppingAvailable,
+        isSizeAvailable
+      ];
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
       'userId': AuthAPI.currentUser!.id,
-      'foodId': food!.id,
+      'foodId': food.id,
       'quantity': quantity,
       'size': size,
       'topping': topping,
@@ -67,5 +81,7 @@ class CartFood extends Equatable {
               (food) => food.id == (map['foodId'] as String),
             ),
         unitPrice = 0,
+        isToppingAvailable = true,
+        isSizeAvailable = true,
         id = map['id'] as int;
 }
