@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/blocs/store_store/store_store_event.dart';
 import 'package:coffee_shop_admin/services/blocs/store_store/store_store_state.dart';
 import 'package:coffee_shop_admin/services/models/location.dart';
@@ -12,9 +12,8 @@ class StoreStoreBloc extends Bloc<StoreStoreEvent, StoreStoreState> {
     on<FetchData>(_mapFetchData);
   }
 
-  Future<void> _mapFetchData(
-      FetchData event, Emitter<StoreStoreState> emit) async {
-    final pro = await FirebaseFirestore.instance.collection("Store").get();
+  Future<void> _mapFetchData(FetchData event, Emitter<StoreStoreState> emit) async {
+    final pro = await storeReference.get();
     List<Store> stores = [];
     pro.docs.forEach((doc) {
       var s = doc.data();
@@ -22,9 +21,7 @@ class StoreStoreBloc extends Bloc<StoreStoreEvent, StoreStoreState> {
           id: doc.id,
           sb: s["shortName"],
           address: MLocation(
-              formattedAddress: s["address"]["formattedAddress"],
-              lat: s["address"]["lat"],
-              lng: s["address"]["lng"]),
+              formattedAddress: s["address"]["formattedAddress"], lat: s["address"]["lat"], lng: s["address"]["lng"]),
           phone: s["phone"],
           images: s["images"]));
     });

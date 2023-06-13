@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coffee_shop_admin/screens/drink_manage/drink_edit.dart';
+import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/functions/money_transfer.dart';
 import 'package:coffee_shop_admin/services/models/drink.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
@@ -67,7 +67,7 @@ class _DrinkDetailState extends State<DrinkDetail> {
           List imgUrls = widget.product.images;
 
           try {
-            await FirebaseFirestore.instance.collection("Food").doc(widget.product.id).delete().then((value) {
+            await drinkReference.doc(widget.product.id).delete().then((value) {
               Navigator.of(context).pop();
               Navigator.of(context).pop();
               QuickAlert.show(
@@ -350,8 +350,7 @@ class _DrinkDetailState extends State<DrinkDetail> {
                                         }
                                       }
 
-                                      await FirebaseFirestore.instance
-                                          .collection("Food")
+                                      await drinkReference
                                           .doc(widget.product.id)
                                           .update({"sizes": updatedSizes, "toppings": updatedToppings}).then((value) {
                                         Navigator.of(context).pop();

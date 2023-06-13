@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/functions/money_transfer.dart';
 import 'package:coffee_shop_admin/services/models/drink.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
@@ -116,7 +117,7 @@ class _CreateDrinkScreenState extends State<CreateDrinkScreen> {
             imgUrlList.add(url);
           });
         }
-        FirebaseFirestore.instance.collection("Food").add({
+        drinkReference.add({
           "name": nameController.text,
           "price": int.parse(priceController.text),
           "description": descriptionController.text,

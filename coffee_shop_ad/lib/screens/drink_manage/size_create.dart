@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/blocs/size_manage/size_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/size_manage/size_list_event.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
@@ -48,8 +48,7 @@ class _CreateSizeScreenState extends State<CreateSizeScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             title: Text('Please choose media to select'),
             content: SizedBox(
               height: MediaQuery.of(context).size.height / 6,
@@ -121,13 +120,12 @@ class _CreateSizeScreenState extends State<CreateSizeScreen> {
 
       final storageRef = FirebaseStorage.instance.ref();
 
-      final sizeImagesRef =
-          storageRef.child('products/size/size${DateTime.now().toString()}');
+      final sizeImagesRef = storageRef.child('products/size/size${DateTime.now().toString()}');
 
       try {
         await sizeImagesRef.putFile(File(image!.path)).then((res) {
           res.ref.getDownloadURL().then((url) {
-            FirebaseFirestore.instance.collection("Size").add({
+            sizeReference.add({
               "image": url,
               "name": nameInpController.text,
               "price": int.parse(priceInpController.text),
@@ -175,10 +173,7 @@ class _CreateSizeScreenState extends State<CreateSizeScreen> {
                             ),
                             Container(
                               clipBehavior: Clip.hardEdge,
-                              margin: EdgeInsets.only(
-                                  left: Dimension.height16,
-                                  right: Dimension.height16,
-                                  top: 3),
+                              margin: EdgeInsets.only(left: Dimension.height16, right: Dimension.height16, top: 3),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(8),
@@ -189,56 +184,37 @@ class _CreateSizeScreenState extends State<CreateSizeScreen> {
                                   SizedBox(height: 16),
                                   image != null
                                       ? Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 20),
+                                          padding: const EdgeInsets.symmetric(horizontal: 20),
                                           child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
+                                            borderRadius: BorderRadius.circular(8),
                                             child: Image.file(
                                               File(image!.path),
                                               fit: BoxFit.cover,
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
+                                              width: MediaQuery.of(context).size.width,
                                               height: 300,
                                             ),
                                           ),
                                         )
                                       : Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 20),
+                                          padding: const EdgeInsets.symmetric(horizontal: 20),
                                           child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
+                                            borderRadius: BorderRadius.circular(8),
                                             child: Center(
-                                                widthFactor:
-                                                    MediaQuery.of(context)
-                                                        .size
-                                                        .width,
-                                                child: Icon(IconData(0xee39,
-                                                    fontFamily:
-                                                        'MaterialIcons'))),
+                                                widthFactor: MediaQuery.of(context).size.width,
+                                                child: Icon(IconData(0xee39, fontFamily: 'MaterialIcons'))),
                                           ),
                                         ),
                                   ElevatedButton(
                                     style: ButtonStyle(
-                                        elevation:
-                                            const MaterialStatePropertyAll(0),
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              Dimension.height20),
+                                        elevation: const MaterialStatePropertyAll(0),
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(Dimension.height20),
                                         )),
-                                        backgroundColor:
-                                            const MaterialStatePropertyAll(
-                                                AppColors.blueColor)),
+                                        backgroundColor: const MaterialStatePropertyAll(AppColors.blueColor)),
                                     onPressed: () {
                                       uploadImageDialog();
                                     },
-                                    child: Text(image != null
-                                        ? "Rechoose Photo"
-                                        : "Choose Photo"),
+                                    child: Text(image != null ? "Rechoose Photo" : "Choose Photo"),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(
@@ -247,8 +223,7 @@ class _CreateSizeScreenState extends State<CreateSizeScreen> {
                                         top: Dimension.height12,
                                         bottom: Dimension.height16),
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Column(
                                           children: [
@@ -282,23 +257,15 @@ class _CreateSizeScreenState extends State<CreateSizeScreen> {
                           : Container(
                               height: Dimension.height56,
                               color: Colors.white,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: Dimension.width16,
-                                  vertical: Dimension.height8),
+                              padding: EdgeInsets.symmetric(horizontal: Dimension.width16, vertical: Dimension.height8),
                               child: ElevatedButton(
                                   onPressed: _hanldeCreateSize,
                                   style: ButtonStyle(
-                                      elevation:
-                                          const MaterialStatePropertyAll(0),
-                                      shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            Dimension.height20),
+                                      elevation: const MaterialStatePropertyAll(0),
+                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(Dimension.height20),
                                       )),
-                                      backgroundColor:
-                                          const MaterialStatePropertyAll(
-                                              AppColors.blueColor)),
+                                      backgroundColor: const MaterialStatePropertyAll(AppColors.blueColor)),
                                   child: Text(
                                     "Create Size",
                                     style: AppText.style.regularWhite16,

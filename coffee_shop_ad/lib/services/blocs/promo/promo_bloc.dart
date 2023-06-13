@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/blocs/promo/promo_event.dart';
 import 'package:coffee_shop_admin/services/blocs/promo/promo_state.dart';
 import 'package:coffee_shop_admin/services/models/location.dart';
@@ -22,7 +22,7 @@ class PromoBloc extends Bloc<PromoEvent, PromoState> {
     try {
       List<Promo> promoList = [];
       List<String> existCodeList = [];
-      final promoDocs = await FirebaseFirestore.instance.collection('Promo').get();
+      final promoDocs = await promoReference.get();
       promoDocs.docs.forEach((doc) {
         var curPromo = fromFireStore(doc.data(), doc.id);
         if (curPromo is Promo) {
@@ -32,7 +32,7 @@ class PromoBloc extends Bloc<PromoEvent, PromoState> {
       });
 
       List<Store> allStores = [];
-      final storeDocs = await FirebaseFirestore.instance.collection("Store").get();
+      final storeDocs = await storeReference.get();
       storeDocs.docs.forEach((doc) {
         var s = doc.data();
         allStores.add(Store(

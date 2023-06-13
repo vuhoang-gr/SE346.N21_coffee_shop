@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coffee_shop_admin/screens/store_address/map_screen.dart';
+import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/blocs/edit_address/edit_address_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/edit_address/edit_address_event.dart';
 import 'package:coffee_shop_admin/services/blocs/edit_address/edit_address_state.dart';
@@ -386,7 +386,7 @@ class _AddressScreenState extends State<AddressScreen> with InputValidationMixin
         text: 'Creating your new store...',
       );
       await Future.delayed(Duration(seconds: 1));
-      await FirebaseFirestore.instance.collection("Store").add({
+      await storeReference.add({
         "address": {"formattedAddress": _mLocation.formattedAddress, "lat": _mLocation.lat, "lng": _mLocation.lng},
         "images": ["https://lh5.googleusercontent.com/p/AF1QipNIXjtOoJOOUiV7gx3oXW0Kcesi_GWmoy20gZz_=w408-h306-k-no"],
         "phone": editAddressState.phone,

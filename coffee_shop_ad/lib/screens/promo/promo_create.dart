@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/models/promo.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
 import 'package:coffee_shop_admin/utils/constants/dimension.dart';
@@ -108,7 +109,7 @@ class _CreatePromoScreenState extends State<CreatePromoScreen> {
             choosedStore.add(Promo.allStores[i].id);
           }
         }
-        await FirebaseFirestore.instance.collection("Promo").doc(code).set({
+        await promoReference.doc(code).set({
           "dateStart": startDate,
           "dateEnd": endDate,
           "description": description,

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/blocs/promo/promo_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/promo/promo_event.dart';
 import 'package:coffee_shop_admin/services/models/promo.dart';
@@ -116,7 +117,7 @@ class _EditPromoScreenState extends State<EditPromoScreen> {
             choosedStore.add(Promo.allStores[i].id);
           }
         }
-        await FirebaseFirestore.instance.collection("Promo").doc(widget.promo.id).update({
+        await promoReference.doc(widget.promo.id).update({
           "dateStart": startDate,
           "dateEnd": endDate,
           "description": description,

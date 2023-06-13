@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/models/user.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
 import 'package:coffee_shop_admin/utils/constants/dimension.dart';
@@ -173,7 +174,7 @@ class _UserCardState extends State<UserCard> with SingleTickerProviderStateMixin
                                         type: QuickAlertType.loading,
                                         title: "Setting role",
                                         text: user.isAdmin ? "Removing Admin role" : "Adding Admin role");
-                                    await FirebaseFirestore.instance.collection("users").doc(user.id).update({
+                                    await userReference.doc(user.id).update({
                                       "isAdmin": !user.isAdmin,
                                     }).then((value) {
                                       Navigator.pop(context);
@@ -225,7 +226,7 @@ class _UserCardState extends State<UserCard> with SingleTickerProviderStateMixin
                                           type: QuickAlertType.loading,
                                           title: "Setting role",
                                           text: user.isStaff ? "Removing Staff role" : "Adding Staff role");
-                                      await FirebaseFirestore.instance.collection("users").doc(user.id).update({
+                                      await userReference.doc(user.id).update({
                                         "isStaff": !user.isStaff,
                                       }).then((value) {
                                         Navigator.pop(context);

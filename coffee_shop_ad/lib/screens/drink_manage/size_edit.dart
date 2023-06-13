@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/blocs/size_manage/size_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/size_manage/size_list_event.dart';
 import 'package:coffee_shop_admin/services/models/size.dart';
@@ -122,7 +122,7 @@ class _EditSizeScreenState extends State<EditSizeScreen> {
 
     try {
       // update firestore
-      FirebaseFirestore.instance.collection("Size").doc(widget.product.id).update({
+      sizeReference.doc(widget.product.id).update({
         "image": image != null ? "" : widget.product.image,
         "name": sizeNameController.text.isNotEmpty ? sizeNameController.text : widget.product.name,
         "price": sizePriceController.text.isNotEmpty ? int.parse(sizePriceController.text) : widget.product.price,
@@ -137,7 +137,7 @@ class _EditSizeScreenState extends State<EditSizeScreen> {
 
           await SizeImagesRef.putFile(File(image!.path)).then((res) {
             res.ref.getDownloadURL().then((url) {
-              FirebaseFirestore.instance.collection("Size").doc(widget.product.id).update({
+              sizeReference.doc(widget.product.id).update({
                 "image": url,
               });
             });
