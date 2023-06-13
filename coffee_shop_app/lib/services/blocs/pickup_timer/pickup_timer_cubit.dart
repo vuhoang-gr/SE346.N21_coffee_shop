@@ -28,6 +28,16 @@ class TimerCubit extends Cubit<PickupTimerState> {
 
   setOpenTime(DateTime? openTime) {
     emit(state.copyWith(openTime: openTime));
+
+    if (state.selectedDate!.day == DateTime.now().day) {
+      if (state.selectedDate!.hour < openTime!.hour ||
+          (state.selectedDate!.hour == openTime.hour &&
+              state.selectedDate!.minute < openTime.minute)) {
+        emit(PickupTimerState(hourStartTime: dateTimeToHour(state.openTime!))
+            .copyWith(openTime: state.openTime));
+        return;
+      }
+    }
   }
 
   setSelectedDate(DateTime? selectedDate) {
@@ -43,7 +53,8 @@ class TimerCubit extends Cubit<PickupTimerState> {
       if (state.newDate!.hour < startHour ||
           (state.newDate!.hour == startHour &&
               state.newDate!.minute < startMinute)) {
-        emit(PickupTimerState(hourStartTime: hourStartTime)
+        emit(PickupTimerState(
+                hourStartTime: hourStartTime, selectedDate: state.selectedDate)
             .copyWith(openTime: state.openTime));
         return;
       }

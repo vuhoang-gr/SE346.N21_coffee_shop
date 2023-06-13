@@ -1,4 +1,3 @@
-import 'package:coffee_shop_app/services/apis/topping_api.dart';
 import 'package:coffee_shop_app/services/models/cart_food.dart';
 import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
@@ -6,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../services/apis/size_api.dart';
 import '../../../services/blocs/cart_cubit/cart_cubit.dart';
 import '../../../services/functions/money_transfer.dart';
 import '../../../utils/constants/dimension.dart';
@@ -27,24 +25,24 @@ class CheckoutProdItem extends StatelessWidget {
       },
       direction: DismissDirection.endToStart,
       background: ColoredBox(
-    color: Colors.white,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Icon(
-          Icons.delete_rounded,
-          color: AppColors.redColor,
+        color: Colors.white,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Icon(
+              Icons.delete_rounded,
+              color: AppColors.redColor,
+            ),
+            Text(
+              ' Xóa',
+              style: TextStyle(
+                color: AppColors.redColor,
+                fontSize: Dimension.font14,
+              ),
+            ),
+          ],
         ),
-        Text(
-          ' Xóa',
-          style: TextStyle(
-            color: AppColors.redColor,
-            fontSize: Dimension.font14,
-          ),
-        ),
-      ],
-    ),
-  ),
+      ),
       child: ColoredBox(
         color: Colors.white,
         child: Column(
@@ -73,11 +71,20 @@ class CheckoutProdItem extends StatelessWidget {
                         height: Dimension.height8 / 2,
                       ),
 
-                      //TODO: fix this
-                      Text(
-                        'Size: ${SizeApi().currentSizes.firstWhere((size) => size.id == cartFood.size).name}',
-                        style: AppText.style.regularGrey12,
-                      ),
+                      Builder(builder: (context) {
+                        if (!cartFood.isSizeAvailable) {
+                          return Text(
+                            'Size được chọn đã hết',
+                            style: AppText.style.regularGrey12
+                                .copyWith(color: AppColors.redColor),
+                          );
+                        } else {
+                          return Text(
+                            'Size: ${BlocProvider.of<CartCubit>(context).getCartFoodSize(cartFood)}',
+                            style: AppText.style.regularGrey12,
+                          );
+                        }
+                      }),
 
                       SizedBox(
                         height: Dimension.height8 / 2,
@@ -85,20 +92,18 @@ class CheckoutProdItem extends StatelessWidget {
                       cartFood.topping == ''
                           ? SizedBox.shrink()
                           : Builder(builder: (context) {
-                              List<String> toppingNames = [];
-                              List<String> toppings =
-                                  cartFood.topping!.split(',');
-                              for (var t in ToppingApi().currentToppings) {
-                                for (var selected in toppings) {
-                                  if (t.id == selected.trim()) {
-                                    toppingNames.add(t.name);
-                                  }
-                                }
+                              if (!cartFood.isToppingAvailable) {
+                                return Text(
+                                  'Topping được chọn đã hết',
+                                  style: AppText.style.regularGrey12
+                                      .copyWith(color: AppColors.redColor),
+                                );
+                              } else {
+                                return Text(
+                                  'Topping: ${BlocProvider.of<CartCubit>(context).getCartFoodTopping(cartFood)}',
+                                  style: AppText.style.regularGrey12,
+                                );
                               }
-                              return Text(
-                                'Topping: ${toppingNames.join(", ")}',
-                                style: AppText.style.regularGrey12,
-                              );
                             }),
                       SizedBox(
                         height: Dimension.height8 / 2,
@@ -138,9 +143,9 @@ class CheckoutProdItem extends StatelessWidget {
                               isEnable: true,
                               icon: CupertinoIcons.minus,
                               backgroundColor: Colors.transparent,
-                              onTap: () {
+                              onTap: () async {
                                 if (cartFood.quantity > 1) {
-                                  BlocProvider.of<CartCubit>(context)
+                                  await BlocProvider.of<CartCubit>(context)
                                       .updateQuantityFromCart(
                                           cartFood, cartFood.quantity - 1);
                                 } else {
@@ -164,15 +169,15 @@ class CheckoutProdItem extends StatelessWidget {
                                                         Dimension.height8),
                                                 child: OutlinedButton(
                                                   style: outlinedButton,
-                                                  onPressed: () {
-                                                    BlocProvider.of<CartCubit>(
-                                                            context)
+                                                  onPressed: () async {
+                                                    Navigator.pop(
+                                                        context, 'Yes');
+                                                    await BlocProvider.of<
+                                                            CartCubit>(context)
                                                         .updateQuantityFromCart(
                                                             cartFood,
                                                             cartFood.quantity -
                                                                 1);
-                                                    Navigator.pop(
-                                                        context, 'Yes');
                                                   },
                                                   child: Text('Yes',
                                                       style: AppText
@@ -201,16 +206,7 @@ class CheckoutProdItem extends StatelessWidget {
                                                 ),
                                               ),
                                             ],
-                                          )).then((value) {
-                                    if (BlocProvider.of<CartCubit>(context)
-                                        .state
-                                        .products
-                                        .isEmpty) {
-                                      Navigator.of(context).pop();
-                                      // Navigator.of(context)
-                                      //     .pushReplacementNamed("/");
-                                    }
-                                  });
+                                          )).then((value) {});
                                 }
                               }),
                           SizedBox(
@@ -226,8 +222,8 @@ class CheckoutProdItem extends StatelessWidget {
                               isEnable: true,
                               icon: CupertinoIcons.add,
                               backgroundColor: Colors.transparent,
-                              onTap: () {
-                                BlocProvider.of<CartCubit>(context)
+                              onTap: () async {
+                                await BlocProvider.of<CartCubit>(context)
                                     .updateQuantityFromCart(
                                         cartFood, cartFood.quantity + 1);
                               }),

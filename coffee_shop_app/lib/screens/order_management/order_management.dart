@@ -29,7 +29,7 @@ class OrderManagement extends StatelessWidget {
                   height: Dimension.height56,
                   child: CustomAppBar(
                       leading: Text(
-                        'Orders',
+                        'Đơn hàng',
                         style: AppText.style.boldBlack18,
                       ),
                       trailing: IconButton(
@@ -70,9 +70,6 @@ class OrderManagement extends StatelessWidget {
               ),
               BlocBuilder<OrderDeliveryCubit, OrderListState>(
                   builder: (context, state) {
-                if (!state.isLoaded && state is OrderNormalState) {
-                  BlocProvider.of<OrderDeliveryCubit>(context).loadOrder();
-                }
                 return Expanded(
                     child: TabBarView(
                   children: [

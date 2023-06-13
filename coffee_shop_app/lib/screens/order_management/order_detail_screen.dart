@@ -28,7 +28,7 @@ class OrderDetailScreen extends StatelessWidget {
               children: [
                 CustomAppBar(
                   leading: Text(
-                    'Order',
+                    'Đơn hàng',
                     style: AppText.style.boldBlack18,
                   ),
                 ),
@@ -92,7 +92,7 @@ class OrderDetailScreen extends StatelessWidget {
                                                       );
                                                     });
                                               },
-                                              child: Text('Contact support',
+                                              child: Text('Liên hệ hỗ trợ',
                                                   style: AppText
                                                       .style.boldBlack14
                                                       .copyWith(
@@ -172,7 +172,7 @@ class OrderDetailScreen extends StatelessWidget {
 
                               //General info
                               Text(
-                                "General info",
+                                "Thông tin chung",
                                 style: AppText.style.boldBlack16,
                               ),
                               SizedBox(
@@ -205,7 +205,7 @@ class OrderDetailScreen extends StatelessWidget {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            'Order date',
+                                            'Ngày đặt hàng',
                                             style: AppText.style.regular,
                                           ),
                                           Text(
@@ -221,7 +221,7 @@ class OrderDetailScreen extends StatelessWidget {
                                 height: Dimension.height16,
                               ),
                               Text(
-                                "Shipping details",
+                                "Thông tin vận chuyển",
                                 style: AppText.style.boldBlack16,
                               ),
                               SizedBox(
@@ -242,8 +242,8 @@ class OrderDetailScreen extends StatelessWidget {
                                           children: [
                                             Text(
                                                 isPickup
-                                                    ? 'Pick up location'
-                                                    : 'From store',
+                                                    ? 'Cửa hàng mang đi'
+                                                    : 'Từ cửa hàng',
                                                 style: AppText.style.regular),
                                             SizedBox(
                                               height: Dimension.height4,
@@ -280,8 +280,8 @@ class OrderDetailScreen extends StatelessWidget {
                                                 children: [
                                                   Text(
                                                       isPickup
-                                                          ? 'Pick up time'
-                                                          : 'To',
+                                                          ? 'Thời gian mang đi'
+                                                          : 'Đến',
                                                       style: AppText
                                                           .style.regular),
                                                   SizedBox(
@@ -337,7 +337,7 @@ class OrderDetailScreen extends StatelessWidget {
                               ),
                               //product info
                               Text(
-                                "Product info",
+                                "Chi tiết đơn hàng",
                                 style: AppText.style.boldBlack16,
                               ),
                               SizedBox(
@@ -373,7 +373,7 @@ class OrderDetailScreen extends StatelessWidget {
                               ),
                               //product info
                               Text(
-                                "Payment info",
+                                "Thanh toán",
                                 style: AppText.style.boldBlack16,
                               ),
                               SizedBox(
@@ -390,11 +390,11 @@ class OrderDetailScreen extends StatelessWidget {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            "Price",
+                                            "Tổng tiền",
                                             style: AppText.style.regular,
                                           ),
                                           Text(
-                                            "${MoneyTransfer.transferFromDouble(order.total!)} ₫",
+                                            "${MoneyTransfer.transferFromDouble(order.totalProduct!)} ₫",
                                             style: AppText.style.boldBlack14,
                                           ),
                                         ],
@@ -413,7 +413,7 @@ class OrderDetailScreen extends StatelessWidget {
                                                       .spaceBetween,
                                               children: [
                                                 Text(
-                                                  "Shipping fee",
+                                                  "Phí giao hàng",
                                                   style: AppText.style.regular,
                                                 ),
                                                 Text(
@@ -432,11 +432,11 @@ class OrderDetailScreen extends StatelessWidget {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            "Promotion",
+                                            "Giảm giá từ cửa hàng",
                                             style: AppText.style.regular,
                                           ),
                                           Text(
-                                            "-50.000 ₫",
+                                            "-${MoneyTransfer.transferFromDouble(order.discount!)} ₫",
                                             style: AppText.style.boldBlack14
                                                 .copyWith(
                                                     color:
@@ -453,11 +453,11 @@ class OrderDetailScreen extends StatelessWidget {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            "Total",
+                                            'Thành tiền',
                                             style: AppText.style.regular,
                                           ),
                                           Text(
-                                            "248.000 ₫",
+                                            "${MoneyTransfer.transferFromDouble(order.total!)} ₫",
                                             style: AppText.style.boldBlack14,
                                           ),
                                         ],

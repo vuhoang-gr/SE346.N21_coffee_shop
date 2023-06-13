@@ -37,7 +37,7 @@ class OrderHistory extends StatelessWidget {
                       height: Dimension.height56,
                       child: CustomAppBar(
                         leading: Text(
-                          'Orders',
+                          'Lịch sử mua hàng',
                           style: AppText.style.boldBlack18,
                         ),
                       ),
@@ -72,7 +72,7 @@ class OrderHistory extends StatelessWidget {
                   BlocBuilder<OrderDeliveryCubit, OrderListState>(
                       builder: (context, state) {
                     if (!state.isLoaded && state is OrderHistoryState) {
-                      BlocProvider.of<OrderDeliveryCubit>(context).loadOrder();
+                      // BlocProvider.of<OrderDeliveryCubit>(context).loadOrder();
                     }
                     return Expanded(
                         child: TabBarView(

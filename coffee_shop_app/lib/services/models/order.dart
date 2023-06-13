@@ -9,6 +9,7 @@ class Order {
   double? discount;
   double? total;
   double? deliveryCost;
+  double? totalProduct;
   DateTime dateOrder;
   List<OrderFood> products;
   DeliveryAddress? address;
@@ -21,6 +22,7 @@ class Order {
       this.discount,
       this.total,
       this.deliveryCost,
+      this.totalProduct,
       required this.dateOrder,
       required this.products,
       required this.status,
@@ -33,6 +35,7 @@ class Order {
           double? discount,
           double? total,
           double? deliveryCost,
+          double? totalProduct,
           DateTime? dateOrder,
           List<OrderFood>? products,
           String? status,
@@ -45,6 +48,7 @@ class Order {
           store: store ?? this.store,
           discount: discount ?? this.discount,
           total: total ?? this.total,
+          totalProduct: totalProduct ?? this.totalProduct,
           deliveryCost: deliveryCost ?? this.deliveryCost,
           status: status ?? this.status,
           address: address ?? this.address,

@@ -1,3 +1,4 @@
+import 'package:coffee_shop_app/services/functions/datetime_to_pickup.dart';
 import 'package:equatable/equatable.dart';
 
 class PickupTimerState extends Equatable {
@@ -20,6 +21,12 @@ class PickupTimerState extends Equatable {
       DateTime? openTime}) {
     var now = DateTime.now();
     var date = newDate ?? now;
+    if (openTime != null || this.openTime != null) {
+      if ((hourStartTime ?? this.hourStartTime) <
+          dateTimeToHour(openTime ?? this.openTime!)) {
+        hourStartTime = dateTimeToHour(openTime ?? this.openTime!);
+      }
+    }
 
     var newSelect = DateTime(
         date.year,
@@ -36,5 +43,5 @@ class PickupTimerState extends Equatable {
 
   @override
   // TODO: implement props
-  List<Object?> get props => [hourStartTime, newDate, openTime];
+  List<Object?> get props => [hourStartTime, newDate, openTime, selectedDate];
 }
