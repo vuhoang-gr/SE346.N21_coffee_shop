@@ -1,6 +1,9 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coffee_shop_app/services/apis/order_api.dart';
 import 'package:coffee_shop_app/services/blocs/order/order_list_state.dart';
-import 'package:coffee_shop_app/services/models/order.dart';
+import 'package:coffee_shop_app/services/models/order.dart' as Order;
 import 'package:coffee_shop_app/utils/constants/string.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,10 +13,24 @@ class OrderDeliveryCubit extends Cubit<OrderListState> {
           listDeliveryOrders: [],
           listPickupOrders: [],
           isLoaded: false,
-        ));
-
+        )) {
+    _oderSubscription = OrderAPI().fetchData().listen((snapshot) async {
+      needLoad();
+      List<Order.Order> orderList = [];
+      var list = await OrderAPI().fromQuerySnapshotToListOrder(snapshot);
+      for (var order in list) {
+        var listFood = await OrderAPI().loadOrderFood(order);
+        orderList.add(order.copyWith(products: listFood));
+      }
+      OrderAPI().loadOrder(orderList);
+      loadOrder();
+      finishLoad();
+    });
+  }
+  late StreamSubscription<QuerySnapshot<Map<String, dynamic>>>
+      _oderSubscription;
   loadOrder() async {
-    await OrderAPI().loadOrder();
+    // await OrderAPI().loadOrder();
     if (state is OrderHistoryState) {
       showHistory();
     } else if (state is OrderNormalState) {
@@ -35,6 +52,20 @@ class OrderDeliveryCubit extends Cubit<OrderListState> {
     }
   }
 
+  finishLoad() {
+    if (state is OrderHistoryState) {
+      emit(OrderHistoryState(
+          listDeliveryOrders: state.listDeliveryOrders,
+          listPickupOrders: state.listPickupOrders,
+          isLoaded: true));
+    } else if (state is OrderNormalState) {
+      emit(OrderNormalState(
+          listDeliveryOrders: state.listDeliveryOrders,
+          listPickupOrders: state.listPickupOrders,
+          isLoaded: true));
+    }
+  }
+
   needHistory(bool isHistory) {
     if (isHistory) {
       showHistory();
@@ -44,8 +75,8 @@ class OrderDeliveryCubit extends Cubit<OrderListState> {
   }
 
   showHistory() {
-    final List<Order> listDeli = [];
-    final List<Order> listPickup = [];
+    final List<Order.Order> listDeli = [];
+    final List<Order.Order> listPickup = [];
     for (var ord in OrderAPI.ordersDelivery!) {
       if (ord.status == orderCancelled ||
           ord.status == orderDelivered ||
@@ -67,8 +98,8 @@ class OrderDeliveryCubit extends Cubit<OrderListState> {
   }
 
   showOrder() {
-    final List<Order> listDeli = [];
-    final List<Order> listPickup = [];
+    final List<Order.Order> listDeli = [];
+    final List<Order.Order> listPickup = [];
 
     for (var ord in OrderAPI.ordersDelivery!) {
       if (ord.status != orderCancelled &&
@@ -88,5 +119,12 @@ class OrderDeliveryCubit extends Cubit<OrderListState> {
         listDeliveryOrders: listDeli,
         listPickupOrders: listPickup,
         isLoaded: true));
+  }
+
+  @override
+  Future<void> close() {
+    // TODO: implement close
+    _oderSubscription.cancel();
+    return super.close();
   }
 }

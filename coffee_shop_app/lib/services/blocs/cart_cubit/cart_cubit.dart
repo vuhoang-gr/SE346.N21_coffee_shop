@@ -9,11 +9,16 @@ import 'package:coffee_shop_app/services/blocs/topping_store/topping_store_bloc.
 import 'package:coffee_shop_app/services/models/cart_food.dart';
 import 'package:coffee_shop_app/services/apis/sql_helper.dart';
 import 'package:coffee_shop_app/services/models/delivery_address.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../utils/constants/dimension.dart';
 import '../../apis/food_api.dart';
 import '../../models/food.dart';
 import '../../models/cart.dart';
+import '../../models/promo.dart';
 import '../../models/store.dart';
 import '../product_store/product_store_bloc.dart';
 
@@ -35,44 +40,47 @@ class CartCubit extends Cubit<Cart> {
             deliveryCost: 0,
             discount: 0,
             totalFood: 0,
-            cannotOrderFoods: [],
             isLoaded: false)) {
-    print("stateInit: carCubit............................................");
     _productStoreSubscription = productStoreBloc.stream.listen((state) async {
       if (state is product_store_state.FetchedState) {
         await getItemsFromDB();
+        checkToppingAvailable();
+        checkSizeAvailable();
       }
     });
     _toppingStoreSubscription = toppingStoreBloc.stream.listen((state) {
       if (state is topping_state.FetchedState) {
-        toppingLoaded = true;
-        setLoading(sizeLoaded && toppingLoaded);
+        checkToppingAvailable();
       }
     });
 
     _sizeStoreSubscription = sizeStoreBloc.stream.listen((state) {
       if (state is size_state.FetchedState) {
-        sizeLoaded = true;
-        setLoading(sizeLoaded && toppingLoaded);
+        checkSizeAvailable();
       }
     });
   }
   late StreamSubscription _productStoreSubscription;
   late StreamSubscription _toppingStoreSubscription;
   late StreamSubscription _sizeStoreSubscription;
+  late StreamSubscription _userChangedSubscription;
   final ProductStoreBloc productStoreBloc;
   final ToppingStoreBloc toppingStoreBloc;
   final SizeStoreBloc sizeStoreBloc;
   bool sizeLoaded = false;
   bool toppingLoaded = false;
   getItemsFromDB() async {
+    if (AuthAPI.currentUser == null) {
+      return;
+    }
     final items = await SQLHelper.getCartFood(AuthAPI.currentUser!.id);
     List<CartFood> foodList = [];
     for (var item in items) {
-      if (FoodAPI()
+      var realFood = FoodAPI()
           .currentFoods
           .where((food) => food.id == (item['foodId'] as String))
-          .isEmpty) {
+          .toList();
+      if (realFood.isEmpty) {
         continue;
       }
       var cartFood = CartFood.fromMap(item);
@@ -85,8 +93,69 @@ class CartCubit extends Cubit<Cart> {
     calculateTotalPrice();
   }
 
+  String getCartFoodTopping(CartFood cartFood) {
+    List<String> toppingNames = [];
+    List<String> toppings = cartFood.topping!.split(', ');
+    List<String> currentToppingId = [];
+    for (var t in ToppingApi().currentToppings) {
+      for (var selected in toppings) {
+        if (t.id == selected.trim()) {
+          if (!cartFood.food.toppings.contains(selected.trim())) {
+            return '';
+          }
+          toppingNames.add(t.name);
+          currentToppingId.add(t.id);
+        }
+      }
+    }
+    if (toppingNames.length != toppings.length) {
+      return '';
+    } else {
+      return toppingNames.join(', ');
+    }
+  }
+
+  String getCartFoodSize(CartFood cartFood) {
+    var sizes = SizeApi()
+        .currentSizes
+        .where((size) => size.id == cartFood.size)
+        .toList();
+    if (!cartFood.food.sizes.contains(cartFood.size) || sizes.isEmpty) {
+      return '';
+    } else {
+      return sizes.first.name;
+    }
+  }
+
   setLoading(bool isLoaded) {
     emit(state.copyWith(isLoaded: isLoaded));
+  }
+
+  checkToppingAvailable() {
+    List<CartFood> newList = [];
+    for (var cartFood in state.products) {
+      bool isAvailable = true;
+      if (getCartFoodTopping(cartFood) == '') {
+        isAvailable = false;
+      }
+      if (cartFood.topping == '') {
+        isAvailable = true;
+      }
+      newList.add(cartFood.copyWith(isToppingAvailable: isAvailable));
+    }
+    emit(state.copyWith(products: newList));
+  }
+
+  checkSizeAvailable() {
+    List<CartFood> newList = [];
+    for (var cartFood in state.products) {
+      bool isAvailable = true;
+      if (getCartFoodSize(cartFood) == '') {
+        isAvailable = false;
+      }
+      newList.add(cartFood.copyWith(isSizeAvailable: isAvailable));
+    }
+    emit(state.copyWith(products: newList));
   }
 
   addProduct(Food food, int quantity, String sizeId, String? topping,
@@ -106,6 +175,8 @@ class CartCubit extends Cubit<Cart> {
             size: sizeId,
             topping: topping,
             unitPrice: unitPrice,
+            isSizeAvailable: true,
+            isToppingAvailable: true,
             note: note);
         int id = await SQLHelper.updateCartFood(newFood);
         newFoodList.add(newFood.copyWith(id: id));
@@ -122,6 +193,8 @@ class CartCubit extends Cubit<Cart> {
           size: sizeId,
           topping: topping,
           unitPrice: unitPrice,
+          isSizeAvailable: true,
+          isToppingAvailable: true,
           note: note);
       int id = await SQLHelper.createCartFood(newFood);
       newFoodList.add(newFood.copyWith(id: id));
@@ -134,7 +207,7 @@ class CartCubit extends Cubit<Cart> {
   updateQuantityFromCart(CartFood cartFood, int totalQuantity) async {
     List<CartFood> newFoodList = [];
     for (var item in state.products) {
-      if (item.food!.id == cartFood.food!.id &&
+      if (item.food.id == cartFood.food.id &&
           item.size == cartFood.size &&
           item.topping == cartFood.topping) {
         if (totalQuantity == 0) {
@@ -150,18 +223,21 @@ class CartCubit extends Cubit<Cart> {
 
     emit(state.copyWith(products: newFoodList));
     calculateTotalPrice();
+    applyPromoAndCalPrice(state.promo);
   }
 
   calculateTotalPrice({
-    double discount = 0,
-    double deliveryCost = 0,
+    double? discount,
+    double? deliveryCost,
   }) {
     double totalFood = 0;
     double total = 0;
     for (var product in state.products) {
       totalFood = totalFood + product.unitPrice * product.quantity;
     }
-    total = totalFood + deliveryCost - discount;
+    deliveryCost ??= state.deliveryCost;
+    discount ??= state.discount;
+    total = totalFood + deliveryCost! - discount!;
     emit(state.copyWith(
         deliveryCost: deliveryCost,
         discount: discount,
@@ -169,9 +245,45 @@ class CartCubit extends Cubit<Cart> {
         totalFood: totalFood));
   }
 
+  double calculatePromo(Promo? promo) {
+    if (promo == null) {
+      return -1;
+    }
+    if (DateTime.now().isAfter(promo.dateStart) &&
+        DateTime.now().isBefore(promo.dateEnd) &&
+        (state.totalFood!) >= promo.minPrice) {
+      var discount = state.totalFood! * promo.percent;
+      if (discount > promo.maxPrice) {
+        discount = promo.maxPrice;
+      }
+      return discount;
+    }
+    return 0;
+  }
+
+  applyPromoAndCalPrice(Promo? promo) {
+    var discount = calculatePromo(promo);
+    if (discount == -1) {
+      emit(state.copyWith(promo: promo, discount: 0));
+    } else if (discount == 0) {
+      if (state.products.isEmpty) {
+        return;
+      }
+      Fluttertoast.showToast(
+          msg: "Không đủ điều kiện áp dụng mã giảm giá.",
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.white,
+          fontSize: Dimension.font14);
+    } else {
+      emit(state.copyWith(promo: promo, discount: discount));
+      calculateTotalPrice();
+    }
+  }
+
   double calcualteUnitPrice(Food food, String size, String? topping) {
     double unitPrice = food.price;
-    for (var s in SizeApi().currentSizes!) {
+    for (var s in SizeApi().currentSizes) {
       if (size == s.id) {
         unitPrice += s.price;
         break;
@@ -190,42 +302,35 @@ class CartCubit extends Cubit<Cart> {
     return unitPrice;
   }
 
-  // addPromo(Promo promo){
-  //   emit(state.copyWith(discount: ))
-  // }
-
-  bool checkCanOrderFoods(
-      {required Store store,
-      DeliveryAddress? address,
-      DateTime? pickupTime,
-      String? status}) {
-    List<String> list = [];
+  bool checkCanOrderFoods({
+    required Store store,
+  }) {
+    List<CartFood> newList = [];
     for (var pr in state.products) {
-      if (!pr.food.isAvailable) {
-        list.add(pr.food.id);
-      }
+      bool isSize = true;
+      bool isTopping = true;
       if (store.stateFood[pr] != null) {
-        list.add(pr.food.id);
+        isSize = false;
       }
-
       if (pr.topping != null && pr.topping != '') {
         for (var tp in store.stateTopping) {
           if (pr.topping!.contains(tp)) {
-            list.add(pr.food.id);
+            isTopping = false;
             break;
           }
         }
       }
+      newList.add(
+          pr.copyWith(isSizeAvailable: isSize, isToppingAvailable: isTopping));
     }
-    emit(state.copyWith(cannotOrderFoods: list));
-    if (list.isNotEmpty) {
-      return false;
-    } else {
-      return true;
-    }
+    emit(state.copyWith(products: newList));
+    return state.products
+        .where((element) =>
+            !element.isSizeAvailable || !element.isToppingAvailable)
+        .isEmpty;
   }
 
-  placeOrder(
+  Future<void> placeOrder(
       {required Store store,
       DeliveryAddress? address,
       DateTime? pickupTime,
@@ -248,6 +353,7 @@ class CartCubit extends Cubit<Cart> {
     _productStoreSubscription.cancel();
     _sizeStoreSubscription.cancel();
     _toppingStoreSubscription.cancel();
+    _userChangedSubscription.cancel();
     return super.close();
   }
 }

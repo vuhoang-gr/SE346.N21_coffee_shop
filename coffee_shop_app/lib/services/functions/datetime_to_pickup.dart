@@ -5,9 +5,9 @@ String datetimeToPickup(DateTime dateTime) {
   var day = DateFormat('dd/MM/yyyy').format(dateTime).toString();
   if (now.month == dateTime.month && dateTime.year == now.year) {
     if (now.day == dateTime.day) {
-      day = 'Today';
+      day = 'Hôm nay';
     } else if (now.day == dateTime.day - 1) {
-      day = 'Tomorrow';
+      day = 'Ngày mai';
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:coffee_shop_app/services/models/cart_food.dart';
+import 'package:coffee_shop_app/services/models/promo.dart';
 import 'package:equatable/equatable.dart';
 
 class Cart extends Equatable {
@@ -8,7 +9,7 @@ class Cart extends Equatable {
   final double? totalFood;
   final double? deliveryCost;
   final List<CartFood> products;
-  final List<String>? cannotOrderFoods;
+  final Promo? promo;
   final bool isLoaded;
   const Cart(
       {this.id,
@@ -16,8 +17,8 @@ class Cart extends Equatable {
       this.total,
       this.deliveryCost,
       this.totalFood,
+      this.promo,
       required this.products,
-      this.cannotOrderFoods,
       required this.isLoaded});
 
   Cart copyWith(
@@ -28,7 +29,8 @@ class Cart extends Equatable {
           double? deliveryCost,
           DateTime? dateOrder,
           List<CartFood>? products,
-          List<String>? cannotOrderFoods,
+          List<int>? cannotOrderFoods,
+          Promo? promo,
           bool? isLoaded}) =>
       Cart(
           products: products ?? this.products,
@@ -37,7 +39,7 @@ class Cart extends Equatable {
           total: total ?? this.total,
           totalFood: totalFood ?? this.totalFood,
           deliveryCost: deliveryCost ?? this.deliveryCost,
-          cannotOrderFoods: cannotOrderFoods ?? this.cannotOrderFoods,
+          promo: promo ?? this.promo,
           isLoaded: isLoaded ?? this.isLoaded);
 
   @override
@@ -48,6 +50,6 @@ class Cart extends Equatable {
         total,
         deliveryCost,
         totalFood,
-        cannotOrderFoods,
+        promo,
       ];
 }

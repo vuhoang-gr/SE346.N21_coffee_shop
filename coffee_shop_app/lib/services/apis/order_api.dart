@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coffee_shop_app/services/apis/address_api.dart';
 import 'package:coffee_shop_app/services/apis/size_api.dart';
@@ -25,35 +27,30 @@ class OrderAPI {
   static List<Order.Order>? ordersPickup;
   static List<Order.Order>? ordersDelivery;
 
-  Future<void> loadOrder() async {
-    List<Order.Order> pickups = [];
-    List<Order.Order> deliveries = [];
-    ordersPickup ??= [];
-    ordersDelivery ??= [];
-    ordersPickup!.clear();
-    ordersDelivery!.clear();
-    try {
-      final QuerySnapshot<Map<String, dynamic>> data =
-          await orderRF.where('user', isEqualTo: AuthAPI.currentUser!.id).get();
-      for (var doc in data.docs) {
-        if (doc.data().containsKey('pickupTime')) {
-          pickups.add(await fromSnapshotOrder(doc));
-        } else if (doc.data().containsKey('deliveryCost')) {
-          deliveries.add(await fromSnapshotOrder(doc));
-        }
-      }
+  loadOrder(List<Order.Order> list) async {
+    ordersDelivery = [];
+    ordersPickup = [];
+    ordersDelivery!.addAll(list.where((ord) => ord.address != null));
+    ordersPickup!.addAll(list.where((ord) => ord.pickupTime != null));
+  }
 
-      for (var order in pickups) {
-        var listFood = await loadOrderFood(order);
-        ordersPickup!.add(order.copyWith(products: listFood));
+  Stream<QuerySnapshot<Map<String, dynamic>>> fetchData() {
+    return orderRF
+        .where('user', isEqualTo: AuthAPI.currentUser!.id)
+        .snapshots();
+  }
+
+  Future<List<Order.Order>> fromQuerySnapshotToListOrder(
+      QuerySnapshot<Map<String, dynamic>> data) async {
+    List<Order.Order> list = [];
+    for (var doc in data.docs) {
+      if (doc.data().containsKey('pickupTime')) {
+        list.add(await fromSnapshotOrder(doc));
+      } else if (doc.data().containsKey('deliveryCost')) {
+        list.add(await fromSnapshotOrder(doc));
       }
-      for (var order in deliveries) {
-        var listFood = await loadOrderFood(order);
-        ordersDelivery!.add(order.copyWith(products: listFood));
-      }
-    } catch (e) {
-      print(e);
     }
+    return list;
   }
 
   Future<Order.Order> fromSnapshotOrder(
@@ -66,7 +63,9 @@ class OrderAPI {
         store: StoreAPI().fromFireStore(store, storeId),
         dateOrder: json['dateOrder'].toDate(),
         status: json['status'],
+        discount: json['discountPrice'].toDouble(),
         total: json['totalPrice'].toDouble(),
+        totalProduct: json['totalProduct'].toDouble(),
         deliveryCost: json.data()!.containsKey('deliveryCost')
             ? json['deliveryCost'].toDouble()
             : null,
@@ -100,6 +99,7 @@ class OrderAPI {
       'discountPrice': order.discount,
       'totalPrice': order.total,
       'dateOrder': order.dateOrder,
+      'totalProduct': order.totalProduct,
       'status': order.status,
     }).then((value) {
       if (order.deliveryCost != null && order.address != null) {
@@ -151,6 +151,7 @@ class OrderAPI {
         discount: cart.discount,
         deliveryCost: cart.deliveryCost,
         total: cart.total,
+        totalProduct: cart.totalFood,
         address: address,
         pickupTime: pickupTime,
         products: cart.products

@@ -7,6 +7,7 @@ import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 import '../../services/blocs/cart_button/cart_button_bloc.dart';
@@ -15,9 +16,9 @@ import '../../services/blocs/cart_button/cart_button_state.dart';
 import '../../services/blocs/pickup_timer/pickup_timer_cubit.dart';
 import '../../services/functions/money_transfer.dart';
 import '../../services/models/cart.dart';
+import '../../services/models/promo.dart';
 import '../../utils/constants/dimension.dart';
 import '../../utils/styles/button.dart';
-import '../../widgets/feature/cart_delivery_pickup/apply_coupon_textfield.dart';
 import '../../widgets/feature/cart_delivery_pickup/timer_picker.dart';
 
 import '../../widgets/feature/cart_delivery_pickup/checkout_prod_item.dart';
@@ -25,6 +26,7 @@ import '../../widgets/feature/product_detail_widgets/icon_widget_row.dart';
 import '../../widgets/global/container_card.dart';
 import '../../widgets/global/custom_app_bar.dart';
 import '../../widgets/global/order_type_modal.dart';
+import '../promo/promo_screen.dart';
 
 class CartStorePickup extends StatefulWidget {
   const CartStorePickup({super.key});
@@ -62,7 +64,8 @@ class _CartStorePickupState extends State<CartStorePickup> {
 
     return BlocBuilder<CartCubit, Cart>(builder: (context, state) {
       double total = BlocProvider.of<CartCubit>(context).state.total!;
-      double productTotal = BlocProvider.of<CartCubit>(context).state.total!;
+      double productTotal =
+          BlocProvider.of<CartCubit>(context).state.totalFood!;
       double discount = BlocProvider.of<CartCubit>(context).state.discount!;
       return ColoredBox(
         color: AppColors.backgroundColor,
@@ -89,7 +92,7 @@ class _CartStorePickupState extends State<CartStorePickup> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Pickup details',
+                                  'Thông tin mang đi',
                                   style: AppText.style.boldBlack16,
                                 ),
                                 GestureDetector(
@@ -118,7 +121,7 @@ class _CartStorePickupState extends State<CartStorePickup> {
                                         borderRadius: BorderRadius.circular(20),
                                         color: AppColors.blueBackgroundColor),
                                     child: Text(
-                                      'Change',
+                                      'Thay đổi',
                                       style: TextStyle(
                                           fontSize: Dimension.font12,
                                           fontWeight: FontWeight.w500,
@@ -148,7 +151,7 @@ class _CartStorePickupState extends State<CartStorePickup> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              'Pick up location',
+                                              'Cửa hàng mang đi',
                                               style: AppText.style.regular,
                                             ),
                                             SizedBox(
@@ -181,7 +184,7 @@ class _CartStorePickupState extends State<CartStorePickup> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                'Pick up time',
+                                                'Thời gian mang đi',
                                                 style: AppText.style.regular,
                                               ),
                                               SizedBox(
@@ -202,11 +205,11 @@ class _CartStorePickupState extends State<CartStorePickup> {
                                                         now.year) {
                                                   if (now.day ==
                                                       state.selectedDate!.day) {
-                                                    day = 'Today';
+                                                    day = 'Hôm nay';
                                                   } else if (now.day ==
                                                       state.selectedDate!.day -
                                                           1) {
-                                                    day = 'Tomorrow';
+                                                    day = 'Ngày mai';
                                                   }
                                                 }
                                                 return Text(
@@ -248,7 +251,7 @@ class _CartStorePickupState extends State<CartStorePickup> {
 
                             //oder details
                             Text(
-                              'Order details',
+                              'Chi tiết đơn hàng',
                               style: AppText.style.boldBlack16,
                             ),
                             SizedBox(
@@ -257,86 +260,119 @@ class _CartStorePickupState extends State<CartStorePickup> {
 
                             ContainerCard(
                               horizontalPadding: Dimension.height16,
-                              child: Column(
-                                children: [
-                                  ListView.separated(
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      controller: ScrollController(),
-                                      itemBuilder: (context, index) {
-                                        if (state.cannotOrderFoods!.contains(
-                                            state.products[index].food.id)) {
-                                          return Opacity(
-                                            opacity: 0.5,
-                                            child: CheckoutProdItem(
-                                              cartFood:
-                                                  BlocProvider.of<CartCubit>(
-                                                          context)
+                              child: state.products.isEmpty
+                                  ? Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: Dimension.height16),
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            width: double.infinity,
+                                            height: Dimension.height24,
+                                          ),
+                                          Image.asset(
+                                            'assets/images/img_no_order.png',
+                                            height: 120,
+                                          ),
+                                          SizedBox(
+                                            height: Dimension.height24,
+                                          ),
+                                          Text(
+                                            'Không có sản phẩm trong giỏ hàng',
+                                            style: AppText.style.regularBlack16,
+                                          ),
+                                          SizedBox(
+                                            height: Dimension.height24,
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : Column(
+                                      children: [
+                                        ListView.separated(
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            controller: ScrollController(),
+                                            itemBuilder: (context, index) {
+                                              if (!state.products[index]
+                                                      .isToppingAvailable ||
+                                                  !state.products[index]
+                                                      .isSizeAvailable) {
+                                                return Opacity(
+                                                  opacity: 0.5,
+                                                  child: CheckoutProdItem(
+                                                    cartFood: BlocProvider.of<
+                                                            CartCubit>(context)
+                                                        .state
+                                                        .products[index],
+                                                  ),
+                                                );
+                                              } else {
+                                                return CheckoutProdItem(
+                                                  cartFood: BlocProvider.of<
+                                                          CartCubit>(context)
                                                       .state
                                                       .products[index],
-                                            ),
-                                          );
-                                        } else {
-                                          return CheckoutProdItem(
-                                            cartFood:
+                                                );
+                                              }
+                                            },
+                                            separatorBuilder: (_, __) =>
+                                                const Divider(
+                                                  thickness: 1,
+                                                  color: AppColors.greyBoxColor,
+                                                ),
+                                            itemCount:
                                                 BlocProvider.of<CartCubit>(
                                                         context)
                                                     .state
-                                                    .products[index],
-                                          );
-                                        }
-                                      },
-                                      separatorBuilder: (_, __) =>
-                                          const Divider(
-                                            thickness: 1,
-                                            color: AppColors.greyBoxColor,
-                                          ),
-                                      itemCount:
-                                          BlocProvider.of<CartCubit>(context)
-                                              .state
-                                              .products
-                                              .length),
-                                  const Divider(
-                                    thickness: 1,
-                                    color: AppColors.greyBoxColor,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'Price',
-                                        style: AppText.style.regularBlack14,
-                                      ),
-                                      Text(
-                                        '${MoneyTransfer.transferFromDouble(productTotal)} ₫',
-                                        style: AppText.style.boldBlack14,
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'Promotion',
-                                        style: AppText.style.regularBlack14,
-                                      ),
-                                      Text(
-                                        '${MoneyTransfer.transferFromDouble(discount)} ₫',
-                                        style: AppText.style.boldBlack14,
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                ],
-                              ),
+                                                    .products
+                                                    .length),
+                                        const Divider(
+                                          thickness: 1,
+                                          color: AppColors.greyBoxColor,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Tổng tiền',
+                                              style:
+                                                  AppText.style.regularBlack14,
+                                            ),
+                                            Text(
+                                              '${MoneyTransfer.transferFromDouble(productTotal)} ₫',
+                                              style: AppText.style.boldBlack14,
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Giảm giá từ cửa hàng',
+                                              style:
+                                                  AppText.style.regularBlack14,
+                                            ),
+                                            Text(
+                                              '-${MoneyTransfer.transferFromDouble(discount)} ₫',
+                                              style: AppText.style.boldBlack14
+                                                  .copyWith(
+                                                      color:
+                                                          AppColors.greenColor),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                      ],
+                                    ),
                             ),
                             SizedBox(
                               height: Dimension.height12,
@@ -374,57 +410,46 @@ class _CartStorePickupState extends State<CartStorePickup> {
                             IconWidgetRow(
                                 icon: Icons.discount_rounded,
                                 iconColor: AppColors.greenColor,
-                                size: Dimension.height24,
+                                size: Dimension.height12 * 2,
                                 child: Text(
-                                  'Apply coupon',
+                                  'Sử dụng mã giảm giá',
                                   style: AppText.style.boldBlack14,
                                 )),
                             IconButton(
                               icon: Icon(
                                 CupertinoIcons.right_chevron,
-                                size: Dimension.height40 / 2,
+                                size: Dimension.height20,
                                 color: AppColors.greyTextColor,
                               ),
                               onPressed: () {
-                                showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    context: context,
-                                    backgroundColor: Colors.transparent,
-                                    builder: (builder) {
-                                      return SingleChildScrollView(
-                                        padding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom),
-                                        child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: Dimension.height16,
-                                              vertical: 0,
-                                            ),
-                                            width: double.maxFinite,
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(8),
-                                                  topRight: Radius.circular(8)),
-                                              color: Colors.white,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.grey
-                                                      .withOpacity(0.5),
-                                                  spreadRadius: 3,
-                                                  blurRadius: 5,
-                                                  offset: const Offset(0,
-                                                      5), // changes position of shadow
-                                                ),
-                                              ],
-                                            ),
-                                            child: ApplyCouponTextfield(
-                                              closeBox: () {
-                                                Navigator.pop(context);
-                                              },
-                                            )),
-                                      );
-                                    });
+                                //Mai: promo
+                                Navigator.of(context)
+                                    .pushNamed(PromoScreen.routeName)
+                                    .then((value) {
+                                  if (value != null && value is Promo) {
+                                    String? idSelectedStore =
+                                        BlocProvider.of<CartButtonBloc>(context)
+                                            .state
+                                            .selectedStore
+                                            ?.id;
+                                    if (idSelectedStore != null &&
+                                        value.stores
+                                            .contains(idSelectedStore)) {
+                                      BlocProvider.of<CartCubit>(context)
+                                          .applyPromoAndCalPrice(value);
+                                    } else {
+                                      BlocProvider.of<CartCubit>(context)
+                                          .applyPromoAndCalPrice(null);
+                                      Fluttertoast.showToast(
+                                          msg:
+                                              "Mã giảm giá không thể áp dụng ở cửa hàng được chọn",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          timeInSecForIosWeb: 1,
+                                          textColor: Colors.white,
+                                          fontSize: Dimension.font14);
+                                    }
+                                  }
+                                });
                               },
                             ),
                           ],
@@ -438,124 +463,150 @@ class _CartStorePickupState extends State<CartStorePickup> {
                         child: SizedBox(
                           width: double.maxFinite,
                           height: Dimension.height40,
-                          child: ElevatedButton(
-                            style: roundedButton,
-                            onPressed: () {
-                              var canOrder = BlocProvider.of<CartCubit>(context)
-                                  .checkCanOrderFoods(
-                                store: BlocProvider.of<CartButtonBloc>(context)
-                                    .state
-                                    .selectedStore!,
-                                address:
-                                    BlocProvider.of<CartButtonBloc>(context)
-                                        .state
-                                        .selectedDeliveryAddress,
-                              );
-                              if (!canOrder) {
-                                showDialog<String>(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        CupertinoAlertDialog(
-                                          title: const Text(
-                                            'Lỗi',
-                                          ),
-                                          content: Text(
-                                            'Có vài sản phẩm không hợp lệ trong giỏ hàng, vui lòng kiểm tra lại.',
-                                            style: AppText.style.regular,
-                                          ),
-                                          actions: <Widget>[
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: Dimension.height8,
-                                                  horizontal:
-                                                      Dimension.height8),
-                                              child: OutlinedButton(
-                                                style: outlinedButton,
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                                child: Text('OK',
-                                                    style: AppText
-                                                        .style.regularBlack16
-                                                        .copyWith(
-                                                            color:
-                                                                Colors.blue)),
-                                              ),
-                                            ),
-                                          ],
-                                        ));
-                              } else if (canOrder) {
-                                showDialog<String>(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        CupertinoAlertDialog(
-                                          title: const Text(
-                                            'Lưu ý',
-                                          ),
-                                          content: Text(
-                                            'Bạn sẽ không được huỷ đơn nếu xác nhận đặt hàng',
-                                            style: AppText.style.regular,
-                                          ),
-                                          actions: <Widget>[
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: Dimension.height8,
-                                                  horizontal:
-                                                      Dimension.height8),
-                                              child: OutlinedButton(
-                                                style: outlinedButton,
-                                                onPressed: () {
-                                                  BlocProvider.of<CartCubit>(
-                                                          context)
-                                                      .placeOrder(
-                                                    store: BlocProvider.of<
-                                                                CartButtonBloc>(
-                                                            context)
-                                                        .state
-                                                        .selectedStore!,
-                                                    pickupTime: BlocProvider.of<
-                                                            TimerCubit>(context)
-                                                        .state
-                                                        .selectedDate,
-                                                  );
-                                                  Navigator.of(context).pop();
-                                                  Navigator.pop(
-                                                      context, 'Đặt hàng');
-                                                },
-                                                child: Text('Đặt hàng',
-                                                    style: AppText
-                                                        .style.regularBlack16
-                                                        .copyWith(
-                                                            color:
-                                                                Colors.blue)),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: Dimension.height8,
-                                                  horizontal:
-                                                      Dimension.height8),
-                                              child: ElevatedButton(
-                                                style: roundedButton,
-                                                onPressed: () => Navigator.pop(
-                                                    context, 'Huỷ bỏ'),
-                                                child: Text('Huỷ bỏ',
-                                                    style: AppText
-                                                        .style.regularBlack16
-                                                        .copyWith(
-                                                            color:
-                                                                Colors.white)),
-                                              ),
-                                            ),
-                                          ],
-                                        ));
-                              }
-                            },
-                            child: Text(
-                              'Pay ${MoneyTransfer.transferFromDouble(total)} ₫',
-                              style: AppText.style.regularWhite16,
-                            ),
-                          ),
+                          child: state.products.isEmpty ||
+                                  BlocProvider.of<CartButtonBloc>(context)
+                                          .state
+                                          .selectedStore ==
+                                      null
+                              ? ElevatedButton(
+                                  style: roundedButton,
+                                  onPressed: null,
+                                  child: Text(
+                                    'Đặt hàng ${MoneyTransfer.transferFromDouble(0)} ₫',
+                                    style: AppText.style.regularWhite16,
+                                  ))
+                              : ElevatedButton(
+                                  style: roundedButton,
+                                  onPressed: () {
+                                    var canOrder =
+                                        BlocProvider.of<CartCubit>(context)
+                                            .checkCanOrderFoods(
+                                      store: BlocProvider.of<CartButtonBloc>(
+                                              context)
+                                          .state
+                                          .selectedStore!,
+                                    );
+                                    if (!canOrder) {
+                                      showDialog<String>(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              CupertinoAlertDialog(
+                                                title: const Text(
+                                                  'Lỗi',
+                                                ),
+                                                content: Text(
+                                                  'Có vài sản phẩm không hợp lệ trong giỏ hàng, vui lòng kiểm tra lại.',
+                                                  style: AppText.style.regular,
+                                                ),
+                                                actions: <Widget>[
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: Dimension
+                                                                .height8,
+                                                            horizontal:
+                                                                Dimension
+                                                                    .height8),
+                                                    child: OutlinedButton(
+                                                      style: outlinedButton,
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                      child: Text('OK',
+                                                          style: AppText.style
+                                                              .regularBlack16
+                                                              .copyWith(
+                                                                  color: Colors
+                                                                      .blue)),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ));
+                                    } else {
+                                      showDialog<String>(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              CupertinoAlertDialog(
+                                                title: const Text(
+                                                  'Lưu ý',
+                                                ),
+                                                content: Text(
+                                                  'Bạn sẽ không được huỷ đơn nếu xác nhận đặt hàng',
+                                                  style: AppText.style.regular,
+                                                ),
+                                                actions: <Widget>[
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: Dimension
+                                                                .height8,
+                                                            horizontal:
+                                                                Dimension
+                                                                    .height8),
+                                                    child: OutlinedButton(
+                                                      style: outlinedButton,
+                                                      onPressed: () async {
+                                                        Navigator.pop(context,
+                                                            'Đặt hàng');
+                                                        await BlocProvider.of<
+                                                                    CartCubit>(
+                                                                context)
+                                                            .placeOrder(
+                                                          store: BlocProvider
+                                                                  .of<CartButtonBloc>(
+                                                                      context)
+                                                              .state
+                                                              .selectedStore!,
+                                                          pickupTime: BlocProvider
+                                                                  .of<TimerCubit>(
+                                                                      context)
+                                                              .state
+                                                              .selectedDate,
+                                                        );
+                                                      },
+                                                      child: Text('Đặt hàng',
+                                                          style: AppText.style
+                                                              .regularBlack16
+                                                              .copyWith(
+                                                                  color: Colors
+                                                                      .blue)),
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: Dimension
+                                                                .height8,
+                                                            horizontal:
+                                                                Dimension
+                                                                    .height8),
+                                                    child: ElevatedButton(
+                                                      style: roundedButton,
+                                                      onPressed: () =>
+                                                          Navigator.pop(context,
+                                                              'Huỷ bỏ'),
+                                                      child: Text('Huỷ bỏ',
+                                                          style: AppText.style
+                                                              .regularBlack16
+                                                              .copyWith(
+                                                                  color: Colors
+                                                                      .white)),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ));
+                                    }
+                                  },
+                                  child: Builder(builder: (context) {
+                                    BlocProvider.of<CartCubit>(context)
+                                        .calculateTotalPrice(deliveryCost: 0);
+                                    return Text(
+                                      'Đặt hàng ${MoneyTransfer.transferFromDouble(total)} ₫',
+                                      style: AppText.style.regularWhite16,
+                                    );
+                                  }),
+                                ),
                         ),
                       )
                     ],
