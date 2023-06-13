@@ -47,7 +47,7 @@ class TimerPicker extends StatelessWidget {
                 Align(
                   alignment: Alignment.center,
                   child: Text(
-                    'Pickup time',
+                    'Thời gian mang đi',
                     style: AppText.style.boldBlack16,
                   ),
                 )
@@ -93,9 +93,9 @@ class TimerPicker extends StatelessWidget {
                                 builder: (context, index) {
                                   String day;
                                   if (index == 0) {
-                                    day = 'Today';
+                                    day = 'Hôm nay';
                                   } else if (index == 1) {
-                                    day = 'Tomorrow';
+                                    day = 'Ngày mai';
                                   } else {
                                     day = DateFormat('dd-MM-yyyy')
                                         .format((DateTime.now()
@@ -159,7 +159,7 @@ class TimerPicker extends StatelessWidget {
                   Navigator.pop(context);
                 },
                 child: Text(
-                  'Apply',
+                  'Áp dụng',
                   style: AppText.style.regularWhite16,
                 ),
               ),
