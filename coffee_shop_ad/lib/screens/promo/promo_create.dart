@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_admin/services/models/promo.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
 import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:coffee_shop_admin/utils/validations/validator.dart';
 import 'package:coffee_shop_admin/widgets/global/custom_app_bar.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:coffee_shop_admin/widgets/global/textForm/custom_text_form.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +29,14 @@ class _CreatePromoScreenState extends State<CreatePromoScreen> {
   TextEditingController endDateController = TextEditingController();
   bool _forNewCustomer = false;
   bool _isKeyboardOpened = false;
+
+  List<bool> _selectedStores = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedStores = List<bool>.generate(Promo.allStores.length, (index) => false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,8 +102,12 @@ class _CreatePromoScreenState extends State<CreatePromoScreen> {
       int mi = int.parse(minPriceController.text), mx = int.parse(maxPriceController.text);
 
       try {
-        print("begin post");
-        print(code);
+        List<dynamic> choosedStore = [];
+        for (int i = 0; i < _selectedStores.length; i++) {
+          if (_selectedStores[i]) {
+            choosedStore.add(Promo.allStores[i].id);
+          }
+        }
         await FirebaseFirestore.instance.collection("Promo").doc(code).set({
           "dateStart": startDate,
           "dateEnd": endDate,
@@ -103,7 +117,7 @@ class _CreatePromoScreenState extends State<CreatePromoScreen> {
           "maxPrice": mx,
           "percent": percent,
           "products": [],
-          "stores": [],
+          "stores": choosedStore,
         }).then((value) {
           Navigator.of(context).pop();
           Navigator.of(context).pop();
@@ -277,6 +291,85 @@ class _CreatePromoScreenState extends State<CreatePromoScreen> {
                                       ],
                                     ),
                                   ),
+                                ],
+                              ),
+                            ),
+
+                            //stores
+                            Container(
+                              width: double.maxFinite,
+                              padding:
+                                  EdgeInsets.symmetric(horizontal: Dimension.height16, vertical: Dimension.height16),
+                              margin: EdgeInsets.only(
+                                  top: Dimension.height12, left: Dimension.height16, right: Dimension.height16),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      style: AppText.style.boldBlack16,
+                                      children: <TextSpan>[
+                                        const TextSpan(text: 'Stores'),
+                                      ],
+                                    ),
+                                  ),
+                                  ListView.separated(
+                                      padding: EdgeInsets.only(top: Dimension.height16),
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      controller: ScrollController(),
+                                      itemBuilder: (context, index) => InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                _selectedStores[index] = !_selectedStores[index];
+                                              });
+                                            },
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                  child: Row(
+                                                    children: [
+                                                      Checkbox(
+                                                        value: _selectedStores[index],
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            _selectedStores[index] = value as bool;
+                                                          });
+                                                        },
+                                                      ),
+                                                      Expanded(
+                                                          child: Text(Promo.allStores[index].sb,
+                                                              style: AppText.style.regularBlack14)),
+                                                      SizedBox(
+                                                        height: Dimension.height20,
+                                                        width: Dimension.width20,
+                                                        child: IconTheme(
+                                                          data: IconThemeData(
+                                                            size: Dimension.width20,
+                                                            color: AppColors.blueColor,
+                                                          ),
+                                                          child: const FaIcon(FontAwesomeIcons.store),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: Dimension.height8,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                      separatorBuilder: (_, __) => const Divider(
+                                            thickness: 2,
+                                            color: AppColors.greyBoxColor,
+                                          ),
+                                      itemCount: _selectedStores.length),
                                 ],
                               ),
                             ),

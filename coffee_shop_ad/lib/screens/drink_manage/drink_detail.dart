@@ -111,7 +111,6 @@ class _DrinkDetailState extends State<DrinkDetail> {
                       child: SingleChildScrollView(
                           child: Column(
                     children: [
-                      //TODO:
                       ProductCard(product: widget.product),
 
                       //size
@@ -125,27 +124,32 @@ class _DrinkDetailState extends State<DrinkDetail> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Size",
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            RichText(
+                              text: TextSpan(
                                 style: AppText.style.boldBlack16,
+                                children: <TextSpan>[
+                                  const TextSpan(text: 'Size'),
+                                ],
                               ),
-                              ListView.separated(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  controller: ScrollController(),
-                                  itemBuilder: (context, index) => InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            _selectedSizes[index] = !_selectedSizes[index];
-                                          });
-                                        },
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Row(
+                            ),
+                            ListView.separated(
+                                padding: EdgeInsets.only(top: Dimension.height16),
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                controller: ScrollController(),
+                                itemBuilder: (context, index) => InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          _selectedSizes[index] = !_selectedSizes[index];
+                                        });
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: Row(
                                               children: [
                                                 Checkbox(
                                                   value: _selectedSizes[index],
@@ -159,25 +163,26 @@ class _DrinkDetailState extends State<DrinkDetail> {
                                                 SizedBox(
                                                   width: Dimension.height8,
                                                 ),
-                                                Text(
-                                                  Drink.sizes[index].name,
-                                                  style: AppText.style.regularBlack14,
-                                                ),
+                                                Expanded(
+                                                    child: Text(Drink.sizes[index].name,
+                                                        style: AppText.style.regularBlack14)),
                                               ],
                                             ),
-                                            Text(
-                                              '+${MoneyTransfer.transferFromDouble(Drink.sizes[index].price)} ₫',
-                                              style: AppText.style.boldBlack14,
-                                            ),
-                                          ],
-                                        ),
+                                          ),
+                                          Text(
+                                            '+${MoneyTransfer.transferFromDouble(Drink.sizes[index].price)} ₫',
+                                            style: AppText.style.boldBlack14,
+                                          ),
+                                        ],
                                       ),
-                                  separatorBuilder: (_, __) => const Divider(
-                                        thickness: 2,
-                                        color: AppColors.greyBoxColor,
-                                      ),
-                                  itemCount: Drink.sizes.length),
-                            ]),
+                                    ),
+                                separatorBuilder: (_, __) => const Divider(
+                                      thickness: 2,
+                                      color: AppColors.greyBoxColor,
+                                    ),
+                                itemCount: Drink.sizes.length),
+                          ],
+                        ),
                       ),
 
                       //topping
@@ -230,7 +235,9 @@ class _DrinkDetailState extends State<DrinkDetail> {
                                                 SizedBox(
                                                   width: Dimension.height8,
                                                 ),
-                                                Text(Drink.toppings[index].name, style: AppText.style.regularBlack14),
+                                                Expanded(
+                                                    child: Text(Drink.toppings[index].name,
+                                                        style: AppText.style.regularBlack14)),
                                               ],
                                             ),
                                           ),

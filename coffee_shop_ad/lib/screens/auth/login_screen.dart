@@ -1,6 +1,7 @@
 import 'package:coffee_shop_admin/services/blocs/auth/auth_bloc.dart';
 import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/validations/email_validate.dart';
+import 'package:coffee_shop_admin/utils/validations/validator.dart';
 import 'package:coffee_shop_admin/widgets/global/buttons/rounded_button.dart';
 import 'package:coffee_shop_admin/widgets/global/textForm/custom_text_form.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
         CustormTextForm(
           controller: passwordController,
           verifiedCheck: true,
+          validator: NullValidator(),
           secure: true,
           label: 'Password',
           margin: EdgeInsets.symmetric(vertical: Dimension.getHeightFromValue(15)),
