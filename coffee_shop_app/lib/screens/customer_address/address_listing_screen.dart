@@ -4,6 +4,7 @@ import 'package:coffee_shop_app/services/blocs/address_store/address_store_event
 import 'package:coffee_shop_app/services/blocs/address_store/address_store_state.dart';
 import 'package:coffee_shop_app/services/models/delivery_address.dart';
 import 'package:coffee_shop_app/widgets/feature/address_screen/address_skeleton.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -43,8 +44,10 @@ class _AddressListingScreenState extends State<AddressListingScreen> {
                     if (state is LoadedState) {
                       return RefreshIndicator(
                         onRefresh: () async {
-                          BlocProvider.of<AddressStoreBloc>(context)
-                              .add(FetchData());
+                          if (FirebaseAuth.instance.currentUser != null) {
+                            BlocProvider.of<AddressStoreBloc>(context)
+                                .add(FetchData());
+                          }
                         },
                         child: LayoutBuilder(builder:
                             (BuildContext context, BoxConstraints constraints) {

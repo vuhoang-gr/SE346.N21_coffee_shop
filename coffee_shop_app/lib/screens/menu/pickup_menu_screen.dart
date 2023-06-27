@@ -2,6 +2,7 @@ import 'package:coffee_shop_app/screens/search_product_screen.dart';
 import 'package:coffee_shop_app/services/blocs/product_store/product_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/product_store/product_store_event.dart';
 import 'package:coffee_shop_app/widgets/feature/menu_screen/skeleton/pickup_menu_skeleton.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -58,12 +59,14 @@ class _PickupMenuScreenState extends State<PickupMenuScreen> {
                   if (state is HasDataProductStoreState) {
                     return RefreshIndicator(
                       onRefresh: () async {
-                        CartButtonState cartButtonState =
-                            BlocProvider.of<CartButtonBloc>(context).state;
-                        BlocProvider.of<ProductStoreBloc>(context).add(
-                            FetchData(
-                                stateFood:
-                                    cartButtonState.selectedStore?.stateFood));
+                        if (FirebaseAuth.instance.currentUser != null) {
+                          CartButtonState cartButtonState =
+                              BlocProvider.of<CartButtonBloc>(context).state;
+                          BlocProvider.of<ProductStoreBloc>(context).add(
+                              FetchData(
+                                  stateFood: cartButtonState
+                                      .selectedStore?.stateFood));
+                        }
                       },
                       child: LayoutBuilder(builder:
                           (BuildContext context, BoxConstraints constraints) {
