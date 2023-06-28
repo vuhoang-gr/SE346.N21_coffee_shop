@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:coffee_shop_app/services/apis/food_api.dart';
+import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/product_store/product_store_event.dart';
 import 'package:coffee_shop_app/services/blocs/product_store/product_store_state.dart';
 import 'package:coffee_shop_app/services/models/food.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,6 +20,14 @@ class ProductStoreBloc extends Bloc<ProductStoreEvent, ProductStoreState> {
     on<FetchData>(_mapFetchData);
     on<UpdateFavorite>(_mapUpdateFavorite);
     on<GetDataFetched>(_mapGetDataFetched);
+
+    CartButtonBloc.changeSelectedStoreSubscription.addListener(() {
+      if (FirebaseAuth.instance.currentUser != null) {
+        add(FetchData(
+            stateFood:
+                CartButtonBloc.changeSelectedStoreSubscription.value?.stateFood));
+      }
+    });
   }
 
   void _mapFetchData(FetchData event, Emitter<ProductStoreState> emit) {

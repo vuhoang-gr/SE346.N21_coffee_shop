@@ -4,6 +4,7 @@ import 'package:coffee_shop_app/services/apis/address_api.dart';
 import 'package:coffee_shop_app/services/blocs/address_store/address_store_event.dart';
 import 'package:coffee_shop_app/services/blocs/address_store/address_store_state.dart';
 import 'package:coffee_shop_app/services/models/delivery_address.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -19,24 +20,34 @@ class AddressStoreBloc extends Bloc<AddressStoreEvent, AddressStoreState> {
     on<DeleteIndex>(_onDeleteIndex);
     on<Insert>(_onInsert);
     on<UpdateAddresses>(_onUpdateAddresses);
+
+    FirebaseAuth.instance.authStateChanges().listen(userSubscriptionFunction);
+  }
+  
+  void userSubscriptionFunction(User? user) {
+    if (user != null) {
+      add(FetchData());
+    }
   }
 
   void _onFetchData(FetchData event, Emitter<AddressStoreState> emit) {
     emit(LoadingState());
-    _addressSubscription?.cancel();
-    _addressSubscription = AddressAPI()
-        .fetchData(AuthAPI.currentUser!.id)
-        .listen((listDeliveryAddress) {
-      add(UpdateAddresses(listDeliveryAddress: listDeliveryAddress));
-    }, onError: (_) {
-      Fluttertoast.showToast(
-          msg: "Đã có lỗi xảy ra, hãy thử lại sau.",
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 1,
-          textColor: Colors.white,
-          fontSize: Dimension.font14);
-      add(UpdateAddresses(listDeliveryAddress: []));
-    });
+    if (FirebaseAuth.instance.currentUser != null) {
+      _addressSubscription?.cancel();
+      _addressSubscription = AddressAPI()
+          .fetchData(FirebaseAuth.instance.currentUser!.uid)
+          .listen((listDeliveryAddress) {
+        add(UpdateAddresses(listDeliveryAddress: listDeliveryAddress));
+      }, onError: (_) {
+        Fluttertoast.showToast(
+            msg: "Đã có lỗi xảy ra, hãy thử lại sau.",
+            toastLength: Toast.LENGTH_SHORT,
+            timeInSecForIosWeb: 1,
+            textColor: Colors.white,
+            fontSize: Dimension.font14);
+        add(UpdateAddresses(listDeliveryAddress: []));
+      });
+    }
   }
 
   void _onUpdateAddresses(

@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:coffee_shop_app/main.dart';
 import 'package:coffee_shop_app/services/apis/store_api.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_event.dart';
 import 'package:coffee_shop_app/services/blocs/store_store/store_store_event.dart';
 import 'package:coffee_shop_app/services/blocs/store_store/store_store_state.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -24,6 +26,13 @@ class StoreStoreBloc extends Bloc<StoreStoreEvent, StoreStoreState> {
     on<UpdateFavorite>(_mapUpdateFavorite);
     on<UpdateLocation>(_mapUpdateLocation);
     on<GetDataFetched>(_mapGetDataFetched);
+
+    FirebaseAuth.instance.authStateChanges().listen(userSubscriptionFunction);
+  }
+  void userSubscriptionFunction(User? user) {
+    if (user != null) {
+      add(FetchData(location: initLatLng));
+    }
   }
 
   void _mapFetchData(FetchData event, Emitter<StoreStoreState> emit) {

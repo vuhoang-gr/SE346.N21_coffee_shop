@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coffee_shop_app/services/apis/auth_api.dart';
 import 'package:coffee_shop_app/services/models/location.dart';
 import 'package:coffee_shop_app/services/models/store.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class StoreAPI {
   //singleton
@@ -22,7 +23,7 @@ class StoreAPI {
   Stream<List<Store>> fetchData() {
     return storeReference.snapshots().asyncMap<List<Store>>((snapshot) async {
       List<dynamic> favoriteStores = [];
-      if (AuthAPI.currentUser != null) {
+      if (FirebaseAuth.instance.currentUser != null) {
         DocumentSnapshot userData =
             await userReference.doc(AuthAPI.currentUser!.id).get();
         if (userData.exists) {
@@ -80,7 +81,6 @@ class StoreAPI {
       }
     });
 
-    print("sizeIds: ${sizeIds}");
     return Store(
         id: id,
         sb: data['shortName'],

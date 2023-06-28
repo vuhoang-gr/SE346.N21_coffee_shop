@@ -5,6 +5,7 @@ import 'package:coffee_shop_app/services/blocs/store_store/store_store_event.dar
 import 'package:coffee_shop_app/services/blocs/store_store/store_store_state.dart';
 import 'package:coffee_shop_app/services/models/store.dart';
 import 'package:coffee_shop_app/utils/colors/app_colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -72,7 +73,7 @@ class _StoreSelectionScreenState extends State<StoreSelectionScreen> {
                         }).then((value) {
                           if (value != null && value is bool && value == true) {
                             if (widget.isPurposeForShowDetail) {
-                              //change to menu 
+                              //change to menu
                               DefaultTabController.of(context).index = 1;
                             } else {
                               Navigator.of(context).pop();
@@ -114,8 +115,10 @@ class _StoreSelectionScreenState extends State<StoreSelectionScreen> {
                     builder: (context, state) {
                   if (state is HasDataStoreStoreState) {
                     return RefreshIndicator(onRefresh: () async {
-                      BlocProvider.of<StoreStoreBloc>(context)
-                          .add(FetchData(location: widget.latLng));
+                      if (FirebaseAuth.instance.currentUser != null) {
+                        BlocProvider.of<StoreStoreBloc>(context)
+                            .add(FetchData(location: widget.latLng));
+                      }
                     }, child: LayoutBuilder(builder:
                         (BuildContext context, BoxConstraints constraints) {
                       return SingleChildScrollView(

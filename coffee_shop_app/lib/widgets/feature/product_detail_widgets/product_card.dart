@@ -91,21 +91,24 @@ class _ProductCardState extends State<ProductCard> {
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.product.name,
-                              style: AppText.style.regularBlack16,
-                            ),
-                            const SizedBox(
-                              height: 2,
-                            ),
-                            Text(
-                                "${MoneyTransfer.transferFromDouble(widget.product.price)} ₫",
-                                style: AppText.style.boldBlack14),
-                          ],
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.product.name,
+                                style: AppText.style.regularBlack16,
+                              ),
+                              const SizedBox(
+                                height: 2,
+                              ),
+                              Text(
+                                  "${MoneyTransfer.transferFromDouble(widget.product.price)} ₫",
+                                  style: AppText.style.boldBlack14),
+                            ],
+                          ),
                         ),
                         BlocBuilder<ProductStoreBloc, ProductStoreState>(
                           builder: (context, state) {

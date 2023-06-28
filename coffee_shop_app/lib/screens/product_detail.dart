@@ -72,109 +72,115 @@ class _ProductDetailState extends State<ProductDetail> {
                             ProductCard(product: state.selectedFood!),
 
                             //size
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: Dimension.height16,
-                                  vertical: Dimension.height16),
-                              margin: EdgeInsets.only(
-                                  top: Dimension.height12,
-                                  left: Dimension.height16,
-                                  right: Dimension.height16),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Size",
-                                      style: AppText.style.boldBlack16,
+                            (state.productsSize.length == 1 &&
+                                    state.productsSize.first.price == 0)
+                                ? SizedBox.shrink()
+                                : Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: Dimension.height16,
+                                        vertical: Dimension.height16),
+                                    margin: EdgeInsets.only(
+                                        top: Dimension.height12,
+                                        left: Dimension.height16,
+                                        right: Dimension.height16),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
-                                    ListView.separated(
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        controller: ScrollController(),
-                                        itemBuilder:
-                                            (context, index) => InkWell(
-                                                  onTap: () {
-                                                    BlocProvider.of<
-                                                                ProductDetailBloc>(
-                                                            context)
-                                                        .add(SelectSize(
-                                                            selectedSize: state
-                                                                    .productsSize[
-                                                                index]));
-                                                  },
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Expanded(
+                                    child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Size",
+                                            style: AppText.style.boldBlack16,
+                                          ),
+                                          ListView.separated(
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              shrinkWrap: true,
+                                              controller: ScrollController(),
+                                              itemBuilder:
+                                                  (context, index) => InkWell(
+                                                        onTap: () {
+                                                          BlocProvider.of<
+                                                                      ProductDetailBloc>(
+                                                                  context)
+                                                              .add(SelectSize(
+                                                                  selectedSize:
+                                                                      state.productsSize[
+                                                                          index]));
+                                                        },
                                                         child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
                                                           children: [
-                                                            Radio<Size>(
-                                                              value: state
-                                                                      .productsSize[
-                                                                  index],
-                                                              groupValue: state
-                                                                  .selectedSize,
-                                                              onChanged:
-                                                                  (value) {
-                                                                setState(() {
-                                                                  if (value !=
-                                                                      null) {
-                                                                    BlocProvider.of<ProductDetailBloc>(
-                                                                            context)
-                                                                        .add(SelectSize(
-                                                                            selectedSize:
-                                                                                value));
-                                                                  }
-                                                                });
-                                                              },
-                                                            ),
-                                                            RoundImage(
-                                                                imgUrl: state
-                                                                    .productsSize[
-                                                                        index]
-                                                                    .image),
-                                                            SizedBox(
-                                                              width: Dimension
-                                                                  .height8,
-                                                            ),
                                                             Expanded(
-                                                              child: Text(
-                                                                state
-                                                                    .productsSize[
-                                                                        index]
-                                                                    .name,
-                                                                style: AppText
-                                                                    .style
-                                                                    .regularBlack14,
+                                                              child: Row(
+                                                                children: [
+                                                                  Radio<Size>(
+                                                                    value: state
+                                                                            .productsSize[
+                                                                        index],
+                                                                    groupValue:
+                                                                        state
+                                                                            .selectedSize,
+                                                                    onChanged:
+                                                                        (value) {
+                                                                      setState(
+                                                                          () {
+                                                                        if (value !=
+                                                                            null) {
+                                                                          BlocProvider.of<ProductDetailBloc>(context)
+                                                                              .add(SelectSize(selectedSize: value));
+                                                                        }
+                                                                      });
+                                                                    },
+                                                                  ),
+                                                                  RoundImage(
+                                                                      imgUrl: state
+                                                                          .productsSize[
+                                                                              index]
+                                                                          .image),
+                                                                  SizedBox(
+                                                                    width: Dimension
+                                                                        .height8,
+                                                                  ),
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                      state
+                                                                          .productsSize[
+                                                                              index]
+                                                                          .name,
+                                                                      style: AppText
+                                                                          .style
+                                                                          .regularBlack14,
+                                                                    ),
+                                                                  ),
+                                                                ],
                                                               ),
+                                                            ),
+                                                            Text(
+                                                              '+${MoneyTransfer.transferFromDouble(state.productsSize[index].price)} ₫',
+                                                              style: AppText
+                                                                  .style
+                                                                  .boldBlack14,
                                                             ),
                                                           ],
                                                         ),
                                                       ),
-                                                      Text(
-                                                        '+${MoneyTransfer.transferFromDouble(state.productsSize[index].price)} ₫',
-                                                        style: AppText
-                                                            .style.boldBlack14,
-                                                      ),
-                                                    ],
+                                              separatorBuilder: (_, __) =>
+                                                  const Divider(
+                                                    thickness: 2,
+                                                    color:
+                                                        AppColors.greyBoxColor,
                                                   ),
-                                                ),
-                                        separatorBuilder: (_, __) =>
-                                            const Divider(
-                                              thickness: 2,
-                                              color: AppColors.greyBoxColor,
-                                            ),
-                                        itemCount: state.productsSize.length),
-                                  ]),
-                            ),
+                                              itemCount:
+                                                  state.productsSize.length),
+                                        ]),
+                                  ),
 
                             //topping
                             state.productsTopping.isNotEmpty
@@ -287,7 +293,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                   )
                                 : SizedBox.shrink(),
 
-                            SizedBox(height: 16),
+                            SizedBox(height: Dimension.height4),
                             //note to barista
                             Container(
                                 height: Dimension.height8 * 15,
@@ -445,7 +451,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                                         .maybePop();
                                                   },
                                             child: Text(
-                                              'Add to cart - ${MoneyTransfer.transferFromDouble(finalTotal)} ₫',
+                                              'Thêm vào giỏ - ${MoneyTransfer.transferFromDouble(finalTotal)} ₫',
                                               style:
                                                   AppText.style.regularWhite16,
                                             ));

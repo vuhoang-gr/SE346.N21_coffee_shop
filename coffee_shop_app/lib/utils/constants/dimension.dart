@@ -22,7 +22,7 @@ class Dimension {
   static double height230 = getHeightFromValue(230);
   static double height160 = getHeightFromValue(160);
   static double height120 = getHeightFromValue(120);
-  static double height86 = getHeightFromValue(86);
+  static double height82 = getHeightFromValue(82);
   static double height72 = getHeightFromValue(72);
   static double height68 = getHeightFromValue(68);
   static double height56 = getHeightFromValue(56);

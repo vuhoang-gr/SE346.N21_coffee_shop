@@ -8,7 +8,6 @@ import 'package:coffee_shop_app/screens/main_page.dart';
 import 'package:coffee_shop_app/screens/menu/menu_screen.dart';
 import 'package:coffee_shop_app/screens/order_management/order_detail_screen.dart';
 import 'package:coffee_shop_app/screens/order_management/order_history.dart';
-import 'package:coffee_shop_app/screens/order_management/order_management.dart';
 import 'package:coffee_shop_app/screens/product_detail.dart';
 import 'package:coffee_shop_app/screens/profile/image_view_screen.dart';
 import 'package:coffee_shop_app/screens/profile/profile_screen.dart';

@@ -4,6 +4,7 @@ import 'package:coffee_shop_app/services/blocs/product_store/product_store_bloc.
 import 'package:coffee_shop_app/services/blocs/product_store/product_store_state.dart';
 import 'package:coffee_shop_app/widgets/feature/menu_screen/skeleton/delivery_menu_skeleton.dart';
 import 'package:coffee_shop_app/widgets/global/cart_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -38,11 +39,11 @@ class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
   @override
   Widget build(BuildContext context) {
     _scrollController.addListener(() {
-      if (_scrollController.offset <= Dimension.height86 && _isButtonVisible) {
+      if (_scrollController.offset <= Dimension.height82 && _isButtonVisible) {
         setState(() {
           _isButtonVisible = false;
         });
-      } else if (_scrollController.offset > Dimension.height86 &&
+      } else if (_scrollController.offset > Dimension.height82 &&
           !_isButtonVisible) {
         setState(() {
           _isButtonVisible = true;
@@ -78,14 +79,17 @@ class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
                 BlocBuilder<ProductStoreBloc, ProductStoreState>(
                     builder: (context, state) {
                   if (state is HasDataProductStoreState) {
+                    _isButtonVisible = false;
                     return RefreshIndicator(
                       onRefresh: () async {
-                        CartButtonState cartButtonState =
-                            BlocProvider.of<CartButtonBloc>(context).state;
-                        BlocProvider.of<ProductStoreBloc>(context).add(
-                            FetchData(
-                                stateFood:
-                                    cartButtonState.selectedStore?.stateFood));
+                        if (FirebaseAuth.instance.currentUser != null) {
+                          CartButtonState cartButtonState =
+                              BlocProvider.of<CartButtonBloc>(context).state;
+                          BlocProvider.of<ProductStoreBloc>(context).add(
+                              FetchData(
+                                  stateFood: cartButtonState
+                                      .selectedStore?.stateFood));
+                        }
                       },
                       child: LayoutBuilder(builder:
                           (BuildContext context, BoxConstraints constraints) {
