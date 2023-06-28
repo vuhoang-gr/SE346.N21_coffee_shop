@@ -21,13 +21,15 @@ class ProductStoreBloc extends Bloc<ProductStoreEvent, ProductStoreState> {
     on<UpdateFavorite>(_mapUpdateFavorite);
     on<GetDataFetched>(_mapGetDataFetched);
 
-    CartButtonBloc.changeSelectedStoreSubscription.addListener(() {
-      if (FirebaseAuth.instance.currentUser != null) {
-        add(FetchData(
-            stateFood:
-                CartButtonBloc.changeSelectedStoreSubscription.value?.stateFood));
-      }
-    });
+    CartButtonBloc.changeSelectedStoreSubscription
+        .addListener(changeSelectedStoreSubscriptionFunction);
+  }
+  void changeSelectedStoreSubscriptionFunction() {
+    if (FirebaseAuth.instance.currentUser != null) {
+      add(FetchData(
+          stateFood:
+              CartButtonBloc.changeSelectedStoreSubscription.value?.stateFood));
+    }
   }
 
   void _mapFetchData(FetchData event, Emitter<ProductStoreState> emit) {
@@ -120,6 +122,8 @@ class ProductStoreBloc extends Bloc<ProductStoreEvent, ProductStoreState> {
   @override
   Future<void> close() {
     _foodStoreSubscription?.cancel();
+    CartButtonBloc.changeSelectedStoreSubscription
+        .removeListener(changeSelectedStoreSubscriptionFunction);
     return super.close();
   }
 }
