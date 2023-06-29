@@ -1,9 +1,7 @@
-import 'package:coffee_shop_admin/utils/constants/order_enum.dart';
-
 import '../../../temp/mockData.dart';
 import 'order_listing.dart';
-import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
-import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
+import 'package:coffee_shop_staff/utils/colors/app_colors.dart';
+import 'package:coffee_shop_staff/utils/styles/app_texts.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utils/constants/dimension.dart';

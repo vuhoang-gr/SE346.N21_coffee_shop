@@ -1,16 +1,22 @@
-import 'package:coffee_shop_admin/utils/constants/dimension.dart';
-import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
-import 'package:coffee_shop_admin/widgets/features/profile_screen/change_password_dialog.dart';
-import 'package:coffee_shop_admin/widgets/global/buttons/touchable_opacity.dart';
-import 'package:coffee_shop_admin/widgets/global/textForm/custom_text_form.dart';
+import 'package:coffee_shop_staff/services/blocs/auth/auth_bloc.dart';
+import 'package:coffee_shop_staff/utils/constants/dimension.dart';
+import 'package:coffee_shop_staff/utils/styles/app_texts.dart';
+import 'package:coffee_shop_staff/utils/validations/phone_validate.dart';
+import 'package:coffee_shop_staff/widgets/global/buttons/touchable_opacity.dart';
+import 'package:coffee_shop_staff/widgets/global/custom_app_bar.dart';
+import 'package:coffee_shop_staff/widgets/global/textForm/custom_text_form.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fireAuth;
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import '../../services/models/staff.dart';
-import '../../widgets/features/login_screen/back_header.dart';
+import '../../services/apis/auth_api.dart';
+import '../../services/models/user.dart';
+import '../../widgets/features/profile_screen/change_password_dialog.dart';
 import '../../widgets/features/profile_screen/profile_custom_button.dart';
 
 class ProfileSettingScreen extends StatefulWidget {
+  static const String routeName = '/profile_setting_screen';
   const ProfileSettingScreen({super.key});
 
   @override
@@ -20,31 +26,54 @@ class ProfileSettingScreen extends StatefulWidget {
 // enum AuthState { login, signup, loggedIn }
 
 class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
-  Staff userTest = Staff(
-      id: '1',
-      name: 'Yau Boii',
-      phoneNumber: '0101010101',
-      email: 'fuck@gm.co',
-      isActive: true,
-      dob: DateTime(2003, 6, 11),
-      store: '123');
+  User user = AuthAPI.currentUser!;
+
   bool isChangeInformation = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    //change password handle
-
     //change infor handle
     TextEditingController nameController =
-        TextEditingController(text: userTest.name);
+        TextEditingController(text: user.name);
     TextEditingController dobController = TextEditingController(
-        text: userTest.dob != null
-            ? DateFormat('dd/MM/yyyy').format(userTest.dob!)
-            : '');
+        text:
+            user.dob != null ? DateFormat('dd/MM/yyyy').format(user.dob!) : '');
+    TextEditingController phoneController =
+        TextEditingController(text: user.phoneNumber);
+
+    fireAuth.User? rawUser = fireAuth.FirebaseAuth.instance.currentUser;
+
+    onSaveInformation() {
+      setState(() {
+        isChangeInformation = false;
+      });
+      user.name = nameController.text;
+      if (PhoneValidator().validate(phoneController.text)) {
+        user.phoneNumber = phoneController.text;
+      }
+      try {
+        user.dob = DateFormat('dd/MM/yyyy').parse(dobController.text);
+      } catch (e) {
+        print("user not choose any dob $e");
+      } finally {
+        setState(() {
+          dobController = TextEditingController(
+              text: user.dob != null
+                  ? DateFormat('dd/MM/yyyy').format(user.dob!)
+                  : '');
+        });
+        context.read<AuthBloc>().add(UserChanged(user: user));
+      }
+    }
 
     return SafeArea(
       child: Scaffold(
-        // resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
             Column(
@@ -53,7 +82,7 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
               children: [
                 //Back button
                 Navigator.of(context).canPop()
-                    ? BackHeader()
+                    ? CustomAppBar()
                     : SizedBox(
                         height: Dimension.height32,
                       ),
@@ -68,7 +97,7 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                       children: [
                         //Header
                         Text(
-                          'Settings',
+                          'Cài đặt',
                           style: AppText.style.boldBlack16.copyWith(
                             fontSize: Dimension.getWidthFromValue(34),
                           ),
@@ -86,23 +115,26 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Personal Information',
+                                  'Thông tin cá nhân',
                                   style: AppText.style.mediumBlack16.copyWith(
-                                    fontSize: 18,
+                                    fontSize: Dimension.getWidthFromValue(18),
                                   ),
                                 ),
                                 !isChangeInformation
                                     ? TouchableOpacity(
                                         onTap: () {
-                                          setState(() {
-                                            isChangeInformation = true;
-                                          });
+                                          if (context.mounted) {
+                                            setState(() {
+                                              isChangeInformation = true;
+                                            });
+                                          }
                                         },
                                         child: Text(
-                                          'Change',
+                                          'Thay đổi',
                                           style: AppText.style.regularBlue16
                                               .copyWith(
-                                            fontSize: 14,
+                                            fontSize:
+                                                Dimension.getWidthFromValue(14),
                                           ),
                                         ),
                                       )
@@ -110,21 +142,22 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                                         children: [
                                           TouchableOpacity(
                                             onTap: () {
-                                              setState(() {
-                                                isChangeInformation = false;
-                                                dobController =
-                                                    TextEditingController(
-                                                        text: userTest.dob !=
-                                                                null
-                                                            ? DateFormat(
-                                                                    'dd/MM/yyyy')
-                                                                .format(userTest
-                                                                    .dob!)
-                                                            : '');
-                                              });
+                                              if (context.mounted) {
+                                                setState(() {
+                                                  isChangeInformation = false;
+                                                  dobController =
+                                                      TextEditingController(
+                                                          text: user.dob != null
+                                                              ? DateFormat(
+                                                                      'dd/MM/yyyy')
+                                                                  .format(
+                                                                      user.dob!)
+                                                              : '');
+                                                });
+                                              }
                                             },
                                             child: Text(
-                                              'Cancel',
+                                              'Hủy',
                                               style: AppText.style.regularGrey14
                                                   .copyWith(
                                                 fontSize: 14,
@@ -136,33 +169,9 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                                                 Dimension.getWidthFromValue(15),
                                           ),
                                           TouchableOpacity(
-                                            onTap: () {
-                                              setState(() {
-                                                isChangeInformation = false;
-                                              });
-                                              userTest.name =
-                                                  nameController.text;
-                                              try {
-                                                userTest.dob = DateFormat(
-                                                        'dd/MM/yyyy')
-                                                    .parse(dobController.text);
-                                              } finally {
-                                                setState(() {
-                                                  dobController =
-                                                      TextEditingController(
-                                                          text: userTest.dob !=
-                                                                  null
-                                                              ? DateFormat(
-                                                                      'dd/MM/yyyy')
-                                                                  .format(
-                                                                      userTest
-                                                                          .dob!)
-                                                              : '');
-                                                });
-                                              }
-                                            },
+                                            onTap: onSaveInformation,
                                             child: Text(
-                                              'Save',
+                                              'Lưu',
                                               style: AppText.style.regularBlue16
                                                   .copyWith(
                                                 fontSize: 14,
@@ -175,48 +184,51 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                             ),
                             CustormTextForm(
                               margin: EdgeInsets.only(top: 30),
-                              label: 'Fullname',
+                              label: 'Họ và tên',
                               controller: nameController,
                               readOnly: !isChangeInformation,
                             ),
                             CustormTextForm(
                               margin: EdgeInsets.only(top: 30),
-                              label: 'Date of birth',
+                              label: 'Ngày sinh',
                               controller: dobController,
                               readOnly: !isChangeInformation,
                               haveDatePicker: true,
                             ),
+                            CustormTextForm(
+                              margin: EdgeInsets.only(top: 30),
+                              label: 'Số điện thoại',
+                              controller: phoneController,
+                              validator: PhoneValidator(),
+                              readOnly: !isChangeInformation,
+                            ),
                             SizedBox(
                               height: Dimension.getHeightFromValue(25),
-                            ),
-                            //Button
-                            ProfileCustomButton(
-                              onPressed: () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            'Nav to AddressListingScreen')));
-                              },
-                              icon: Icons.home,
-                              title: 'Shipping address',
-                              description: 'Add/change address',
                             ),
                             SizedBox(
                               height: Dimension.getHeightFromValue(15),
                             ),
-                            ProfileCustomButton(
-                              onPressed: () {
-                                showGeneralDialog(
-                                  context: context,
-                                  pageBuilder: (_, __, ___) {
-                                    return ChangePasswordDialog();
-                                  },
-                                );
-                              },
-                              icon: Icons.security,
-                              title: 'Password',
-                              description: 'Change password',
-                            ),
+                            rawUser!.providerData[0].providerId == 'password'
+                                ? ProfileCustomButton(
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) {
+                                            return ChangePasswordDialog();
+                                          }).then((value) {
+                                        if (value as bool) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  content: Text(
+                                                      'Password Changed!')));
+                                        }
+                                      });
+                                    },
+                                    icon: Icons.security,
+                                    title: 'Mật khẩu',
+                                    description: 'Thay đổi mật khẩu',
+                                  )
+                                : SizedBox.shrink(),
                           ],
                         ),
                         //Footer
