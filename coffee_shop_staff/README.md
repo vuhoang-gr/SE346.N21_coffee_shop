@@ -1,4 +1,4 @@
-# coffee_shop_admin
+# coffee_shop_staff
 
 A new Flutter project.
 
