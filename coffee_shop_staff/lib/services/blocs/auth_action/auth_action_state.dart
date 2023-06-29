@@ -1,21 +1,19 @@
-part of 'auth_cubit.dart';
+part of 'auth_action_cubit.dart';
 
 @immutable
-abstract class AuthState extends Equatable {
+abstract class AuthActionState extends Equatable {
   @override
   List<Object?> get props => [];
 }
 
-class Login extends AuthState {
+class Login extends AuthActionState {
   final String? email;
   Login({this.email});
   @override
   List<Object?> get props => [email];
 }
 
-class SignIn extends AuthState {}
-
-class ForgotPassword extends AuthState {
+class ForgotPassword extends AuthActionState {
   final String? email;
   ForgotPassword({this.email});
   @override

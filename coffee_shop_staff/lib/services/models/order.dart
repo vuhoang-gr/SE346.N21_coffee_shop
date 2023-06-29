@@ -1,8 +1,8 @@
-import 'package:coffee_shop_admin/services/models/address.dart';
-import 'package:coffee_shop_admin/services/models/ordered_food.dart';
-import 'package:coffee_shop_admin/services/models/store.dart';
-import 'package:coffee_shop_admin/services/models/user.dart';
-import 'package:coffee_shop_admin/utils/constants/order_enum.dart';
+import 'package:coffee_shop_staff/services/models/address.dart';
+import 'package:coffee_shop_staff/services/models/ordered_food.dart';
+import 'package:coffee_shop_staff/services/models/store.dart';
+import 'package:coffee_shop_staff/services/models/user.dart';
+import 'package:coffee_shop_staff/utils/constants/order_enum.dart';
 import 'package:equatable/equatable.dart';
 
 class Order extends Equatable {

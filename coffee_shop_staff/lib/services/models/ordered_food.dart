@@ -1,4 +1,4 @@
-import 'package:coffee_shop_admin/services/models/topping.dart';
+import 'package:coffee_shop_staff/services/models/topping.dart';
 import 'package:equatable/equatable.dart';
 
 import 'food.dart';

@@ -1,5 +1,5 @@
-import 'package:coffee_shop_admin/services/models/food.dart';
-import 'package:coffee_shop_admin/services/models/store.dart';
+import 'package:coffee_shop_staff/services/models/food.dart';
+import 'package:coffee_shop_staff/services/models/store.dart';
 import 'package:equatable/equatable.dart';
 
 class StoreProduct extends Equatable {
