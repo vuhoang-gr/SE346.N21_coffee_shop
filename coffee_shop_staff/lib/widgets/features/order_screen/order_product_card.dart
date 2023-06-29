@@ -1,7 +1,7 @@
-import 'package:coffee_shop_admin/services/models/ordered_food.dart';
-import 'package:coffee_shop_admin/utils/constants/placeholder_enum.dart';
-import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
-import 'package:coffee_shop_admin/widgets/global/aysncImage/async_image.dart';
+import 'package:coffee_shop_staff/services/models/ordered_food.dart';
+import 'package:coffee_shop_staff/utils/constants/placeholder_enum.dart';
+import 'package:coffee_shop_staff/utils/styles/app_texts.dart';
+import 'package:coffee_shop_staff/widgets/global/aysncImage/async_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../utils/constants/dimension.dart';

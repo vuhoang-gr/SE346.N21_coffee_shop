@@ -1,8 +1,9 @@
-import 'package:coffee_shop_admin/services/models/order.dart';
-import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
-import 'package:coffee_shop_admin/utils/constants/order_enum.dart';
-import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
-import 'package:coffee_shop_admin/widgets/global/buttons/touchable_opacity.dart';
+import 'package:coffee_shop_staff/screens/staff/order/order_detail_screen.dart';
+import 'package:coffee_shop_staff/services/models/order.dart';
+import 'package:coffee_shop_staff/utils/colors/app_colors.dart';
+import 'package:coffee_shop_staff/utils/constants/order_enum.dart';
+import 'package:coffee_shop_staff/utils/styles/app_texts.dart';
+import 'package:coffee_shop_staff/widgets/global/buttons/touchable_opacity.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -29,7 +30,8 @@ class OrderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return TouchableOpacity(
       onTap: () {
-        print('nav to order detail');
+        Navigator.of(context)
+            .pushNamed(OrderDetailScreen.routeName, arguments: order);
       },
       child: ContainerCard(
           horizontalPadding: Dimension.height16,

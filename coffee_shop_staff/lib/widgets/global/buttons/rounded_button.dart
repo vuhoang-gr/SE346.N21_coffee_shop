@@ -22,7 +22,7 @@ class RoundedButton extends StatelessWidget {
     this.child,
   }) {
     if (height == -1) {
-      this.height = Dimension.getHeightFromValue(39);
+      this.height = Dimension.getHeightFromValue(48);
     } else {
       this.height = height;
     }

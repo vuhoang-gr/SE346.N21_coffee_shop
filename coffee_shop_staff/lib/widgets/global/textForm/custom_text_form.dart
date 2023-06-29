@@ -1,6 +1,6 @@
-import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
-import 'package:coffee_shop_admin/utils/validations/validator.dart';
-import 'package:coffee_shop_admin/widgets/global/buttons/touchable_opacity.dart';
+import 'package:coffee_shop_staff/utils/styles/app_texts.dart';
+import 'package:coffee_shop_staff/utils/validations/validator.dart';
+import 'package:coffee_shop_staff/widgets/global/buttons/touchable_opacity.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../utils/colors/app_colors.dart';

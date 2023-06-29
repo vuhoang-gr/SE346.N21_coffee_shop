@@ -1,11 +1,11 @@
 import 'package:coffee_shop_staff/utils/validations/validator.dart';
 
-class EmailValidator extends Validator {
+class PhoneValidator extends Validator {
   @override
   bool validate(String? value) {
     if (value == null) return false;
-    RegExp exp = RegExp(
-        r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+    RegExp exp =
+        RegExp(r'^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$');
     return exp.hasMatch(value);
   }
 

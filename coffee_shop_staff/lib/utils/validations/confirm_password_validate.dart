@@ -1,6 +1,5 @@
+import 'package:coffee_shop_staff/utils/validations/validator.dart';
 import 'package:flutter/material.dart';
-
-import 'validator.dart';
 
 class ConfirmPasswordValidator extends Validator {
   TextEditingController oldPassword;
