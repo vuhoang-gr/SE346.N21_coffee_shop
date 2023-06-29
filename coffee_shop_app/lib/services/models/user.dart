@@ -13,6 +13,8 @@ class User extends Equatable {
   List<Food>? favoriteFoods;
   List<Store>? favouriteStores;
   bool isActive;
+  bool isAdmin;
+  bool isStaff;
   String avatarUrl;
   String coverUrl;
 
@@ -23,6 +25,8 @@ class User extends Equatable {
       required this.email,
       this.dob,
       required this.isActive,
+      this.isAdmin = false,
+      this.isStaff = false,
       this.addresses,
       this.favoriteFoods,
       this.favouriteStores,

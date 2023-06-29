@@ -6,10 +6,10 @@ import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:coffee_shop_app/utils/validations/email_validate.dart';
 import 'package:coffee_shop_app/utils/validations/password_validate.dart';
 import 'package:coffee_shop_app/widgets/global/buttons/touchable_opacity.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../services/blocs/app_cubit/app_cubit.dart';
 import '../../services/blocs/auth_action/auth_action_cubit.dart';
 import '../../widgets/feature/login_screen/information_dialog.dart';
 import '../../widgets/global/buttons/rounded_button.dart';
@@ -53,8 +53,13 @@ class _LoginScreenState extends State<LoginScreen> {
             SnackBar(content: Text('Something is wrong! Try again!')));
         return;
       }
+      context.read<AppCubit>().changeState(AppLoading());
       var user = await AuthAPI()
           .emailLogin(emailController.text, passwordController.text);
+      if (context.mounted) {
+        context.read<AppCubit>().changeState(AppLoaded());
+      }
+
       if (user == null) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

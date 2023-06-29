@@ -1,11 +1,7 @@
-import 'dart:async';
-
-import 'package:bloc/bloc.dart';
 import 'package:coffee_shop_app/services/apis/auth_api.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/user.dart';
 import '../auth_action/auth_action_cubit.dart';
