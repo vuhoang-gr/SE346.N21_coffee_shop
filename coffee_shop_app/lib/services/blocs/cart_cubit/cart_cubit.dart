@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:coffee_shop_app/services/apis/auth_api.dart';
 import 'package:coffee_shop_app/services/apis/order_api.dart';
 import 'package:coffee_shop_app/services/apis/size_api.dart';
 import 'package:coffee_shop_app/services/apis/topping_api.dart';
@@ -20,6 +19,7 @@ import '../../models/food.dart';
 import '../../models/cart.dart';
 import '../../models/promo.dart';
 import '../../models/store.dart';
+import '../cart_button/cart_button_bloc.dart';
 import '../product_store/product_store_bloc.dart';
 
 import 'package:coffee_shop_app/services/blocs/product_store/product_store_state.dart'
@@ -59,6 +59,15 @@ class CartCubit extends Cubit<Cart> {
         checkSizeAvailable();
       }
     });
+
+    _userChangedSubscription =
+        FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (user != null) {
+        getItemsFromDB();
+      }
+    });
+
+    CartButtonBloc.changeSelectedStoreSubscription.addListener(storeChange);
   }
   late StreamSubscription _productStoreSubscription;
   late StreamSubscription _toppingStoreSubscription;
@@ -70,10 +79,11 @@ class CartCubit extends Cubit<Cart> {
   bool sizeLoaded = false;
   bool toppingLoaded = false;
   getItemsFromDB() async {
-    if (AuthAPI.currentUser == null) {
+    if (FirebaseAuth.instance.currentUser == null) {
       return;
     }
-    final items = await SQLHelper.getCartFood(AuthAPI.currentUser!.id);
+    final items =
+        await SQLHelper.getCartFood(FirebaseAuth.instance.currentUser!.uid);
     List<CartFood> foodList = [];
     for (var item in items) {
       var realFood = FoodAPI()
@@ -281,6 +291,23 @@ class CartCubit extends Cubit<Cart> {
     }
   }
 
+  checkPromo(Object? value, Store store) {
+    if (value != null && value is Promo) {
+      String? idSelectedStore = store.id;
+      if (value.stores.contains(idSelectedStore)) {
+        applyPromoAndCalPrice(value);
+      } else {
+        applyPromoAndCalPrice(null);
+        Fluttertoast.showToast(
+            msg: "Mã giảm giá không thể áp dụng ở cửa hàng được chọn",
+            toastLength: Toast.LENGTH_SHORT,
+            timeInSecForIosWeb: 1,
+            textColor: Colors.white,
+            fontSize: Dimension.font14);
+      }
+    }
+  }
+
   double calcualteUnitPrice(Food food, String size, String? topping) {
     double unitPrice = food.price;
     for (var s in SizeApi().currentSizes) {
@@ -307,8 +334,8 @@ class CartCubit extends Cubit<Cart> {
   }) {
     List<CartFood> newList = [];
     for (var pr in state.products) {
-      bool isSize = true;
-      bool isTopping = true;
+      bool isSize = pr.isSizeAvailable;
+      bool isTopping = pr.isToppingAvailable;
       if (store.stateFood[pr] != null) {
         isSize = false;
       }
@@ -348,12 +375,19 @@ class CartCubit extends Cubit<Cart> {
     await getItemsFromDB();
   }
 
+  storeChange() {
+    checkPromo(
+        state.promo, CartButtonBloc.changeSelectedStoreSubscription.value!);
+  }
+
   @override
   Future<void> close() {
     _productStoreSubscription.cancel();
     _sizeStoreSubscription.cancel();
     _toppingStoreSubscription.cancel();
     _userChangedSubscription.cancel();
+    CartButtonBloc.changeSelectedStoreSubscription.removeListener(storeChange);
+
     return super.close();
   }
 }
