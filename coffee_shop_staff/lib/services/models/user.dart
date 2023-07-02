@@ -1,8 +1,8 @@
 import 'package:coffee_shop_staff/services/models/delivery_address.dart';
-import 'package:coffee_shop_staff/services/models/food.dart';
 import 'package:coffee_shop_staff/services/models/store.dart';
 import 'package:equatable/equatable.dart';
 
+// ignore: must_be_immutable
 class User extends Equatable {
   final String id;
   String name;
