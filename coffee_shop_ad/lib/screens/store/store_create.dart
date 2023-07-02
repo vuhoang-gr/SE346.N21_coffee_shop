@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coffee_shop_admin/screens/store_address/map_screen.dart';
 import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/blocs/edit_address/edit_address_bloc.dart';
@@ -101,14 +100,6 @@ class _CreateStoreScreenState extends State<CreateStoreScreen> with InputValidat
         borderRadius: BorderRadius.circular(Dimension.height20),
       )),
       backgroundColor: const MaterialStatePropertyAll(AppColors.blueColor));
-
-  final _roundedOutlineButtonStyle = ButtonStyle(
-      elevation: const MaterialStatePropertyAll(0),
-      shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-        side: const BorderSide(color: AppColors.blueColor, width: 1),
-        borderRadius: BorderRadius.circular(Dimension.height20),
-      )),
-      backgroundColor: const MaterialStatePropertyAll(Colors.white));
 
   @override
   void dispose() {

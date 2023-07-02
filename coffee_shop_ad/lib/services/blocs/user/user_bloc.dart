@@ -17,6 +17,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     List<User> users = [];
     pro.docs.forEach((doc) {
       var s = doc.data();
+
       users.add(User(
           id: doc.id,
           name: s["name"] ?? "Unnamed",
@@ -29,24 +30,18 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     });
 
     users.sort((a, b) {
-      if (!a.isAdmin && !a.isStaff && !b.isAdmin && !b.isStaff) return 0;
-      if (a.isAdmin) {
-        if (b.isAdmin) {
-          return 0;
-        } else {
-          if (b.isStaff) return 1;
-        }
-      } else {
-        if (b.isAdmin) {
-          return 1;
-        } else {
-          if (a.isStaff) {
-            return -1;
-          } else if (b.isStaff) {
-            return 1;
-          }
-        }
+      int A = 0, B = 0;
+      if (a.isAdmin) A += 10;
+      if (a.isStaff) A++;
+      if (b.isAdmin) B += 10;
+      if (b.isStaff) B++;
+
+      if (A < B) {
+        return 1;
+      } else if (A > B) {
+        return -1;
       }
+
       return 0;
     });
 
