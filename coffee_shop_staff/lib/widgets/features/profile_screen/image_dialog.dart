@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../services/models/user.dart';
 import '../../../utils/styles/app_texts.dart';
 
+// ignore: must_be_immutable
 class ImageDialog extends StatelessWidget {
   ImageDialog(
       {super.key, this.imageType = ImageType.avatar, required this.source});

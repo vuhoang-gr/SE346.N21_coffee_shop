@@ -5,6 +5,7 @@ import '../../../utils/colors/app_colors.dart';
 import '../../../utils/constants/dimension.dart';
 
 //VHDONE
+// ignore: must_be_immutable
 class OrderStatusLabel extends StatelessWidget {
   OrderStatusLabel({
     super.key,
@@ -41,6 +42,9 @@ class OrderStatusLabel extends StatelessWidget {
         status == OrderStatus.cancelled) {
       backgroundColor = AppColors.pinkBackgroundColor;
       foregroundColor = AppColors.pinkColor;
+    } else {
+      backgroundColor = AppColors.backgroundColor;
+      foregroundColor = AppColors.blackColor;
     }
 
     return Container(
@@ -51,7 +55,7 @@ class OrderStatusLabel extends StatelessWidget {
         border: hasBorder!
             ? Border.all(
                 width: 1,
-                color: foregroundColor!,
+                color: foregroundColor,
               )
             : null,
       ),

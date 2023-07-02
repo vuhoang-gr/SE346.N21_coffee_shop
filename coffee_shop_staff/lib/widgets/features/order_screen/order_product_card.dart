@@ -30,7 +30,7 @@ class OrderProductCard extends StatelessWidget {
                 child: AsyncImage(
                   // src:
                   //     'https://product.hstatic.net/1000075078/product/cold-brew-sua-tuoi_379576_7fd130b7d162497a950503207876ef64.jpg',
-                  src: product.food.images[0],
+                  src: product.image,
                   type: PlaceholderType.food,
                 ),
               ),
@@ -44,7 +44,7 @@ class OrderProductCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    product.food.name,
+                    product.name,
                     style: AppText.style.boldBlack14.copyWith(
                       fontSize: 15,
                     ),
@@ -60,7 +60,7 @@ class OrderProductCard extends StatelessWidget {
                         style: AppText.style.mediumBlack14,
                       ),
                       Text(
-                        product.size.name,
+                        product.size,
                         style: TextStyle(
                             fontSize: Dimension.height12,
                             color: Colors.black.withOpacity(0.8),
@@ -92,23 +92,18 @@ class OrderProductCard extends StatelessWidget {
                   ),
                   Builder(
                     builder: (context) {
-                      String topping = '';
-                      if (product.toppings != null) {
-                        for (var item in product.toppings!) {
-                          topping += '${item.name}, ';
-                        }
-                      }
-                      if (topping.length > 2) {
-                        topping = topping.substring(0, topping.length - 2);
-                      }
                       return Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
                           Text(
                             'Topping: ',
                             style: AppText.style.mediumBlack14,
                           ),
                           Text(
-                            topping,
+                            product.topping != null &&
+                                    product.topping!.isNotEmpty
+                                ? product.topping!
+                                : 'Không có',
                           ),
                         ],
                       );

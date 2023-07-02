@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../utils/colors/app_colors.dart';
 import '../../../utils/constants/dimension.dart';
 
+// ignore: must_be_immutable
 class RoundedButton extends StatelessWidget {
   final double width;
   final String label;

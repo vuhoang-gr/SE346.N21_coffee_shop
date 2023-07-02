@@ -4,7 +4,12 @@ import '../../utils/colors/app_colors.dart';
 import '../../utils/constants/dimension.dart';
 
 class CustomAppBar extends StatelessWidget {
-  const CustomAppBar({Key? key, this.leading, this.middle, this.trailing, this.color = CupertinoColors.white})
+  const CustomAppBar(
+      {Key? key,
+      this.leading,
+      this.middle,
+      this.trailing,
+      this.color = CupertinoColors.white})
       : super(key: key);
 
   final Widget? middle;
@@ -39,7 +44,11 @@ class CustomAppBar extends StatelessWidget {
                       ),
                     )
                   : Container(),
-              if (leading != null) leading!,
+              if (leading != null)
+                Container(
+                  constraints: BoxConstraints(minWidth: 100, maxWidth: 200),
+                  child: leading!,
+                ),
             ],
           ),
           SizedBox(

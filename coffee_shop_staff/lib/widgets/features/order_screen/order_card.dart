@@ -14,6 +14,7 @@ import '../../global/container_card.dart';
 import 'price_row.dart';
 
 //VHDONE
+// ignore: must_be_immutable
 class OrderCard extends StatelessWidget {
   OrderCard({
     super.key,
@@ -89,7 +90,7 @@ class OrderCard extends StatelessWidget {
                     Text(
                       order.isPickup
                           ? 'PICKUP'
-                          : order.deliveryAddress.toString(),
+                          : order.deliveryAddress!.address.formattedAddress,
                       style: AppText.style.regular,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -106,7 +107,7 @@ class OrderCard extends StatelessWidget {
               Builder(builder: (context) {
                 String productSummary = '';
                 for (var item in order.productList) {
-                  productSummary += '${item.food.name} (${item.amount}), ';
+                  productSummary += '${item.name} (${item.amount}), ';
                 }
                 productSummary.substring(0, productSummary.length - 2);
                 return Align(
@@ -126,7 +127,7 @@ class OrderCard extends StatelessWidget {
               ),
 
               //Price
-              order.isPickup
+              !order.isPickup
                   ? PriceRow(
                       title: 'Delivery',
                       price: order.deliveryFee ?? 0,

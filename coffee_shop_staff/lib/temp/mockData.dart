@@ -4,7 +4,6 @@ import 'package:coffee_shop_staff/services/models/order.dart';
 import 'package:coffee_shop_staff/services/models/user.dart';
 import 'package:coffee_shop_staff/utils/constants/order_enum.dart';
 
-import '../services/models/address.dart';
 import '../services/models/food.dart';
 import '../services/models/location.dart';
 import '../services/models/ordered_food.dart';
@@ -36,9 +35,11 @@ class FakeData {
     sb: 'Coffee shop hehehe',
     address: addressMock,
     phone: '012345678',
-    stateFood: {},
-    stateTopping: {},
+    stateFood: [],
+    stateTopping: [],
     images: [],
+    stateFoodRaw: {},
+    stateToppingRaw: [],
   );
 
   static Size sizeMock = Size(
@@ -67,11 +68,13 @@ class FakeData {
   );
 
   static OrderedFood orderedFoodMock = OrderedFood(
-    food: foodMock,
-    amount: 5,
-    size: sizeMock,
-    toppings: List.generate(4, (index) => toppingMock),
-  );
+      name: 'heheh',
+      amount: 2,
+      image: 'https://cdn-icons-png.flaticon.com/512/1377/1377194.png',
+      size: 'L',
+      topping: 'ahihi',
+      unitPrice: 123,
+      totalPrice: 568);
 
   static Order orderMock = Order(
     id: 'orderMock',

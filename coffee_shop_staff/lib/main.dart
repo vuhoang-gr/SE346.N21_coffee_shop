@@ -4,8 +4,11 @@ import 'package:coffee_shop_staff/screens/home/main_page.dart';
 import 'package:coffee_shop_staff/screens/loading/loading_screen.dart';
 import 'package:coffee_shop_staff/screens/loading/splash_screen.dart';
 import 'package:coffee_shop_staff/services/apis/auth_api.dart';
+import 'package:coffee_shop_staff/services/apis/store_api.dart';
 import 'package:coffee_shop_staff/services/blocs/auth/auth_bloc.dart';
 import 'package:coffee_shop_staff/services/blocs/auth_action/auth_action_cubit.dart';
+import 'package:coffee_shop_staff/services/blocs/order/order_bloc.dart';
+import 'package:coffee_shop_staff/services/blocs/product/product_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -21,10 +24,10 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  var isRmb = prefs.getBool('isRemember') ?? false;
+  bool isRmb = prefs.getBool('isRemember') ?? false;
 
   if (!isRmb) {
-    AuthAPI().signOut();
+    await AuthAPI().signOut();
   }
   bool isOpened = true;
   runApp(MyApp(
@@ -44,7 +47,9 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
-        BlocProvider<AppCubit>(create: (context) => AppCubit())
+        BlocProvider<AppCubit>(create: (context) => AppCubit()),
+        BlocProvider<ProductBloc>(create: (context) => ProductBloc()),
+        BlocProvider<OrderBloc>(create: (context) => OrderBloc()),
       ],
       child: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
@@ -57,6 +62,13 @@ class MyApp extends StatelessWidget {
                   .add(UserChanged(user: AuthAPI.currentUser));
             }
           });
+
+          if (state is Authenticated) {
+            context
+                .read<ProductBloc>()
+                .add(LoadProduct(storeID: StoreAPI.currentStore!.id));
+            context.read<OrderBloc>().add(LoadOrder());
+          }
           // print(state);
           return MaterialApp(
               title: 'Coffee Shop',
