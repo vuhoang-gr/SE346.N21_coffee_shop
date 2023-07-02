@@ -7,6 +7,6 @@ var sizeReference = firestore.collection("Size");
 
 var storeReference = firestore.collection("Store");
 
-var promoReference = firestore.collection("Promo");
+var promoReference = firestore.collection("PromoTest");
 
 var userReference = firestore.collection("users");
