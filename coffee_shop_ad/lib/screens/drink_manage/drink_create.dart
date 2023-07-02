@@ -80,7 +80,7 @@ class _CreateDrinkScreenState extends State<CreateDrinkScreen> {
     }
 
     // ignore: no_leading_underscores_for_local_identifiers
-    void _hanldeCreateDrink() async {
+    void _handleCreateDrink() async {
       if (!_validateData()) {
         print("Invalid data!");
         return;
@@ -432,7 +432,7 @@ class _CreateDrinkScreenState extends State<CreateDrinkScreen> {
                               color: Colors.white,
                               padding: EdgeInsets.symmetric(horizontal: Dimension.width16, vertical: Dimension.height8),
                               child: ElevatedButton(
-                                  onPressed: _hanldeCreateDrink,
+                                  onPressed: _handleCreateDrink,
                                   style: ButtonStyle(
                                       elevation: const MaterialStatePropertyAll(0),
                                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(

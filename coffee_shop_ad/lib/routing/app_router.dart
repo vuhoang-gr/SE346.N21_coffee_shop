@@ -18,7 +18,7 @@ import 'package:coffee_shop_admin/screens/promo/promo_edit.dart';
 import 'package:coffee_shop_admin/screens/promo/promo_screen.dart';
 import 'package:coffee_shop_admin/screens/store/store_detail.dart';
 import 'package:coffee_shop_admin/screens/store/store_create.dart';
-import 'package:coffee_shop_admin/screens/store_address/map_screen.dart';
+import 'package:coffee_shop_admin/widgets/feature/store/store_address/map_screen.dart';
 import 'package:coffee_shop_admin/screens/user/user_screen.dart';
 import 'package:coffee_shop_admin/services/blocs/auth_action/auth_action_cubit.dart';
 import 'package:coffee_shop_admin/services/models/address.dart';

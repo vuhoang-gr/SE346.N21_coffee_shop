@@ -1,4 +1,7 @@
-import 'package:coffee_shop_admin/screens/store_address/map_screen.dart';
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_admin/widgets/feature/store/store_address/map_screen.dart';
 import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/blocs/edit_address/edit_address_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/edit_address/edit_address_event.dart';
@@ -12,9 +15,11 @@ import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:coffee_shop_admin/widgets/global/custom_app_bar.dart';
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import 'package:quickalert/quickalert.dart';
 
 MLocation _mLocation = MLocation(formattedAddress: "HCM", lat: 10.871759281171983, lng: 106.80328866625126);
@@ -39,6 +44,14 @@ class _CreateStoreScreenState extends State<CreateStoreScreen> with InputValidat
   final _phoneNumberFocusNode = FocusNode();
   TextEditingController openTimeController = TextEditingController();
   TextEditingController closeTimeController = TextEditingController();
+
+  final imgController = MultiImagePickerController(
+      maxImages: 6,
+      allowedImageTypes: ['png', 'jpg', 'jpeg'],
+      withData: false,
+      withReadStream: false,
+      images: <ImageFile>[]);
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -284,7 +297,28 @@ class _CreateStoreScreenState extends State<CreateStoreScreen> with InputValidat
                                         timeLabelText: "Close Time",
                                       ),
                                     ],
-                                  )
+                                  ),
+                                  SizedBox(
+                                    height: Dimension.height16,
+                                  ),
+                                  Text(
+                                    "Images",
+                                    style: AppText.style.boldBlack14,
+                                  ),
+                                  SizedBox(
+                                    height: Dimension.height4,
+                                  ),
+                                  //images
+                                  Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        MultiImagePickerView(
+                                          draggable: false,
+                                          controller: imgController,
+                                          padding: const EdgeInsets.all(10),
+                                        ),
+                                      ]),
                                 ],
                               ),
                             ),
@@ -316,6 +350,18 @@ class _CreateStoreScreenState extends State<CreateStoreScreen> with InputValidat
   void _submitForm(EditAddressState editAddressState, bool submit) async {
     if (_formKey.currentState?.validate() ?? false) {
       if (!submit) return;
+
+      final imagePaths = imgController.images;
+      if (imagePaths.isEmpty) {
+        QuickAlert.show(
+          context: context,
+          type: QuickAlertType.warning,
+          confirmBtnText: "Ok",
+          text: 'Please choose store images!',
+        );
+        return;
+      }
+
       QuickAlert.show(
         context: context,
         type: QuickAlertType.loading,
@@ -323,26 +369,50 @@ class _CreateStoreScreenState extends State<CreateStoreScreen> with InputValidat
         text: 'Creating your new store...',
       );
 
-      DateTime openTime = DateTime.parse('2023-06-14 ${openTimeController.text}');
-      DateTime closeTime = DateTime.parse('2023-06-14 ${closeTimeController.text}');
-      await storeReference.add({
-        "address": {"formattedAddress": _mLocation.formattedAddress, "lat": _mLocation.lat, "lng": _mLocation.lng},
-        "images": ["https://lh5.googleusercontent.com/p/AF1QipNIXjtOoJOOUiV7gx3oXW0Kcesi_GWmoy20gZz_=w408-h306-k-no"],
-        "phone": editAddressState.phone,
-        "shortName": editAddressState.nameReceiver,
-        "timeOpen": openTime,
-        "timeClose": closeTime,
-      }).then((value) {
+      try {
+        final storageRef = FirebaseStorage.instance.ref();
+        List<String> imgUrlList = [];
+        for (final image in imagePaths) {
+          File img = image.hasPath ? File(image.path!) : File.fromRawPath(image.bytes!);
+          final imgRef = storageRef.child("/stores/${img.path.split('/').last}${DateTime.now()}");
+          await imgRef.putFile(img);
+          await imgRef.getDownloadURL().then((url) {
+            imgUrlList.add(url);
+          });
+        }
+
+        DateTime openTime = DateTime.parse('2023-06-14 ${openTimeController.text}');
+        DateTime closeTime = DateTime.parse('2023-06-14 ${closeTimeController.text}');
+        await storeReference.add({
+          "address": {"formattedAddress": _mLocation.formattedAddress, "lat": _mLocation.lat, "lng": _mLocation.lng},
+          "images": imgUrlList,
+          "phone": editAddressState.phone,
+          "shortName": editAddressState.nameReceiver,
+          "timeOpen": openTime,
+          "timeClose": closeTime,
+        }).then((value) {
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+          BlocProvider.of<StoreStoreBloc>(context).add(FetchData());
+          QuickAlert.show(
+            context: context,
+            type: QuickAlertType.success,
+            text: 'Completed Successfully!',
+            confirmBtnText: "Ok",
+          );
+        });
+      } catch (e) {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
-        BlocProvider.of<StoreStoreBloc>(context).add(FetchData());
         QuickAlert.show(
           context: context,
-          type: QuickAlertType.success,
-          text: 'Completed Successfully!',
+          type: QuickAlertType.error,
+          text: 'Something\'s wrong when create new store!',
           confirmBtnText: "Ok",
         );
-      });
+        print("Something's wrong when create new store!");
+        print(e);
+      }
     }
   }
 }

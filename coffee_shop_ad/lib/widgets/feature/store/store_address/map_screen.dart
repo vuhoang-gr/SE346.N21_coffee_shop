@@ -10,10 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../../services/apis/location_api.dart';
-import '../../utils/constants/dimension.dart';
-import '../../utils/styles/app_texts.dart';
-import '../../widgets/global/custom_app_bar.dart';
+import '../../../../services/apis/location_api.dart';
+import '../../../../utils/constants/dimension.dart';
+import '../../../../utils/styles/app_texts.dart';
+import '../../../global/custom_app_bar.dart';
 
 class MapScreen extends StatefulWidget {
   static const String routeName = "/map_screen";
@@ -34,8 +34,7 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   void initState() {
-    draggedLatlng =
-        widget.latLng ?? LatLng(10.870023145812784, 106.80306064596698);
+    draggedLatlng = widget.latLng ?? LatLng(10.870023145812784, 106.80306064596698);
     textController.addListener(() {
       setState(() {
         isShowClearButton = textController.text.isNotEmpty;
@@ -68,23 +67,19 @@ class _MapScreenState extends State<MapScreen> {
             _showDraggedAddress(),
             CustomAppBar(
               color: Colors.transparent,
-              middle: BlocBuilder<MapPickerBloc, MapPickerState>(
-                  builder: (context, state) {
+              middle: BlocBuilder<MapPickerBloc, MapPickerState>(builder: (context, state) {
                 return Stack(children: [
                   TypeAheadField<MLocation>(
                     noItemsFoundBuilder: (context) => Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: Dimension.height16,
-                          horizontal: Dimension.width16),
+                      padding: EdgeInsets.symmetric(vertical: Dimension.height16, horizontal: Dimension.width16),
                       child: Text(
                         "No location found",
                         style: AppText.style.regularBlack14,
                         textAlign: TextAlign.left,
                       ),
                     ),
-                    loadingBuilder: (context) => SizedBox(
-                        height: Dimension.height230,
-                        child: Center(child: CircularProgressIndicator())),
+                    loadingBuilder: (context) =>
+                        SizedBox(height: Dimension.height230, child: Center(child: CircularProgressIndicator())),
                     textFieldConfiguration: TextFieldConfiguration(
                         controller: textController,
                         focusNode: focusNode,
@@ -94,25 +89,21 @@ class _MapScreenState extends State<MapScreen> {
                         decoration: InputDecoration(
                           fillColor: Colors.white,
                           filled: true,
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: Dimension.width40,
-                              vertical: Dimension.height8),
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: Dimension.width40, vertical: Dimension.height8),
                           hintText: 'Search...',
                           hintStyle: AppText.style.regularGrey16,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
-                            borderSide: const BorderSide(
-                                style: BorderStyle.solid,
-                                width: 1,
-                                color: AppColors.greyBoxColor),
+                            borderSide:
+                                const BorderSide(style: BorderStyle.solid, width: 1, color: AppColors.greyBoxColor),
                           ),
                         ),
                         style: AppText.style.regularBlack16),
                     suggestionsCallback: (query) {
                       if (query.isNotEmpty) {
                         try {
-                          return LocationApi.getLocationData(query)
-                              .then((response) {
+                          return LocationApi.getLocationData(query).then((response) {
                             var data = jsonDecode(response.body.toString());
                             if (data['features'] != []) {
                               return MLocation.parseLocationList(data);
@@ -145,8 +136,8 @@ class _MapScreenState extends State<MapScreen> {
                       );
                     },
                     onSuggestionSelected: (suggestion) {
-                      BlocProvider.of<MapPickerBloc>(context).add(MoveCamera(
-                          location: LatLng(suggestion.lat, suggestion.lng)));
+                      BlocProvider.of<MapPickerBloc>(context)
+                          .add(MoveCamera(location: LatLng(suggestion.lat, suggestion.lng)));
 
                       focusNode.unfocus();
                     },
@@ -156,8 +147,7 @@ class _MapScreenState extends State<MapScreen> {
                       left: Dimension.width8,
                       child: Icon(
                         Icons.search,
-                        color:
-                            isSearching ? Colors.blue : AppColors.greyTextColor,
+                        color: isSearching ? Colors.blue : AppColors.greyTextColor,
                       )),
                   isShowClearButton
                       ? Positioned(
@@ -168,9 +158,7 @@ class _MapScreenState extends State<MapScreen> {
                               },
                               icon: Icon(
                                 Icons.clear,
-                                color: isSearching
-                                    ? Colors.blue
-                                    : AppColors.greyTextColor,
+                                color: isSearching ? Colors.blue : AppColors.greyTextColor,
                               )),
                         )
                       : const SizedBox.shrink(),
@@ -190,10 +178,8 @@ class _MapScreenState extends State<MapScreen> {
       right: Dimension.width16,
       child: Card(
         child: Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: Dimension.width16, vertical: Dimension.height8),
-          child: BlocBuilder<MapPickerBloc, MapPickerState>(
-              builder: (context, state) {
+          padding: EdgeInsets.symmetric(horizontal: Dimension.width16, vertical: Dimension.height8),
+          child: BlocBuilder<MapPickerBloc, MapPickerState>(builder: (context, state) {
             if (state is LoaddingLocation) {
               return Padding(
                 padding: EdgeInsets.symmetric(
@@ -251,17 +237,13 @@ class _MapScreenState extends State<MapScreen> {
   Widget _getMap() {
     return IgnorePointer(
       ignoring: isSearching,
-      child:
-          BlocBuilder<MapPickerBloc, MapPickerState>(builder: (context, state) {
+      child: BlocBuilder<MapPickerBloc, MapPickerState>(builder: (context, state) {
         return GoogleMap(
-          initialCameraPosition: CameraPosition(
-              target: widget.latLng ??
-                  LatLng(10.870023145812784, 106.80306064596698),
-              zoom: 20),
+          initialCameraPosition:
+              CameraPosition(target: widget.latLng ?? LatLng(10.870023145812784, 106.80306064596698), zoom: 20),
           mapType: MapType.normal,
           onCameraIdle: () {
-            BlocProvider.of<MapPickerBloc>(context)
-                .add(UpdatedLocation(location: draggedLatlng));
+            BlocProvider.of<MapPickerBloc>(context).add(UpdatedLocation(location: draggedLatlng));
           },
           onCameraMove: (cameraPosition) {
             BlocProvider.of<MapPickerBloc>(context).add(UpdatingLocation());
@@ -270,8 +252,7 @@ class _MapScreenState extends State<MapScreen> {
           onMapCreated: (GoogleMapController controller) {
             BlocProvider.of<MapPickerBloc>(context).add(InitController(
                 controller: controller,
-                currentLocation: widget.latLng ??
-                    LatLng(10.870023145812784, 106.80306064596698)));
+                currentLocation: widget.latLng ?? LatLng(10.870023145812784, 106.80306064596698)));
           },
           zoomControlsEnabled: false,
         );
