@@ -2,10 +2,14 @@ import 'package:coffee_shop_app/services/blocs/pickup_timer/pickup_timer_state.d
 import 'package:coffee_shop_app/services/functions/datetime_to_pickup.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../cart_button/cart_button_bloc.dart';
+
 class TimerCubit extends Cubit<PickupTimerState> {
   TimerCubit()
       : super(PickupTimerState(hourStartTime: dateTimeToHour(DateTime.now()))
-            .copyWith());
+            .copyWith()) {
+    CartButtonBloc.changeSelectedStoreSubscription.addListener(storeChange);
+  }
 
   setDateTime({DateTime? newDate, int? hour, int? minute}) {
     var now = DateTime.now();
@@ -68,5 +72,15 @@ class TimerCubit extends Cubit<PickupTimerState> {
         return;
       }
     }
+  }
+
+  storeChange() {
+    setOpenTime(CartButtonBloc.changeSelectedStoreSubscription.value?.timeOpen);
+  }
+
+  @override
+  Future<void> close() {
+    CartButtonBloc.changeSelectedStoreSubscription.removeListener(storeChange);
+    return super.close();
   }
 }

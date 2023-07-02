@@ -42,7 +42,7 @@ dependencies:
   qr_code_scanner: ^1.0.1
   qr_widget: ^4.1.0
   image_picker: ^0.8.7+5
-
+  quickalert: ^1.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

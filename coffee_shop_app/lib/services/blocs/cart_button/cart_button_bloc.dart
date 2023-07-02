@@ -1,19 +1,18 @@
 import 'package:coffee_shop_app/main.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_event.dart';
 import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_state.dart';
-import 'package:coffee_shop_app/services/blocs/product_store/product_store_bloc.dart';
-import 'package:coffee_shop_app/services/blocs/product_store/product_store_event.dart';
 import 'package:coffee_shop_app/services/functions/calculate_distance.dart';
 import 'package:coffee_shop_app/services/models/delivery_address.dart';
 import 'package:coffee_shop_app/services/models/location.dart';
 import 'package:coffee_shop_app/services/models/store.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class CartButtonBloc extends Bloc<CartButtonEvent, CartButtonState> {
-  final ProductStoreBloc _foodStoreBloc;
-
-  CartButtonBloc(this._foodStoreBloc)
+  static ValueNotifier<Store?> changeSelectedStoreSubscription =
+      ValueNotifier<Store?>(null);
+  CartButtonBloc()
       : super(CartButtonState(
             selectedStore: null, selectedDeliveryAddress: null, distance: 0)) {
     print('stateInit: cartButton............................................');
@@ -34,7 +33,7 @@ class CartButtonBloc extends Bloc<CartButtonEvent, CartButtonState> {
         selectedDeliveryAddress: state.selectedDeliveryAddress,
         selectedOrderType: OrderType.storePickup,
         distance: distance));
-    _foodStoreBloc.add(FetchData(stateFood: event.selectedStore.stateFood));
+    changeSelectedStoreSubscription.value = event.selectedStore;
   }
 
   void _mapChangeSelectedStoreButNotUse(
@@ -52,7 +51,7 @@ class CartButtonBloc extends Bloc<CartButtonEvent, CartButtonState> {
         selectedDeliveryAddress: state.selectedDeliveryAddress,
         selectedOrderType: state.selectedOrderType,
         distance: distance));
-    _foodStoreBloc.add(FetchData(stateFood: event.selectedStore.stateFood));
+    changeSelectedStoreSubscription.value = event.selectedStore;
   }
 
   void _mapChangeSelectedAddressToState(
@@ -99,7 +98,7 @@ class CartButtonBloc extends Bloc<CartButtonEvent, CartButtonState> {
         selectedDeliveryAddress: state.selectedDeliveryAddress,
         selectedOrderType: state.selectedOrderType,
         distance: distance));
-    _foodStoreBloc.add(FetchData(stateFood: event.selectedStore?.stateFood));
+    changeSelectedStoreSubscription.value = event.selectedStore;
   }
 
   double calculateDistanceFromLocation(MLocation addres1, MLocation address2) {

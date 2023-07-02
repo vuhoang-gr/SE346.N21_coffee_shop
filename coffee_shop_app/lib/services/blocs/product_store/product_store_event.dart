@@ -4,7 +4,7 @@ abstract class ProductStoreEvent {}
 
 class FetchData extends ProductStoreEvent {
   Map<String, List<String>>? stateFood;
-  FetchData({this.stateFood});
+  FetchData({required this.stateFood});
 }
 
 class UpdateFavorite extends ProductStoreEvent {

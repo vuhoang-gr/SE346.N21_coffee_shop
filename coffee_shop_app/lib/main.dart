@@ -3,7 +3,6 @@ import 'package:coffee_shop_app/screens/auth/auth_screen.dart';
 import 'package:coffee_shop_app/screens/loading/loading_screen.dart';
 import 'package:coffee_shop_app/screens/loading/splash_screen.dart';
 import 'package:coffee_shop_app/screens/main_page.dart';
-import 'package:coffee_shop_app/screens/profile/image_view_screen.dart';
 import 'package:coffee_shop_app/services/apis/auth_api.dart';
 import 'package:coffee_shop_app/services/blocs/address_store/address_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/address_store/address_store_event.dart'
@@ -122,8 +121,7 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) => ProductStoreBloc(),
         ),
         BlocProvider<CartButtonBloc>(
-          create: (BuildContext context) =>
-              CartButtonBloc(context.read<ProductStoreBloc>()),
+          create: (BuildContext context) => CartButtonBloc(),
         ),
         BlocProvider<StoreStoreBloc>(
           create: (BuildContext context) =>

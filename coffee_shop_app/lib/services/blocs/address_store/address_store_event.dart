@@ -2,7 +2,9 @@ import 'package:coffee_shop_app/services/models/delivery_address.dart';
 
 abstract class AddressStoreEvent {}
 
-class FetchData extends AddressStoreEvent {}
+class FetchData extends AddressStoreEvent {
+  FetchData();
+}
 
 class UpdateIndex extends AddressStoreEvent {
   DeliveryAddress deliveryAddress;

@@ -1,7 +1,6 @@
 import 'package:coffee_shop_app/screens/promo/promo_screen.dart';
 import 'package:coffee_shop_app/services/blocs/cart_cubit/cart_cubit.dart';
 import 'package:coffee_shop_app/services/functions/datetime_to_pickup.dart';
-import 'package:coffee_shop_app/services/models/promo.dart';
 import 'package:coffee_shop_app/utils/colors/app_colors.dart';
 import 'package:coffee_shop_app/utils/constants/shipping_value.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
@@ -9,6 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../../services/blocs/cart_button/cart_button_bloc.dart';
 import '../../services/blocs/cart_button/cart_button_event.dart';
@@ -23,6 +24,7 @@ import '../../widgets/global/container_card.dart';
 import '../../widgets/global/custom_app_bar.dart';
 import '../../widgets/global/order_type_modal.dart';
 import '../customer_address/address_listing_screen.dart';
+import '../main_page.dart';
 
 class CartDelivery extends StatelessWidget {
   const CartDelivery({super.key});
@@ -405,43 +407,26 @@ class CartDelivery extends StatelessWidget {
                                   'Sử dụng mã giảm giá',
                                   style: AppText.style.boldBlack14,
                                 )),
-                            IconButton(
-                              icon: Icon(
-                                CupertinoIcons.right_chevron,
-                                size: Dimension.height20,
-                                color: AppColors.greyTextColor,
-                              ),
-                              onPressed: () {
-                                //Mai: promo
-                                Navigator.of(context)
-                                    .pushNamed(PromoScreen.routeName)
-                                    .then((value) {
-                                  if (value != null && value is Promo) {
-                                    String? idSelectedStore =
-                                        BlocProvider.of<CartButtonBloc>(context)
-                                            .state
-                                            .selectedStore
-                                            ?.id;
-                                    if (idSelectedStore != null &&
-                                        value.stores
-                                            .contains(idSelectedStore)) {
-                                      BlocProvider.of<CartCubit>(context)
-                                          .applyPromoAndCalPrice(value);
-                                    } else {
-                                      BlocProvider.of<CartCubit>(context)
-                                          .applyPromoAndCalPrice(null);
-                                      Fluttertoast.showToast(
-                                          msg:
-                                              "Mã giảm giá không thể áp dụng ở cửa hàng được chọn",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          timeInSecForIosWeb: 1,
-                                          textColor: Colors.white,
-                                          fontSize: Dimension.font14);
-                                    }
-                                  }
-                                });
-                              },
-                            ),
+                            BlocBuilder<CartButtonBloc, CartButtonState>(
+                                builder: (context, cartButtonState) {
+                              return IconButton(
+                                icon: Icon(
+                                  CupertinoIcons.right_chevron,
+                                  size: Dimension.height20,
+                                  color: AppColors.greyTextColor,
+                                ),
+                                onPressed: () {
+                                  //Mai: promo
+                                  Navigator.of(context)
+                                      .pushNamed(PromoScreen.routeName)
+                                      .then((value) {
+                                    BlocProvider.of<CartCubit>(context)
+                                        .checkPromo(value,
+                                            cartButtonState.selectedStore!);
+                                  });
+                                },
+                              );
+                            }),
                           ],
                         ),
                       ),
@@ -552,8 +537,8 @@ class CartDelivery extends StatelessWidget {
                                                       child: OutlinedButton(
                                                         style: outlinedButton,
                                                         onPressed: () async {
-                                                          Navigator.pop(context,
-                                                              'Đặt hàng');
+                                                          Navigator.pop(
+                                                              context, 'Yes');
                                                           await BlocProvider.of<
                                                                       CartCubit>(
                                                                   context)
@@ -602,7 +587,24 @@ class CartDelivery extends StatelessWidget {
                                                       ),
                                                     ),
                                                   ],
-                                                ));
+                                                )).then((value) {
+                                          if (value != null && value == 'Yes') {
+                                            QuickAlert.show(
+                                                context: context,
+                                                type: QuickAlertType.success,
+                                                text: 'Đặt hàng thành công',
+                                                confirmBtnText: 'OK',
+                                                onConfirmBtnTap: () {
+                                                  Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              MainPage(
+                                                                selectedPage: 3,
+                                                              )));
+                                                });
+                                          }
+                                        });
                                       }
                                     },
                                     child: Text(

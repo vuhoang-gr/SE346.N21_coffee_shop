@@ -9,14 +9,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:quickalert/quickalert.dart';
 
 import '../../services/blocs/cart_button/cart_button_bloc.dart';
 import '../../services/blocs/cart_button/cart_button_event.dart';
 import '../../services/blocs/cart_button/cart_button_state.dart';
 import '../../services/blocs/pickup_timer/pickup_timer_cubit.dart';
+import '../../services/functions/datetime_to_pickup.dart';
 import '../../services/functions/money_transfer.dart';
 import '../../services/models/cart.dart';
-import '../../services/models/promo.dart';
 import '../../utils/constants/dimension.dart';
 import '../../utils/styles/button.dart';
 import '../../widgets/feature/cart_delivery_pickup/timer_picker.dart';
@@ -26,6 +27,7 @@ import '../../widgets/feature/product_detail_widgets/icon_widget_row.dart';
 import '../../widgets/global/container_card.dart';
 import '../../widgets/global/custom_app_bar.dart';
 import '../../widgets/global/order_type_modal.dart';
+import '../main_page.dart';
 import '../promo/promo_screen.dart';
 
 class CartStorePickup extends StatefulWidget {
@@ -415,43 +417,26 @@ class _CartStorePickupState extends State<CartStorePickup> {
                                   'Sử dụng mã giảm giá',
                                   style: AppText.style.boldBlack14,
                                 )),
-                            IconButton(
-                              icon: Icon(
-                                CupertinoIcons.right_chevron,
-                                size: Dimension.height20,
-                                color: AppColors.greyTextColor,
-                              ),
-                              onPressed: () {
-                                //Mai: promo
-                                Navigator.of(context)
-                                    .pushNamed(PromoScreen.routeName)
-                                    .then((value) {
-                                  if (value != null && value is Promo) {
-                                    String? idSelectedStore =
-                                        BlocProvider.of<CartButtonBloc>(context)
-                                            .state
-                                            .selectedStore
-                                            ?.id;
-                                    if (idSelectedStore != null &&
-                                        value.stores
-                                            .contains(idSelectedStore)) {
-                                      BlocProvider.of<CartCubit>(context)
-                                          .applyPromoAndCalPrice(value);
-                                    } else {
-                                      BlocProvider.of<CartCubit>(context)
-                                          .applyPromoAndCalPrice(null);
-                                      Fluttertoast.showToast(
-                                          msg:
-                                              "Mã giảm giá không thể áp dụng ở cửa hàng được chọn",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          timeInSecForIosWeb: 1,
-                                          textColor: Colors.white,
-                                          fontSize: Dimension.font14);
-                                    }
-                                  }
-                                });
-                              },
-                            ),
+                            BlocBuilder<CartButtonBloc, CartButtonState>(
+                                builder: (context, cartButtonState) {
+                              return IconButton(
+                                icon: Icon(
+                                  CupertinoIcons.right_chevron,
+                                  size: Dimension.height20,
+                                  color: AppColors.greyTextColor,
+                                ),
+                                onPressed: () {
+                                  //Mai: promo
+                                  Navigator.of(context)
+                                      .pushNamed(PromoScreen.routeName)
+                                      .then((value) {
+                                    BlocProvider.of<CartCubit>(context)
+                                        .checkPromo(value,
+                                            cartButtonState.selectedStore!);
+                                  });
+                                },
+                              );
+                            }),
                           ],
                         ),
                       ),
@@ -463,150 +448,180 @@ class _CartStorePickupState extends State<CartStorePickup> {
                         child: SizedBox(
                           width: double.maxFinite,
                           height: Dimension.height40,
-                          child: state.products.isEmpty ||
-                                  BlocProvider.of<CartButtonBloc>(context)
-                                          .state
-                                          .selectedStore ==
-                                      null
-                              ? ElevatedButton(
-                                  style: roundedButton,
-                                  onPressed: null,
-                                  child: Text(
-                                    'Đặt hàng ${MoneyTransfer.transferFromDouble(0)} ₫',
-                                    style: AppText.style.regularWhite16,
-                                  ))
-                              : ElevatedButton(
-                                  style: roundedButton,
-                                  onPressed: () {
-                                    var canOrder =
-                                        BlocProvider.of<CartCubit>(context)
-                                            .checkCanOrderFoods(
-                                      store: BlocProvider.of<CartButtonBloc>(
-                                              context)
-                                          .state
-                                          .selectedStore!,
-                                    );
-                                    if (!canOrder) {
-                                      showDialog<String>(
-                                          context: context,
-                                          builder: (BuildContext context) =>
-                                              CupertinoAlertDialog(
-                                                title: const Text(
-                                                  'Lỗi',
-                                                ),
-                                                content: Text(
-                                                  'Có vài sản phẩm không hợp lệ trong giỏ hàng, vui lòng kiểm tra lại.',
-                                                  style: AppText.style.regular,
-                                                ),
-                                                actions: <Widget>[
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            vertical: Dimension
-                                                                .height8,
-                                                            horizontal:
-                                                                Dimension
-                                                                    .height8),
-                                                    child: OutlinedButton(
-                                                      style: outlinedButton,
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                      child: Text('OK',
-                                                          style: AppText.style
-                                                              .regularBlack16
-                                                              .copyWith(
-                                                                  color: Colors
-                                                                      .blue)),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ));
-                                    } else {
-                                      showDialog<String>(
-                                          context: context,
-                                          builder: (BuildContext context) =>
-                                              CupertinoAlertDialog(
-                                                title: const Text(
-                                                  'Lưu ý',
-                                                ),
-                                                content: Text(
-                                                  'Bạn sẽ không được huỷ đơn nếu xác nhận đặt hàng',
-                                                  style: AppText.style.regular,
-                                                ),
-                                                actions: <Widget>[
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            vertical: Dimension
-                                                                .height8,
-                                                            horizontal:
-                                                                Dimension
-                                                                    .height8),
-                                                    child: OutlinedButton(
-                                                      style: outlinedButton,
-                                                      onPressed: () async {
-                                                        Navigator.pop(context,
-                                                            'Đặt hàng');
-                                                        await BlocProvider.of<
-                                                                    CartCubit>(
-                                                                context)
-                                                            .placeOrder(
-                                                          store: BlocProvider
-                                                                  .of<CartButtonBloc>(
-                                                                      context)
-                                                              .state
-                                                              .selectedStore!,
-                                                          pickupTime: BlocProvider
-                                                                  .of<TimerCubit>(
-                                                                      context)
-                                                              .state
-                                                              .selectedDate,
-                                                        );
-                                                      },
-                                                      child: Text('Đặt hàng',
-                                                          style: AppText.style
-                                                              .regularBlack16
-                                                              .copyWith(
-                                                                  color: Colors
-                                                                      .blue)),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            vertical: Dimension
-                                                                .height8,
-                                                            horizontal:
-                                                                Dimension
-                                                                    .height8),
-                                                    child: ElevatedButton(
-                                                      style: roundedButton,
-                                                      onPressed: () =>
-                                                          Navigator.pop(context,
-                                                              'Huỷ bỏ'),
-                                                      child: Text('Huỷ bỏ',
-                                                          style: AppText.style
-                                                              .regularBlack16
-                                                              .copyWith(
-                                                                  color: Colors
-                                                                      .white)),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ));
-                                    }
-                                  },
-                                  child: Builder(builder: (context) {
-                                    BlocProvider.of<CartCubit>(context)
-                                        .calculateTotalPrice(deliveryCost: 0);
-                                    return Text(
-                                      'Đặt hàng ${MoneyTransfer.transferFromDouble(total)} ₫',
+                          child: BlocBuilder<CartButtonBloc, CartButtonState>(
+                              builder: (context, cartButtonState) {
+                            return state.products.isEmpty ||
+                                    cartButtonState.selectedStore == null
+                                ? ElevatedButton(
+                                    style: roundedButton,
+                                    onPressed: null,
+                                    child: Text(
+                                      'Đặt hàng ${MoneyTransfer.transferFromDouble(0)} ₫',
                                       style: AppText.style.regularWhite16,
-                                    );
-                                  }),
-                                ),
+                                    ))
+                                : ElevatedButton(
+                                    style: roundedButton,
+                                    onPressed: () {
+                                      var canOrder =
+                                          BlocProvider.of<CartCubit>(context)
+                                              .checkCanOrderFoods(
+                                        store: cartButtonState.selectedStore!,
+                                      );
+                                      if (!canOrder) {
+                                        showDialog<String>(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                CupertinoAlertDialog(
+                                                  title: const Text(
+                                                    'Lỗi',
+                                                  ),
+                                                  content: Text(
+                                                    'Có vài sản phẩm không hợp lệ trong giỏ hàng, vui lòng kiểm tra lại.',
+                                                    style:
+                                                        AppText.style.regular,
+                                                  ),
+                                                  actions: <Widget>[
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical:
+                                                                  Dimension
+                                                                      .height8,
+                                                              horizontal:
+                                                                  Dimension
+                                                                      .height8),
+                                                      child: OutlinedButton(
+                                                        style: outlinedButton,
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: Text('OK',
+                                                            style: AppText.style
+                                                                .regularBlack16
+                                                                .copyWith(
+                                                                    color: Colors
+                                                                        .blue)),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ));
+                                      } else if (dateTimeToHour(
+                                                  DateTime.now()) >
+                                              dateTimeToHour(cartButtonState
+                                                  .selectedStore!.timeClose) ||
+                                          dateTimeToHour(DateTime.now()) <
+                                              dateTimeToHour(cartButtonState
+                                                  .selectedStore!.timeOpen)) {
+                                        Fluttertoast.showToast(
+                                            msg:
+                                                "Không trong thời gian hoạt động, vui lòng quay lại sau.",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            timeInSecForIosWeb: 1,
+                                            textColor: Colors.white,
+                                            fontSize: Dimension.font14);
+                                      } else {
+                                        showDialog<String>(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                CupertinoAlertDialog(
+                                                  title: const Text(
+                                                    'Lưu ý',
+                                                  ),
+                                                  content: Text(
+                                                    'Bạn sẽ không được huỷ đơn nếu xác nhận đặt hàng',
+                                                    style:
+                                                        AppText.style.regular,
+                                                  ),
+                                                  actions: <Widget>[
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical:
+                                                                  Dimension
+                                                                      .height8,
+                                                              horizontal:
+                                                                  Dimension
+                                                                      .height8),
+                                                      child: OutlinedButton(
+                                                        style: outlinedButton,
+                                                        onPressed: () async {
+                                                          Navigator.pop(
+                                                              context, 'Yes');
+                                                          await BlocProvider.of<
+                                                                      CartCubit>(
+                                                                  context)
+                                                              .placeOrder(
+                                                            store: cartButtonState
+                                                                .selectedStore!,
+                                                            pickupTime: BlocProvider
+                                                                    .of<TimerCubit>(
+                                                                        context)
+                                                                .state
+                                                                .selectedDate,
+                                                          );
+                                                        },
+                                                        child: Text('Đặt hàng',
+                                                            style: AppText.style
+                                                                .regularBlack16
+                                                                .copyWith(
+                                                                    color: Colors
+                                                                        .blue)),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical:
+                                                                  Dimension
+                                                                      .height8,
+                                                              horizontal:
+                                                                  Dimension
+                                                                      .height8),
+                                                      child: ElevatedButton(
+                                                        style: roundedButton,
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context, 'No'),
+                                                        child: Text('Huỷ bỏ',
+                                                            style: AppText.style
+                                                                .regularBlack16
+                                                                .copyWith(
+                                                                    color: Colors
+                                                                        .white)),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )).then((value) {
+                                          if (value != null && value == 'Yes') {
+                                            QuickAlert.show(
+                                                context: context,
+                                                type: QuickAlertType.success,
+                                                text: 'Đặt hàng thành công',
+                                                confirmBtnText: 'OK',
+                                                onConfirmBtnTap: () {
+                                                  Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              MainPage(
+                                                                selectedPage: 3,
+                                                              )));
+                                                });
+                                          }
+                                        });
+                                      }
+                                    },
+                                    child: Builder(builder: (context) {
+                                      BlocProvider.of<CartCubit>(context)
+                                          .calculateTotalPrice(deliveryCost: 0);
+                                      return Text(
+                                        'Đặt hàng ${MoneyTransfer.transferFromDouble(total)} ₫',
+                                        style: AppText.style.regularWhite16,
+                                      );
+                                    }),
+                                  );
+                          }),
                         ),
                       )
                     ],

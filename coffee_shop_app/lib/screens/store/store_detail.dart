@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:coffee_shop_app/screens/main_page.dart';
 import 'package:coffee_shop_app/services/blocs/store_store/store_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/store_store/store_store_state.dart';
 import 'package:coffee_shop_app/utils/colors/app_colors.dart';
