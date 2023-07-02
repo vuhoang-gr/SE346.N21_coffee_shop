@@ -46,7 +46,8 @@ class PromoBloc extends Bloc<PromoEvent, PromoState> {
 
       Promo.allStores = allStores;
       emit(LoadedState(initPromos: promoList, listExistCode: existCodeList, stores: allStores, drinks: []));
-    } catch (_) {
+    } catch (err) {
+      print(err.toString());
       Fluttertoast.showToast(
           msg: "Đã có lỗi xảy ra, hãy thử lại sau.",
           toastLength: Toast.LENGTH_SHORT,
@@ -70,7 +71,7 @@ class PromoBloc extends Bloc<PromoEvent, PromoState> {
         dateStart: data['dateStart'].toDate(),
         products: data['products'].cast<String>(),
         stores: data['stores'].cast<String>(),
-        forNewCustomer: data['forNewCustomer']);
+        forNewCustomer: data['forNewCustomer'] ?? false);
   }
 
   @override

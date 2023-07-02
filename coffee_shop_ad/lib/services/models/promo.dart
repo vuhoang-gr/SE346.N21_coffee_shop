@@ -24,6 +24,6 @@ class Promo {
     required this.dateStart,
     required this.products,
     required this.stores,
-    required this.forNewCustomer,
+    this.forNewCustomer = false,
   });
 }

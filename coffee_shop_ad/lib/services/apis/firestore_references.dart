@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-final firestore = FirebaseFirestore.instance;
-var drinkReference = firestore.collection("Food");
-var toppingReference = firestore.collection("Topping");
-var sizeReference = firestore.collection("Size");
+final firestoreInstance = FirebaseFirestore.instance;
 
-var storeReference = firestore.collection("Store");
+var drinkReference = firestoreInstance.collection("Food");
+var toppingReference = firestoreInstance.collection("Topping");
+var sizeReference = firestoreInstance.collection("Size");
 
-var promoReference = firestore.collection("PromoTest");
+var storeReference = firestoreInstance.collection("Store");
 
-var userReference = firestore.collection("users");
+var promoReference = firestoreInstance.collection("Promo");
+
+var userReference = firestoreInstance.collection("users");
