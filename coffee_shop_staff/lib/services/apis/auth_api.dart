@@ -80,7 +80,9 @@ class AuthAPI {
   }
 
   Future<User?> fromFireStore(Map<String, dynamic>? data, String id) async {
-    if (data == null) return null;
+    if (data == null || data['isStaff'] == null || !data['isStaff']) {
+      return null;
+    }
     Store? store = await StoreAPI().getRef(data['store']);
     if (store == null) return null;
     return User(

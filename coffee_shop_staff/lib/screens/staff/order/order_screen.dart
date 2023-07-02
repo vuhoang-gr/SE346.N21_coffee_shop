@@ -31,7 +31,7 @@ class _OrderScreenState extends State<OrderScreen> {
                 height: Dimension.height56,
                 child: CustomAppBar(
                   leading: Text(
-                    'Orders',
+                    'Đơn hàng',
                     style: TextStyle(
                         fontSize: Dimension.height18,
                         fontWeight: FontWeight.bold),
@@ -55,10 +55,10 @@ class _OrderScreenState extends State<OrderScreen> {
                   unselectedLabelStyle: AppText.style.regular,
                   tabs: const [
                     Tab(
-                      text: 'Store pickup',
+                      text: 'Đến lấy',
                     ),
                     Tab(
-                      text: 'Delivery',
+                      text: 'Vận chuyển',
                     ),
                   ],
                 ),

@@ -204,14 +204,14 @@ class NoOrderScreen extends StatelessWidget {
               height: Dimension.height24,
             ),
             Text(
-              'The store has no orders yet!',
+              'Chưa có đơn hàng nào!',
               style: AppText.style.boldBlack16,
             ),
             SizedBox(
               height: Dimension.height8 / 2,
             ),
             Text(
-              'You think this is a mistake?',
+              'Bạn nghĩ đây là lỗi?',
               style: AppText.style.regular,
             ),
             Padding(
@@ -227,7 +227,7 @@ class NoOrderScreen extends StatelessWidget {
                     width: double.maxFinite,
                     child: Center(
                       child: Text(
-                        'Try again!',
+                        'THỬ LẠI!',
                         style: TextStyle(
                             fontSize: Dimension.height16,
                             fontWeight: FontWeight.normal),

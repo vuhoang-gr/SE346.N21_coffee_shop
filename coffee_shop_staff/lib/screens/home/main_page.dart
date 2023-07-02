@@ -51,7 +51,7 @@ class _MainPageState extends State<MainPage> {
                           size: Dimension.font14 * 2,
                         ),
                         Text(
-                          'Product',
+                          'Sản phẩm',
                           style: AppText.style.regular10,
                         )
                       ],
@@ -67,7 +67,7 @@ class _MainPageState extends State<MainPage> {
                           size: Dimension.font14 * 2,
                         ),
                         Text(
-                          'Order',
+                          'Đơn hàng',
                           style: AppText.style.regular10,
                         )
                       ],
@@ -83,7 +83,7 @@ class _MainPageState extends State<MainPage> {
                           size: Dimension.font14 * 2,
                         ),
                         Text(
-                          'Profile',
+                          'Cá nhân',
                           style: AppText.style.regular10,
                         ),
                       ],

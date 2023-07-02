@@ -236,7 +236,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   padding: const EdgeInsets.all(20.0),
                   child: RoundedButton(
                     onPressed: onSaveProduct,
-                    label: 'Save',
+                    label: 'Lưu lại',
                   ),
                 )
               ],

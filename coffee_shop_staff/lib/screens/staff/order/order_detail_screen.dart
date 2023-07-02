@@ -97,7 +97,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
                       //General info
                       Text(
-                        "General info",
+                        "Thông tin cơ bản",
                         style: AppText.style.boldBlack16,
                       ),
                       SizedBox(
@@ -111,7 +111,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Order ID',
+                                  'ID đơn hàng',
                                   style: AppText.style.regular,
                                   softWrap: true,
                                 ),
@@ -129,7 +129,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Order date',
+                                  'Ngày đặt đơn',
                                   style: AppText.style.regular,
                                 ),
                                 Text(
@@ -149,7 +149,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
                       //Delivery details
                       Text(
-                        "Delivery details",
+                        "Thông tin vận chuyển",
                         style: AppText.style.boldBlack16,
                       ),
                       SizedBox(
@@ -170,8 +170,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                 children: [
                                   Text(
                                       widget.order.isPickup
-                                          ? 'Pick up time'
-                                          : 'Delivery to',
+                                          ? 'Thời gian lấy'
+                                          : 'Vận chuyển tới',
                                       style: AppText.style.regular),
                                   SizedBox(
                                     height: Dimension.height4,
@@ -195,7 +195,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('Receiver: ${order.user.name}',
+                                  Text('Người nhận: ${order.user.name}',
                                       style: AppText.style.regular),
                                   SizedBox(
                                     height: Dimension.height4,
@@ -215,7 +215,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
                       //Product info
                       Text(
-                        "Products info",
+                        "Thông tin sản phẩm",
                         style: AppText.style.boldBlack16,
                       ),
                       SizedBox(
@@ -250,7 +250,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
                       //Payment info
                       Text(
-                        "Payment info",
+                        "Thông tin thanh toán",
                         style: AppText.style.boldBlack16,
                       ),
                       SizedBox(
@@ -262,7 +262,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           children: [
                             //price
                             PriceRow(
-                              title: 'Price',
+                              title: 'Giá',
                               price: order.totalPrice +
                                   (order.discount ?? 0) -
                                   (order.deliveryFee ?? 0),
@@ -272,7 +272,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             ),
                             //shipping fee
                             PriceRow(
-                              title: 'Delivery fee',
+                              title: 'Phí giao hàng',
                               price: (order.deliveryFee ?? 0),
                             ),
                             SizedBox(
@@ -280,7 +280,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             ),
                             //promotion
                             PriceRow(
-                              title: 'Discounted',
+                              title: 'Giảm giá',
                               price: (order.discount ?? 0),
                             ),
                             SizedBox(
@@ -288,7 +288,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             ),
                             //total
                             PriceRow(
-                              title: 'Price',
+                              title: 'Tổng cộng',
                               price: order.totalPrice,
                             ),
                           ],
@@ -312,7 +312,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Change status: ',
+                          'Thay đổi trạng thái: ',
                           style: AppText.style.regularGrey14
                               .copyWith(color: Colors.black),
                         ),
@@ -398,7 +398,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               .add(ChangeOrder(order: order));
                         }
                       },
-                      label: 'CONFIRM',
+                      label: 'XÁC NHẬN',
                     ),
                   ],
                 ),

@@ -39,7 +39,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 height: Dimension.height56,
                 child: CustomAppBar(
                   leading: Text(
-                    'Products',
+                    'Sản phẩm',
                     style: TextStyle(
                         fontSize: Dimension.height18,
                         fontWeight: FontWeight.bold),
@@ -63,7 +63,7 @@ class _ProductScreenState extends State<ProductScreen> {
                   unselectedLabelStyle: AppText.style.regular,
                   tabs: const [
                     Tab(
-                      text: 'Drink',
+                      text: 'Đồ uống',
                     ),
                     Tab(
                       text: 'Topping',

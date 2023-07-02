@@ -64,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (user == null) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Something is wrong! Try again!')));
+              SnackBar(content: Text('Email hoặc mật khẩu sai! Hãy thử lại!')));
           return;
         }
       }
@@ -76,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
           if (!check) {
             if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Please fill the information!')));
+                  SnackBar(content: Text('Vui lòng điền đầy đủ thông tin!')));
               return;
             }
           }
