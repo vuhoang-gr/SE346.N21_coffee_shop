@@ -1,4 +1,7 @@
-import '../../../temp/mockData.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../services/blocs/order/order_bloc.dart';
+import '../../../services/models/order.dart';
 import 'order_listing.dart';
 import 'package:coffee_shop_staff/utils/colors/app_colors.dart';
 import 'package:coffee_shop_staff/utils/styles/app_texts.dart';
@@ -65,18 +68,28 @@ class _OrderScreenState extends State<OrderScreen> {
                   children: [
                     //store pickup
                     //map order have pickup type
-                    OrderListing(
-                      orderList: List.generate(5, (index) {
-                        return FakeData.orderMock;
-                      }),
+                    BlocBuilder<OrderBloc, OrderState>(
+                      builder: (context, state) {
+                        List<Order>? orderList = [];
+                        var orderState = context.read<OrderBloc>().state;
+                        if (orderState is OrderLoaded) {
+                          orderList = orderState.pickup;
+                        }
+                        return OrderListing(orderList: orderList);
+                      },
                     ),
 
                     //delivery
                     //map order have delivery type
-                    OrderListing(
-                      orderList: List.generate(5, (index) {
-                        return FakeData.orderMock;
-                      }),
+                    BlocBuilder<OrderBloc, OrderState>(
+                      builder: (context, state) {
+                        List<Order>? orderList = [];
+                        var orderState = context.read<OrderBloc>().state;
+                        if (orderState is OrderLoaded) {
+                          orderList = orderState.delivery;
+                        }
+                        return OrderListing(orderList: orderList);
+                      },
                     )
                   ],
                 ),

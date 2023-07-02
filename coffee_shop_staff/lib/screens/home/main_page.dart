@@ -1,14 +1,9 @@
-import 'package:coffee_shop_staff/main.dart';
-import 'package:coffee_shop_staff/screens/home/home_screen.dart';
 import 'package:coffee_shop_staff/screens/profile/profile_screen.dart';
 import 'package:coffee_shop_staff/screens/staff/food/product_screen.dart';
 import 'package:coffee_shop_staff/screens/staff/order/order_screen.dart';
 import 'package:coffee_shop_staff/utils/colors/app_colors.dart';
 import 'package:coffee_shop_staff/utils/styles/app_texts.dart';
 import 'package:flutter/material.dart';
-
-import '../../services/models/store_product.dart';
-import '../../temp/mockData.dart';
 import '../../utils/constants/dimension.dart';
 
 class MainPage extends StatefulWidget {

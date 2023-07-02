@@ -1,6 +1,8 @@
 import 'package:coffee_shop_staff/screens/profile/image_view_screen.dart';
+import 'package:coffee_shop_staff/screens/staff/food/product_detail_screen.dart';
 import 'package:coffee_shop_staff/screens/staff/order/order_detail_screen.dart';
 import 'package:coffee_shop_staff/services/models/order.dart';
+import 'package:coffee_shop_staff/services/models/store_product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -78,6 +80,7 @@ class AppRouter {
 
       case ProfileSettingScreen.routeName:
         return _createRoute(ProfileSettingScreen());
+
       case ImageViewScreen.routeName:
         Set<Object> args = settings.arguments as Set<Object>;
         String image = args.elementAt(0) as String;
@@ -100,6 +103,12 @@ class AppRouter {
       case OrderDetailScreen.routeName:
         var arg = settings.arguments as Order;
         return _createRoute(OrderDetailScreen(order: arg));
+
+      case ProductDetailScreen.routeName:
+        var arg = settings.arguments as StoreProduct;
+        return _createRoute(ProductDetailScreen(
+          product: arg,
+        ));
 
       default:
         return _createRoute(MainPage());

@@ -1,3 +1,4 @@
+import 'package:coffee_shop_staff/services/blocs/order/order_bloc.dart';
 import 'package:coffee_shop_staff/utils/colors/app_colors.dart';
 import 'package:coffee_shop_staff/utils/constants/order_enum.dart';
 import 'package:coffee_shop_staff/utils/styles/app_texts.dart';
@@ -5,6 +6,7 @@ import 'package:coffee_shop_staff/widgets/features/order_screen/order_status_lab
 import 'package:coffee_shop_staff/widgets/features/order_screen/price_row.dart';
 import 'package:coffee_shop_staff/widgets/global/buttons/rounded_button.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../widgets/features/order_screen/order_product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -61,10 +63,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         body: Column(
           children: [
             CustomAppBar(
-              leading: Text(
-                order.id,
-                style: TextStyle(
-                    fontSize: Dimension.height18, fontWeight: FontWeight.bold),
+              leading: Container(
+                constraints: BoxConstraints(minWidth: 100, maxWidth: 150),
+                child: Text(
+                  order.id,
+                  style: TextStyle(
+                      fontSize: Dimension.height18,
+                      fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               trailing: OrderStatusLabel(status: order.status),
             ),
@@ -106,6 +113,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                 Text(
                                   'Order ID',
                                   style: AppText.style.regular,
+                                  softWrap: true,
                                 ),
                                 Text(
                                   order.id,
@@ -169,7 +177,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                     height: Dimension.height4,
                                   ),
                                   Text(
-                                      '${order.isPickup ? DateFormat('dd/MM/yyyy, hh:mm:ss').format(order.pickupTime!) : order.deliveryAddress}',
+                                      order.isPickup
+                                          ? DateFormat('dd/MM/yyyy, hh:mm:ss')
+                                              .format(order.pickupTime!)
+                                          : order.deliveryAddress!.address
+                                              .formattedAddress,
                                       style: AppText.style.boldBlack14)
                                 ],
                               ),
@@ -305,50 +317,69 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               .copyWith(color: Colors.black),
                         ),
                         DropdownButtonHideUnderline(
-                          child: DropdownButton2(
-                            customButton: OrderStatusLabel(
-                              hasBorder: true,
-                              status: orderStatusTemp,
-                              fontSize: 15,
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 15),
-                            ),
-                            value: orderStatusTemp.name,
-                            items: OrderStatus.values.map((value) {
-                              return DropdownMenuItem(
-                                  value: value.name,
-                                  child: OrderStatusLabel(
-                                    status: value,
-                                  ));
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                orderStatusTemp =
-                                    (value as String).toOrderStatus();
-                              });
-                            },
-                            buttonStyleData: ButtonStyleData(
-                              padding: const EdgeInsets.only(right: 8),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
-                                border: Border.all(
-                                  color: AppColors.blueColor,
+                          child: Builder(builder: (context) {
+                            List<OrderStatus> statusList = [];
+                            if (order.isPickup) {
+                              statusList = [
+                                OrderStatus.received,
+                                OrderStatus.prepared,
+                                OrderStatus.completed,
+                                OrderStatus.cancelled
+                              ];
+                            } else {
+                              statusList = [
+                                OrderStatus.preparing,
+                                OrderStatus.delivering,
+                                OrderStatus.delivered,
+                                OrderStatus.deliverFailed,
+                                OrderStatus.cancelled
+                              ];
+                            }
+                            return DropdownButton2(
+                              customButton: OrderStatusLabel(
+                                hasBorder: true,
+                                status: orderStatusTemp,
+                                fontSize: 15,
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 15),
+                              ),
+                              value: orderStatusTemp.name,
+                              items: statusList.map((value) {
+                                return DropdownMenuItem(
+                                    value: value.name,
+                                    child: OrderStatusLabel(
+                                      status: value,
+                                    ));
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  orderStatusTemp =
+                                      (value as String).toOrderStatus();
+                                });
+                              },
+                              buttonStyleData: ButtonStyleData(
+                                padding: const EdgeInsets.only(right: 8),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(14),
+                                  border: Border.all(
+                                    color: AppColors.blueColor,
+                                  ),
+                                  color: Colors.white,
                                 ),
-                                color: Colors.white,
                               ),
-                            ),
-                            dropdownStyleData: DropdownStyleData(
-                              maxHeight: 400,
-                              width: 200,
-                              padding: null,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
-                                color: Colors.white,
+                              dropdownStyleData: DropdownStyleData(
+                                maxHeight: 400,
+                                width: 200,
+                                padding: null,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(14),
+                                  color: Colors.white,
+                                ),
+                                elevation: 3,
+                                offset: const Offset(-20, 315),
                               ),
-                              elevation: 3,
-                              offset: const Offset(0, 440),
-                            ),
-                          ),
+                            );
+                          }),
                         ),
                       ],
                     ),
@@ -356,10 +387,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       height: Dimension.height6,
                     ),
                     RoundedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         setState(() {
                           order.status = orderStatusTemp;
                         });
+                        // await OrderAPI().update(order);
+                        if (context.mounted) {
+                          context
+                              .read<OrderBloc>()
+                              .add(ChangeOrder(order: order));
+                        }
                       },
                       label: 'CONFIRM',
                     ),

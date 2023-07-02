@@ -1,7 +1,9 @@
 import 'package:coffee_shop_staff/screens/staff/food/product_listing.dart';
+import 'package:coffee_shop_staff/services/blocs/product/product_bloc.dart';
+import 'package:coffee_shop_staff/widgets/global/skeleton.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../services/models/store_product.dart';
-import '../../../temp/mockData.dart';
 import 'package:coffee_shop_staff/utils/colors/app_colors.dart';
 import 'package:coffee_shop_staff/utils/styles/app_texts.dart';
 import 'package:flutter/material.dart';
@@ -11,12 +13,19 @@ import '../../../widgets/global/custom_app_bar.dart';
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({super.key});
+  static const String routeName = 'product_screen/';
 
   @override
   State<ProductScreen> createState() => _ProductScreenState();
 }
 
 class _ProductScreenState extends State<ProductScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -30,7 +39,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 height: Dimension.height56,
                 child: CustomAppBar(
                   leading: Text(
-                    'Orders',
+                    'Products',
                     style: TextStyle(
                         fontSize: Dimension.height18,
                         fontWeight: FontWeight.bold),
@@ -64,26 +73,31 @@ class _ProductScreenState extends State<ProductScreen> {
               ),
               Expanded(
                 child: TabBarView(
+                  physics: NeverScrollableScrollPhysics(),
                   children: [
-                    //store pickup
-                    //map order have pickup type
-                    ProductListing(
-                        itemList: List.generate(
-                            10,
-                            (i) => StoreProduct(
-                                isStocking: i % 2 == 0,
-                                store: FakeData.storeMock,
-                                item: FakeData.toppingMock))),
-
-                    //delivery
+                    //drink
+                    BlocBuilder<ProductBloc, ProductState>(
+                      builder: (context, state) {
+                        List<StoreProduct> itemList = [];
+                        if (state is ProductLoaded) {
+                          itemList = state.drink;
+                          return ProductListing(itemList: itemList);
+                        }
+                        return Skeleton();
+                      },
+                    ),
+                    //topping
+                    BlocBuilder<ProductBloc, ProductState>(
+                      builder: (context, state) {
+                        List<StoreProduct> itemList = [];
+                        if (state is ProductLoaded) {
+                          itemList = state.topping;
+                          return ProductListing(itemList: itemList);
+                        }
+                        return Skeleton();
+                      },
+                    ),
                     //map order have delivery type
-                    ProductListing(
-                        itemList: List.generate(
-                            10,
-                            (i) => StoreProduct(
-                                isStocking: i % 2 == 0,
-                                store: FakeData.storeMock,
-                                item: FakeData.foodMock))),
                   ],
                 ),
               ),

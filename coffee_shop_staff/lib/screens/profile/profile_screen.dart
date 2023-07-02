@@ -1,6 +1,5 @@
 import 'package:coffee_shop_staff/screens/profile/profile_setting_screen.dart';
 import 'package:coffee_shop_staff/services/apis/auth_api.dart';
-import 'package:coffee_shop_staff/services/apis/store_api.dart';
 import 'package:coffee_shop_staff/services/blocs/auth/auth_bloc.dart';
 import 'package:coffee_shop_staff/services/models/user.dart';
 import 'package:coffee_shop_staff/utils/constants/dimension.dart';
@@ -144,12 +143,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SizedBox(
               height: Dimension.getHeightFromValue(15),
             ),
-            ElevatedButton(
-              onPressed: () async {
-                await StoreAPI().get(user.store.id);
-              },
-              child: Text('yay'),
-            ),
+            // ElevatedButton(
+            //   onPressed: () async {
+            //     var x = await OrderAPI().getAll(StoreAPI.currentStore!.id);
+            //     print(x);
+            //   },
+            //   child: Text('yay'),
+            // ),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(
