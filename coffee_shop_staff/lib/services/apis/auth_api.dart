@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_staff/services/apis/store_api.dart';
+import 'package:coffee_shop_staff/services/models/store.dart';
 import 'package:coffee_shop_staff/services/models/user.dart';
-import 'package:coffee_shop_staff/temp/mockData.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,7 @@ class AuthAPI {
 
   static User? get currentUser => userSubscription.value;
   static set currentUser(User? value) {
-    userSubscription = ValueNotifier(value);
+    userSubscription.value = value;
   }
 
   static ValueNotifier<User?> userSubscription = ValueNotifier<User?>(null);
@@ -78,15 +79,17 @@ class AuthAPI {
     return data;
   }
 
-  User? fromFireStore(Map<String, dynamic>? data, String id) {
+  Future<User?> fromFireStore(Map<String, dynamic>? data, String id) async {
     if (data == null) return null;
+    Store? store = await StoreAPI().getRef(data['store']);
+    if (store == null) return null;
     return User(
       email: data['email'],
       id: id,
       name: data['name'],
       phoneNumber: data['phoneNumber'] ?? 'No Phone Number',
       // store: data['store'],
-      store: FakeData.storeMock,
+      store: store,
 
       dob: DateTime.tryParse(
               (data['dob'] ?? Timestamp.now()).toDate().toString()) ??
@@ -110,7 +113,7 @@ class AuthAPI {
   Future<User?> get(String id) async {
     var raw = await firestore.collection('users').doc(id).get();
     var data = raw.data();
-    return fromFireStore(data, id);
+    return await fromFireStore(data, id);
   }
 
   pop(User user) async {
