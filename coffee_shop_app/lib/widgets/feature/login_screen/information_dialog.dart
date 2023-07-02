@@ -1,15 +1,11 @@
 import 'package:coffee_shop_app/services/apis/auth_api.dart';
 import 'package:coffee_shop_app/utils/validations/phone_validate.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
 import '../../../services/models/user.dart';
 import '../../../utils/constants/dimension.dart';
 import '../../../utils/styles/app_texts.dart';
-import '../../../utils/validations/confirm_password_validate.dart';
-import '../../../utils/validations/password_validate.dart';
 import '../../global/buttons/rounded_button.dart';
 import '../../global/dialog/swipe_up_dialog.dart';
 import '../../global/textForm/custom_text_form.dart';

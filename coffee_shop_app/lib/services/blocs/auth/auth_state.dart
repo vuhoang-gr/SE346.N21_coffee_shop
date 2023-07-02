@@ -6,6 +6,7 @@ abstract class AuthState extends Equatable {
   List<Object?> get props => [];
 }
 
+// ignore: must_be_immutable
 class UnAuthenticated extends AuthState {
   final String? message;
   UnAuthenticated({this.message, pageState}) {
