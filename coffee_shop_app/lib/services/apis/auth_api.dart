@@ -18,7 +18,7 @@ class AuthAPI {
 
   static User? get currentUser => userSubscription.value;
   static set currentUser(User? value) {
-    userSubscription = ValueNotifier(value);
+    userSubscription.value = value;
   }
 
   static ValueNotifier<User?> userSubscription = ValueNotifier<User?>(null);
@@ -145,6 +145,9 @@ class AuthAPI {
 
   User? fromFireStore(Map<String, dynamic>? data, String id) {
     if (data == null) return null;
+    if (data['isActive'] == null || !(data['isActive'] as bool)) {
+      return null;
+    }
     return User(
       email: data['email'],
       id: id,

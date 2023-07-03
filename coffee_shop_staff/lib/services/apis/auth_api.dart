@@ -85,6 +85,9 @@ class AuthAPI {
     }
     Store? store = await StoreAPI().getRef(data['store']);
     if (store == null) return null;
+    if (data['isActive'] == null || !(data['isActive'] as bool)) {
+      return null;
+    }
     return User(
       email: data['email'],
       id: id,

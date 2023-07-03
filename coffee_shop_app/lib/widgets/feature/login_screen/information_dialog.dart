@@ -11,7 +11,8 @@ import '../../global/dialog/swipe_up_dialog.dart';
 import '../../global/textForm/custom_text_form.dart';
 
 class InformationDialog extends StatefulWidget {
-  const InformationDialog({super.key});
+  const InformationDialog({super.key, required this.user});
+  final User? user;
 
   @override
   State<InformationDialog> createState() => _InformationDialogState();
@@ -33,12 +34,12 @@ class _InformationDialogState extends State<InformationDialog> {
     }
 
     onSubmit() async {
-      User? temp = AuthAPI.currentUser;
+      User? temp = widget.user;
 
       if (!canSaveInfor() || temp == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Something is wrong. Try again!'),
+            content: Text('Có gì đó không ổn. Hãy thử lại!'),
           ),
         );
         return false;
@@ -53,10 +54,12 @@ class _InformationDialogState extends State<InformationDialog> {
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Update failed. Try again!'),
+            content: Text('Cập nhật thất bại. Hãy thử lại!'),
           ),
         );
         return false;
+      } finally {
+        // await AuthAPI().signOut();
       }
     }
 
