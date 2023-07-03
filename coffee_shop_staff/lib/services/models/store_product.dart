@@ -1,7 +1,7 @@
-import 'package:coffee_shop_admin/services/models/food.dart';
-import 'package:coffee_shop_admin/services/models/store.dart';
+import 'package:coffee_shop_staff/services/models/store.dart';
 import 'package:equatable/equatable.dart';
 
+// ignore: must_be_immutable
 class StoreProduct extends Equatable {
   var item;
   bool isStocking;

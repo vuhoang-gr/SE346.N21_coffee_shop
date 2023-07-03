@@ -1,4 +1,4 @@
-import 'package:coffee_shop_admin/utils/validations/validator.dart';
+import 'package:coffee_shop_staff/utils/validations/validator.dart';
 
 class PasswordValidator extends Validator {
   @override

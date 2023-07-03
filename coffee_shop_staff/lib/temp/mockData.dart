@@ -1,11 +1,11 @@
 import 'dart:math';
 
-import 'package:coffee_shop_admin/services/models/order.dart';
-import 'package:coffee_shop_admin/services/models/user.dart';
-import 'package:coffee_shop_admin/utils/constants/order_enum.dart';
+import 'package:coffee_shop_staff/services/models/order.dart';
+import 'package:coffee_shop_staff/services/models/user.dart';
+import 'package:coffee_shop_staff/utils/constants/order_enum.dart';
 
-import '../services/models/address.dart';
 import '../services/models/food.dart';
+import '../services/models/location.dart';
 import '../services/models/ordered_food.dart';
 import '../services/models/size.dart';
 import '../services/models/store.dart';
@@ -17,25 +17,29 @@ class FakeData {
     id: 'User1',
     name: 'Yau Boii',
     phoneNumber: '0101010101',
+    store: storeMock,
     email: 'fuck@gm.co',
     isActive: true,
     avatarUrl: 'https://cdn-icons-png.flaticon.com/512/1377/1377194.png',
     coverUrl: 'https://cdn-icons-png.flaticon.com/512/1377/1377194.png',
   );
 
-  static Address addressMock = Address(
-    city: 'Ha Noi',
-    district: 'Cau Giay',
-    ward: 'Xuan Thuy',
-    shortName: 'CSP',
+  static MLocation addressMock = MLocation(
+    formattedAddress: 'Ha Noi something',
+    lat: 1,
+    lng: 1,
   );
 
   static Store storeMock = Store(
     id: 'Store1',
-    sb: 'Short name',
+    sb: 'Coffee shop hehehe',
     address: addressMock,
     phone: '012345678',
-    stateFood: {},
+    stateFood: [],
+    stateTopping: [],
+    images: [],
+    stateFoodRaw: {},
+    stateToppingRaw: [],
   );
 
   static Size sizeMock = Size(
@@ -64,11 +68,13 @@ class FakeData {
   );
 
   static OrderedFood orderedFoodMock = OrderedFood(
-    food: foodMock,
-    amount: 5,
-    size: sizeMock,
-    toppings: List.generate(4, (index) => toppingMock),
-  );
+      name: 'heheh',
+      amount: 2,
+      image: 'https://cdn-icons-png.flaticon.com/512/1377/1377194.png',
+      size: 'L',
+      topping: 'ahihi',
+      unitPrice: 123,
+      totalPrice: 568);
 
   static Order orderMock = Order(
     id: 'orderMock',

@@ -78,10 +78,10 @@ void main() async {
   );
   initLatLng = await _determineUserCurrentPosition();
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  var isRmb = prefs.getBool('isRemember') ?? false;
+  bool isRmb = prefs.getBool('isRemember') ?? false;
 
   if (!isRmb) {
-    AuthAPI().signOut();
+    await AuthAPI().signOut();
   }
   bool isOpened = true;
   runApp(MyApp(
@@ -89,6 +89,7 @@ void main() async {
   ));
 }
 
+// ignore: must_be_immutable
 class MyApp extends StatelessWidget {
   MyApp({super.key, required this.isOpened});
   bool isOpened;
@@ -165,8 +166,6 @@ class MyApp extends StatelessWidget {
       ],
       child: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
-          var appState = context.read<AppCubit>().state;
-
           FirebaseAuth.instance.userChanges().listen((User? user) async {
             AuthAPI.currentUser = await AuthAPI().toUser(user);
             if (context.mounted && isOpened) {

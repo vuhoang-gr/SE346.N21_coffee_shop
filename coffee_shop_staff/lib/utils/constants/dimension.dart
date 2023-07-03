@@ -21,6 +21,7 @@ class Dimension {
   static double height150 = getHeightFromValue(150);
   static double height230 = getHeightFromValue(230);
   static double height160 = getHeightFromValue(160);
+  static double height120 = getHeightFromValue(120);
   static double height86 = getHeightFromValue(86);
   static double height72 = getHeightFromValue(72);
   static double height68 = getHeightFromValue(68);

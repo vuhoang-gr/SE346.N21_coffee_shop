@@ -1,4 +1,4 @@
-name: coffee_shop_admin
+name: coffee_shop_staff
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -21,9 +21,15 @@ dependencies:
   font_awesome_flutter: ^10.4.0
   cached_network_image: ^3.2.3
   dropdown_button2: ^2.0.0
-  # firebase_core: ^1.14.0
-  # firebase_auth: ^3.3.13
-  # flutter_svg: ^1.0.0
+  firebase_core: ^2.9.0
+  firebase_auth: ^4.4.1
+  cloud_firestore: ^4.7.1
+  firebase_storage: ^11.2.1
+  image_picker: ^0.8.7+5
+  shared_preferences: ^2.0.20
+  skeletons: ^0.0.3
+  carousel_slider: ^4.2.1
+  dots_indicator: ^3.0.0
 
 dev_dependencies:
   flutter_test:

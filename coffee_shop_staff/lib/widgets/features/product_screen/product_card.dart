@@ -1,10 +1,11 @@
-import 'package:coffee_shop_admin/services/models/store_product.dart';
-import 'package:coffee_shop_admin/services/models/topping.dart';
-import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
-import 'package:coffee_shop_admin/utils/constants/placeholder_enum.dart';
-import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
-import 'package:coffee_shop_admin/widgets/global/aysncImage/async_image.dart';
-import 'package:coffee_shop_admin/widgets/global/buttons/touchable_opacity.dart';
+import 'package:coffee_shop_staff/services/models/food_checker.dart';
+import 'package:coffee_shop_staff/services/models/store_product.dart';
+import 'package:coffee_shop_staff/services/models/topping.dart';
+import 'package:coffee_shop_staff/utils/colors/app_colors.dart';
+import 'package:coffee_shop_staff/utils/constants/placeholder_enum.dart';
+import 'package:coffee_shop_staff/utils/styles/app_texts.dart';
+import 'package:coffee_shop_staff/widgets/global/aysncImage/async_image.dart';
+import 'package:coffee_shop_staff/widgets/global/buttons/touchable_opacity.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -12,8 +13,14 @@ import '../../../services/models/food.dart';
 import '../../../utils/constants/dimension.dart';
 
 class ProductCard extends StatefulWidget {
-  ProductCard({super.key, required this.product});
-  StoreProduct product;
+  ProductCard(
+      {super.key,
+      required this.product,
+      this.onPressed,
+      required this.onDoFunction});
+  final StoreProduct product;
+  final void Function()? onPressed;
+  final void Function() onDoFunction;
 
   @override
   State<ProductCard> createState() => _ProductCardState();
@@ -26,6 +33,7 @@ class _ProductCardState extends State<ProductCard>
   late AnimationController swipeController;
   late Animation<Offset> swipeAnimation;
   late String imageUrl;
+  late void Function()? onPressed;
 
   @override
   void initState() {
@@ -35,7 +43,10 @@ class _ProductCardState extends State<ProductCard>
     swipeAnimation = Tween<Offset>(begin: Offset.zero, end: Offset(-0.3, 0))
         .animate(
             CurvedAnimation(parent: swipeController, curve: Curves.linear));
+
     product = widget.product;
+    onPressed = widget.onPressed;
+
     if (product.item is Food) {
       imageUrl = (product.item as Food).images[0];
     } else if (product.item is Topping) {
@@ -52,11 +63,12 @@ class _ProductCardState extends State<ProductCard>
   @override
   Widget build(BuildContext context) {
     product = widget.product;
-    Color color =
-        product.isStocking ? AppColors.greenColor : AppColors.redColor;
-    Color oppositeColor = color == AppColors.greenColor
-        ? AppColors.redColor
-        : AppColors.greenColor;
+    bool semiCheck = product is FoodChecker &&
+        (product as FoodChecker).blockSize!.isNotEmpty &&
+        product.isStocking;
+    Color semiColor = semiCheck ? Colors.blueAccent : AppColors.greenColor;
+    Color color = product.isStocking ? semiColor : AppColors.redColor;
+    Color oppositeColor = color == semiColor ? AppColors.redColor : semiColor;
     return Stack(
       children: [
         SlideTransition(
@@ -69,6 +81,13 @@ class _ProductCardState extends State<ProductCard>
               } else if (details.delta.dx > 5 &&
                   swipeController.status == AnimationStatus.completed) {
                 swipeController.reverse();
+              }
+            },
+            onTap: () {
+              if (onPressed != null) {
+                onPressed!();
+              } else {
+                print('Product Card pressed');
               }
             },
             child: Container(
@@ -106,19 +125,19 @@ class _ProductCardState extends State<ProductCard>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          product.item.id,
+                          product.item.name,
                           style: AppText.style.boldBlack16.copyWith(
                             color: color,
                           ),
                         ),
+                        // Text(
+                        //   product.item.id,
+                        //   style: AppText.style.regularGrey14.copyWith(
+                        //     color: Colors.black,
+                        //   ),
+                        // ),
                         Text(
-                          product.item.name,
-                          style: AppText.style.regularGrey14.copyWith(
-                            color: Colors.black,
-                          ),
-                        ),
-                        Text(
-                          '${NumberFormat("#,##0.00", "en_US").format(product.item.price)} đ',
+                          '${NumberFormat("#,##0", "en_US").format(product.item.price)} đ',
                           style: AppText.style.regularGrey14.copyWith(
                             color: Colors.black,
                           ),
@@ -173,6 +192,7 @@ class _ProductCardState extends State<ProductCard>
                               product.isStocking = !product.isStocking;
                             });
                             swipeController.reverse();
+                            widget.onDoFunction();
                           },
                           child: Container(
                             decoration: BoxDecoration(

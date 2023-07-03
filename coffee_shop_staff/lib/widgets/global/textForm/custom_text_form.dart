@@ -1,11 +1,12 @@
-import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
-import 'package:coffee_shop_admin/utils/validations/validator.dart';
-import 'package:coffee_shop_admin/widgets/global/buttons/touchable_opacity.dart';
+import 'package:coffee_shop_staff/utils/styles/app_texts.dart';
+import 'package:coffee_shop_staff/utils/validations/validator.dart';
+import 'package:coffee_shop_staff/widgets/global/buttons/touchable_opacity.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../utils/colors/app_colors.dart';
 import '../../../utils/constants/dimension.dart';
 
+// ignore: must_be_immutable
 class CustormTextForm extends StatefulWidget {
   CustormTextForm(
       {super.key,
@@ -16,7 +17,10 @@ class CustormTextForm extends StatefulWidget {
       this.margin,
       this.label,
       this.readOnly = false,
-      this.haveDatePicker = false});
+      this.haveDatePicker = false,
+      this.prefixIcon,
+      this.onChanged,
+      this.canCancel = false});
 
   final TextEditingController controller;
   final Validator? validator;
@@ -26,6 +30,9 @@ class CustormTextForm extends StatefulWidget {
   final String? label;
   final bool haveDatePicker;
   bool readOnly;
+  final Icon? prefixIcon;
+  final void Function(String)? onChanged;
+  final bool canCancel;
 
   @override
   State<CustormTextForm> createState() => _CustormTextFormState();
@@ -48,6 +55,15 @@ class _CustormTextFormState extends State<CustormTextForm> {
         widget.controller.text = DateFormat('dd/MM/yyyy').format(selectedDate);
       });
     }
+  }
+
+  void onCancel() {
+    setState(() {
+      widget.controller.text = "";
+      if (widget.onChanged != null) {
+        widget.onChanged!("");
+      }
+    });
   }
 
   @override
@@ -93,6 +109,9 @@ class _CustormTextFormState extends State<CustormTextForm> {
           FocusManager.instance.primaryFocus?.unfocus();
         },
         onChanged: (value) {
+          if (widget.onChanged != null) {
+            widget.onChanged!(value);
+          }
           if (!widget.verifiedCheck) return;
           if (widget.validator!.validate(value)) {
             setState(() {
@@ -120,6 +139,7 @@ class _CustormTextFormState extends State<CustormTextForm> {
             vertical: Dimension.getHeightFromValue(10),
           ),
           alignLabelWithHint: false,
+          prefixIcon: widget.prefixIcon,
           suffixIcon: widget.haveDatePicker
               ? TouchableOpacity(
                   unable: widget.readOnly,
@@ -128,12 +148,20 @@ class _CustormTextFormState extends State<CustormTextForm> {
                   },
                   child: Icon(Icons.calendar_month),
                 )
-              : _isValidate
-                  ? Icon(Icons.check)
-                  : null,
+              : widget.canCancel && widget.controller.text.isNotEmpty
+                  ? TouchableOpacity(
+                      unable: widget.readOnly,
+                      onTap: onCancel,
+                      child: Icon(Icons.cancel),
+                    )
+                  : _isValidate
+                      ? Icon(Icons.check)
+                      : null,
           suffixIconColor: widget.haveDatePicker
               ? AppColors.greyTextColor
-              : AppColors.greenColor,
+              : widget.canCancel
+                  ? AppColors.redColor
+                  : AppColors.greenColor,
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: AppColors.blackColor,

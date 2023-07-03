@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:coffee_shop_app/services/blocs/auth/auth_bloc.dart';
 import 'package:coffee_shop_app/services/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
@@ -65,6 +64,7 @@ class AuthAPI {
   Future<User?> googleLogin() async {
     await GoogleSignIn().disconnect().catchError((onError) {
       print('don\'t need to sign out');
+      return null;
     });
 
     try {

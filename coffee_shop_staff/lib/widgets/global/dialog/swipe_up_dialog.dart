@@ -4,12 +4,10 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import '../../../utils/constants/dimension.dart';
 
 class SwipeUpDialog extends StatefulWidget {
-  const SwipeUpDialog({
-    super.key,
-    this.child,
-  });
+  const SwipeUpDialog({super.key, this.child, required this.context});
 
   final Widget? child;
+  final BuildContext context;
 
   @override
   State<SwipeUpDialog> createState() => _SwipeUpDialogState();
@@ -24,18 +22,6 @@ class _SwipeUpDialogState extends State<SwipeUpDialog>
   @override
   void initState() {
     super.initState();
-    var keyboardController = KeyboardVisibilityController();
-    keyboardController.onChange.listen((visible) {
-      if (visible) {
-        setState(() {
-          maxHeight = Dimension.height / 2;
-        });
-      } else {
-        setState(() {
-          maxHeight = Dimension.height / 1.5;
-        });
-      }
-    });
 
     _slideController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 600));
@@ -48,7 +34,7 @@ class _SwipeUpDialogState extends State<SwipeUpDialog>
       _slideController.forward();
       _slideController.addStatusListener((status) {
         if (status == AnimationStatus.dismissed) {
-          Navigator.pop(context);
+          Navigator.pop(widget.context, false);
         }
       });
     });
@@ -61,7 +47,21 @@ class _SwipeUpDialogState extends State<SwipeUpDialog>
   }
 
   @override
-  Widget build(BuildContext acontext) {
+  Widget build(BuildContext context) {
+    var keyboardController = KeyboardVisibilityController();
+    keyboardController.onChange.listen((visible) {
+      if (context.mounted) {
+        if (visible) {
+          setState(() {
+            maxHeight = Dimension.height / 2;
+          });
+        } else {
+          setState(() {
+            maxHeight = Dimension.height / 1.5;
+          });
+        }
+      }
+    });
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.transparent,

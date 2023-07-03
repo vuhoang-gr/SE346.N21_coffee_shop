@@ -1,21 +1,22 @@
-import 'package:coffee_shop_admin/services/models/address.dart';
-import 'package:coffee_shop_admin/services/models/ordered_food.dart';
-import 'package:coffee_shop_admin/services/models/store.dart';
-import 'package:coffee_shop_admin/services/models/user.dart';
-import 'package:coffee_shop_admin/utils/constants/order_enum.dart';
+import 'package:coffee_shop_staff/services/models/delivery_address.dart';
+import 'package:coffee_shop_staff/services/models/ordered_food.dart';
+import 'package:coffee_shop_staff/services/models/store.dart';
+import 'package:coffee_shop_staff/services/models/user.dart';
+import 'package:coffee_shop_staff/utils/constants/order_enum.dart';
 import 'package:equatable/equatable.dart';
 
+// ignore: must_be_immutable
 class Order extends Equatable {
   final String id;
   User user;
   Store store;
   double? discount;
   double? deliveryFee;
-  late double totalPrice;
+  double totalPrice;
   DateTime? pickupTime;
   DateTime orderDate;
   List<OrderedFood> productList;
-  Address? deliveryAddress;
+  DeliveryAddress? deliveryAddress;
   late OrderStatus status;
   late bool isPickup;
 
@@ -29,13 +30,11 @@ class Order extends Equatable {
     required this.orderDate,
     required this.productList,
     this.deliveryAddress,
+    this.totalPrice = -1,
     OrderStatus? status,
   }) {
     this.status = status ?? OrderStatus.preparing;
-    totalPrice = (deliveryFee ?? 0) - (discount ?? 0);
-    for (var product in productList) {
-      totalPrice += product.totalPrice;
-    }
+
     if (pickupTime != null) {
       isPickup = true;
     } else {

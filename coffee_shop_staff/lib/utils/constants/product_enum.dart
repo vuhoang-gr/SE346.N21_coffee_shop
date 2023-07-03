@@ -1,0 +1,1 @@
+enum ProductType { drink, topping }

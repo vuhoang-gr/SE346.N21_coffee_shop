@@ -1,18 +1,34 @@
-import 'address.dart';
+import 'package:coffee_shop_staff/services/models/location.dart';
+import 'package:coffee_shop_staff/services/models/store_product.dart';
+import 'food_checker.dart';
 
 class Store {
   String id;
   String sb;
-  Address address;
+  MLocation address;
   String phone;
-  Map<String, bool> stateFood;
-  Store({
-    required this.id,
-    required this.sb,
-    required this.address,
-    required this.phone,
-    required this.stateFood,
-  });
+  List<FoodChecker> stateFood;
+  Map<String, dynamic> stateFoodRaw;
+  List<String> stateToppingRaw;
+  List<StoreProduct> stateTopping;
+  late DateTime timeOpen;
+  late DateTime timeClose;
+  List<String> images;
+  Store(
+      {required this.id,
+      required this.sb,
+      required this.address,
+      required this.phone,
+      required this.stateFood,
+      required this.stateTopping,
+      required this.images,
+      required this.stateFoodRaw,
+      required this.stateToppingRaw,
+      timeOpen,
+      timeClose}) {
+    this.timeOpen = timeOpen ?? DateTime.now();
+    this.timeClose = timeClose ?? DateTime.now();
+  }
 
   @override
   String toString() {

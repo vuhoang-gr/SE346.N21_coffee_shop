@@ -1,6 +1,6 @@
-import 'package:coffee_shop_admin/utils/constants/dimension.dart';
-import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
-import 'package:coffee_shop_admin/utils/validations/email_validate.dart';
+import 'package:coffee_shop_staff/utils/constants/dimension.dart';
+import 'package:coffee_shop_staff/utils/styles/app_texts.dart';
+import 'package:coffee_shop_staff/utils/validations/email_validate.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/global/buttons/rounded_button.dart';
 import '../../widgets/global/textForm/custom_text_form.dart';
@@ -30,9 +30,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           height: Dimension.getHeightFromValue(72),
         ),
         Text(
-          'Please, enter your email address. You will receive a link to create a new password via email.',
+          'Vui lòng nhập email phía bên dưới, chúng tôi sẽ gửi cho bạn một hướng dẫn đổi mật khẩu mới thông qua email!',
           style: AppText.style.regularBlack10.copyWith(
-            fontSize: 15,
+            fontSize: Dimension.getWidthFromValue(15),
           ),
         ),
         CustormTextForm(
@@ -50,7 +50,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         ),
         RoundedButton(
           onPressed: () {},
-          label: "SEND",
+          label: "GỬI",
         ),
       ],
     );
