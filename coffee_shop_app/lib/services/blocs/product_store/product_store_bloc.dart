@@ -72,9 +72,9 @@ class ProductStoreBloc extends Bloc<ProductStoreEvent, ProductStoreState> {
       emit(LoadingState());
 
       _foodStoreSubscription?.pause();
-      if (await FoodAPI().updateFavorite(event.food.id)) {
-        //update favorite
-
+      bool? isUpdateSuccess =
+          await FoodAPI().updateFavorite(event.food.id, event.food.isFavorite);
+      if (isUpdateSuccess != null) {
         Map<String, dynamic> foodObject =
             separateIntoNeededObject(FoodAPI().currentFoods);
 

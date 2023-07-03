@@ -31,13 +31,8 @@ class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
   bool _isButtonVisible = false;
 
   @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     _scrollController.addListener(() {
       if (_scrollController.offset <= Dimension.height82 && _isButtonVisible) {
         setState(() {
@@ -50,7 +45,16 @@ class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
         });
       }
     });
+  }
 
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
       backgroundColor: Colors.white,
@@ -80,81 +84,98 @@ class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
                     builder: (context, state) {
                   if (state is HasDataProductStoreState) {
                     _isButtonVisible = false;
-                    return RefreshIndicator(
-                      onRefresh: () async {
-                        if (FirebaseAuth.instance.currentUser != null) {
-                          CartButtonState cartButtonState =
-                              BlocProvider.of<CartButtonBloc>(context).state;
-                          BlocProvider.of<ProductStoreBloc>(context).add(
-                              FetchData(
-                                  stateFood: cartButtonState
-                                      .selectedStore?.stateFood));
-                        }
-                      },
-                      child: LayoutBuilder(builder:
-                          (BuildContext context, BoxConstraints constraints) {
-                        return ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minHeight: constraints.maxHeight,
-                          ),
-                          child: ListView(
-                            controller: _scrollController,
-                            physics: AlwaysScrollableScrollPhysics(),
-                            children: [
-                              AddressPicker(),
-                              SizedBox(height: Dimension.height8),
-                              const DeliveryStorePicker(),
-                              SizedBox(height: Dimension.height8),
-                              state.listFavoriteFood.isNotEmpty
-                                  ? Container(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          16, 12, 0, 12),
-                                      child: Text(
-                                        "Yêu thích",
-                                        style: AppText.style.mediumBlack14,
-                                      ),
-                                    )
-                                  : SizedBox.shrink(),
-                              ...(state.listFavoriteFood
-                                  .map((product) => Container(
-                                        padding: EdgeInsets.only(
-                                            bottom: Dimension.height8,
-                                            left: Dimension.width16,
-                                            right: Dimension.width16),
-                                        child: (ProductItem(
-                                          product: product,
-                                        )),
-                                      ))
-                                  .toList()),
-                              (state.listFavoriteFood.isNotEmpty &&
-                                      state.listOtherFood.isNotEmpty)
-                                  ? Container(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          16, 12, 0, 12),
-                                      child: Text(
-                                        "Khác",
-                                        style: AppText.style.mediumBlack14,
-                                      ),
-                                    )
-                                  : SizedBox.shrink(),
-                              ...(state.listOtherFood
-                                  .map((product) => Container(
-                                        padding: EdgeInsets.only(
-                                            bottom: Dimension.height8,
-                                            left: Dimension.width16,
-                                            right: Dimension.width16),
-                                        child: (ProductItem(
-                                          product: product,
-                                        )),
-                                      ))
-                                  .toList()),
-                              SizedBox(
-                                height: Dimension.height68,
-                              )
-                            ],
-                          ),
-                        );
-                      }),
+                    return Stack(
+                      children: [
+                        _isButtonVisible
+                            ? Positioned(
+                                left: 0,
+                                right: 0,
+                                child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 0,
+                                      vertical: Dimension.height8,
+                                    ),
+                                    color: Colors.white,
+                                    child: const DeliveryStorePicker()))
+                            : SizedBox.shrink(),
+                        RefreshIndicator(
+                          onRefresh: () async {
+                            if (FirebaseAuth.instance.currentUser != null) {
+                              CartButtonState cartButtonState =
+                                  BlocProvider.of<CartButtonBloc>(context)
+                                      .state;
+                              BlocProvider.of<ProductStoreBloc>(context).add(
+                                  FetchData(
+                                      stateFood: cartButtonState
+                                          .selectedStore?.stateFood));
+                            }
+                          },
+                          child: LayoutBuilder(builder: (BuildContext context,
+                              BoxConstraints constraints) {
+                            return ConstrainedBox(
+                              constraints: BoxConstraints(
+                                minHeight: constraints.maxHeight,
+                              ),
+                              child: ListView(
+                                controller: _scrollController,
+                                physics: AlwaysScrollableScrollPhysics(),
+                                children: [
+                                  AddressPicker(),
+                                  SizedBox(height: Dimension.height8),
+                                  const DeliveryStorePicker(),
+                                  SizedBox(height: Dimension.height8),
+                                  state.listFavoriteFood.isNotEmpty
+                                      ? Container(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              16, 12, 0, 12),
+                                          child: Text(
+                                            "Yêu thích",
+                                            style: AppText.style.mediumBlack14,
+                                          ),
+                                        )
+                                      : SizedBox.shrink(),
+                                  ...(state.listFavoriteFood
+                                      .map((product) => Container(
+                                            padding: EdgeInsets.only(
+                                                bottom: Dimension.height8,
+                                                left: Dimension.width16,
+                                                right: Dimension.width16),
+                                            child: (ProductItem(
+                                              product: product,
+                                            )),
+                                          ))
+                                      .toList()),
+                                  (state.listFavoriteFood.isNotEmpty &&
+                                          state.listOtherFood.isNotEmpty)
+                                      ? Container(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              16, 12, 0, 12),
+                                          child: Text(
+                                            "Khác",
+                                            style: AppText.style.mediumBlack14,
+                                          ),
+                                        )
+                                      : SizedBox.shrink(),
+                                  ...(state.listOtherFood
+                                      .map((product) => Container(
+                                            padding: EdgeInsets.only(
+                                                bottom: Dimension.height8,
+                                                left: Dimension.width16,
+                                                right: Dimension.width16),
+                                            child: (ProductItem(
+                                              product: product,
+                                            )),
+                                          ))
+                                      .toList()),
+                                  SizedBox(
+                                    height: Dimension.height68,
+                                  )
+                                ],
+                              ),
+                            );
+                          }),
+                        ),
+                      ],
                     );
                   } else if (state is LoadingState || state is FetchedState) {
                     return DeliveryMenuSkeleton();
@@ -162,18 +183,6 @@ class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
                     return SizedBox.shrink();
                   }
                 }),
-                _isButtonVisible
-                    ? Positioned(
-                        left: 0,
-                        right: 0,
-                        child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 0,
-                              vertical: Dimension.height8,
-                            ),
-                            color: Colors.white,
-                            child: const DeliveryStorePicker()))
-                    : SizedBox.shrink(),
                 BlocBuilder<StoreStoreBloc, store_state.StoreStoreState>(
                     builder: (context, state) {
                   if (state is store_state.HasDataStoreStoreState) {
