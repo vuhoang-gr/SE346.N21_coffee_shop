@@ -7,11 +7,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../../services/apis/location_api.dart';
-import '../../services/blocs/map_picker/map_picker_bloc.dart';
-import '../../services/models/location.dart';
+import '../../../../services/apis/location_api.dart';
+import '../../../../services/blocs/map_picker/map_picker_bloc.dart';
+import '../../../../services/models/location.dart';
 
-import '../../utils/constants/dimension.dart';
+import '../../../../utils/constants/dimension.dart';
 
 class LocationScreenDialog extends StatefulWidget {
   final GoogleMapController? mapController;
@@ -47,13 +47,11 @@ class _LocationScreenDialogState extends State<LocationScreenDialog> {
       alignment: Alignment.topCenter,
       child: Material(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-        child: BlocBuilder<MapPickerBloc, MapPickerState>(
-            builder: (context, state) {
+        child: BlocBuilder<MapPickerBloc, MapPickerState>(builder: (context, state) {
           return Stack(children: [
             TypeAheadField<MLocation>(
-              loadingBuilder: (context) => SizedBox(
-                  height: Dimension.height230,
-                  child: Center(child: CircularProgressIndicator())),
+              loadingBuilder: (context) =>
+                  SizedBox(height: Dimension.height230, child: Center(child: CircularProgressIndicator())),
               textFieldConfiguration: TextFieldConfiguration(
                   controller: textController,
                   textInputAction: TextInputAction.search,
@@ -61,9 +59,7 @@ class _LocationScreenDialogState extends State<LocationScreenDialog> {
                   textCapitalization: TextCapitalization.words,
                   keyboardType: TextInputType.streetAddress,
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(
-                        horizontal: Dimension.width40,
-                        vertical: Dimension.height16),
+                    contentPadding: EdgeInsets.symmetric(horizontal: Dimension.width40, vertical: Dimension.height16),
                     hintText: 'search...',
                     hintStyle: AppText.style.regularGrey16,
                     border: OutlineInputBorder(
@@ -107,10 +103,7 @@ class _LocationScreenDialogState extends State<LocationScreenDialog> {
                 Navigator.of(context).pop(suggestion);
               },
             ),
-            Positioned(
-                top: Dimension.height16,
-                left: Dimension.width8,
-                child: Icon(Icons.search)),
+            Positioned(top: Dimension.height16, left: Dimension.width8, child: Icon(Icons.search)),
             isShowClearButton
                 ? Positioned(
                     top: Dimension.height4,

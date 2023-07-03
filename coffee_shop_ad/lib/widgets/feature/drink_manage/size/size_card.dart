@@ -20,8 +20,7 @@ class _SizeCardState extends State<SizeCard> {
       children: [
         Container(
           clipBehavior: Clip.hardEdge,
-          margin: EdgeInsets.only(
-              left: Dimension.height16, right: Dimension.height16, top: 3),
+          margin: EdgeInsets.only(left: Dimension.height16, right: Dimension.height16, top: 3),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
@@ -75,8 +74,7 @@ class _SizeCardState extends State<SizeCard> {
                             const SizedBox(
                               height: 2,
                             ),
-                            Text(
-                                "${MoneyTransfer.transferFromDouble(widget.product.price)} ₫",
+                            Text("${MoneyTransfer.transferFromDouble(widget.product.price)} ₫",
                                 style: AppText.style.boldBlack14),
                           ],
                         ),

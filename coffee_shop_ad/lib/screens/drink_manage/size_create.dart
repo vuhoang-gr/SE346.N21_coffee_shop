@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/blocs/size_manage/size_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/size_manage/size_list_event.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
@@ -91,7 +91,7 @@ class _CreateSizeScreenState extends State<CreateSizeScreen> {
   @override
   Widget build(BuildContext context) {
     _isKeyboardOpened = MediaQuery.of(context).viewInsets.bottom > 0;
-    bool _validateData() {
+    bool validateData() {
       if (image == null ||
           nameInpController.text.isEmpty ||
           priceInpController.text.isEmpty ||
@@ -107,8 +107,8 @@ class _CreateSizeScreenState extends State<CreateSizeScreen> {
       return true;
     }
 
-    void _hanldeCreateSize() async {
-      if (!_validateData()) {
+    void hanldeCreateSize() async {
+      if (!validateData()) {
         print("Invalid data!");
         return;
       }
@@ -127,7 +127,7 @@ class _CreateSizeScreenState extends State<CreateSizeScreen> {
       try {
         await sizeImagesRef.putFile(File(image!.path)).then((res) {
           res.ref.getDownloadURL().then((url) {
-            FirebaseFirestore.instance.collection("Size").add({
+            sizeReference.add({
               "image": url,
               "name": nameInpController.text,
               "price": int.parse(priceInpController.text),
@@ -286,7 +286,7 @@ class _CreateSizeScreenState extends State<CreateSizeScreen> {
                                   horizontal: Dimension.width16,
                                   vertical: Dimension.height8),
                               child: ElevatedButton(
-                                  onPressed: _hanldeCreateSize,
+                                  onPressed: hanldeCreateSize,
                                   style: ButtonStyle(
                                       elevation:
                                           const MaterialStatePropertyAll(0),

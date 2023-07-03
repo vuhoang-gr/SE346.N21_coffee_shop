@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/blocs/store_store/store_store_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/store_store/store_store_event.dart';
 import 'package:coffee_shop_admin/services/models/store.dart';
@@ -41,7 +41,10 @@ class StoreDetail extends StatelessWidget {
           body: Column(
             children: [
               CustomAppBar(
-                color: Colors.white,
+                leading: Text(
+                  'Store: ${store.sb}',
+                  style: AppText.style.regularBlack16,
+                ),
               ),
               Expanded(
                 child: SingleChildScrollView(
@@ -211,10 +214,7 @@ class StoreDetail extends StatelessWidget {
                                                                   Expanded(
                                                                     child: ElevatedButton(
                                                                         onPressed: () async {
-                                                                          FirebaseFirestore.instance
-                                                                              .collection("Store")
-                                                                              .doc(store.id)
-                                                                              .delete();
+                                                                          storeReference.doc(store.id).delete();
                                                                           Navigator.of(context).pop();
                                                                           Navigator.of(context).pop();
                                                                           BlocProvider.of<StoreStoreBloc>(context)

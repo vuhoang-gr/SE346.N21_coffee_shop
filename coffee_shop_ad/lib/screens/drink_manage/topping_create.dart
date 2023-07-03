@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_event.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
@@ -91,7 +91,7 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
   @override
   Widget build(BuildContext context) {
     _isKeyboardOpened = MediaQuery.of(context).viewInsets.bottom > 0;
-    bool _validateData() {
+    bool validateData() {
       if (image == null ||
           toppingNameController.text.isEmpty ||
           toppingPriceController.text.isEmpty ||
@@ -107,8 +107,8 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
       return true;
     }
 
-    void _hanldeCreateTopping() async {
-      if (!_validateData()) {
+    void hanldeCreateTopping() async {
+      if (!validateData()) {
         print("Invalid data!");
         return;
       }
@@ -127,7 +127,7 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
       try {
         await toppingImagesRef.putFile(File(image!.path)).then((res) {
           res.ref.getDownloadURL().then((url) {
-            FirebaseFirestore.instance.collection("Topping").add({
+            toppingReference.add({
               "image": url,
               "name": toppingNameController.text,
               "price": int.parse(toppingPriceController.text),
@@ -310,7 +310,7 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
                                   horizontal: Dimension.width16,
                                   vertical: Dimension.height8),
                               child: ElevatedButton(
-                                  onPressed: _hanldeCreateTopping,
+                                  onPressed: hanldeCreateTopping,
                                   style: ButtonStyle(
                                       elevation:
                                           const MaterialStatePropertyAll(0),

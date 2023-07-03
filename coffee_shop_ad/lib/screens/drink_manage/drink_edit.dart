@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/models/drink.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
 import 'package:coffee_shop_admin/utils/constants/dimension.dart';
@@ -110,7 +110,7 @@ class _EditDrinkScreenState extends State<EditDrinkScreen> {
           var url = widget.product.images[i].toString();
           if (_imageUrls.contains(url)) imgUrlList.add(url);
         }
-        FirebaseFirestore.instance.collection("Food").doc(widget.product.id).update({
+        drinkReference.doc(widget.product.id).update({
           "name": nameController.text,
           "price": int.parse(priceController.text),
           "description": descriptionController.text,

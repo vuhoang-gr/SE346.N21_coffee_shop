@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_event.dart';
 import 'package:coffee_shop_admin/services/models/topping.dart';
@@ -122,7 +122,7 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
 
     try {
       // update firestore
-      FirebaseFirestore.instance.collection("Topping").doc(widget.product.id).update({
+      toppingReference.doc(widget.product.id).update({
         "image": image != null ? "" : widget.product.image,
         "name": toppingNameController.text.isNotEmpty ? toppingNameController.text : widget.product.name,
         "price": toppingPriceController.text.isNotEmpty ? int.parse(toppingPriceController.text) : widget.product.price,
@@ -137,7 +137,7 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
 
           await toppingImagesRef.putFile(File(image!.path)).then((res) {
             res.ref.getDownloadURL().then((url) {
-              FirebaseFirestore.instance.collection("Topping").doc(widget.product.id).update({
+              toppingReference.doc(widget.product.id).update({
                 "image": url,
               });
             });
@@ -164,36 +164,6 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
   @override
   Widget build(BuildContext context) {
     _isKeyboardOpened = MediaQuery.of(context).viewInsets.bottom > 0;
-
-    // final storageRef = FirebaseStorage.instance.ref();
-
-    // final toppingImagesRef = storageRef
-    //     .child('products/topping/topping${DateTime.now().toString()}');
-
-    // try {
-    //   await toppingImagesRef.putFile(File(image!.path)).then((res) {
-    //     res.ref.getDownloadURL().then((url) {
-    //       FirebaseFirestore.instance.collection("Topping").add({
-    //         "image": url,
-    //         "name": toppingNameController.text,
-    //         "price": int.parse(toppingPriceController.text),
-    //       });
-    //     }).then((value) {
-    //       Navigator.of(context).pop();
-    //       Navigator.of(context).pop();
-    //       BlocProvider.of<ToppingListBloc>(context).add(FetchData());
-    //       QuickAlert.show(
-    //         context: context,
-    //         type: QuickAlertType.success,
-    //         text: 'Completed Successfully!',
-    //         confirmBtnText: "Ok",
-    //       );
-    //     });
-    //   });
-    // } catch (e) {
-    //   print("Something wrong when edit new topping");
-    //   print(e);
-    // }
 
     return SafeArea(
         child: Scaffold(

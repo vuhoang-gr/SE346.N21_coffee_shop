@@ -1,5 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:coffee_shop_admin/screens/store_address/map_screen.dart';
+import 'dart:io';
+
+import 'package:coffee_shop_admin/widgets/feature/store/store_address/map_screen.dart';
+import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/blocs/edit_address/edit_address_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/edit_address/edit_address_event.dart';
 import 'package:coffee_shop_admin/services/blocs/edit_address/edit_address_state.dart';
@@ -11,25 +13,26 @@ import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
 import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:coffee_shop_admin/widgets/global/custom_app_bar.dart';
+import 'package:date_time_picker/date_time_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import 'package:quickalert/quickalert.dart';
 
 MLocation _mLocation = MLocation(formattedAddress: "HCM", lat: 10.871759281171983, lng: 106.80328866625126);
 
-class AddressScreen extends StatefulWidget {
-  static const String routeName = "/address_screen";
+class CreateStoreScreen extends StatefulWidget {
+  static const String routeName = "/create_store";
   final Address? deliveryAddress;
-  const AddressScreen({super.key, required this.deliveryAddress});
+  const CreateStoreScreen({super.key, required this.deliveryAddress});
 
   @override
-  State<AddressScreen> createState() => _AddressScreenState();
+  State<CreateStoreScreen> createState() => _CreateStoreScreenState();
 }
 
-class _AddressScreenState extends State<AddressScreen> with InputValidationMixin {
-  bool _isCreatingNewAddress = true;
-
+class _CreateStoreScreenState extends State<CreateStoreScreen> with InputValidationMixin {
   bool _isKeyboardOpened = false;
 
   late TextEditingController _addressController;
@@ -38,17 +41,25 @@ class _AddressScreenState extends State<AddressScreen> with InputValidationMixin
 
   final _nameFocusNode = FocusNode();
   final _phoneNumberFocusNode = FocusNode();
+  TextEditingController openTimeController = TextEditingController();
+  TextEditingController closeTimeController = TextEditingController();
+
+  final imgController = MultiImagePickerController(
+      maxImages: 6,
+      allowedImageTypes: ['png', 'jpg', 'jpeg'],
+      withData: false,
+      withReadStream: false,
+      images: <ImageFile>[]);
 
   @override
   void initState() {
-    if (widget.deliveryAddress != null) {
-      _isCreatingNewAddress = false;
-    }
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       EditAddressBloc editAddressBloc = BlocProvider.of<EditAddressBloc>(context);
       editAddressBloc.add(InitForm(deliveryAddress: widget.deliveryAddress));
     });
+
+    openTimeController.text = "08:00";
+    closeTimeController.text = "22:00";
 
     String initAddress;
     if (widget.deliveryAddress == null) {
@@ -102,14 +113,6 @@ class _AddressScreenState extends State<AddressScreen> with InputValidationMixin
       )),
       backgroundColor: const MaterialStatePropertyAll(AppColors.blueColor));
 
-  final _roundedOutlineButtonStyle = ButtonStyle(
-      elevation: const MaterialStatePropertyAll(0),
-      shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-        side: const BorderSide(color: AppColors.blueColor, width: 1),
-        borderRadius: BorderRadius.circular(Dimension.height20),
-      )),
-      backgroundColor: const MaterialStatePropertyAll(Colors.white));
-
   @override
   void dispose() {
     _nameFocusNode.dispose();
@@ -120,86 +123,6 @@ class _AddressScreenState extends State<AddressScreen> with InputValidationMixin
 
   @override
   Widget build(BuildContext context) {
-    final dialogButton = IconButton(
-        onPressed: () async {
-          await showDialog(
-              context: context,
-              builder: (ctx) {
-                return AlertDialog(
-                    contentPadding: EdgeInsets.zero,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    content: Builder(builder: (context) {
-                      return SizedBox(
-                        height: Dimension.height160,
-                        width: Dimension.width296,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              alignment: Alignment.bottomCenter,
-                              height: Dimension.height43,
-                              padding: EdgeInsets.symmetric(horizontal: Dimension.width16),
-                              child: Text(
-                                "Confirm",
-                                textAlign: TextAlign.center,
-                                style: AppText.style.boldBlack18,
-                              ),
-                            ),
-                            SizedBox(
-                              height: Dimension.height8,
-                            ),
-                            Container(
-                                height: Dimension.height37,
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "Do you want to remove this address?",
-                                  style: AppText.style.regular,
-                                )),
-                            SizedBox(
-                              height: Dimension.height8,
-                            ),
-                            Container(
-                                height: Dimension.height56,
-                                padding:
-                                    EdgeInsets.symmetric(horizontal: Dimension.width16, vertical: Dimension.height8),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
-                                          },
-                                          style: _roundedOutlineButtonStyle,
-                                          child: Text(
-                                            "Yes",
-                                            style: AppText.style.regularBlue16,
-                                          )),
-                                    ),
-                                    SizedBox(
-                                      width: Dimension.width8,
-                                    ),
-                                    Expanded(
-                                      child: ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          style: _roundedButtonStyle,
-                                          child: Text(
-                                            "No",
-                                            style: AppText.style.regularWhite16,
-                                          )),
-                                    )
-                                  ],
-                                )),
-                          ],
-                        ),
-                      );
-                    }));
-              });
-        },
-        icon: const Icon(Icons.delete_outline));
-
     _isKeyboardOpened = MediaQuery.of(context).viewInsets.bottom > 0;
     return SafeArea(
         child: Scaffold(
@@ -209,10 +132,9 @@ class _AddressScreenState extends State<AddressScreen> with InputValidationMixin
               children: [
                 CustomAppBar(
                   leading: Text(
-                    _isCreatingNewAddress ? "Create store" : "Edit store",
+                    "Create store",
                     style: AppText.style.boldBlack18,
                   ),
-                  trailing: !_isCreatingNewAddress ? dialogButton : const SizedBox(),
                 ),
                 Expanded(
                   child: Column(
@@ -335,7 +257,7 @@ class _AddressScreenState extends State<AddressScreen> with InputValidationMixin
                                       style: AppText.style.regularBlack14,
                                       decoration: generateTextDecoration(hintString: "10-digit phone number"),
                                       onFieldSubmitted: (_) {
-                                        _submitForm(state);
+                                        _submitForm(state, false);
                                       },
                                       maxLength: 10,
                                       validator: (value) {
@@ -349,6 +271,53 @@ class _AddressScreenState extends State<AddressScreen> with InputValidationMixin
                                       },
                                     );
                                   }),
+                                  SizedBox(
+                                    height: Dimension.height16,
+                                  ),
+                                  Text(
+                                    "Time",
+                                    style: AppText.style.boldBlack14,
+                                  ),
+                                  SizedBox(
+                                    height: Dimension.height4,
+                                  ),
+                                  Column(
+                                    children: [
+                                      DateTimePicker(
+                                        type: DateTimePickerType.time,
+                                        controller: openTimeController,
+                                        icon: Icon(Icons.event),
+                                        timeLabelText: "Open Time",
+                                      ),
+                                      DateTimePicker(
+                                        type: DateTimePickerType.time,
+                                        controller: closeTimeController,
+                                        icon: Icon(Icons.event),
+                                        timeLabelText: "Close Time",
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: Dimension.height16,
+                                  ),
+                                  Text(
+                                    "Images",
+                                    style: AppText.style.boldBlack14,
+                                  ),
+                                  SizedBox(
+                                    height: Dimension.height4,
+                                  ),
+                                  //images
+                                  Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        MultiImagePickerView(
+                                          draggable: false,
+                                          controller: imgController,
+                                          padding: const EdgeInsets.all(10),
+                                        ),
+                                      ]),
                                 ],
                               ),
                             ),
@@ -363,10 +332,10 @@ class _AddressScreenState extends State<AddressScreen> with InputValidationMixin
                               padding: EdgeInsets.symmetric(horizontal: Dimension.width16, vertical: Dimension.height8),
                               child: BlocBuilder<EditAddressBloc, EditAddressState>(builder: (context, state) {
                                 return ElevatedButton(
-                                    onPressed: () => _submitForm(state),
+                                    onPressed: () => _submitForm(state, true),
                                     style: _roundedButtonStyle,
                                     child: Text(
-                                      "Add",
+                                      "Create",
                                       style: AppText.style.regularWhite16,
                                     ));
                               }))
@@ -377,31 +346,72 @@ class _AddressScreenState extends State<AddressScreen> with InputValidationMixin
             )));
   }
 
-  void _submitForm(EditAddressState editAddressState) async {
+  void _submitForm(EditAddressState editAddressState, bool submit) async {
     if (_formKey.currentState?.validate() ?? false) {
+      if (!submit) return;
+
+      final imagePaths = imgController.images;
+      if (imagePaths.isEmpty) {
+        QuickAlert.show(
+          context: context,
+          type: QuickAlertType.warning,
+          confirmBtnText: "Ok",
+          text: 'Please choose store images!',
+        );
+        return;
+      }
+
       QuickAlert.show(
         context: context,
         type: QuickAlertType.loading,
         title: 'Loading',
         text: 'Creating your new store...',
       );
-      await Future.delayed(Duration(seconds: 1));
-      await FirebaseFirestore.instance.collection("Store").add({
-        "address": {"formattedAddress": _mLocation.formattedAddress, "lat": _mLocation.lat, "lng": _mLocation.lng},
-        "images": ["https://lh5.googleusercontent.com/p/AF1QipNIXjtOoJOOUiV7gx3oXW0Kcesi_GWmoy20gZz_=w408-h306-k-no"],
-        "phone": editAddressState.phone,
-        "shortName": editAddressState.nameReceiver,
-      }).then((value) {
+
+      try {
+        final storageRef = FirebaseStorage.instance.ref();
+        List<String> imgUrlList = [];
+        for (final image in imagePaths) {
+          File img = image.hasPath ? File(image.path!) : File.fromRawPath(image.bytes!);
+          final imgRef = storageRef.child("/stores/${img.path.split('/').last}${DateTime.now()}");
+          await imgRef.putFile(img);
+          await imgRef.getDownloadURL().then((url) {
+            imgUrlList.add(url);
+          });
+        }
+
+        DateTime openTime = DateTime.parse('2023-06-14 ${openTimeController.text}');
+        DateTime closeTime = DateTime.parse('2023-06-14 ${closeTimeController.text}');
+        await storeReference.add({
+          "address": {"formattedAddress": _mLocation.formattedAddress, "lat": _mLocation.lat, "lng": _mLocation.lng},
+          "images": imgUrlList,
+          "phone": editAddressState.phone,
+          "shortName": editAddressState.nameReceiver,
+          "timeOpen": openTime,
+          "timeClose": closeTime,
+        }).then((value) {
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+          BlocProvider.of<StoreStoreBloc>(context).add(FetchData());
+          QuickAlert.show(
+            context: context,
+            type: QuickAlertType.success,
+            text: 'Completed Successfully!',
+            confirmBtnText: "Ok",
+          );
+        });
+      } catch (e) {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
-        BlocProvider.of<StoreStoreBloc>(context).add(FetchData());
         QuickAlert.show(
           context: context,
-          type: QuickAlertType.success,
-          text: 'Completed Successfully!',
+          type: QuickAlertType.error,
+          text: 'Something\'s wrong when create new store!',
           confirmBtnText: "Ok",
         );
-      });
+        print("Something's wrong when create new store!");
+        print(e);
+      }
     }
   }
 }

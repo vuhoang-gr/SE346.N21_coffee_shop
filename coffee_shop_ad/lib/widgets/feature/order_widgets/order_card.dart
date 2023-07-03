@@ -7,6 +7,7 @@ import 'package:coffee_shop_admin/widgets/feature/order_widgets/order_status_lab
 import 'package:coffee_shop_admin/widgets/global/container_card.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class OrderCard extends StatelessWidget {
   OrderCard({
     super.key,
@@ -20,7 +21,9 @@ class OrderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isPickup;
-    if (orderStatus == orderReceived || orderStatus == orderReadyForPickup || orderStatus == orderCompleted) {
+    if (orderStatus == orderReceived ||
+        orderStatus == orderReadyForPickup ||
+        orderStatus == orderCompleted) {
       isPickup = true;
     } else {
       isPickup = false;
@@ -28,7 +31,8 @@ class OrderCard extends StatelessWidget {
     if (orderStatus == orderPreparing || orderStatus == orderReceived) {
       backgroundColor = AppColors.orangeBackgroundColor;
       labelColor = AppColors.orangeColor;
-    } else if (orderStatus == orderDelivering || orderStatus == orderReadyForPickup) {
+    } else if (orderStatus == orderDelivering ||
+        orderStatus == orderReadyForPickup) {
       backgroundColor = AppColors.blueBackgroundColor;
       labelColor = Colors.blue;
     } else if (orderStatus == orderDelivered || orderStatus == orderCompleted) {
@@ -47,7 +51,10 @@ class OrderCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                OrderStatusLabel(backgroundColor: backgroundColor, foregroundColor: labelColor, text: orderStatus),
+                OrderStatusLabel(
+                    backgroundColor: backgroundColor,
+                    foregroundColor: labelColor,
+                    text: orderStatus),
                 Text('20/04/2020, 04:20', style: AppText.style.regularGrey12),
               ],
             ),
@@ -78,8 +85,11 @@ class OrderCard extends StatelessWidget {
             //to address
             IconWidgetRow(
               crossAxisAlignment: CrossAxisAlignment.center,
-              icon: isPickup ? Icons.access_time_filled_sharp : Icons.location_pin,
-              iconColor: isPickup ? AppColors.orangeColor : AppColors.greenColor,
+              icon: isPickup
+                  ? Icons.access_time_filled_sharp
+                  : Icons.location_pin,
+              iconColor:
+                  isPickup ? AppColors.orangeColor : AppColors.greenColor,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

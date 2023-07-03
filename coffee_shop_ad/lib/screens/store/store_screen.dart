@@ -1,4 +1,4 @@
-import 'package:coffee_shop_admin/screens/store_address/address_screen.dart';
+import 'package:coffee_shop_admin/screens/store/store_create.dart';
 import 'package:coffee_shop_admin/services/blocs/store_store/store_store_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/store_store/store_store_event.dart';
 import 'package:coffee_shop_admin/services/blocs/store_store/store_store_state.dart';
@@ -67,7 +67,7 @@ class _StoreScreenState extends State<StoreScreen> {
                               ElevatedButton(
                                   style: roundedButton,
                                   onPressed: () {
-                                    Navigator.of(context).pushNamed(AddressScreen.routeName);
+                                    Navigator.of(context).pushNamed(CreateStoreScreen.routeName);
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,

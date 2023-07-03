@@ -33,6 +33,5 @@ class CartFood extends Equatable {
         unitPrice: unitPrice ?? this.unitPrice,
       );
   @override
-  // TODO: implement props
   List<Object?> get props => [food, quantity, size, topping, note];
 }

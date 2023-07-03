@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/blocs/size_manage/size_list_event.dart';
 import 'package:coffee_shop_admin/services/blocs/size_manage/size_list_state.dart';
 import 'package:coffee_shop_admin/services/models/size.dart';
@@ -15,9 +15,9 @@ class SizeListBloc extends Bloc<SizeListEvent, SizeListState> {
       FetchData event, Emitter<SizeListState> emit) async {
     emit(LoadingState());
 
-    final pro = await FirebaseFirestore.instance.collection("Size").get();
+    final pro = await sizeReference.get();
     List<Size> sizeList = [];
-    pro.docs.forEach((doc) {
+    for (var doc in pro.docs) {
       var s = doc.data();
       sizeList.add(Size(
           id: doc.id,
@@ -25,7 +25,7 @@ class SizeListBloc extends Bloc<SizeListEvent, SizeListState> {
           price: s["price"] * 1.0,
           image: s["image"] ??
               "https://www.shutterstock.com/image-vector/bubble-tea-on-spoon-add-260nw-1712622337.jpg"));
-    });
+    }
     emit(LoadedState(
       sizeList: sizeList,
     ));

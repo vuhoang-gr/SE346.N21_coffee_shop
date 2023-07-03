@@ -2,7 +2,7 @@
 
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_event.dart';
 import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_state.dart';
 import 'package:coffee_shop_admin/services/models/drink.dart';
@@ -19,8 +19,7 @@ class DrinkListBloc extends Bloc<DrinkListEvent, DrinkListState> {
       FetchData event, Emitter<DrinkListState> emit) async {
     emit(LoadingState(initFoods: []));
 
-    final proTopping =
-        await FirebaseFirestore.instance.collection("Topping").get();
+    final proTopping = await toppingReference.get();
     Drink.toppings = [];
     proTopping.docs.forEach((doc) {
       var s = doc.data();
@@ -31,7 +30,7 @@ class DrinkListBloc extends Bloc<DrinkListEvent, DrinkListState> {
           image: s["image"] ??
               "https://www.shutterstock.com/image-vector/bubble-tea-on-spoon-add-260nw-1712622337.jpg"));
     });
-    final proSize = await FirebaseFirestore.instance.collection("Size").get();
+    final proSize = await sizeReference.get();
     Drink.sizes = [];
     proSize.docs.forEach((doc) {
       var s = doc.data();
@@ -43,7 +42,7 @@ class DrinkListBloc extends Bloc<DrinkListEvent, DrinkListState> {
               "https://www.shutterstock.com/image-vector/bubble-tea-on-spoon-add-260nw-1712622337.jpg"));
     });
 
-    final pro = await FirebaseFirestore.instance.collection("Food").get();
+    final pro = await drinkReference.get();
     List<Drink> drinkList = [];
     pro.docs.forEach((doc) {
       var s = doc.data();
@@ -91,10 +90,10 @@ class DrinkListBloc extends Bloc<DrinkListEvent, DrinkListState> {
     ));
   }
 
-  Future<void> _onGoBack(FetchData event, Emitter<DrinkListState> emit) async {
+  Future<void> onGoBack(FetchData event, Emitter<DrinkListState> emit) async {
     emit(LoadingState(initFoods: []));
 
-    final pro = await FirebaseFirestore.instance.collection("Food").get();
+    final pro = await drinkReference.get();
     List<Drink> drinkList = [];
     pro.docs.forEach((doc) {
       var s = doc.data();

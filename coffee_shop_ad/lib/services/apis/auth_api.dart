@@ -59,6 +59,7 @@ class AuthAPI {
     await GoogleSignIn().disconnect().catchError((onError) {
       print(onError);
       print('don\'t need to sign out');
+      return null;
     });
 
     try {
@@ -74,8 +75,9 @@ class AuthAPI {
       var rawUser = await firebaseAuth.signInWithCredential(credential);
 
       var user = await toUser(rawUser.user);
-      if (user != null && user.phoneNumber == "No Phone Number")
+      if (user != null && user.phoneNumber == "No Phone Number") {
         await push(user);
+      }
       return user;
     } on firebase_auth.FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -144,7 +146,7 @@ class AuthAPI {
       phoneNumber: data['phoneNumber'] ?? 'No Phone Number',
       dob: DateTime.tryParse(
               (data['dob'] ?? Timestamp.now()).toDate().toString()) ??
-          DateTime.now(),
+          DateTime(0),
       isActive: data['isActive'],
       avatarUrl: data['avatarUrl'],
       coverUrl: data['coverUrl'],

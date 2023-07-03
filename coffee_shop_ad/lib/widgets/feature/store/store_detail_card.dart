@@ -21,10 +21,7 @@ class _StoreDetailCardState extends State<StoreDetailCard> {
       children: [
         Container(
           clipBehavior: Clip.hardEdge,
-          margin: EdgeInsets.only(
-              left: Dimension.height16,
-              right: Dimension.height16,
-              top: Dimension.height12),
+          margin: EdgeInsets.only(left: Dimension.height16, right: Dimension.height16, top: Dimension.height12),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
@@ -66,9 +63,8 @@ class _StoreDetailCardState extends State<StoreDetailCard> {
                           bottom: Dimension.height8,
                           left: Dimension.height12,
                           right: Dimension.height12),
-                      decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.4),
-                          borderRadius: BorderRadius.circular(16)),
+                      decoration:
+                          BoxDecoration(color: Colors.black.withOpacity(0.4), borderRadius: BorderRadius.circular(16)),
                       child: Text(
                         '${_index + 1}/${widget.store.images.length}',
                         style: AppText.style.regularWhite14,
@@ -103,7 +99,8 @@ class _StoreDetailCardState extends State<StoreDetailCard> {
                                 height: 2,
                               ),
                               Text(
-                                "Open: 07:00 - 22:00",
+                                'Open time',
+                                // 'Open: ${TimeOfDay(widget.store.)} - 22:00',
                                 style: AppText.style.regularBlack14,
                               ),
                             ],

@@ -1,42 +1,70 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/blocs/promo/promo_event.dart';
 import 'package:coffee_shop_admin/services/blocs/promo/promo_state.dart';
+import 'package:coffee_shop_admin/services/models/location.dart';
 import 'package:coffee_shop_admin/services/models/promo.dart';
+import 'package:coffee_shop_admin/services/models/store.dart';
 import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class PromoBloc extends Bloc<PromoEvent, PromoState> {
-  PromoBloc() : super(LoadingState(initPromos: [], listExistCode: [], stores: [], drinks: [])) {
+  PromoBloc()
+      : super(LoadingState(
+            initPromos: [], listExistCode: [], stores: [], drinks: [])) {
     on<FetchData>(_mapFetchData);
   }
 
   void _mapFetchData(FetchData event, Emitter<PromoState> emit) async {
-    emit(LoadingState(initPromos: [], listExistCode: [], stores: [], drinks: []));
+    emit(LoadingState(
+        initPromos: [], listExistCode: [], stores: [], drinks: []));
+
     try {
-      final CollectionReference promoReference = FirebaseFirestore.instance.collection('Promo');
-      final promoDocs = await promoReference.get();
       List<Promo> promoList = [];
       List<String> existCodeList = [];
-      promoDocs.docs.forEach((doc) {
-        var curPromo = fromFireStore(doc.data() as Map<String, dynamic>?, doc.id);
+      final promoDocs = await promoReference.get();
+      for (var doc in promoDocs.docs) {
+        var curPromo = fromFireStore(doc.data(), doc.id);
         if (curPromo is Promo) {
           existCodeList.add(curPromo.id);
           promoList.add(curPromo);
         }
-      });
-      emit(LoadedState(initPromos: promoList, listExistCode: existCodeList, stores: [], drinks: []));
-    } catch (_) {
+      }
+
+      List<Store> allStores = [];
+      final storeDocs = await storeReference.get();
+      for (var doc in storeDocs.docs) {
+        var s = doc.data();
+        allStores.add(Store(
+            id: doc.id,
+            sb: s["shortName"],
+            address: MLocation(
+                formattedAddress: s["address"]["formattedAddress"],
+                lat: s["address"]["lat"],
+                lng: s["address"]["lng"]),
+            phone: s["phone"],
+            images: s["images"]));
+      }
+
+      Promo.allStores = allStores;
+      emit(LoadedState(
+          initPromos: promoList,
+          listExistCode: existCodeList,
+          stores: allStores,
+          drinks: []));
+    } catch (err) {
+      print(err.toString());
       Fluttertoast.showToast(
           msg: "Đã có lỗi xảy ra, hãy thử lại sau.",
           toastLength: Toast.LENGTH_SHORT,
           timeInSecForIosWeb: 1,
           textColor: Colors.white,
           fontSize: Dimension.font14);
-      emit(LoadedState(initPromos: [], listExistCode: [], stores: [], drinks: []));
+      emit(LoadedState(
+          initPromos: [], listExistCode: [], stores: [], drinks: []));
     }
   }
 
@@ -53,7 +81,7 @@ class PromoBloc extends Bloc<PromoEvent, PromoState> {
         dateStart: data['dateStart'].toDate(),
         products: data['products'].cast<String>(),
         stores: data['stores'].cast<String>(),
-        forNewCustomer: data['forNewCustomer']);
+        forNewCustomer: data['forNewCustomer'] ?? false);
   }
 
   @override

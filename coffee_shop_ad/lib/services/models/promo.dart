@@ -1,5 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:coffee_shop_admin/services/models/store.dart';
+
 class Promo {
+  static List<Store> allStores = [];
   final String id;
   final double minPrice;
   final double maxPrice;
@@ -21,6 +24,6 @@ class Promo {
     required this.dateStart,
     required this.products,
     required this.stores,
-    required this.forNewCustomer,
+    this.forNewCustomer = false,
   });
 }

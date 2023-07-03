@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coffee_shop_admin/screens/promo/promo_edit.dart';
+import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/blocs/promo/promo_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/promo/promo_event.dart';
 import 'package:coffee_shop_admin/services/functions/money_transfer.dart';
@@ -179,11 +179,7 @@ class PromoDetailModal extends StatelessWidget {
                                                                   title: 'Loading',
                                                                   text: 'Deleting your promo...',
                                                                 );
-                                                                FirebaseFirestore.instance
-                                                                    .collection("Promo")
-                                                                    .doc(promo.id)
-                                                                    .delete()
-                                                                    .then((value) {
+                                                                promoReference.doc(promo.id).delete().then((value) {
                                                                   Navigator.of(context).pop();
                                                                   Navigator.of(context).pop();
                                                                   Navigator.of(context).pop();
