@@ -12,19 +12,22 @@ class StoreStoreBloc extends Bloc<StoreStoreEvent, StoreStoreState> {
     on<FetchData>(_mapFetchData);
   }
 
-  Future<void> _mapFetchData(FetchData event, Emitter<StoreStoreState> emit) async {
+  Future<void> _mapFetchData(
+      FetchData event, Emitter<StoreStoreState> emit) async {
     final pro = await storeReference.get();
     List<Store> stores = [];
-    pro.docs.forEach((doc) {
+    for (var doc in pro.docs) {
       var s = doc.data();
       stores.add(Store(
           id: doc.id,
           sb: s["shortName"],
           address: MLocation(
-              formattedAddress: s["address"]["formattedAddress"], lat: s["address"]["lat"], lng: s["address"]["lng"]),
+              formattedAddress: s["address"]["formattedAddress"],
+              lat: s["address"]["lat"],
+              lng: s["address"]["lng"]),
           phone: s["phone"],
           images: s["images"]));
-    });
+    }
     await Future.delayed(const Duration(seconds: 1), () {
       emit(LoadedState(
         stores: stores,

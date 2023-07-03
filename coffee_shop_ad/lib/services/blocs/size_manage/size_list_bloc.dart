@@ -11,20 +11,21 @@ class SizeListBloc extends Bloc<SizeListEvent, SizeListState> {
     on<FetchData>(_mapFetchData);
   }
 
-  Future<void> _mapFetchData(FetchData event, Emitter<SizeListState> emit) async {
+  Future<void> _mapFetchData(
+      FetchData event, Emitter<SizeListState> emit) async {
     emit(LoadingState());
 
     final pro = await sizeReference.get();
     List<Size> sizeList = [];
-    pro.docs.forEach((doc) {
+    for (var doc in pro.docs) {
       var s = doc.data();
       sizeList.add(Size(
           id: doc.id,
           name: s["name"] ?? "Unamed Size",
           price: s["price"] * 1.0,
-          image:
-              s["image"] ?? "https://www.shutterstock.com/image-vector/bubble-tea-on-spoon-add-260nw-1712622337.jpg"));
-    });
+          image: s["image"] ??
+              "https://www.shutterstock.com/image-vector/bubble-tea-on-spoon-add-260nw-1712622337.jpg"));
+    }
     emit(LoadedState(
       sizeList: sizeList,
     ));

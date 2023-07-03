@@ -11,20 +11,21 @@ class ToppingListBloc extends Bloc<ToppingListEvent, ToppingListState> {
     on<FetchData>(_mapFetchData);
   }
 
-  Future<void> _mapFetchData(FetchData event, Emitter<ToppingListState> emit) async {
+  Future<void> _mapFetchData(
+      FetchData event, Emitter<ToppingListState> emit) async {
     emit(LoadingState());
 
     final pro = await toppingReference.get();
     List<Topping> toppingList = [];
-    pro.docs.forEach((doc) {
+    for (var doc in pro.docs) {
       var s = doc.data();
       toppingList.add(Topping(
           id: doc.id,
           name: s["name"] ?? "Unamed Topping",
           price: s["price"] * 1.0,
-          image:
-              s["image"] ?? "https://www.shutterstock.com/image-vector/bubble-tea-on-spoon-add-260nw-1712622337.jpg"));
-    });
+          image: s["image"] ??
+              "https://www.shutterstock.com/image-vector/bubble-tea-on-spoon-add-260nw-1712622337.jpg"));
+    }
     emit(LoadedState(
       toppingList: toppingList,
     ));

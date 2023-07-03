@@ -1,7 +1,7 @@
+import 'package:coffee_shop_admin/services/models/location.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../models/location.dart';
-
+// ignore: must_be_immutable
 class EditAddressState extends Equatable {
   EditAddressState({
     this.address,

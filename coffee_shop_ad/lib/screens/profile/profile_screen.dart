@@ -21,66 +21,64 @@ class ProfileScreen extends StatelessWidget {
     User user = AuthAPI.currentUser!;
     return SafeArea(
       child: Scaffold(
-        body: Container(
-          child: Column(
-            children: [
-              Stack(
-                children: [
-                  Column(
-                    children: [
-                      SizedBox(
-                        width: double.infinity,
-                        height: Dimension.getHeightFromValue(125),
-                        child: AsyncImage(
-                          src: user.coverUrl,
-                        ),
+        body: Column(
+          children: [
+            Stack(
+              children: [
+                Column(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      height: Dimension.getHeightFromValue(125),
+                      child: AsyncImage(
+                        src: user.coverUrl,
                       ),
-                      Container(
-                        height: Dimension.getHeightFromValue(39),
-                      ),
-                    ],
-                  ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: TouchableOpacity(
-                      onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Change cover')));
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(top: 10, right: 10),
-                        child: CircleAvatar(
-                          radius: 18,
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.edit,
-                            color: Colors.black,
-                          ),
+                    ),
+                    Container(
+                      height: Dimension.getHeightFromValue(39),
+                    ),
+                  ],
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: TouchableOpacity(
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Change cover')));
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(top: 10, right: 10),
+                      child: CircleAvatar(
+                        radius: 18,
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.edit,
+                          color: Colors.black,
                         ),
                       ),
                     ),
                   ),
-                  Positioned.fill(
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: TouchableOpacity(
-                        opacity: 0.8,
-                        onTap: () {},
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.white, width: 5),
-                            borderRadius: BorderRadius.circular(72),
-                          ),
-                          child: CircleAvatar(
-                            radius: 36,
-                            backgroundColor: Color.fromARGB(255, 226, 226, 226),
-                            child: Padding(
-                              padding: EdgeInsets.all(5),
-                              child: ClipOval(
-                                child: AsyncImage(
-                                  src: user.avatarUrl,
-                                  type: PlaceholderType.user,
-                                ),
+                ),
+                Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: TouchableOpacity(
+                      opacity: 0.8,
+                      onTap: () {},
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white, width: 5),
+                          borderRadius: BorderRadius.circular(72),
+                        ),
+                        child: CircleAvatar(
+                          radius: 36,
+                          backgroundColor: Color.fromARGB(255, 226, 226, 226),
+                          child: Padding(
+                            padding: EdgeInsets.all(5),
+                            child: ClipOval(
+                              child: AsyncImage(
+                                src: user.avatarUrl,
+                                type: PlaceholderType.user,
                               ),
                             ),
                           ),
@@ -88,66 +86,65 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                ],
-              ),
-              Text(
-                user.name,
-                style: AppText.style.boldBlack18,
-              ),
-              SizedBox(
-                height: Dimension.getHeightFromValue(15),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: Dimension.getWidthFromValue(16)),
-                  child: Column(
-                    children: [
-                      ProfileCustomButton(
-                        onPressed: () {
-                          Navigator.of(context)
-                              .pushNamed(ProfileSettingScreen.routeName);
-                        },
-                        icon: Icons.settings,
-                        title: 'Settings',
-                        description: 'Profile, address, password',
+                ),
+              ],
+            ),
+            Text(
+              user.name,
+              style: AppText.style.boldBlack18,
+            ),
+            SizedBox(
+              height: Dimension.getHeightFromValue(15),
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: Dimension.getWidthFromValue(16)),
+                child: Column(
+                  children: [
+                    ProfileCustomButton(
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushNamed(ProfileSettingScreen.routeName);
+                      },
+                      icon: Icons.settings,
+                      title: 'Settings',
+                      description: 'Profile, address, password',
+                    ),
+                    SizedBox(
+                      height: Dimension.getHeightFromValue(15),
+                    ),
+                    ProfileCustomButton(
+                      onPressed: () {
+                        context.read<AuthBloc>().add(LogOut());
+                      },
+                      icon: Icons.logout,
+                      title: 'Sign out',
+                      description: 'Go back to Login page',
+                    ),
+                    Expanded(child: SizedBox()),
+                    TouchableOpacity(
+                      child: Text(
+                        'Term and Conditions',
+                        style: AppText.style.regularBlue16.copyWith(
+                            fontSize: 14, decoration: TextDecoration.underline),
                       ),
-                      SizedBox(
-                        height: Dimension.getHeightFromValue(15),
-                      ),
-                      ProfileCustomButton(
-                        onPressed: () {
-                          context.read<AuthBloc>().add(LogOut());
-                        },
-                        icon: Icons.logout,
-                        title: 'Sign out',
-                        description: 'Go back to Login page',
-                      ),
-                      Expanded(child: SizedBox()),
-                      TouchableOpacity(
-                        child: Text(
-                          'Term and Conditions',
-                          style: AppText.style.regularBlue16.copyWith(
-                              fontSize: 14,
-                              decoration: TextDecoration.underline),
-                        ),
-                      ),
-                      SizedBox(
-                        height: Dimension.getHeightFromValue(12),
-                      ),
-                      Text(
-                        'Version 1.0.0',
-                        style: AppText.style.regularGrey12,
-                      ),
-                      SizedBox(
-                        height: Dimension.getHeightFromValue(20),
-                      )
-                    ],
-                  ),
+                    ),
+                    SizedBox(
+                      height: Dimension.getHeightFromValue(12),
+                    ),
+                    Text(
+                      'Version 1.0.0',
+                      style: AppText.style.regularGrey12,
+                    ),
+                    SizedBox(
+                      height: Dimension.getHeightFromValue(20),
+                    )
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

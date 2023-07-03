@@ -59,6 +59,7 @@ class AuthAPI {
     await GoogleSignIn().disconnect().catchError((onError) {
       print(onError);
       print('don\'t need to sign out');
+      return null;
     });
 
     try {

@@ -91,7 +91,7 @@ class _CreateSizeScreenState extends State<CreateSizeScreen> {
   @override
   Widget build(BuildContext context) {
     _isKeyboardOpened = MediaQuery.of(context).viewInsets.bottom > 0;
-    bool _validateData() {
+    bool validateData() {
       if (image == null ||
           nameInpController.text.isEmpty ||
           priceInpController.text.isEmpty ||
@@ -107,8 +107,8 @@ class _CreateSizeScreenState extends State<CreateSizeScreen> {
       return true;
     }
 
-    void _hanldeCreateSize() async {
-      if (!_validateData()) {
+    void hanldeCreateSize() async {
+      if (!validateData()) {
         print("Invalid data!");
         return;
       }
@@ -286,7 +286,7 @@ class _CreateSizeScreenState extends State<CreateSizeScreen> {
                                   horizontal: Dimension.width16,
                                   vertical: Dimension.height8),
                               child: ElevatedButton(
-                                  onPressed: _hanldeCreateSize,
+                                  onPressed: hanldeCreateSize,
                                   style: ButtonStyle(
                                       elevation:
                                           const MaterialStatePropertyAll(0),

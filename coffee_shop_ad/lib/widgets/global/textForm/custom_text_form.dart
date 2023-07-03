@@ -1,11 +1,12 @@
+import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:coffee_shop_admin/utils/validations/validator.dart';
 import 'package:coffee_shop_admin/widgets/global/buttons/touchable_opacity.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../../utils/colors/app_colors.dart';
-import '../../../utils/constants/dimension.dart';
 
+// ignore: must_be_immutable
 class CustormTextForm extends StatefulWidget {
   CustormTextForm(
       {super.key,

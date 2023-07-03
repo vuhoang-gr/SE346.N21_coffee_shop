@@ -4,9 +4,8 @@ import 'package:equatable/equatable.dart';
 import 'cart_food.dart';
 
 class Order extends Equatable {
-  //TODO: add notes
   final String? id;
-  final Store? store; //TODO: store is required
+  final Store? store;
   final int? discount;
   final int? total;
   final int? deliveryCost;
@@ -48,7 +47,6 @@ class Order extends Equatable {
           pickupTime: pickupTime ?? this.pickupTime);
 
   @override
-  // TODO: implement props
   List<Object?> get props => [
         products,
         store,

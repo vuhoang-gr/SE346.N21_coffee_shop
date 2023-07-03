@@ -15,7 +15,8 @@ class DrinkListBloc extends Bloc<DrinkListEvent, DrinkListState> {
     on<FetchData>(_mapFetchData);
   }
 
-  Future<void> _mapFetchData(FetchData event, Emitter<DrinkListState> emit) async {
+  Future<void> _mapFetchData(
+      FetchData event, Emitter<DrinkListState> emit) async {
     emit(LoadingState(initFoods: []));
 
     final proTopping = await toppingReference.get();
@@ -26,8 +27,8 @@ class DrinkListBloc extends Bloc<DrinkListEvent, DrinkListState> {
           id: doc.id,
           name: s["name"] ?? "Unamed Topping",
           price: s["price"] * 1.0,
-          image:
-              s["image"] ?? "https://www.shutterstock.com/image-vector/bubble-tea-on-spoon-add-260nw-1712622337.jpg"));
+          image: s["image"] ??
+              "https://www.shutterstock.com/image-vector/bubble-tea-on-spoon-add-260nw-1712622337.jpg"));
     });
     final proSize = await sizeReference.get();
     Drink.sizes = [];
@@ -37,8 +38,8 @@ class DrinkListBloc extends Bloc<DrinkListEvent, DrinkListState> {
           id: doc.id,
           name: s["name"] ?? "Unamed Size",
           price: s["price"] * 1.0,
-          image:
-              s["image"] ?? "https://www.shutterstock.com/image-vector/bubble-tea-on-spoon-add-260nw-1712622337.jpg"));
+          image: s["image"] ??
+              "https://www.shutterstock.com/image-vector/bubble-tea-on-spoon-add-260nw-1712622337.jpg"));
     });
 
     final pro = await drinkReference.get();
@@ -89,7 +90,7 @@ class DrinkListBloc extends Bloc<DrinkListEvent, DrinkListState> {
     ));
   }
 
-  Future<void> _onGoBack(FetchData event, Emitter<DrinkListState> emit) async {
+  Future<void> onGoBack(FetchData event, Emitter<DrinkListState> emit) async {
     emit(LoadingState(initFoods: []));
 
     final pro = await drinkReference.get();

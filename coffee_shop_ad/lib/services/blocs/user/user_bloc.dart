@@ -15,7 +15,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     emit(LoadingState());
     final pro = await userReference.get();
     List<User> users = [];
-    pro.docs.forEach((doc) {
+    for (var doc in pro.docs) {
       var s = doc.data();
 
       users.add(User(
@@ -24,10 +24,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           phoneNumber: s["phoneNumber"] ?? "",
           email: s["email"],
           isActive: s["isActive"] ?? true,
-          avatarUrl: s["avatarUrl"] ?? "https://img.freepik.com/free-icon/user_318-159711.jpg",
+          avatarUrl: s["avatarUrl"] ??
+              "https://img.freepik.com/free-icon/user_318-159711.jpg",
           isAdmin: s["isAdmin"] ?? false,
           isStaff: s["isStaff"] ?? false));
-    });
+    }
 
     users.sort((a, b) {
       int A = 0, B = 0;

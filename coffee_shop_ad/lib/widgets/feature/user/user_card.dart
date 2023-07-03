@@ -8,6 +8,7 @@ import 'package:coffee_shop_admin/widgets/global/buttons/touchable_opacity.dart'
 import 'package:flutter/material.dart';
 import 'package:quickalert/quickalert.dart';
 
+// ignore: must_be_immutable
 class UserCard extends StatefulWidget {
   UserCard({super.key, required this.user});
   User user;
@@ -15,7 +16,8 @@ class UserCard extends StatefulWidget {
   State<UserCard> createState() => _UserCardState();
 }
 
-class _UserCardState extends State<UserCard> with SingleTickerProviderStateMixin {
+class _UserCardState extends State<UserCard>
+    with SingleTickerProviderStateMixin {
   late User user;
 
   late AnimationController swipeController;
@@ -25,9 +27,11 @@ class _UserCardState extends State<UserCard> with SingleTickerProviderStateMixin
   @override
   void initState() {
     super.initState();
-    swipeController = AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    swipeController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     swipeAnimation = Tween<Offset>(begin: Offset.zero, end: Offset(-0.5, 0))
-        .animate(CurvedAnimation(parent: swipeController, curve: Curves.linear));
+        .animate(
+            CurvedAnimation(parent: swipeController, curve: Curves.linear));
     user = widget.user;
   }
 
@@ -41,18 +45,24 @@ class _UserCardState extends State<UserCard> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     user = widget.user;
     Color adminColor = user.isAdmin ? AppColors.greenColor : AppColors.redColor;
-    Color adminOppositeColor = adminColor == AppColors.greenColor ? AppColors.redColor : AppColors.greenColor;
+    Color adminOppositeColor = adminColor == AppColors.greenColor
+        ? AppColors.redColor
+        : AppColors.greenColor;
     Color staffColor = user.isStaff ? AppColors.greenColor : AppColors.redColor;
-    Color staffOppositeColor = staffColor == AppColors.greenColor ? AppColors.redColor : AppColors.greenColor;
+    Color staffOppositeColor = staffColor == AppColors.greenColor
+        ? AppColors.redColor
+        : AppColors.greenColor;
     return Stack(
       children: [
         SlideTransition(
           position: swipeAnimation,
           child: GestureDetector(
             onPanUpdate: (details) {
-              if (details.delta.dx < -5 && swipeController.status == AnimationStatus.dismissed) {
+              if (details.delta.dx < -5 &&
+                  swipeController.status == AnimationStatus.dismissed) {
                 swipeController.forward();
-              } else if (details.delta.dx > 5 && swipeController.status == AnimationStatus.completed) {
+              } else if (details.delta.dx > 5 &&
+                  swipeController.status == AnimationStatus.completed) {
                 swipeController.reverse();
               }
             },
@@ -79,7 +89,8 @@ class _UserCardState extends State<UserCard> with SingleTickerProviderStateMixin
                       height: 60.0,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                        image: DecorationImage(
+                            image: imageProvider, fit: BoxFit.cover),
                       ),
                     ),
                     placeholder: (context, url) => CircularProgressIndicator(),
@@ -107,7 +118,9 @@ class _UserCardState extends State<UserCard> with SingleTickerProviderStateMixin
                         Row(
                           children: [
                             Text(
-                              (user.isAdmin || user.isStaff) ? "Role: " : "Role: Normal User",
+                              (user.isAdmin || user.isStaff)
+                                  ? "Role: "
+                                  : "Role: Normal User",
                               style: AppText.style.regularGrey14.copyWith(
                                 color: Colors.grey,
                               ),
@@ -129,7 +142,8 @@ class _UserCardState extends State<UserCard> with SingleTickerProviderStateMixin
                     onTap: () {
                       if (swipeController.status == AnimationStatus.completed) {
                         swipeController.reverse();
-                      } else if (swipeController.status == AnimationStatus.dismissed) {
+                      } else if (swipeController.status ==
+                          AnimationStatus.dismissed) {
                         swipeController.forward();
                       }
                     },
@@ -161,7 +175,9 @@ class _UserCardState extends State<UserCard> with SingleTickerProviderStateMixin
                           right: 0,
                           top: 0,
                           bottom: 0,
-                          width: constraint.maxWidth * swipeAnimation.value.dx * -1,
+                          width: constraint.maxWidth *
+                              swipeAnimation.value.dx *
+                              -1,
                           child: Row(
                             children: [
                               SizedBox(
@@ -172,7 +188,9 @@ class _UserCardState extends State<UserCard> with SingleTickerProviderStateMixin
                                         context: context,
                                         type: QuickAlertType.loading,
                                         title: "Setting role",
-                                        text: user.isAdmin ? "Removing Admin role" : "Adding Admin role");
+                                        text: user.isAdmin
+                                            ? "Removing Admin role"
+                                            : "Adding Admin role");
                                     await userReference.doc(user.id).update({
                                       "isAdmin": !user.isAdmin,
                                     }).then((value) {
@@ -181,7 +199,9 @@ class _UserCardState extends State<UserCard> with SingleTickerProviderStateMixin
                                         context: context,
                                         type: QuickAlertType.success,
                                         title: "Done!",
-                                        text: user.isAdmin ? "Removed Admin role!" : "This user is Admin now!",
+                                        text: user.isAdmin
+                                            ? "Removed Admin role!"
+                                            : "This user is Admin now!",
                                         confirmBtnText: "Ok",
                                       );
                                     });
@@ -197,12 +217,14 @@ class _UserCardState extends State<UserCard> with SingleTickerProviderStateMixin
                                       color: adminOppositeColor,
                                     ),
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Icon(
                                           user.isAdmin
                                               ? Icons.admin_panel_settings
-                                              : Icons.admin_panel_settings_outlined,
+                                              : Icons
+                                                  .admin_panel_settings_outlined,
                                           size: 35,
                                           color: Colors.white,
                                         ),
@@ -224,7 +246,9 @@ class _UserCardState extends State<UserCard> with SingleTickerProviderStateMixin
                                           context: context,
                                           type: QuickAlertType.loading,
                                           title: "Setting role",
-                                          text: user.isStaff ? "Removing Staff role" : "Adding Staff role");
+                                          text: user.isStaff
+                                              ? "Removing Staff role"
+                                              : "Adding Staff role");
                                       await userReference.doc(user.id).update({
                                         "isStaff": !user.isStaff,
                                       }).then((value) {
@@ -233,7 +257,9 @@ class _UserCardState extends State<UserCard> with SingleTickerProviderStateMixin
                                           context: context,
                                           type: QuickAlertType.success,
                                           title: "Done!",
-                                          text: user.isStaff ? "Removed Staff role!" : "This user is Staff now!",
+                                          text: user.isStaff
+                                              ? "Removed Staff role!"
+                                              : "This user is Staff now!",
                                           confirmBtnText: "Ok",
                                         );
                                       });
@@ -248,15 +274,20 @@ class _UserCardState extends State<UserCard> with SingleTickerProviderStateMixin
                                         color: staffOppositeColor,
                                       ),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Icon(
-                                            user.isStaff ? Icons.people_alt : Icons.people_alt_outlined,
+                                            user.isStaff
+                                                ? Icons.people_alt
+                                                : Icons.people_alt_outlined,
                                             size: 35,
                                             color: Colors.white,
                                           ),
                                           Text(
-                                            user.isStaff ? "unStaff" : "setStaff",
+                                            user.isStaff
+                                                ? "unStaff"
+                                                : "setStaff",
                                             style: AppText.style.mediumWhite12,
                                           )
                                         ],

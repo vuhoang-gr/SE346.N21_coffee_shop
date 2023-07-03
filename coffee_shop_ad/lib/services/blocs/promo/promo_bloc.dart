@@ -12,40 +12,49 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class PromoBloc extends Bloc<PromoEvent, PromoState> {
-  PromoBloc() : super(LoadingState(initPromos: [], listExistCode: [], stores: [], drinks: [])) {
+  PromoBloc()
+      : super(LoadingState(
+            initPromos: [], listExistCode: [], stores: [], drinks: [])) {
     on<FetchData>(_mapFetchData);
   }
 
   void _mapFetchData(FetchData event, Emitter<PromoState> emit) async {
-    emit(LoadingState(initPromos: [], listExistCode: [], stores: [], drinks: []));
+    emit(LoadingState(
+        initPromos: [], listExistCode: [], stores: [], drinks: []));
 
     try {
       List<Promo> promoList = [];
       List<String> existCodeList = [];
       final promoDocs = await promoReference.get();
-      promoDocs.docs.forEach((doc) {
+      for (var doc in promoDocs.docs) {
         var curPromo = fromFireStore(doc.data(), doc.id);
         if (curPromo is Promo) {
           existCodeList.add(curPromo.id);
           promoList.add(curPromo);
         }
-      });
+      }
 
       List<Store> allStores = [];
       final storeDocs = await storeReference.get();
-      storeDocs.docs.forEach((doc) {
+      for (var doc in storeDocs.docs) {
         var s = doc.data();
         allStores.add(Store(
             id: doc.id,
             sb: s["shortName"],
             address: MLocation(
-                formattedAddress: s["address"]["formattedAddress"], lat: s["address"]["lat"], lng: s["address"]["lng"]),
+                formattedAddress: s["address"]["formattedAddress"],
+                lat: s["address"]["lat"],
+                lng: s["address"]["lng"]),
             phone: s["phone"],
             images: s["images"]));
-      });
+      }
 
       Promo.allStores = allStores;
-      emit(LoadedState(initPromos: promoList, listExistCode: existCodeList, stores: allStores, drinks: []));
+      emit(LoadedState(
+          initPromos: promoList,
+          listExistCode: existCodeList,
+          stores: allStores,
+          drinks: []));
     } catch (err) {
       print(err.toString());
       Fluttertoast.showToast(
@@ -54,7 +63,8 @@ class PromoBloc extends Bloc<PromoEvent, PromoState> {
           timeInSecForIosWeb: 1,
           textColor: Colors.white,
           fontSize: Dimension.font14);
-      emit(LoadedState(initPromos: [], listExistCode: [], stores: [], drinks: []));
+      emit(LoadedState(
+          initPromos: [], listExistCode: [], stores: [], drinks: []));
     }
   }
 
