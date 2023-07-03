@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
 class Dimension {
-  static double height = MediaQueryData.fromView(WidgetsBinding.instance.window).size.height;
-  static double width = MediaQueryData.fromView(WidgetsBinding.instance.window).size.width;
-  static double textScale = MediaQueryData.fromView(WidgetsBinding.instance.window).textScaleFactor;
+  static double height =
+      MediaQueryData.fromView(WidgetsBinding.instance.window).size.height;
+  static double width =
+      MediaQueryData.fromView(WidgetsBinding.instance.window).size.width;
+  static double textScale =
+      MediaQueryData.fromView(WidgetsBinding.instance.window).textScaleFactor;
 
   static double getHeightFromValue(double inputHeight) {
     return (height / 640) * inputHeight;
