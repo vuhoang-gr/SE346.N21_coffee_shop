@@ -43,7 +43,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
 
-Future<LatLng> _determineUserCurrentPosition() async {
+Future<LatLng?> _determineUserCurrentPosition() async {
   LocationPermission locationPermission;
   bool isLocationServiceEnabled = await Geolocator.isLocationServiceEnabled();
 
@@ -57,11 +57,13 @@ Future<LatLng> _determineUserCurrentPosition() async {
     locationPermission = await Geolocator.requestPermission();
     if (locationPermission == LocationPermission.denied) {
       print("user denied location permission");
+      return null;
     }
   }
 
   if (locationPermission == LocationPermission.deniedForever) {
     print("user denied permission forever");
+    return null;
   }
 
   Position position = await Geolocator.getCurrentPosition(

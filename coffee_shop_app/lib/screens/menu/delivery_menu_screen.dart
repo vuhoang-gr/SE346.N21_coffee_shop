@@ -31,8 +31,13 @@ class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
   bool _isButtonVisible = false;
 
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     _scrollController.addListener(() {
       if (_scrollController.offset <= Dimension.height82 && _isButtonVisible) {
         setState(() {
@@ -45,16 +50,7 @@ class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
         });
       }
     });
-  }
 
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
       backgroundColor: Colors.white,
@@ -83,21 +79,8 @@ class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
                 BlocBuilder<ProductStoreBloc, ProductStoreState>(
                     builder: (context, state) {
                   if (state is HasDataProductStoreState) {
-                    _isButtonVisible = false;
                     return Stack(
                       children: [
-                        _isButtonVisible
-                            ? Positioned(
-                                left: 0,
-                                right: 0,
-                                child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 0,
-                                      vertical: Dimension.height8,
-                                    ),
-                                    color: Colors.white,
-                                    child: const DeliveryStorePicker()))
-                            : SizedBox.shrink(),
                         RefreshIndicator(
                           onRefresh: () async {
                             if (FirebaseAuth.instance.currentUser != null) {
@@ -175,11 +158,25 @@ class _DeliveryMenuScreenState extends State<DeliveryMenuScreen> {
                             );
                           }),
                         ),
+                        _isButtonVisible
+                            ? Positioned(
+                                left: 0,
+                                right: 0,
+                                child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 0,
+                                      vertical: Dimension.height8,
+                                    ),
+                                    color: Colors.white,
+                                    child: const DeliveryStorePicker()))
+                            : SizedBox.shrink(),
                       ],
                     );
                   } else if (state is LoadingState || state is FetchedState) {
+                    _isButtonVisible = false;
                     return DeliveryMenuSkeleton();
                   } else {
+                    _isButtonVisible = false;
                     return SizedBox.shrink();
                   }
                 }),
