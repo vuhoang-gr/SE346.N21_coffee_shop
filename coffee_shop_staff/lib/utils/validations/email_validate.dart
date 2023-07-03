@@ -1,4 +1,4 @@
-import 'package:coffee_shop_admin/utils/validations/validator.dart';
+import 'package:coffee_shop_staff/utils/validations/validator.dart';
 
 class EmailValidator extends Validator {
   @override
@@ -17,5 +17,6 @@ class EmailValidator extends Validator {
     if (!validate(value)) {
       return "Wrong type!";
     }
+    return null;
   }
 }

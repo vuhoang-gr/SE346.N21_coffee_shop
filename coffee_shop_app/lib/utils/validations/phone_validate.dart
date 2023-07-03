@@ -17,5 +17,6 @@ class PhoneValidator extends Validator {
     if (!validate(value)) {
       return "Wrong type!";
     }
+    return null;
   }
 }

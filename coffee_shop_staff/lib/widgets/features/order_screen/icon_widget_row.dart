@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../utils/constants/dimension.dart';
 
+// ignore: must_be_immutable
 class IconWidgetRow extends StatelessWidget {
   IconWidgetRow(
       {super.key,
@@ -29,7 +30,7 @@ class IconWidgetRow extends StatelessWidget {
         SizedBox(
           width: Dimension.height8,
         ),
-        child,
+        Flexible(child: child),
       ],
     );
   }

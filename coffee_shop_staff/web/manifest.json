@@ -1,6 +1,6 @@
 {
-    "name": "coffee_shop_admin",
-    "short_name": "coffee_shop_admin",
+    "name": "coffee_shop_staff",
+    "short_name": "coffee_shop_staff",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

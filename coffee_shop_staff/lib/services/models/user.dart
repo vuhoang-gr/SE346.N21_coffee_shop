@@ -1,8 +1,8 @@
-import 'package:coffee_shop_admin/services/models/delivery_address.dart';
-import 'package:coffee_shop_admin/services/models/food.dart';
-import 'package:coffee_shop_admin/services/models/store.dart';
+import 'package:coffee_shop_staff/services/models/delivery_address.dart';
+import 'package:coffee_shop_staff/services/models/store.dart';
 import 'package:equatable/equatable.dart';
 
+// ignore: must_be_immutable
 class User extends Equatable {
   final String id;
   String name;
@@ -10,22 +10,24 @@ class User extends Equatable {
   String email;
   DateTime? dob;
   List<DeliveryAddress>? addresses;
-  List<Food>? favoriteFoods;
-  List<Store>? favouriteStores;
+  bool isStaff;
+  bool isAdmin;
   bool isActive;
   String avatarUrl;
   String coverUrl;
+  Store store;
 
   User(
       {required this.id,
       required this.name,
       required this.phoneNumber,
       required this.email,
+      required this.store,
       this.dob,
       required this.isActive,
       this.addresses,
-      this.favoriteFoods,
-      this.favouriteStores,
+      this.isStaff = true,
+      this.isAdmin = false,
       this.avatarUrl =
           r'https://camo.githubusercontent.com/137115c4e2eab897b580d1f0db934f330d84654bccb0947c5e9af4bc8a66c6b6/68747470733a2f2f662e636c6f75642e6769746875622e636f6d2f6173736574732f323639323831302f323130343036312f34643839316563302d386637362d313165332d393230322d6637333934306431306632302e706e67',
       this.coverUrl =

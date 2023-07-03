@@ -1,34 +1,27 @@
-import 'package:coffee_shop_admin/services/models/topping.dart';
 import 'package:equatable/equatable.dart';
 
-import 'food.dart';
-import 'size.dart';
-
+// ignore: must_be_immutable
 class OrderedFood extends Equatable {
-  Food food;
+  String? id;
+  String image;
+  String name;
   int amount;
-  List<Topping>? toppings;
-  late double unitPrice;
-  late double totalPrice;
-  Size size;
+  String size;
+  String? topping;
   String? note;
-
-  OrderedFood({
-    required this.food,
-    required this.amount,
-    required this.size,
-    this.toppings,
-    this.note,
-  }) {
-    unitPrice = food.price + size.price;
-    if (toppings != null) {
-      for (var item in toppings!) {
-        unitPrice += item.price;
-      }
-    }
-    totalPrice = unitPrice * amount;
-  }
+  double unitPrice;
+  double totalPrice;
+  OrderedFood(
+      {required this.name,
+      this.id,
+      required this.amount,
+      required this.size,
+      required this.image,
+      this.topping,
+      this.note,
+      required this.unitPrice,
+      required this.totalPrice});
 
   @override
-  List<Object?> get props => [food, amount, toppings, note];
+  List<Object?> get props => [id, name, amount, topping, size, note];
 }
