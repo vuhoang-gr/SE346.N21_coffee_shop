@@ -1,4 +1,4 @@
-import '../../models/user.dart';
+import 'package:coffee_shop_admin/services/models/user.dart';
 
 abstract class UserState {
   UserState();

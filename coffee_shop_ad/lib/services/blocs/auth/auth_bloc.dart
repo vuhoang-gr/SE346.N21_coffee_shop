@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
@@ -14,7 +16,10 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthAPI _authAPI = AuthAPI();
 
-  AuthBloc() : super(AuthAPI.currentUser != null ? Authenticated(user: AuthAPI.currentUser!) : UnAuthenticated()) {
+  AuthBloc()
+      : super(AuthAPI.currentUser != null
+            ? Authenticated(user: AuthAPI.currentUser!)
+            : UnAuthenticated()) {
     on<EmailLogin>((event, emit) async {
       emit(Loading());
       var user = await _authAPI.emailLogin(event.email, event.password);

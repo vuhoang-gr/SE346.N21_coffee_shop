@@ -5,12 +5,11 @@ import 'package:coffee_shop_admin/services/models/user.dart';
 import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/constants/placeholder_enum.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
+import 'package:coffee_shop_admin/widgets/feature/profile_screen/profile_custom_button.dart';
 import 'package:coffee_shop_admin/widgets/global/aysncImage/async_image.dart';
 import 'package:coffee_shop_admin/widgets/global/buttons/touchable_opacity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../widgets/feature/profile_screen/profile_custom_button.dart';
 
 class ProfileScreen extends StatelessWidget {
   static const String routeName = '/profile_screen';
@@ -38,26 +37,6 @@ class ProfileScreen extends StatelessWidget {
                       height: Dimension.getHeightFromValue(39),
                     ),
                   ],
-                ),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: TouchableOpacity(
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Change cover')));
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(top: 10, right: 10),
-                      child: CircleAvatar(
-                        radius: 18,
-                        backgroundColor: Colors.white,
-                        child: Icon(
-                          Icons.edit,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
                 ),
                 Positioned.fill(
                   child: Align(

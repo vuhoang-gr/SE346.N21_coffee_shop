@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
+import 'package:coffee_shop_admin/services/models/store.dart';
 import 'package:coffee_shop_admin/services/models/user.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
 import 'package:coffee_shop_admin/utils/constants/dimension.dart';
@@ -242,15 +243,22 @@ class _UserCardState extends State<UserCard>
                                   width: constraint.maxWidth / 4 - 1,
                                   child: TouchableOpacity(
                                     onTap: () async {
+                                      if (!user.isStaff) {
+                                        user.staffOfStore = "";
+                                        await showChooseStoreDialog(context);
+                                        if (user.staffOfStore.isEmpty) return;
+                                      }
+                                      // ignore: use_build_context_synchronously
                                       QuickAlert.show(
                                           context: context,
                                           type: QuickAlertType.loading,
                                           title: "Setting role",
                                           text: user.isStaff
-                                              ? "Removing Staff role"
-                                              : "Adding Staff role");
+                                              ? "Removing Staff role..."
+                                              : "Adding Staff role...");
                                       await userReference.doc(user.id).update({
                                         "isStaff": !user.isStaff,
+                                        "store": 'Store/${user.staffOfStore}',
                                       }).then((value) {
                                         Navigator.pop(context);
                                         QuickAlert.show(
@@ -304,6 +312,30 @@ class _UserCardState extends State<UserCard>
           ),
         )
       ],
+    );
+  }
+
+  showChooseStoreDialog(BuildContext context) async {
+    Widget getStoreItemWidget(Store store) {
+      return SimpleDialogOption(
+        child: Text(store.sb),
+        onPressed: () {
+          user.staffOfStore = store.id;
+          Navigator.of(context).pop(store.id);
+        },
+      );
+    }
+
+    SimpleDialog dialog = SimpleDialog(
+      title: const Text('Choose a store'),
+      children: <Widget>[...User.allStores.map((e) => getStoreItemWidget(e))],
+    );
+
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return dialog;
+      },
     );
   }
 }

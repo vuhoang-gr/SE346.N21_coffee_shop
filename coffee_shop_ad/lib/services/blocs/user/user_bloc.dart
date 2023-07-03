@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/blocs/user/user_event.dart';
 import 'package:coffee_shop_admin/services/blocs/user/user_state.dart';
+import 'package:coffee_shop_admin/services/models/location.dart';
+import 'package:coffee_shop_admin/services/models/store.dart';
 import 'package:coffee_shop_admin/services/models/user.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -45,6 +47,22 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
       return 0;
     });
+
+    List<Store> allStores = [];
+    final storeDocs = await storeReference.get();
+    for (var doc in storeDocs.docs) {
+      var s = doc.data();
+      allStores.add(Store(
+          id: doc.id,
+          sb: s["shortName"],
+          address: MLocation(
+              formattedAddress: s["address"]["formattedAddress"],
+              lat: s["address"]["lat"],
+              lng: s["address"]["lng"]),
+          phone: s["phone"],
+          images: s["images"]));
+    }
+    User.allStores = allStores;
 
     emit(LoadedState(
       users: users,
