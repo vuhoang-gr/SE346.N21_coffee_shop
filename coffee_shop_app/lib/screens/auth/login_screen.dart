@@ -50,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
     onLogin() async {
       if (!canLogin()) {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Something is wrong! Try again!')));
+            SnackBar(content: Text('Có gì đó không ổn! Hãy thử lại!')));
         return;
       }
       context.read<AppCubit>().changeState(AppLoading());
@@ -63,15 +63,21 @@ class _LoginScreenState extends State<LoginScreen> {
       if (user == null) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Something is wrong! Try again!')));
+              SnackBar(content: Text('Email hoặc mật khẩu sai! Hãy thử lại!')));
           return;
         }
       }
 
+      await AuthAPI().signOut();
+
       if (context.mounted) {
         if (user!.name == "No Name") {
           var check = await showDialog(
-              context: context, builder: (context) => InformationDialog());
+            context: context,
+            builder: (context) => InformationDialog(
+              user: user,
+            ),
+          );
           if (!check) {
             if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(

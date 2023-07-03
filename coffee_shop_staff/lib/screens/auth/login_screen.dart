@@ -51,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
     onLogin() async {
       if (!canLogin()) {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Something is wrong! Try again!')));
+            SnackBar(content: Text('Có gì đó không ổn! Hãy thử lại')));
         return;
       }
       context.read<AppCubit>().changeState(AppLoading());
