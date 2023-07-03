@@ -56,22 +56,30 @@ class FoodAPI {
     });
   }
 
-  Future<bool> updateFavorite(String productId) async {
+  Future<bool?> updateFavorite(String productId, bool isFavorite) async {
     try {
       final userDoc = await userReference.doc(AuthAPI.currentUser!.id).get();
       final favorites =
           (userDoc.data() as Map<String, dynamic>)['favoriteFoods'] ?? [];
       if (favorites.contains(productId)) {
-        favorites.remove(productId);
+        if (!isFavorite) {
+          favorites.remove(productId);
+        } else {
+          return false;
+        }
       } else {
-        favorites.add(productId);
+        if (isFavorite) {
+          favorites.add(productId);
+        } else {
+          return false;
+        }
       }
       await userReference
           .doc(AuthAPI.currentUser!.id)
           .update({'favoriteFoods': favorites});
       return true;
     } catch (e) {
-      return false;
+      return null;
     }
   }
 

@@ -132,7 +132,10 @@ class StoreStoreBloc extends Bloc<StoreStoreEvent, StoreStoreState> {
       emit(LoadingState(initStores: state.initStores, latLng: state.latLng));
 
       _storeSubscription?.pause();
-      if (await StoreAPI().updateFavorite(event.store.id)) {
+
+      bool? isUpdateSuccess = await StoreAPI()
+          .updateFavorite(event.store.id, event.store.isFavorite);
+      if (isUpdateSuccess != null) {
         Map<String, dynamic> storeObject =
             _separateIntoNeededObject(state.initStores, location);
 
@@ -212,6 +215,10 @@ class StoreStoreBloc extends Bloc<StoreStoreEvent, StoreStoreState> {
             location.latitude, location.longitude);
 
         return distanceA.compareTo(distanceB);
+      });
+    } else {
+      stores.sort((a, b) {
+        return a.sb.compareTo(b.sb);
       });
     }
   }

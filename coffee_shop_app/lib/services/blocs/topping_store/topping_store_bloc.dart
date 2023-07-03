@@ -23,6 +23,7 @@ class ToppingStoreBloc extends Bloc<ToppingStoreEvent, ToppingStoreState> {
     emit(LoadingState());
     _toppingStoreSubscription?.cancel();
     _toppingStoreSubscription = ToppingApi().fetchData().listen((listToppings) {
+      listToppings.sort((a, b) => a.name.compareTo(b.name));
       add(GetDataFetched(listToppings: listToppings));
     }, onError: (_) {
       Fluttertoast.showToast(

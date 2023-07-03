@@ -48,22 +48,30 @@ class StoreAPI {
     });
   }
 
-  Future<bool> updateFavorite(String storeId) async {
+  Future<bool?> updateFavorite(String storeId, bool isFavorite) async {
     try {
       final userDoc = await userReference.doc(AuthAPI.currentUser!.id).get();
       final favorites =
           (userDoc.data() as Map<String, dynamic>)['favoriteStores'] ?? [];
       if (favorites.contains(storeId)) {
-        favorites.remove(storeId);
+        if (!isFavorite) {
+          favorites.remove(storeId);
+        } else {
+          return false;
+        }
       } else {
-        favorites.add(storeId);
+        if (isFavorite) {
+          favorites.add(storeId);
+        } else {
+          return false;
+        }
       }
       await userReference
           .doc(AuthAPI.currentUser!.id)
           .update({'favoriteStores': favorites});
       return true;
     } catch (e) {
-      return false;
+      return null;
     }
   }
 
