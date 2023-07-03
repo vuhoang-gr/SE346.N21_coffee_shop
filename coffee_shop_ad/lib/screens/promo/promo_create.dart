@@ -426,8 +426,9 @@ class CodeValidator extends Validator {
       return "This field cannot be empty!";
     }
     if (!validate(value)) {
-      if (codes.contains(value) || codes.contains(value.toUpperCase()) || codes.contains(value.toLowerCase()))
+      if (codes.contains(value) || codes.contains(value.toUpperCase()) || codes.contains(value.toLowerCase())) {
         return "Code existed!";
+      }
       return "Wrong type!";
     }
     return null;

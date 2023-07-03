@@ -1,8 +1,5 @@
 import 'package:coffee_shop_admin/widgets/global/buttons/touchable_opacity.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../services/blocs/auth_action/auth_action_cubit.dart';

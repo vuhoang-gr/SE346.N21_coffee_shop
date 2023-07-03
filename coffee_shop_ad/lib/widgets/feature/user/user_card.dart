@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/models/user.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';

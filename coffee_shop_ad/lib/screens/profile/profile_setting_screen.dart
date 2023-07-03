@@ -165,18 +165,6 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                             //Button
                             ProfileCustomButton(
                               onPressed: () {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(content: Text('Nav to AddressListingScreen')));
-                              },
-                              icon: Icons.home,
-                              title: 'Shipping address',
-                              description: 'Add/change address',
-                            ),
-                            SizedBox(
-                              height: Dimension.getHeightFromValue(15),
-                            ),
-                            ProfileCustomButton(
-                              onPressed: () {
                                 showGeneralDialog(
                                     context: context,
                                     pageBuilder: (_, __, ___) {

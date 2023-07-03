@@ -65,10 +65,7 @@ class ProfileScreen extends StatelessWidget {
                       alignment: Alignment.bottomCenter,
                       child: TouchableOpacity(
                         opacity: 0.8,
-                        onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Change Avatar')));
-                        },
+                        onTap: () {},
                         child: Container(
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.white, width: 5),
@@ -106,30 +103,6 @@ class ProfileScreen extends StatelessWidget {
                       horizontal: Dimension.getWidthFromValue(16)),
                   child: Column(
                     children: [
-                      ProfileCustomButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Nav to OrderScreen')));
-                        },
-                        icon: Icons.shopping_cart,
-                        title: 'My Orders',
-                        description: 'History, delivering, cancelled',
-                      ),
-                      SizedBox(
-                        height: Dimension.getHeightFromValue(15),
-                      ),
-                      ProfileCustomButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Show dialog')));
-                        },
-                        icon: Icons.support_agent,
-                        title: 'Support',
-                        description: 'Contact us',
-                      ),
-                      SizedBox(
-                        height: Dimension.getHeightFromValue(15),
-                      ),
                       ProfileCustomButton(
                         onPressed: () {
                           Navigator.of(context)
