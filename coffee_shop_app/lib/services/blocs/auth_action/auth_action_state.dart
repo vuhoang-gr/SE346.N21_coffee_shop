@@ -13,7 +13,12 @@ class Login extends AuthActionState {
   List<Object?> get props => [email];
 }
 
-class SignIn extends AuthActionState {}
+class SignIn extends AuthActionState {
+  final String? email;
+  SignIn({this.email});
+  @override
+  List<Object?> get props => [email];
+}
 
 class ForgotPassword extends AuthActionState {
   final String? email;

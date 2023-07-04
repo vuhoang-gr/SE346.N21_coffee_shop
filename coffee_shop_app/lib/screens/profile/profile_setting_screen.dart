@@ -15,7 +15,6 @@ import 'package:intl/intl.dart';
 
 import '../../services/apis/auth_api.dart';
 import '../../services/models/user.dart';
-import '../../widgets/feature/profile_screen/image_dialog.dart';
 
 class ProfileSettingScreen extends StatefulWidget {
   static const String routeName = '/profile_setting_screen';

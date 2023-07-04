@@ -66,6 +66,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
       }
     }
 
+    var status = context.watch<AuthActionCubit>().state;
+    if (status is SignIn) {
+      if (status.email != null && status.email!.isNotEmpty) {
+        emailController.text = status.email!;
+      }
+    }
+
     return Column(
       children: [
         SizedBox(

@@ -1,7 +1,13 @@
+import 'package:coffee_shop_app/services/apis/auth_api.dart';
+import 'package:coffee_shop_app/services/blocs/app_cubit/app_cubit.dart';
+import 'package:coffee_shop_app/services/blocs/auth_action/auth_action_cubit.dart';
 import 'package:coffee_shop_app/utils/constants/dimension.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
 import 'package:coffee_shop_app/utils/validations/email_validate.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quickalert/quickalert.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import '../../widgets/global/buttons/rounded_button.dart';
 import '../../widgets/global/textForm/custom_text_form.dart';
 
@@ -20,6 +26,45 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   void initState() {
     super.initState();
     emailController = TextEditingController(text: widget.email);
+  }
+
+  bool canSubmit() {
+    return EmailValidator().validate(emailController.text);
+  }
+
+  Future<void> onSubmit() async {
+    if (!canSubmit()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Có gì đó không ổn. Hãy thử lại!')));
+      return;
+    }
+    if (context.mounted) {
+      context.read<AppCubit>().changeState(AppLoaded());
+
+      context.read<AppCubit>().changeState(AppLoading());
+    }
+    var check = await AuthAPI().forgotPassword(emailController.text);
+
+    if (context.mounted) {
+      await QuickAlert.show(
+          context: context,
+          type: !check ? QuickAlertType.error : QuickAlertType.success,
+          title: !check ? 'Oops' : 'Success',
+          text: !check
+              ? 'Tài khoản này chưa được đăng ký. Hãy đăng ký trước đó.'
+              : 'Chúng tôi đã gửi cho bạn một email để đặt lại mật khẩu, hãy kiểm tra email của mình.',
+          confirmBtnText: !check ? 'OK' : 'Quay lại đăng nhập',
+          barrierDismissible: false,
+          onConfirmBtnTap: () {
+            Navigator.pop(context);
+            context.read<AuthActionCubit>().changeState(!check
+                ? SignIn(email: emailController.text)
+                : Login(email: emailController.text));
+          });
+    }
+    if (context.mounted) {
+      context.read<AppCubit>().changeState(AppLoaded());
+    }
   }
 
   @override
@@ -49,7 +94,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           ),
         ),
         RoundedButton(
-          onPressed: () {},
+          onPressed: onSubmit,
           label: "GỬI",
         ),
       ],

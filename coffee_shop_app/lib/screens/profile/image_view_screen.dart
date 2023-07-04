@@ -15,6 +15,7 @@ import '../../services/blocs/app_cubit/app_cubit.dart';
 
 enum ImageStatus { view, edit }
 
+// ignore: must_be_immutable
 class ImageViewScreen extends StatelessWidget {
   ImageViewScreen(
       {super.key,

@@ -6,7 +6,6 @@ import 'package:coffee_shop_app/utils/constants/dimension.dart';
 import 'package:coffee_shop_app/utils/constants/image_enum.dart';
 import 'package:coffee_shop_app/utils/constants/placeholder_enum.dart';
 import 'package:coffee_shop_app/utils/styles/app_texts.dart';
-import 'package:coffee_shop_app/widgets/feature/profile_screen/change_password_dialog.dart';
 import 'package:coffee_shop_app/widgets/feature/profile_screen/image_dialog.dart';
 import 'package:coffee_shop_app/widgets/global/aysncImage/async_image.dart';
 import 'package:coffee_shop_app/widgets/global/buttons/touchable_opacity.dart';
