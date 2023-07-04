@@ -29,7 +29,8 @@ class _AuthScreenState extends State<AuthScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      flex: MediaQuery.of(context).viewInsets.bottom == 0 ? 3 : 1,
+                      flex:
+                          MediaQuery.of(context).viewInsets.bottom == 0 ? 3 : 1,
                       child: SingleChildScrollView(
                           physics: MediaQuery.of(context).viewInsets.bottom == 0
                               ? NeverScrollableScrollPhysics()

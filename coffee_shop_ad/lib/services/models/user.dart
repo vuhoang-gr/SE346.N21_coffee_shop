@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 
 // ignore: must_be_immutable
 class User extends Equatable {
+  static List<Store> allStores = [];
   final String id;
   String name;
   String phoneNumber;
@@ -16,6 +17,7 @@ class User extends Equatable {
   bool isActive;
   bool isAdmin;
   bool isStaff;
+  String staffOfStore;
   String avatarUrl;
   String coverUrl;
 
@@ -34,6 +36,7 @@ class User extends Equatable {
         r'https://img.freepik.com/free-vector/restaurant-mural-wallpaper_23-2148703851.jpg?w=740&t=st=1680897435~exp=1680898035~hmac=8f6c47b6646a831c4a642b560cf9b10f1ddf80fda5d9d997299e1b2f71fe4cb9',
     this.isAdmin = false,
     this.isStaff = false,
+    this.staffOfStore = "",
   });
 
   @override

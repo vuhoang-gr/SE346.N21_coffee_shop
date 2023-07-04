@@ -16,7 +16,7 @@ class TouchableOpacity extends StatefulWidget {
   });
 
   @override
-  _TouchableOpacityState createState() => _TouchableOpacityState();
+  State<TouchableOpacity> createState() => _TouchableOpacityState();
 }
 
 class _TouchableOpacityState extends State<TouchableOpacity> {
