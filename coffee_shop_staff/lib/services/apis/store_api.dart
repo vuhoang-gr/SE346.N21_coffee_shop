@@ -63,12 +63,6 @@ class StoreAPI {
     return currentStore;
   }
 
-  Future<Store?> getRef(DocumentReference ref) async {
-    var id = ref.path.split('/').last;
-    var store = await get(id);
-    return store;
-  }
-
   update(Store store) async {
     //convert stateTopping
     List<String> stateTopping = [];

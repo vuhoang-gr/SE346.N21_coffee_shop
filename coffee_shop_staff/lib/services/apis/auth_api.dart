@@ -96,7 +96,7 @@ class AuthAPI {
     if (data == null || data['isStaff'] == null || !data['isStaff']) {
       return null;
     }
-    Store? store = await StoreAPI().getRef(data['store']);
+    Store? store = await StoreAPI().get(data['store']);
     if (store == null) return null;
     if (data['isActive'] == null || !(data['isActive'] as bool)) {
       return null;
