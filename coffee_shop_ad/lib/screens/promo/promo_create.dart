@@ -83,6 +83,8 @@ class _CreatePromoScreenState extends State<CreatePromoScreen> {
           context: context,
           type: QuickAlertType.warning,
           confirmBtnText: "Ok",
+          confirmBtnColor: AppColors.blueColor,
+          confirmBtnTextStyle: AppText.style.regularWhite16,
           text: 'Invalid data!',
         );
         return;
@@ -127,6 +129,7 @@ class _CreatePromoScreenState extends State<CreatePromoScreen> {
             type: QuickAlertType.success,
             text: 'Completed Successfully!',
             confirmBtnText: "Ok",
+            confirmBtnColor: AppColors.blueColor,
           );
         });
       } catch (e) {

@@ -98,6 +98,8 @@ class _CreateSizeScreenState extends State<CreateSizeScreen> {
           context: context,
           type: QuickAlertType.warning,
           confirmBtnText: "Ok",
+          confirmBtnColor: AppColors.blueColor,
+          confirmBtnTextStyle: AppText.style.regularWhite16,
           text: 'Please choose an image, input name and price!',
         );
         return false;
@@ -138,6 +140,7 @@ class _CreateSizeScreenState extends State<CreateSizeScreen> {
               type: QuickAlertType.success,
               text: 'Completed Successfully!',
               confirmBtnText: "Ok",
+              confirmBtnColor: AppColors.blueColor,
             );
           });
         });

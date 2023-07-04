@@ -12,24 +12,52 @@ import 'package:coffee_shop_admin/widgets/global/custom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quickalert/quickalert.dart';
 
 class StoreDetail extends StatelessWidget {
-  StoreDetail({super.key, required this.store});
+  const StoreDetail({super.key, required this.store});
   final Store store;
-  final _roundedButtonStyle = ButtonStyle(
-      elevation: const MaterialStatePropertyAll(0),
-      shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(Dimension.height20),
-      )),
-      backgroundColor: const MaterialStatePropertyAll(AppColors.blueColor));
 
-  final _roundedOutlineButtonStyle = ButtonStyle(
-      elevation: const MaterialStatePropertyAll(0),
-      shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-        side: const BorderSide(color: AppColors.blueColor, width: 1),
-        borderRadius: BorderRadius.circular(Dimension.height20),
-      )),
-      backgroundColor: const MaterialStatePropertyAll(Colors.white));
+  void _handleOnTapDeleteStore(BuildContext context) async {
+    await QuickAlert.show(
+      context: context,
+      type: QuickAlertType.confirm,
+      text: 'Delete ${store.sb}?',
+      confirmBtnText: 'Yes',
+      cancelBtnText: 'No',
+      confirmBtnColor: AppColors.blueColor,
+      confirmBtnTextStyle: AppText.style.regularWhite16,
+      cancelBtnTextStyle: AppText.style.regularBlue16,
+      onConfirmBtnTap: () async {
+        Navigator.of(context).pop();
+        QuickAlert.show(
+          context: context,
+          type: QuickAlertType.loading,
+          title: 'Loading',
+          text: 'Deleting ${store.sb}',
+        );
+
+        try {
+          await storeReference.doc(store.id).delete().then((value) {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            BlocProvider.of<StoreStoreBloc>(context).add(FetchData());
+
+            QuickAlert.show(
+              context: context,
+              type: QuickAlertType.success,
+              text: 'Completed Successfully!',
+              confirmBtnText: "Ok",
+              confirmBtnColor: AppColors.blueColor,
+            );
+          });
+        } catch (e) {
+          print("Something wrong when delete size");
+          print(e);
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -166,88 +194,7 @@ class StoreDetail extends StatelessWidget {
                                           fixedSize: Size.fromWidth(120),
                                           shape: const RoundedRectangleBorder(
                                               borderRadius: BorderRadius.all(Radius.circular(45)))),
-                                      onPressed: () async {
-                                        await showDialog(
-                                            context: context,
-                                            builder: (ctx) {
-                                              return AlertDialog(
-                                                  contentPadding: EdgeInsets.zero,
-                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                                  content: Builder(builder: (context) {
-                                                    return SizedBox(
-                                                      height: Dimension.height160,
-                                                      width: Dimension.width296,
-                                                      child: Column(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          Container(
-                                                            alignment: Alignment.bottomCenter,
-                                                            height: Dimension.height43,
-                                                            padding:
-                                                                EdgeInsets.symmetric(horizontal: Dimension.width16),
-                                                            child: Text(
-                                                              "Confirm",
-                                                              textAlign: TextAlign.center,
-                                                              style: AppText.style.boldBlack18,
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            height: Dimension.height8,
-                                                          ),
-                                                          Container(
-                                                              height: Dimension.height37,
-                                                              alignment: Alignment.center,
-                                                              child: Text(
-                                                                "Do you want to delate this store?",
-                                                                style: AppText.style.regular,
-                                                              )),
-                                                          SizedBox(
-                                                            height: Dimension.height8,
-                                                          ),
-                                                          Container(
-                                                              height: Dimension.height56,
-                                                              padding: EdgeInsets.symmetric(
-                                                                  horizontal: Dimension.width16,
-                                                                  vertical: Dimension.height8),
-                                                              child: Row(
-                                                                children: [
-                                                                  Expanded(
-                                                                    child: ElevatedButton(
-                                                                        onPressed: () async {
-                                                                          storeReference.doc(store.id).delete();
-                                                                          Navigator.of(context).pop();
-                                                                          Navigator.of(context).pop();
-                                                                          BlocProvider.of<StoreStoreBloc>(context)
-                                                                              .add(FetchData());
-                                                                        },
-                                                                        style: _roundedOutlineButtonStyle,
-                                                                        child: Text(
-                                                                          "Yes",
-                                                                          style: AppText.style.regularBlue16,
-                                                                        )),
-                                                                  ),
-                                                                  SizedBox(
-                                                                    width: Dimension.width8,
-                                                                  ),
-                                                                  Expanded(
-                                                                    child: ElevatedButton(
-                                                                        onPressed: () {
-                                                                          Navigator.of(context).pop();
-                                                                        },
-                                                                        style: _roundedButtonStyle,
-                                                                        child: Text(
-                                                                          "No",
-                                                                          style: AppText.style.regularWhite16,
-                                                                        )),
-                                                                  )
-                                                                ],
-                                                              )),
-                                                        ],
-                                                      ),
-                                                    );
-                                                  }));
-                                            });
-                                      },
+                                      onPressed: () => _handleOnTapDeleteStore(context),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [

@@ -55,7 +55,9 @@ class _DrinkDetailState extends State<DrinkDetail> {
         text: 'Do you want to delete ${widget.product.name}?',
         confirmBtnText: 'Yes',
         cancelBtnText: 'No',
-        confirmBtnColor: Colors.green,
+        confirmBtnColor: AppColors.blueColor,
+        confirmBtnTextStyle: AppText.style.regularWhite16,
+        cancelBtnTextStyle: AppText.style.regularBlue16,
         onConfirmBtnTap: () async {
           Navigator.of(context).pop();
           QuickAlert.show(
@@ -75,6 +77,7 @@ class _DrinkDetailState extends State<DrinkDetail> {
                 type: QuickAlertType.success,
                 text: 'Completed Successfully!',
                 confirmBtnText: "Ok",
+                confirmBtnColor: AppColors.blueColor,
               );
 
               for (final img in imgUrls) {
@@ -360,6 +363,7 @@ class _DrinkDetailState extends State<DrinkDetail> {
                                           type: QuickAlertType.success,
                                           text: 'Completed Successfully!',
                                           confirmBtnText: "Ok",
+                                          confirmBtnColor: AppColors.blueColor,
                                         );
                                       }).catchError((err) {
                                         QuickAlert.show(
@@ -367,6 +371,7 @@ class _DrinkDetailState extends State<DrinkDetail> {
                                           type: QuickAlertType.error,
                                           text: 'Error when saving drink!',
                                           confirmBtnText: "Ok",
+                                          confirmBtnColor: AppColors.blueColor,
                                         );
                                       });
                                     },

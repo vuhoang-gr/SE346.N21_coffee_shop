@@ -356,6 +356,8 @@ class _CreateStoreScreenState extends State<CreateStoreScreen> with InputValidat
           context: context,
           type: QuickAlertType.warning,
           confirmBtnText: "Ok",
+          confirmBtnColor: AppColors.blueColor,
+          confirmBtnTextStyle: AppText.style.regularWhite16,
           text: 'Please choose store images!',
         );
         return;
@@ -398,6 +400,7 @@ class _CreateStoreScreenState extends State<CreateStoreScreen> with InputValidat
             type: QuickAlertType.success,
             text: 'Completed Successfully!',
             confirmBtnText: "Ok",
+            confirmBtnColor: AppColors.blueColor,
           );
         });
       } catch (e) {
@@ -408,6 +411,7 @@ class _CreateStoreScreenState extends State<CreateStoreScreen> with InputValidat
           type: QuickAlertType.error,
           text: 'Something\'s wrong when create new store!',
           confirmBtnText: "Ok",
+          confirmBtnColor: AppColors.blueColor,
         );
         print("Something's wrong when create new store!");
         print(e);
