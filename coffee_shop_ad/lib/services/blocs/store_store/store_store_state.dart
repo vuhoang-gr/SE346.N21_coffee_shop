@@ -1,4 +1,4 @@
-import '../../models/store.dart';
+import 'package:coffee_shop_admin/services/models/store.dart';
 
 abstract class StoreStoreState {
   StoreStoreState();

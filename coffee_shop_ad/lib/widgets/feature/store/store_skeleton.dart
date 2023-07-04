@@ -1,7 +1,6 @@
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:flutter/material.dart';
 import 'package:skeletons/skeletons.dart';
-
-import '../../../utils/constants/dimension.dart';
 
 class StoreSkeleton extends StatelessWidget {
   const StoreSkeleton({super.key});
@@ -13,17 +12,14 @@ class StoreSkeleton extends StatelessWidget {
         horizontal: Dimension.width16,
         vertical: Dimension.height8,
       ),
-      decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
       child: SkeletonItem(
           child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SkeletonAvatar(
               style: SkeletonAvatarStyle(
-                  width: Dimension.height24,
-                  height: Dimension.height24,
-                  borderRadius: BorderRadius.circular(4))),
+                  width: Dimension.height24, height: Dimension.height24, borderRadius: BorderRadius.circular(4))),
           SizedBox(
             width: Dimension.width8,
           ),

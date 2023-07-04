@@ -1,7 +1,6 @@
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-
-import '../../../utils/constants/dimension.dart';
 
 class SwipeUpDialog extends StatefulWidget {
   const SwipeUpDialog({
@@ -15,8 +14,7 @@ class SwipeUpDialog extends StatefulWidget {
   State<SwipeUpDialog> createState() => _SwipeUpDialogState();
 }
 
-class _SwipeUpDialogState extends State<SwipeUpDialog>
-    with TickerProviderStateMixin {
+class _SwipeUpDialogState extends State<SwipeUpDialog> with TickerProviderStateMixin {
   double maxHeight = Dimension.height / 1.5;
 
   late Animation<Offset> _slideAnimation;
@@ -37,11 +35,9 @@ class _SwipeUpDialogState extends State<SwipeUpDialog>
       }
     });
 
-    _slideController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 600));
+    _slideController = AnimationController(vsync: this, duration: Duration(milliseconds: 600));
     _slideAnimation = Tween<Offset>(begin: Offset(0, 1), end: Offset.zero)
-        .animate(CurvedAnimation(
-            parent: _slideController, curve: Curves.easeInOutCubic));
+        .animate(CurvedAnimation(parent: _slideController, curve: Curves.easeInOutCubic));
 
     //Set after widget is built
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {

@@ -1,6 +1,5 @@
 import 'package:coffee_shop_admin/services/models/address.dart';
-
-import '../../models/location.dart';
+import 'package:coffee_shop_admin/services/models/location.dart';
 
 abstract class EditAddressEvent {}
 

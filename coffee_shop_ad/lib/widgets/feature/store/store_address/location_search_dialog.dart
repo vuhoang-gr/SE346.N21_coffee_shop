@@ -1,17 +1,15 @@
 import 'dart:convert';
+import 'package:coffee_shop_admin/services/apis/location_api.dart';
+import 'package:coffee_shop_admin/services/blocs/map_picker/map_picker_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/map_picker/map_picker_state.dart';
+import 'package:coffee_shop_admin/services/models/location.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-import '../../../../services/apis/location_api.dart';
-import '../../../../services/blocs/map_picker/map_picker_bloc.dart';
-import '../../../../services/models/location.dart';
-
-import '../../../../utils/constants/dimension.dart';
 
 class LocationScreenDialog extends StatefulWidget {
   final GoogleMapController? mapController;

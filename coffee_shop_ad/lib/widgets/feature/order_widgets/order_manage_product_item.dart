@@ -1,9 +1,8 @@
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
+import 'package:coffee_shop_admin/widgets/feature/drink_detail_widgets/round_image.dart';
 import 'package:flutter/material.dart';
-
-import '../../../utils/constants/dimension.dart';
-import '../drink_detail_widgets/round_image.dart';
 
 class OrderManageProductItem extends StatelessWidget {
   const OrderManageProductItem({super.key});
@@ -48,8 +47,7 @@ class OrderManageProductItem extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(Dimension.height8),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: AppColors.greyTextField)),
+                        borderRadius: BorderRadius.circular(8), border: Border.all(color: AppColors.greyTextField)),
                     child: Text(
                         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus rhoncus lorem risus sollicitudin.',
                         style: AppText.style.regularGrey12),

@@ -4,17 +4,16 @@ import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_event.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
+import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:coffee_shop_admin/utils/validations/validator.dart';
+import 'package:coffee_shop_admin/widgets/global/custom_app_bar.dart';
 import 'package:coffee_shop_admin/widgets/global/textForm/custom_text_form.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quickalert/quickalert.dart';
-
-import '../../utils/constants/dimension.dart';
-import '../../utils/styles/app_texts.dart';
-import '../../widgets/global/custom_app_bar.dart';
 
 class CreateToppingScreen extends StatefulWidget {
   static const routeName = "/create_topping";
@@ -48,8 +47,7 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             title: Text('Please choose media to select'),
             content: SizedBox(
               height: MediaQuery.of(context).size.height / 6,
@@ -121,8 +119,7 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
 
       final storageRef = FirebaseStorage.instance.ref();
 
-      final toppingImagesRef = storageRef
-          .child('products/topping/topping${DateTime.now().toString()}');
+      final toppingImagesRef = storageRef.child('products/topping/topping${DateTime.now().toString()}');
 
       try {
         await toppingImagesRef.putFile(File(image!.path)).then((res) {
@@ -175,10 +172,7 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
                             ),
                             Container(
                               clipBehavior: Clip.hardEdge,
-                              margin: EdgeInsets.only(
-                                  left: Dimension.height16,
-                                  right: Dimension.height16,
-                                  top: 3),
+                              margin: EdgeInsets.only(left: Dimension.height16, right: Dimension.height16, top: 3),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(8),
@@ -189,56 +183,37 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
                                   SizedBox(height: 16),
                                   image != null
                                       ? Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 20),
+                                          padding: const EdgeInsets.symmetric(horizontal: 20),
                                           child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
+                                            borderRadius: BorderRadius.circular(8),
                                             child: Image.file(
                                               File(image!.path),
                                               fit: BoxFit.cover,
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
+                                              width: MediaQuery.of(context).size.width,
                                               height: 300,
                                             ),
                                           ),
                                         )
                                       : Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 20),
+                                          padding: const EdgeInsets.symmetric(horizontal: 20),
                                           child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
+                                            borderRadius: BorderRadius.circular(8),
                                             child: Center(
-                                                widthFactor:
-                                                    MediaQuery.of(context)
-                                                        .size
-                                                        .width,
-                                                child: Icon(IconData(0xee39,
-                                                    fontFamily:
-                                                        'MaterialIcons'))),
+                                                widthFactor: MediaQuery.of(context).size.width,
+                                                child: Icon(IconData(0xee39, fontFamily: 'MaterialIcons'))),
                                           ),
                                         ),
                                   ElevatedButton(
                                     style: ButtonStyle(
-                                        elevation:
-                                            const MaterialStatePropertyAll(0),
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              Dimension.height20),
+                                        elevation: const MaterialStatePropertyAll(0),
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(Dimension.height20),
                                         )),
-                                        backgroundColor:
-                                            const MaterialStatePropertyAll(
-                                                AppColors.blueColor)),
+                                        backgroundColor: const MaterialStatePropertyAll(AppColors.blueColor)),
                                     onPressed: () {
                                       uploadImageDialog();
                                     },
-                                    child: Text(image != null
-                                        ? "Rechoose Photo"
-                                        : "Choose Photo"),
+                                    child: Text(image != null ? "Rechoose Photo" : "Choose Photo"),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(
@@ -247,32 +222,8 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
                                         top: Dimension.height12,
                                         bottom: Dimension.height16),
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        // Row(
-                                        //   mainAxisAlignment:
-                                        //       MainAxisAlignment.spaceBetween,
-                                        //   children: [
-                                        //     Column(
-                                        //       crossAxisAlignment:
-                                        //           CrossAxisAlignment.start,
-                                        //       children: [
-                                        //         Text(
-                                        //           "Name",
-                                        //           style: AppText
-                                        //               .style.regularBlack16,
-                                        //         ),
-                                        //         const SizedBox(
-                                        //           height: 2,
-                                        //         ),
-                                        //         Text("Price",
-                                        //             style: AppText
-                                        //                 .style.boldBlack14),
-                                        //       ],
-                                        //     ),
-                                        //   ],
-                                        // ),
                                         Column(
                                           children: [
                                             CustormTextForm(
@@ -283,8 +234,7 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
                                             ),
                                             SizedBox(height: 8),
                                             CustormTextForm(
-                                              controller:
-                                                  toppingPriceController,
+                                              controller: toppingPriceController,
                                               validator: PriceValidator(),
                                               verifiedCheck: true,
                                               label: 'Price (VND)',
@@ -306,23 +256,15 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
                           : Container(
                               height: Dimension.height56,
                               color: Colors.white,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: Dimension.width16,
-                                  vertical: Dimension.height8),
+                              padding: EdgeInsets.symmetric(horizontal: Dimension.width16, vertical: Dimension.height8),
                               child: ElevatedButton(
                                   onPressed: hanldeCreateTopping,
                                   style: ButtonStyle(
-                                      elevation:
-                                          const MaterialStatePropertyAll(0),
-                                      shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            Dimension.height20),
+                                      elevation: const MaterialStatePropertyAll(0),
+                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(Dimension.height20),
                                       )),
-                                      backgroundColor:
-                                          const MaterialStatePropertyAll(
-                                              AppColors.blueColor)),
+                                      backgroundColor: const MaterialStatePropertyAll(AppColors.blueColor)),
                                   child: Text(
                                     "Create Topping",
                                     style: AppText.style.regularWhite16,

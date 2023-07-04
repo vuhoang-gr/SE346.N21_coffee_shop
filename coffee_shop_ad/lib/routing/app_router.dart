@@ -18,6 +18,10 @@ import 'package:coffee_shop_admin/screens/promo/promo_edit.dart';
 import 'package:coffee_shop_admin/screens/promo/promo_screen.dart';
 import 'package:coffee_shop_admin/screens/store/store_detail.dart';
 import 'package:coffee_shop_admin/screens/store/store_create.dart';
+import 'package:coffee_shop_admin/screens/store/store_screen.dart';
+import 'package:coffee_shop_admin/services/blocs/auth/auth_bloc.dart';
+import 'package:coffee_shop_admin/services/models/drink.dart';
+import 'package:coffee_shop_admin/services/models/store.dart';
 import 'package:coffee_shop_admin/widgets/feature/store/store_address/map_screen.dart';
 import 'package:coffee_shop_admin/screens/user/user_screen.dart';
 import 'package:coffee_shop_admin/services/blocs/auth_action/auth_action_cubit.dart';
@@ -30,11 +34,6 @@ import 'package:coffee_shop_admin/services/models/size.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-import '../screens/store/store_screen.dart';
-import '../services/blocs/auth/auth_bloc.dart';
-import '../services/models/drink.dart';
-import '../services/models/store.dart';
 
 class AppRouter {
   AuthState authState = UnAuthenticated();

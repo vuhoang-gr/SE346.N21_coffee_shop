@@ -1,6 +1,5 @@
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:flutter/material.dart';
-
-import '../../../utils/constants/dimension.dart';
 
 class IconWidgetRow extends StatelessWidget {
   const IconWidgetRow(

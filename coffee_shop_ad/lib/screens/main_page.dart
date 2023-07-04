@@ -5,10 +5,9 @@ import 'package:coffee_shop_admin/screens/promo/promo_screen.dart';
 import 'package:coffee_shop_admin/screens/store/store_screen.dart';
 import 'package:coffee_shop_admin/screens/user/user_screen.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:flutter/material.dart';
-
-import '../utils/constants/dimension.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key, this.selectedPage = 0});
@@ -32,14 +31,9 @@ class _MainPageState extends State<MainPage> {
             bottomNavigationBar: Container(
               height: Dimension.height56,
               decoration: const BoxDecoration(
-                  color: Colors.white,
-                  border: Border(
-                      top:
-                          BorderSide(color: AppColors.greyBoxColor, width: 1))),
+                  color: Colors.white, border: Border(top: BorderSide(color: AppColors.greyBoxColor, width: 1))),
               child: TabBar(
-                indicator: const BoxDecoration(
-                    border: Border(
-                        top: BorderSide(color: Colors.blue, width: 1.5))),
+                indicator: const BoxDecoration(border: Border(top: BorderSide(color: Colors.blue, width: 1.5))),
                 labelColor: Colors.blue,
                 labelStyle: AppText.style.boldBlack14,
                 unselectedLabelColor: AppColors.greyTextColor,
@@ -56,7 +50,7 @@ class _MainPageState extends State<MainPage> {
                         ),
                         Text(
                           'Drink',
-                          style: AppText.style.regularGrey10,
+                          style: AppText.style.regular10,
                         )
                       ],
                     ),
@@ -72,7 +66,7 @@ class _MainPageState extends State<MainPage> {
                         ),
                         Text(
                           'Store',
-                          style: AppText.style.regularGrey10,
+                          style: AppText.style.regular10,
                         )
                       ],
                     ),
@@ -88,7 +82,7 @@ class _MainPageState extends State<MainPage> {
                         ),
                         Text(
                           'Promo',
-                          style: AppText.style.regularGrey10,
+                          style: AppText.style.regular10,
                         )
                       ],
                     ),
@@ -104,7 +98,7 @@ class _MainPageState extends State<MainPage> {
                         ),
                         Text(
                           'User',
-                          style: AppText.style.regularGrey10,
+                          style: AppText.style.regular10,
                         )
                       ],
                     ),
@@ -120,7 +114,7 @@ class _MainPageState extends State<MainPage> {
                         ),
                         Text(
                           'Profile',
-                          style: AppText.style.regularGrey10,
+                          style: AppText.style.regular10,
                         ),
                       ],
                     ),

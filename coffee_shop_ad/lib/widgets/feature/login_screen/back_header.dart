@@ -1,10 +1,9 @@
+import 'package:coffee_shop_admin/services/blocs/auth_action/auth_action_cubit.dart';
+import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/widgets/global/buttons/touchable_opacity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../services/blocs/auth_action/auth_action_cubit.dart';
-import '../../../utils/colors/app_colors.dart';
-import '../../../utils/constants/dimension.dart';
 
 class BackHeader extends StatelessWidget {
   const BackHeader({super.key});
@@ -15,8 +14,7 @@ class BackHeader extends StatelessWidget {
       children: [
         TouchableOpacity(
           onTap: () {
-            final AuthActionState current =
-                context.read<AuthActionCubit>().state;
+            final AuthActionState current = context.read<AuthActionCubit>().state;
             if (current is ForgotPassword) {
               context.read<AuthActionCubit>().changeState(Login());
             } else {

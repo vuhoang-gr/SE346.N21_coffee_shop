@@ -1,12 +1,13 @@
 import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_event.dart';
+import 'package:coffee_shop_admin/services/functions/money_transfer.dart';
 import 'package:coffee_shop_admin/services/models/drink.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
+import 'package:coffee_shop_admin/utils/constants/placeholder_enum.dart';
+import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
+import 'package:coffee_shop_admin/widgets/global/aysncImage/async_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../services/functions/money_transfer.dart';
-import '../../utils/constants/dimension.dart';
-import '../../utils/styles/app_texts.dart';
 
 class DrinkItem extends StatelessWidget {
   final Drink product;
@@ -17,14 +18,10 @@ class DrinkItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(5),
-            color: CupertinoColors.white),
+            shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(5), color: CupertinoColors.white),
         child: GestureDetector(
             onTap: () {
-              Navigator.of(context)
-                  .pushNamed("/drink_detail_screen", arguments: product)
-                  .then((value) {
+              Navigator.of(context).pushNamed("/drink_detail_screen", arguments: product).then((value) {
                 BlocProvider.of<DrinkListBloc>(context).add(FetchData());
               });
             },
@@ -32,11 +29,12 @@ class DrinkItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Stack(alignment: Alignment.topCenter, children: [
-                  Image.network(
-                    product.images[0],
+                  AsyncImage(
+                    src: product.images[0],
                     height: Dimension.height68,
                     width: Dimension.height68,
                     fit: BoxFit.cover,
+                    type: PlaceholderType.food,
                   ),
                   SizedBox(
                     height: Dimension.height8,

@@ -1,12 +1,12 @@
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
+import 'package:coffee_shop_admin/utils/styles/button.dart';
+import 'package:coffee_shop_admin/widgets/feature/drink_detail_widgets/icon_widget_row.dart';
+import 'package:coffee_shop_admin/widgets/global/container_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../utils/constants/dimension.dart';
-import '../../../utils/styles/button.dart';
-import '../../global/container_card.dart';
-import '../drink_detail_widgets/icon_widget_row.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class StoreInfoDialog extends StatelessWidget {
@@ -27,8 +27,7 @@ class StoreInfoDialog extends StatelessWidget {
                 fit: BoxFit.cover,
                 alignment: Alignment.center,
                 width: double.maxFinite,
-                imageUrl:
-                    'https://images.edrawmind.com/article/swot-analysis-of-coffee-shop/1200_800.jpg',
+                imageUrl: 'https://images.edrawmind.com/article/swot-analysis-of-coffee-shop/1200_800.jpg',
                 placeholder: (context, url) => Container(
                   alignment: Alignment.center,
                   child: const CircularProgressIndicator(),
@@ -103,8 +102,7 @@ class StoreInfoDialog extends StatelessWidget {
                           child: Center(
                               child: Text(
                             'Close',
-                            style: AppText.style.boldBlack16
-                                .copyWith(fontWeight: FontWeight.normal),
+                            style: AppText.style.boldBlack16.copyWith(fontWeight: FontWeight.normal),
                           )))),
                   SizedBox(
                     height: Dimension.height16,

@@ -1,10 +1,9 @@
+import 'package:coffee_shop_admin/services/models/address.dart';
+import 'package:coffee_shop_admin/services/models/drink.dart';
 import 'package:coffee_shop_admin/services/models/location.dart';
-
-import '../services/models/address.dart';
-import '../services/models/drink.dart';
-import '../services/models/size.dart';
-import '../services/models/store.dart';
-import '../services/models/topping.dart';
+import 'package:coffee_shop_admin/services/models/size.dart';
+import 'package:coffee_shop_admin/services/models/store.dart';
+import 'package:coffee_shop_admin/services/models/topping.dart';
 
 class Data {
   static const name = "Nguyen Van A";
@@ -68,9 +67,7 @@ class Data {
       //   Data.toopings[0],
       //   Data.toopings[1],
       // ],
-      images: [
-        "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
-      ],
+      images: ["https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"],
     ),
     Drink(
       id: "food2",
@@ -84,9 +81,7 @@ class Data {
       //   Data.toopings[0],
       //   Data.toopings[1],
       // ],
-      images: [
-        "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
-      ],
+      images: ["https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"],
     ),
     Drink(
       id: "food3",
@@ -98,9 +93,7 @@ class Data {
       //   Data.sizes[1],
       // ],
       // toppings: [],
-      images: [
-        "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
-      ],
+      images: ["https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"],
     ),
     Drink(
       id: "food4",
@@ -114,9 +107,7 @@ class Data {
       //   Data.toopings[0],
       //   Data.toopings[1],
       // ],
-      images: [
-        "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
-      ],
+      images: ["https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"],
     ),
     Drink(
       id: "food5",
@@ -127,9 +118,7 @@ class Data {
       //   Data.sizes[0],
       // ],
       // toppings: [],
-      images: [
-        "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
-      ],
+      images: ["https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"],
     ),
     Drink(
       id: "food6",
@@ -144,9 +133,7 @@ class Data {
       //   Data.toopings[0],
       //   Data.toopings[1],
       // ],
-      images: [
-        "https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"
-      ],
+      images: ["https://phunugioi.com/wp-content/uploads/2022/02/Anh-Do-An-Cute-2.jpg"],
     ),
   ];
 
@@ -155,8 +142,7 @@ class Data {
       id: "st01",
       sb: "The Coffee House - Hoàng Diệu 2",
       address: MLocation(
-          formattedAddress:
-              '66E Đ. Hoàng Diệu 2, Phường Linh Trung, Thủ Đức, Thành phố Hồ Chí Minh 700000, Việt Nam',
+          formattedAddress: '66E Đ. Hoàng Diệu 2, Phường Linh Trung, Thủ Đức, Thành phố Hồ Chí Minh 700000, Việt Nam',
           lat: 10.859665592985602,
           lng: 106.76683457652881),
       phone: "01234567890",
@@ -165,8 +151,7 @@ class Data {
         id: "st02",
         sb: "The Coffee House - Tô Ngọc Vân",
         address: MLocation(
-            formattedAddress:
-                '116 Tô Ngọc Vân, Linh Tây, TP Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam',
+            formattedAddress: '116 Tô Ngọc Vân, Linh Tây, TP Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam',
             lat: 10.858316892414416,
             lng: 106.75172837615054),
         phone: "01234567890"),
@@ -174,8 +159,7 @@ class Data {
         id: "st03",
         sb: "The Coffee House - Đặng Văn Bi",
         address: MLocation(
-            formattedAddress:
-                '201 Đặng Văn Bi, Bình Thọ, Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam',
+            formattedAddress: '201 Đặng Văn Bi, Bình Thọ, Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam',
             lat: 10.84348078437171,
             lng: 106.75722153992446),
         phone: "01234567890"),
@@ -184,8 +168,7 @@ class Data {
   static final List<Address> addresses = [
     Address(
         address: MLocation(
-            formattedAddress:
-                "Đường Hàn Thuyên, khu phố 6 P, Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam",
+            formattedAddress: "Đường Hàn Thuyên, khu phố 6 P, Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam",
             lat: 10.87002512137537,
             lng: 106.80305394044481),
         addressNote: "",

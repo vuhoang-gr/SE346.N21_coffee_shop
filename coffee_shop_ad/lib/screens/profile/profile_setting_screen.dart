@@ -1,3 +1,5 @@
+import 'package:coffee_shop_admin/services/apis/auth_api.dart';
+import 'package:coffee_shop_admin/services/models/user.dart';
 import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:coffee_shop_admin/widgets/feature/profile_screen/change_password_dialog.dart';
@@ -7,9 +9,6 @@ import 'package:coffee_shop_admin/widgets/global/custom_app_bar.dart';
 import 'package:coffee_shop_admin/widgets/global/textForm/custom_text_form.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-import '../../services/apis/auth_api.dart';
-import '../../services/models/user.dart';
 
 class ProfileSettingScreen extends StatefulWidget {
   static const String routeName = '/profile_setting_screen';
