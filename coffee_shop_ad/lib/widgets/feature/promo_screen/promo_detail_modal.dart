@@ -252,18 +252,3 @@ class PromoDetailModal extends StatelessWidget {
     );
   }
 }
-
-final _roundedButtonStyle = ButtonStyle(
-    elevation: const MaterialStatePropertyAll(0),
-    shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(Dimension.height20),
-    )),
-    backgroundColor: const MaterialStatePropertyAll(AppColors.blueColor));
-
-final _roundedOutlineButtonStyle = ButtonStyle(
-    elevation: const MaterialStatePropertyAll(0),
-    shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-      side: const BorderSide(color: AppColors.blueColor, width: 1),
-      borderRadius: BorderRadius.circular(Dimension.height20),
-    )),
-    backgroundColor: const MaterialStatePropertyAll(Colors.white));

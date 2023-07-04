@@ -76,7 +76,7 @@ class _StoreScreenState extends State<StoreScreen> {
                                         color: Colors.white,
                                       ),
                                       Text(
-                                        'New store...',
+                                        'New Store',
                                         style: AppText.style.regularWhite16,
                                       )
                                     ],

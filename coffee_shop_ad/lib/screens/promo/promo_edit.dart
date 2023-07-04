@@ -210,29 +210,45 @@ class _EditPromoScreenState extends State<EditPromoScreen> {
                                               height: 12,
                                             ),
                                             Container(
+                                                decoration: BoxDecoration(
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey.withOpacity(0.05),
+                                                      spreadRadius: 5,
+                                                      blurRadius: 6,
+                                                    ),
+                                                  ],
+                                                ),
                                                 height: Dimension.height12 * 13,
                                                 width: double.maxFinite,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius: BorderRadius.circular(8),
-                                                ),
                                                 child: TextField(
                                                   controller: descriptionController,
                                                   scrollPadding: EdgeInsets.only(bottom: Dimension.height16),
                                                   textAlignVertical: TextAlignVertical.top,
                                                   expands: true,
                                                   maxLength: 200,
-                                                  style: AppText.style.regularBlack14,
+                                                  style: AppText.style.regularWhite14.copyWith(
+                                                    color: AppColors.blackColor,
+                                                  ),
                                                   decoration: InputDecoration(
-                                                      contentPadding: EdgeInsets.only(
-                                                          top: Dimension.height8,
-                                                          left: Dimension.height16,
-                                                          right: Dimension.height16),
+                                                      contentPadding: EdgeInsets.symmetric(
+                                                        horizontal: Dimension.getWidthFromValue(20),
+                                                        vertical: Dimension.getHeightFromValue(10),
+                                                      ),
                                                       hintText: 'Description',
                                                       hintStyle: AppText.style.regularGrey14,
                                                       focusedBorder: OutlineInputBorder(
-                                                          borderRadius: BorderRadius.circular(4),
-                                                          borderSide: const BorderSide(color: AppColors.greyTextColor)),
+                                                        borderSide: BorderSide(
+                                                          color: AppColors.blackColor,
+                                                          width: 0.4,
+                                                        ),
+                                                      ),
+                                                      enabledBorder: OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                          color: AppColors.blackColor,
+                                                          width: 0.2,
+                                                        ),
+                                                      ),
                                                       border: OutlineInputBorder(
                                                           borderRadius: BorderRadius.circular(4),
                                                           borderSide: const BorderSide(color: AppColors.greyBoxColor))),
@@ -263,6 +279,7 @@ class _EditPromoScreenState extends State<EditPromoScreen> {
                                               icon: Icon(Icons.event),
                                               dateLabelText: 'Start Date',
                                               timeLabelText: "Time",
+                                              style: AppText.style.regularBlack14,
                                               selectableDayPredicate: (date) {
                                                 if (date.weekday == 6 || date.weekday == 7) {
                                                   return false;
@@ -277,6 +294,7 @@ class _EditPromoScreenState extends State<EditPromoScreen> {
                                               lastDate: DateTime(2100),
                                               icon: Icon(Icons.event),
                                               dateLabelText: 'End Date',
+                                              style: AppText.style.regularBlack14,
                                               timeLabelText: "Time",
                                               selectableDayPredicate: (date) {
                                                 if (date.weekday == 6 || date.weekday == 7) {
@@ -322,13 +340,9 @@ class _EditPromoScreenState extends State<EditPromoScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  RichText(
-                                    text: TextSpan(
-                                      style: AppText.style.boldBlack16,
-                                      children: <TextSpan>[
-                                        const TextSpan(text: 'Stores'),
-                                      ],
-                                    ),
+                                  Text(
+                                    "Stores",
+                                    style: AppText.style.boldBlack16,
                                   ),
                                   ListView.separated(
                                       padding: EdgeInsets.only(top: Dimension.height16),

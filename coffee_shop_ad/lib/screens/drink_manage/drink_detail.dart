@@ -129,13 +129,9 @@ class _DrinkDetailState extends State<DrinkDetail> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            RichText(
-                              text: TextSpan(
-                                style: AppText.style.boldBlack16,
-                                children: <TextSpan>[
-                                  const TextSpan(text: 'Size'),
-                                ],
-                              ),
+                            Text(
+                              "Size",
+                              style: AppText.style.boldBlack16,
                             ),
                             ListView.separated(
                                 padding: EdgeInsets.only(top: Dimension.height16),
@@ -201,13 +197,9 @@ class _DrinkDetailState extends State<DrinkDetail> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            RichText(
-                              text: TextSpan(
-                                style: AppText.style.boldBlack16,
-                                children: <TextSpan>[
-                                  const TextSpan(text: 'Topping '),
-                                ],
-                              ),
+                            Text(
+                              "Topping",
+                              style: AppText.style.boldBlack16,
                             ),
                             ListView.separated(
                                 padding: EdgeInsets.only(top: Dimension.height16),

@@ -288,11 +288,13 @@ class _CreateStoreScreenState extends State<CreateStoreScreen> with InputValidat
                                         controller: openTimeController,
                                         icon: Icon(Icons.event),
                                         timeLabelText: "Open Time",
+                                        style: AppText.style.regularBlack14,
                                       ),
                                       DateTimePicker(
                                         type: DateTimePickerType.time,
                                         controller: closeTimeController,
                                         icon: Icon(Icons.event),
+                                        style: AppText.style.regularBlack14,
                                         timeLabelText: "Close Time",
                                       ),
                                     ],
@@ -335,7 +337,7 @@ class _CreateStoreScreenState extends State<CreateStoreScreen> with InputValidat
                                     onPressed: () => _submitForm(state, true),
                                     style: _roundedButtonStyle,
                                     child: Text(
-                                      "Create",
+                                      "Create Store",
                                       style: AppText.style.regularWhite16,
                                     ));
                               }))
