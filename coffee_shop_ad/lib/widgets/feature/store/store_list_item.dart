@@ -1,18 +1,15 @@
+import 'package:coffee_shop_admin/services/models/store.dart';
+import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
+import 'package:coffee_shop_admin/widgets/global/container_card.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-// import '../../../services/blocs/cart_button/cart_button_bloc.dart';
-// import '../../../services/blocs/cart_button/cart_button_state.dart';
-import '../../../services/models/store.dart';
-import '../../../utils/colors/app_colors.dart';
-import '../../../utils/constants/dimension.dart';
-import '../../global/container_card.dart';
 
 class StoreListItem extends StatelessWidget {
   final Store store;
   final VoidCallback tapHandler;
-  const StoreListItem(
-      {super.key, required this.store, required this.tapHandler});
+  const StoreListItem({super.key, required this.store, required this.tapHandler});
 
   @override
   Widget build(BuildContext context) {

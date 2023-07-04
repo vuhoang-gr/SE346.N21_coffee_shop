@@ -20,6 +20,7 @@ class _AuthScreenState extends State<AuthScreen> {
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            //body
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(
@@ -28,14 +29,13 @@ class _AuthScreenState extends State<AuthScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    //Body
                     Expanded(
-                      flex:
-                          MediaQuery.of(context).viewInsets.bottom == 0 ? 3 : 1,
+                      flex: MediaQuery.of(context).viewInsets.bottom == 0 ? 3 : 1,
                       child: SingleChildScrollView(
-                          physics: MediaQuery.of(context).viewInsets.bottom == 0
-                              ? NeverScrollableScrollPhysics()
-                              : BouncingScrollPhysics(),
-                          child: LoginScreen()),
+                        physics: BouncingScrollPhysics(),
+                        child: LoginScreen(),
+                      ),
                     ),
                   ],
                 ),

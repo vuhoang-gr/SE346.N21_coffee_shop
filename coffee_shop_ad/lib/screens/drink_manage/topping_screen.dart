@@ -2,15 +2,14 @@ import 'package:coffee_shop_admin/screens/drink_manage/topping_create.dart';
 import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_event.dart';
 import 'package:coffee_shop_admin/services/blocs/topping_list/topping_list_state.dart';
+import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:coffee_shop_admin/utils/styles/button.dart';
 import 'package:coffee_shop_admin/widgets/feature/drink_manage/topping/topping_item.dart';
 import 'package:coffee_shop_admin/widgets/global/skeleton/list_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../utils/colors/app_colors.dart';
-import '../../utils/constants/dimension.dart';
 
 class ToppingList extends StatefulWidget {
   const ToppingList({super.key});
@@ -38,15 +37,13 @@ class _ToppingListState extends State<ToppingList> {
           Expanded(
             child: Container(
               decoration: const BoxDecoration(color: Colors.white),
-              child: BlocBuilder<ToppingListBloc, ToppingListState>(
-                  builder: (context, state) {
+              child: BlocBuilder<ToppingListBloc, ToppingListState>(builder: (context, state) {
                 if (state is LoadedState) {
                   return Stack(
                     children: [
                       RefreshIndicator(
                         onRefresh: () async {
-                          BlocProvider.of<ToppingListBloc>(context)
-                              .add(FetchData());
+                          BlocProvider.of<ToppingListBloc>(context).add(FetchData());
                         },
                         child: ListView(
                           controller: _scrollController,
@@ -59,12 +56,10 @@ class _ToppingListState extends State<ToppingList> {
                                 child: ElevatedButton(
                                     style: roundedButton,
                                     onPressed: () {
-                                      Navigator.of(context).pushNamed(
-                                          CreateToppingScreen.routeName);
+                                      Navigator.of(context).pushNamed(CreateToppingScreen.routeName);
                                     },
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Icon(
                                           Icons.add,
@@ -80,9 +75,7 @@ class _ToppingListState extends State<ToppingList> {
                             ...(state.toppingList
                                 .map((product) => Container(
                                       padding: EdgeInsets.only(
-                                          bottom: Dimension.height8,
-                                          left: Dimension.width16,
-                                          right: Dimension.width16),
+                                          bottom: Dimension.height8, left: Dimension.width16, right: Dimension.width16),
                                       child: (ToppingItem(
                                         product: product,
                                       )),

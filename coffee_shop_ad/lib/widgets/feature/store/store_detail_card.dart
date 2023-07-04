@@ -1,8 +1,8 @@
+import 'package:coffee_shop_admin/services/models/store.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:flutter/material.dart';
 
-import '../../../services/models/store.dart';
-import '../../../utils/constants/dimension.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class StoreDetailCard extends StatefulWidget {

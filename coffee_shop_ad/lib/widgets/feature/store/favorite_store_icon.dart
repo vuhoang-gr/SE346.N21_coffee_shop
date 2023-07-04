@@ -1,8 +1,7 @@
+import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import '../../../utils/colors/app_colors.dart';
-import '../../../utils/constants/dimension.dart';
 
 class FavoriteStoreIcon extends StatelessWidget {
   const FavoriteStoreIcon({super.key});

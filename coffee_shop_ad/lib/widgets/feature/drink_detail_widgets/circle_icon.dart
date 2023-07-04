@@ -1,6 +1,5 @@
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:flutter/material.dart';
-
-import '../../../utils/constants/dimension.dart';
 
 class CircleIcon extends StatelessWidget {
   final IconData icon;
@@ -33,10 +32,8 @@ class CircleIcon extends StatelessWidget {
         width: size == 0 ? Dimension.height40 : size,
         height: size == 0 ? Dimension.height40 : size,
         decoration: BoxDecoration(
-            border: Border.all(
-                color: isEnable ? iconColor : disabledColor, width: 1),
-            borderRadius: BorderRadius.circular(
-                size == 0 ? Dimension.height40 : size / 2),
+            border: Border.all(color: isEnable ? iconColor : disabledColor, width: 1),
+            borderRadius: BorderRadius.circular(size == 0 ? Dimension.height40 : size / 2),
             color: backgroundColor),
         child: Icon(
           icon,

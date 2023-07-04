@@ -1,8 +1,7 @@
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/widgets/global/skeleton/item_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:skeletons/skeletons.dart';
-
-import '../../../utils/constants/dimension.dart';
 
 class ListItemSkeleton extends StatelessWidget {
   const ListItemSkeleton({super.key});

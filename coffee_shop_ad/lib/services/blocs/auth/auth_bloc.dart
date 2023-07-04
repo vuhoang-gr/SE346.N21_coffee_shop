@@ -7,8 +7,7 @@ import 'package:coffee_shop_admin/services/apis/auth_api.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-
-import '../../models/user.dart';
+import 'package:coffee_shop_admin/services/models/user.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -16,10 +15,7 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthAPI _authAPI = AuthAPI();
 
-  AuthBloc()
-      : super(AuthAPI.currentUser != null
-            ? Authenticated(user: AuthAPI.currentUser!)
-            : UnAuthenticated()) {
+  AuthBloc() : super(AuthAPI.currentUser != null ? Authenticated(user: AuthAPI.currentUser!) : UnAuthenticated()) {
     on<EmailLogin>((event, emit) async {
       emit(Loading());
       var user = await _authAPI.emailLogin(event.email, event.password);

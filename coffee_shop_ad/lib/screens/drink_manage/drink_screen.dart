@@ -1,15 +1,15 @@
 import 'package:coffee_shop_admin/screens/drink_manage/drink_create.dart';
 import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_event.dart';
+import 'package:coffee_shop_admin/services/blocs/drink_list/drink_list_state.dart';
+import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:coffee_shop_admin/utils/styles/button.dart';
 import 'package:coffee_shop_admin/widgets/global/skeleton/list_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../services/blocs/drink_list/drink_list_state.dart';
-import '../../utils/colors/app_colors.dart';
-import '../../utils/constants/dimension.dart';
 import 'drink_item.dart';
 
 class DrinkScreen extends StatefulWidget {

@@ -4,15 +4,14 @@ import 'package:coffee_shop_admin/services/blocs/store_store/store_store_event.d
 import 'package:coffee_shop_admin/services/blocs/store_store/store_store_state.dart';
 import 'package:coffee_shop_admin/services/models/store.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
+import 'package:coffee_shop_admin/utils/constants/dimension.dart';
+import 'package:coffee_shop_admin/utils/styles/app_texts.dart';
 import 'package:coffee_shop_admin/utils/styles/button.dart';
+import 'package:coffee_shop_admin/widgets/feature/store/store_list_item.dart';
+import 'package:coffee_shop_admin/widgets/feature/store/store_skeleton.dart';
+import 'package:coffee_shop_admin/widgets/global/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../utils/constants/dimension.dart';
-import '../../utils/styles/app_texts.dart';
-import '../../widgets/feature/store/store_list_item.dart';
-import '../../widgets/feature/store/store_skeleton.dart';
-import '../../widgets/global/custom_app_bar.dart';
 
 class StoreScreen extends StatefulWidget {
   static const routeName = "/store_selection_screen";
