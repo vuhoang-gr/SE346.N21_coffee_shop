@@ -71,11 +71,7 @@ class _ProductDetailState extends State<ProductDetail> {
                           children: [
                             ProductCard(product: state.selectedFood!),
 
-                            //size
-                            (state.productsSize.length == 1 &&
-                                    state.productsSize.first.price == 0)
-                                ? SizedBox.shrink()
-                                : Container(
+                            Container(
                                     padding: EdgeInsets.symmetric(
                                         horizontal: Dimension.height16,
                                         vertical: Dimension.height16),

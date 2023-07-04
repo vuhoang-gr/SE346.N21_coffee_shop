@@ -6,7 +6,6 @@ class Promo {
   final DateTime dateStart;
   final DateTime dateEnd;
   final String description;
-  final List<String> products;
   final List<String> stores;
   final bool forNewCustomer;
 
@@ -18,7 +17,6 @@ class Promo {
     required this.description,
     required this.dateStart,
     required this.dateEnd,
-    required this.products,
     required this.stores,
     required this.forNewCustomer,
   });
