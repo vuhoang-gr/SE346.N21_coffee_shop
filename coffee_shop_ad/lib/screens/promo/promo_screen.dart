@@ -64,7 +64,7 @@ class _PromoScreenState extends State<PromoScreen> {
                                   onPressed: () {
                                     Navigator.of(context)
                                         .pushNamed(CreatePromoScreen.routeName, arguments: state.listExistCode)
-                                        .then((value) {
+                                        .then((val) {
                                       BlocProvider.of<PromoBloc>(context).add(FetchData());
                                     });
                                   },

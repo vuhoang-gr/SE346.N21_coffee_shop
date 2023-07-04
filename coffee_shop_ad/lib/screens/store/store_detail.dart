@@ -52,7 +52,7 @@ class StoreDetail extends StatelessWidget {
             );
           });
         } catch (e) {
-          print("Something wrong when delete size");
+          print("Something wrong when delete store");
           print(e);
         }
       },

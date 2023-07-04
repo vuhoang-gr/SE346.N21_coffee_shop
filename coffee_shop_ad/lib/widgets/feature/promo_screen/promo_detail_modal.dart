@@ -19,6 +19,47 @@ class PromoDetailModal extends StatelessWidget {
   final Promo promo;
   const PromoDetailModal({super.key, required this.promo});
 
+  void _handleOnTapDeletePromo(BuildContext context) async {
+    await QuickAlert.show(
+      context: context,
+      type: QuickAlertType.confirm,
+      text: 'Delete ${promo.id}?',
+      confirmBtnText: 'Yes',
+      cancelBtnText: 'No',
+      confirmBtnColor: AppColors.blueColor,
+      confirmBtnTextStyle: AppText.style.regularWhite16,
+      cancelBtnTextStyle: AppText.style.regularBlue16,
+      onConfirmBtnTap: () async {
+        Navigator.of(context).pop();
+        QuickAlert.show(
+          context: context,
+          type: QuickAlertType.loading,
+          title: 'Loading',
+          text: 'Deleting...',
+        );
+
+        try {
+          await promoReference.doc(promo.id).delete().then((value) {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            BlocProvider.of<PromoBloc>(context).add(FetchData());
+
+            QuickAlert.show(
+              context: context,
+              type: QuickAlertType.success,
+              text: 'Completed Successfully!',
+              confirmBtnText: "Ok",
+              confirmBtnColor: AppColors.blueColor,
+            );
+          });
+        } catch (e) {
+          print("Something wrong when delete promo");
+          print(e);
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -127,93 +168,7 @@ class PromoDetailModal extends StatelessWidget {
                                 fixedSize: Size.fromWidth(120),
                                 shape:
                                     const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(45)))),
-                            onPressed: () async {
-                              await showDialog(
-                                  context: context,
-                                  builder: (ctx) {
-                                    return AlertDialog(
-                                        contentPadding: EdgeInsets.zero,
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                        content: Builder(builder: (context) {
-                                          return SizedBox(
-                                            height: Dimension.height160,
-                                            width: Dimension.width296,
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  alignment: Alignment.bottomCenter,
-                                                  height: Dimension.height43,
-                                                  padding: EdgeInsets.symmetric(horizontal: Dimension.width16),
-                                                  child: Text(
-                                                    "Confirm",
-                                                    textAlign: TextAlign.center,
-                                                    style: AppText.style.boldBlack18,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: Dimension.height8,
-                                                ),
-                                                Container(
-                                                    height: Dimension.height37,
-                                                    alignment: Alignment.center,
-                                                    child: Text(
-                                                      "Do you want to delete this promo?",
-                                                      style: AppText.style.regular,
-                                                    )),
-                                                SizedBox(
-                                                  height: Dimension.height8,
-                                                ),
-                                                Container(
-                                                    height: Dimension.height56,
-                                                    padding: EdgeInsets.symmetric(
-                                                        horizontal: Dimension.width16, vertical: Dimension.height8),
-                                                    child: Row(
-                                                      children: [
-                                                        Expanded(
-                                                          child: ElevatedButton(
-                                                              onPressed: () async {
-                                                                QuickAlert.show(
-                                                                  context: context,
-                                                                  type: QuickAlertType.loading,
-                                                                  title: 'Loading',
-                                                                  text: 'Deleting your promo...',
-                                                                );
-                                                                promoReference.doc(promo.id).delete().then((value) {
-                                                                  Navigator.of(context).pop();
-                                                                  Navigator.of(context).pop();
-                                                                  Navigator.of(context).pop();
-                                                                  BlocProvider.of<PromoBloc>(context).add(FetchData());
-                                                                });
-                                                              },
-                                                              style: _roundedOutlineButtonStyle,
-                                                              child: Text(
-                                                                "Yes",
-                                                                style: AppText.style.regularBlue16,
-                                                              )),
-                                                        ),
-                                                        SizedBox(
-                                                          width: Dimension.width8,
-                                                        ),
-                                                        Expanded(
-                                                          child: ElevatedButton(
-                                                              onPressed: () {
-                                                                Navigator.of(context).pop();
-                                                              },
-                                                              style: _roundedButtonStyle,
-                                                              child: Text(
-                                                                "No",
-                                                                style: AppText.style.regularWhite16,
-                                                              )),
-                                                        )
-                                                      ],
-                                                    )),
-                                              ],
-                                            ),
-                                          );
-                                        }));
-                                  });
-                            },
+                            onPressed: () => _handleOnTapDeletePromo(context),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
