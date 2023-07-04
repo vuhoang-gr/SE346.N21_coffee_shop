@@ -61,6 +61,19 @@ class AuthAPI {
     return null;
   }
 
+  Future<bool> forgotPassword(String email) async {
+    try {
+      var signInMethod = await firebaseAuth.fetchSignInMethodsForEmail(email);
+      if (signInMethod.isEmpty) {
+        return false;
+      }
+      await firebaseAuth.sendPasswordResetEmail(email: email);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   signOut() async {
     await firebaseAuth.signOut();
     currentUser = null;
