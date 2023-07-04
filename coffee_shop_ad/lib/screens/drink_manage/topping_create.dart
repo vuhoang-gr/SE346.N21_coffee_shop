@@ -138,6 +138,7 @@ class _CreateToppingScreenState extends State<CreateToppingScreen> {
               type: QuickAlertType.success,
               text: 'Completed Successfully!',
               confirmBtnText: "Ok",
+              confirmBtnColor: AppColors.blueColor,
             );
           });
         });

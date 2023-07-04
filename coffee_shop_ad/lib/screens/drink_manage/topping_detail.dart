@@ -39,8 +39,7 @@ class _ToppingDetailState extends State<ToppingDetail> {
 
     // ignore: no_leading_underscores_for_local_identifiers
     void _handleOnTapEditTopping() async {
-      Navigator.of(context)
-          .pushNamed(EditToppingScreen.routeName, arguments: widget.product);
+      Navigator.of(context).pushNamed(EditToppingScreen.routeName, arguments: widget.product);
     }
 
     // ignore: no_leading_underscores_for_local_identifiers
@@ -51,7 +50,9 @@ class _ToppingDetailState extends State<ToppingDetail> {
         text: 'Do you want to delete ${widget.product.name}?',
         confirmBtnText: 'Yes',
         cancelBtnText: 'No',
-        confirmBtnColor: Colors.green,
+        confirmBtnColor: AppColors.blueColor,
+        confirmBtnTextStyle: AppText.style.regularWhite16,
+        cancelBtnTextStyle: AppText.style.regularBlue16,
         onConfirmBtnTap: () async {
           Navigator.of(context).pop();
           String imgUrl = widget.product.image;
@@ -64,11 +65,7 @@ class _ToppingDetailState extends State<ToppingDetail> {
           );
 
           try {
-            await FirebaseFirestore.instance
-                .collection("Topping")
-                .doc(widget.product.id)
-                .delete()
-                .then((value) {
+            await FirebaseFirestore.instance.collection("Topping").doc(widget.product.id).delete().then((value) {
               Navigator.of(context).pop();
               Navigator.of(context).pop();
               BlocProvider.of<ToppingListBloc>(context).add(FetchData());
@@ -78,6 +75,7 @@ class _ToppingDetailState extends State<ToppingDetail> {
                 type: QuickAlertType.success,
                 text: 'Completed Successfully!',
                 confirmBtnText: "Ok",
+                confirmBtnColor: AppColors.blueColor,
               );
             });
           } catch (e) {
@@ -112,19 +110,14 @@ class _ToppingDetailState extends State<ToppingDetail> {
                   Expanded(
                       child: SingleChildScrollView(
                           child: Column(
-                    children: [
-                      ToppingCard(product: widget.product),
-                      SizedBox(height: 16)
-                    ],
+                    children: [ToppingCard(product: widget.product), SizedBox(height: 16)],
                   ))),
 
                   //add to cart bar
                   isKeyboard
                       ? const SizedBox()
                       : Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: Dimension.height16,
-                              vertical: Dimension.height8),
+                          padding: EdgeInsets.symmetric(horizontal: Dimension.height16, vertical: Dimension.height8),
                           width: double.maxFinite,
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -133,8 +126,7 @@ class _ToppingDetailState extends State<ToppingDetail> {
                                 color: Colors.grey.withOpacity(0.5),
                                 spreadRadius: 3,
                                 blurRadius: 5,
-                                offset: const Offset(
-                                    0, 5), // changes position of shadow
+                                offset: const Offset(0, 5), // changes position of shadow
                               ),
                             ],
                           ),
@@ -165,8 +157,7 @@ class _ToppingDetailState extends State<ToppingDetail> {
                                           backgroundColor: Colors.red,
                                           elevation: 0,
                                           shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(45)))),
+                                              borderRadius: BorderRadius.all(Radius.circular(45)))),
                                       icon: Icon(
                                         Icons.delete_forever,
                                         size: 28,

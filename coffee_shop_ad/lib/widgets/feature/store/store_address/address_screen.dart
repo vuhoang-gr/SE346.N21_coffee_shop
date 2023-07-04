@@ -400,6 +400,7 @@ class _AddressScreenState extends State<AddressScreen> with InputValidationMixin
           type: QuickAlertType.success,
           text: 'Completed Successfully!',
           confirmBtnText: "Ok",
+          confirmBtnColor: AppColors.blueColor,
         );
       });
     }

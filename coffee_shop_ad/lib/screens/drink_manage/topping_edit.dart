@@ -107,6 +107,8 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
         context: context,
         type: QuickAlertType.warning,
         confirmBtnText: "Ok",
+        confirmBtnColor: AppColors.blueColor,
+        confirmBtnTextStyle: AppText.style.regularWhite16,
         text: 'Invalid data!',
       );
       return;
@@ -152,6 +154,7 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
           type: QuickAlertType.success,
           text: 'Completed Successfully!',
           confirmBtnText: "Ok",
+          confirmBtnColor: AppColors.blueColor,
         );
       });
     } catch (e) {

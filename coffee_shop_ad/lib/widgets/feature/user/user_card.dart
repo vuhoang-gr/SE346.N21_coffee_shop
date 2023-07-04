@@ -185,6 +185,7 @@ class _UserCardState extends State<UserCard> with SingleTickerProviderStateMixin
                                         title: "Done!",
                                         text: user.isAdmin ? "Removed Admin role!" : "This user is Admin now!",
                                         confirmBtnText: "Ok",
+                                        confirmBtnColor: AppColors.blueColor,
                                       );
                                     });
 
@@ -244,6 +245,7 @@ class _UserCardState extends State<UserCard> with SingleTickerProviderStateMixin
                                           title: "Done!",
                                           text: user.isStaff ? "Removed Staff role!" : "This user is Staff now!",
                                           confirmBtnText: "Ok",
+                                          confirmBtnColor: AppColors.blueColor,
                                         );
                                       });
                                       setState(() {

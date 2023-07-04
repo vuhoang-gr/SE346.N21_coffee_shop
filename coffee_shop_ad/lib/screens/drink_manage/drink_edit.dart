@@ -59,6 +59,8 @@ class _EditDrinkScreenState extends State<EditDrinkScreen> {
           context: context,
           type: QuickAlertType.warning,
           confirmBtnText: "Ok",
+          confirmBtnColor: AppColors.blueColor,
+          confirmBtnTextStyle: AppText.style.regularWhite16,
           text: 'Please choose drink images!',
         );
         return false;
@@ -71,6 +73,8 @@ class _EditDrinkScreenState extends State<EditDrinkScreen> {
           context: context,
           type: QuickAlertType.warning,
           confirmBtnText: "Ok",
+          confirmBtnColor: AppColors.blueColor,
+          confirmBtnTextStyle: AppText.style.regularWhite16,
           text: 'Invalid Data',
         );
         return false;
@@ -124,6 +128,7 @@ class _EditDrinkScreenState extends State<EditDrinkScreen> {
             type: QuickAlertType.success,
             text: 'Completed Successfully!',
             confirmBtnText: "Ok",
+            confirmBtnColor: AppColors.blueColor,
           );
         });
       } catch (e) {
@@ -134,6 +139,7 @@ class _EditDrinkScreenState extends State<EditDrinkScreen> {
           type: QuickAlertType.error,
           text: 'Something\'s wrong when edit drink!',
           confirmBtnText: "Ok",
+          confirmBtnColor: AppColors.blueColor,
         );
         print("Something's wrong when edit drink");
         print(e);

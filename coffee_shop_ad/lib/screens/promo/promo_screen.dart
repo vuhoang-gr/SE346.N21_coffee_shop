@@ -1,4 +1,5 @@
 // import 'package:coffee_shop_app/screens/promo/promo_qr_scan.dart';
+
 import 'package:coffee_shop_admin/screens/promo/promo_create.dart';
 import 'package:coffee_shop_admin/services/blocs/promo/promo_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/promo/promo_state.dart';
@@ -63,10 +64,7 @@ class _PromoScreenState extends State<PromoScreen> {
                                   style: roundedButton,
                                   onPressed: () {
                                     Navigator.of(context)
-                                        .pushNamed(CreatePromoScreen.routeName, arguments: state.listExistCode)
-                                        .then((value) {
-                                      BlocProvider.of<PromoBloc>(context).add(FetchData());
-                                    });
+                                        .pushNamed(CreatePromoScreen.routeName, arguments: state.listExistCode);
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
