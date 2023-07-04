@@ -64,7 +64,7 @@ class _CreatePromoScreenState extends State<CreatePromoScreen> {
       }
       DateTime startDate = DateTime.parse(startDateController.text);
       DateTime endDate = DateTime.parse(endDateController.text);
-      if (endDate.isBefore(startDate)) return false;
+      if (endDate.isBefore(startDate) || startDate.isAtSameMomentAs(endDate)) return false;
 
       String miPrice = minPriceController.text;
       if (miPrice.isEmpty || int.tryParse(miPrice) == null) {

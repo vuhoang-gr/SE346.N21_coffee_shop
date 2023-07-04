@@ -418,7 +418,7 @@ class _EditPromoScreenState extends State<EditPromoScreen> {
                                       )),
                                       backgroundColor: const MaterialStatePropertyAll(AppColors.blueColor)),
                                   child: Text(
-                                    "Save",
+                                    "Edit",
                                     style: AppText.style.regularWhite16,
                                   )))
                     ],

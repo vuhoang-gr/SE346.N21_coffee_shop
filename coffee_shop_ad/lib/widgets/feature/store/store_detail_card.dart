@@ -99,8 +99,7 @@ class _StoreDetailCardState extends State<StoreDetailCard> {
                                 height: 2,
                               ),
                               Text(
-                                'Open time',
-                                // 'Open: ${TimeOfDay(widget.store.)} - 22:00',
+                                'Open: ${widget.store.openTime} - ${widget.store.closeTime}',
                                 style: AppText.style.regularBlack14,
                               ),
                             ],
