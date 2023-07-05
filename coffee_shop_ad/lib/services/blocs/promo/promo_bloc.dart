@@ -12,15 +12,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class PromoBloc extends Bloc<PromoEvent, PromoState> {
-  PromoBloc()
-      : super(LoadingState(
-            initPromos: [], listExistCode: [], stores: [], drinks: [])) {
+  PromoBloc() : super(LoadingState(initPromos: [], listExistCode: [], stores: [], drinks: [])) {
     on<FetchData>(_mapFetchData);
   }
 
   void _mapFetchData(FetchData event, Emitter<PromoState> emit) async {
-    emit(LoadingState(
-        initPromos: [], listExistCode: [], stores: [], drinks: []));
+    emit(LoadingState(initPromos: [], listExistCode: [], stores: [], drinks: []));
 
     try {
       List<Promo> promoList = [];
@@ -28,11 +25,12 @@ class PromoBloc extends Bloc<PromoEvent, PromoState> {
       final promoDocs = await promoReference.get();
       for (var doc in promoDocs.docs) {
         var curPromo = fromFireStore(doc.data(), doc.id);
-        if (curPromo is Promo) {
-          existCodeList.add(curPromo.id);
-          promoList.add(curPromo);
-        }
+        if (curPromo is! Promo) continue;
+        if (curPromo.dateEnd.isBefore(DateTime.now())) continue;
+        existCodeList.add(curPromo.id);
+        promoList.add(curPromo);
       }
+      promoList.sort(((a, b) => a.dateEnd.isBefore(b.dateEnd) ? 0 : 1));
 
       List<Store> allStores = [];
       final storeDocs = await storeReference.get();
@@ -42,19 +40,13 @@ class PromoBloc extends Bloc<PromoEvent, PromoState> {
             id: doc.id,
             sb: s["shortName"],
             address: MLocation(
-                formattedAddress: s["address"]["formattedAddress"],
-                lat: s["address"]["lat"],
-                lng: s["address"]["lng"]),
+                formattedAddress: s["address"]["formattedAddress"], lat: s["address"]["lat"], lng: s["address"]["lng"]),
             phone: s["phone"],
             images: s["images"]));
       }
 
       Promo.allStores = allStores;
-      emit(LoadedState(
-          initPromos: promoList,
-          listExistCode: existCodeList,
-          stores: allStores,
-          drinks: []));
+      emit(LoadedState(initPromos: promoList, listExistCode: existCodeList, stores: allStores, drinks: []));
     } catch (err) {
       print(err.toString());
       Fluttertoast.showToast(
@@ -63,8 +55,7 @@ class PromoBloc extends Bloc<PromoEvent, PromoState> {
           timeInSecForIosWeb: 1,
           textColor: Colors.white,
           fontSize: Dimension.font14);
-      emit(LoadedState(
-          initPromos: [], listExistCode: [], stores: [], drinks: []));
+      emit(LoadedState(initPromos: [], listExistCode: [], stores: [], drinks: []));
     }
   }
 
@@ -72,16 +63,18 @@ class PromoBloc extends Bloc<PromoEvent, PromoState> {
     if (data == null) return null;
 
     return Promo(
-        id: id,
-        minPrice: data['minPrice'].toDouble(),
-        maxPrice: data['maxPrice'].toDouble(),
-        percent: data['percent'].toDouble(),
-        description: data['description'],
-        dateEnd: data['dateEnd'].toDate(),
-        dateStart: data['dateStart'].toDate(),
-        products: data['products'].cast<String>(),
-        stores: data['stores'].cast<String>(),
-        forNewCustomer: data['forNewCustomer'] ?? false);
+      id: id,
+      minPrice: data['minPrice'].toDouble(),
+      maxPrice: data['maxPrice'].toDouble(),
+      percent: data['percent'].toDouble(),
+      description: data['description'],
+      dateEnd: data['dateEnd'].toDate(),
+      dateStart: data['dateStart'].toDate(),
+      products: data['products'].cast<String>(),
+      stores: data['stores'].cast<String>(),
+      forNewCustomer: data['forNewCustomer'] ?? false,
+      isActive: data['dateStart'].toDate().isBefore(DateTime.now()),
+    );
   }
 
   @override

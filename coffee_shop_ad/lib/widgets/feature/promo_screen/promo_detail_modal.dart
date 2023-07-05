@@ -134,17 +134,18 @@ class PromoDetailModal extends StatelessWidget {
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue,
-                                // elevation: 0,
                                 fixedSize: Size.fromWidth(120),
                                 shape:
                                     const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(45)))),
-                            onPressed: () {
-                              Navigator.of(context)
-                                  .pushNamed(EditPromoScreen.routeName, arguments: promo)
-                                  .then((value) {
-                                Navigator.of(context).pop();
-                              });
-                            },
+                            onPressed: promo.isActive
+                                ? null
+                                : () {
+                                    Navigator.of(context)
+                                        .pushNamed(EditPromoScreen.routeName, arguments: promo)
+                                        .then((value) {
+                                      Navigator.of(context).pop();
+                                    });
+                                  },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
