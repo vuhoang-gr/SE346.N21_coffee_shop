@@ -352,6 +352,21 @@ class _CreateStoreScreenState extends State<CreateStoreScreen> with InputValidat
     if (_formKey.currentState?.validate() ?? false) {
       if (!submit) return;
 
+      DateTime openTime = DateTime.parse('2023-06-14 ${openTimeController.text}');
+      DateTime closeTime = DateTime.parse('2023-06-14 ${closeTimeController.text}');
+      if (closeTime.isBefore(openTime) || closeTime.isAtSameMomentAs(openTime)) {
+        // ignore: use_build_context_synchronously
+        QuickAlert.show(
+          context: context,
+          type: QuickAlertType.warning,
+          confirmBtnText: "Ok",
+          confirmBtnColor: AppColors.blueColor,
+          confirmBtnTextStyle: AppText.style.regularWhite16,
+          text: 'Invalid time!',
+        );
+        return;
+      }
+
       final imagePaths = imgController.images;
       if (imagePaths.isEmpty) {
         QuickAlert.show(
@@ -384,8 +399,6 @@ class _CreateStoreScreenState extends State<CreateStoreScreen> with InputValidat
           });
         }
 
-        DateTime openTime = DateTime.parse('2023-06-14 ${openTimeController.text}');
-        DateTime closeTime = DateTime.parse('2023-06-14 ${closeTimeController.text}');
         await storeReference.add({
           "address": {"formattedAddress": _mLocation.formattedAddress, "lat": _mLocation.lat, "lng": _mLocation.lng},
           "images": imgUrlList,
