@@ -11,8 +11,9 @@ import 'package:quickalert/quickalert.dart';
 
 // ignore: must_be_immutable
 class UserCard extends StatefulWidget {
-  UserCard({super.key, required this.user});
+  UserCard({super.key, required this.user, required this.self});
   User user;
+  bool self = false;
   @override
   State<UserCard> createState() => _UserCardState();
 }
@@ -62,7 +63,7 @@ class _UserCardState extends State<UserCard> with SingleTickerProviderStateMixin
               padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
-                color: Colors.white,
+                color: widget.self ? Colors.grey.shade200 : Colors.white,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.1),
@@ -95,7 +96,7 @@ class _UserCardState extends State<UserCard> with SingleTickerProviderStateMixin
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          user.name,
+                          "${widget.self ? "[ME] " : ""} ${user.name}",
                           style: AppText.style.boldBlack16.copyWith(
                             color: AppColors.blueColor,
                           ),
@@ -169,35 +170,37 @@ class _UserCardState extends State<UserCard> with SingleTickerProviderStateMixin
                               SizedBox(
                                 width: constraint.maxWidth / 4 - 1,
                                 child: TouchableOpacity(
-                                  onTap: () async {
-                                    QuickAlert.show(
-                                        context: context,
-                                        type: QuickAlertType.loading,
-                                        title: "Setting role",
-                                        text: user.isAdmin ? "Removing Admin role" : "Adding Admin role");
-                                    await userReference.doc(user.id).update({
-                                      "isAdmin": !user.isAdmin,
-                                    }).then((value) {
-                                      Navigator.pop(context);
-                                      QuickAlert.show(
-                                        context: context,
-                                        type: QuickAlertType.success,
-                                        title: "Done!",
-                                        text: user.isAdmin ? "Removed Admin role!" : "This user is Admin now!",
-                                        confirmBtnText: "Ok",
-                                        confirmBtnColor: AppColors.blueColor,
-                                      );
-                                    });
+                                  onTap: widget.self
+                                      ? null
+                                      : () async {
+                                          QuickAlert.show(
+                                              context: context,
+                                              type: QuickAlertType.loading,
+                                              title: "Setting role",
+                                              text: user.isAdmin ? "Removing Admin role" : "Adding Admin role");
+                                          await userReference.doc(user.id).update({
+                                            "isAdmin": !user.isAdmin,
+                                          }).then((value) {
+                                            Navigator.pop(context);
+                                            QuickAlert.show(
+                                              context: context,
+                                              type: QuickAlertType.success,
+                                              title: "Done!",
+                                              text: user.isAdmin ? "Removed Admin role!" : "This user is Admin now!",
+                                              confirmBtnText: "Ok",
+                                              confirmBtnColor: AppColors.blueColor,
+                                            );
+                                          });
 
-                                    setState(() {
-                                      user.isAdmin = !user.isAdmin;
-                                    });
-                                    swipeController.reverse();
-                                  },
+                                          setState(() {
+                                            user.isAdmin = !user.isAdmin;
+                                          });
+                                          swipeController.reverse();
+                                        },
                                   child: Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(15),
-                                      color: adminOppositeColor,
+                                      color: widget.self ? Colors.grey : adminOppositeColor,
                                     ),
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.center,
