@@ -4,11 +4,11 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-part 'auth_state.dart';
+part 'app_state.dart';
 
-class AuthCubit extends Cubit<AuthState> {
-  AuthCubit() : super(SignIn());
-  void changeState(AuthState type) {
-    emit(type);
+class AppCubit extends Cubit<AppState> {
+  AppCubit() : super(AppLoaded());
+  void changeState(AppState state) {
+    emit(state);
   }
 }

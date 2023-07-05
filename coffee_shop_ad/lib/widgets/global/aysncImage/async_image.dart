@@ -47,7 +47,7 @@ class _AsyncImageState extends State<AsyncImage> {
               )
             : widget.type == PlaceholderType.user
                 ? Image.asset(
-                    'assets/images/placeholder/placeholder_user.jpg',
+                    'assets/images/placeholder/placeholder_user.png',
                     fit: BoxFit.cover,
                   )
                 : widget.type == PlaceholderType.food

@@ -1,3 +1,4 @@
+import 'package:coffee_shop_admin/services/blocs/app_cubit/app_cubit.dart';
 import 'package:coffee_shop_admin/services/blocs/auth/auth_bloc.dart';
 import 'package:coffee_shop_admin/utils/constants/dimension.dart';
 import 'package:coffee_shop_admin/utils/validations/email_validate.dart';
@@ -21,7 +22,9 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     onLogin() async {
+      context.read<AppCubit>().changeState(AppLoading());
       context.read<AuthBloc>().add(EmailLogin(email: emailController.text, password: passwordController.text));
+      context.read<AppCubit>().changeState(AppLoaded());
     }
 
     return Column(
