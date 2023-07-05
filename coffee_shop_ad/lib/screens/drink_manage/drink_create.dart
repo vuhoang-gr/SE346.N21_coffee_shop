@@ -131,7 +131,7 @@ class _CreateDrinkScreenState extends State<CreateDrinkScreen> {
           "images": imgUrlList,
         }).then((value) {
           Navigator.of(context).pop();
-          Navigator.of(context).pop();
+          Navigator.of(context).pop(true);
           QuickAlert.show(
             context: context,
             type: QuickAlertType.success,

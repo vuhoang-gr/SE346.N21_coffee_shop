@@ -57,8 +57,8 @@ class _DrinkListState extends State<DrinkScreen> {
                                 child: ElevatedButton(
                                     style: roundedButton,
                                     onPressed: () {
-                                      Navigator.of(context).pushNamed(CreateDrinkScreen.routeName).then((value) {
-                                        BlocProvider.of<DrinkListBloc>(context).add(FetchData());
+                                      Navigator.of(context).pushNamed(CreateDrinkScreen.routeName).then((created) {
+                                        if (created != null) BlocProvider.of<DrinkListBloc>(context).add(FetchData());
                                       });
                                     },
                                     child: Row(
