@@ -13,8 +13,6 @@ class StoreListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return BlocBuilder<CartButtonBloc, CartButtonState>(
-    //     builder: (context, state) {
     return GestureDetector(
       onTap: tapHandler,
       child: ContainerCard(
@@ -72,6 +70,5 @@ class StoreListItem extends StatelessWidget {
             ),
           ])),
     );
-    //   });
   }
 }
