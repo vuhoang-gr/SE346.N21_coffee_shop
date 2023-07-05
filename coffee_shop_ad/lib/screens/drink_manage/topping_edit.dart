@@ -97,7 +97,8 @@ class _EditToppingScreenState extends State<EditToppingScreen> {
   }
 
   bool _isValidData() {
-    if (toppingPriceController.text.isNotEmpty && int.tryParse(toppingPriceController.text) == null) return false;
+    if (toppingNameController.text.isEmpty || toppingPriceController.text.isEmpty) return false;
+    if (int.tryParse(toppingPriceController.text) == null) return false;
     return true;
   }
 
