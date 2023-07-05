@@ -89,7 +89,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                     ? 'Quên mật khẩu'
                                     : 'Đăng ký',
                             style: AppText.style.boldBlack16.copyWith(
-                              fontSize: Dimension.getWidthFromValue(34),
+                              fontSize: Dimension.getFontSize(34),
                             ),
                           ),
                           //Body
@@ -99,14 +99,20 @@ class _AuthScreenState extends State<AuthScreen> {
                                 : 1,
                             child: SingleChildScrollView(
                               physics: BouncingScrollPhysics(),
-                              child: state is Login
-                                  ? LoginScreen()
-                                  : state is ForgotPassword
-                                      ? ForgotPasswordScreen(
-                                          email:
-                                              (state as ForgotPassword).email,
-                                        )
-                                      : SignUpScreen(),
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: Dimension.getHeightFromValue(50),
+                                  ),
+                                  state is Login
+                                      ? LoginScreen()
+                                      : state is ForgotPassword
+                                          ? ForgotPasswordScreen(
+                                              email: (state).email,
+                                            )
+                                          : SignUpScreen(),
+                                ],
+                              ),
                             ),
                           ),
 
@@ -117,7 +123,10 @@ class _AuthScreenState extends State<AuthScreen> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       Container(
-                                          margin: EdgeInsets.only(bottom: 15),
+                                          margin: EdgeInsets.symmetric(
+                                              vertical:
+                                                  Dimension.getHeightFromValue(
+                                                      15)),
                                           child: Text(
                                               'Hoặc ${state is Login ? 'đăng nhập' : 'đăng ký'} bằng mạng xã hội')),
                                       Row(
@@ -137,9 +146,8 @@ class _AuthScreenState extends State<AuthScreen> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(
-                                        height:
-                                            Dimension.getHeightFromValue(39),
+                                      Expanded(
+                                        child: SizedBox(),
                                       ),
                                     ],
                                   ),

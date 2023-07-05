@@ -12,7 +12,7 @@ class PasswordValidator extends Validator {
   @override
   String? validator(String? value) {
     if (!validate(value)) {
-      return "8 characters, at least 1 letter, 1 number.";
+      return "Ít nhất 8 ký tự gồm một chữ và một số.";
     }
     return null;
   }

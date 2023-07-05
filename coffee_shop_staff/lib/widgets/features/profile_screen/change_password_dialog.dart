@@ -37,7 +37,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
       if (!canChangePassword()) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Something is wrong. Try again!'),
+            content: Text('Có gì đó không ổn. Hãy thử lại!'),
           ),
         );
         return false;
@@ -52,7 +52,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Wrong password. Try again!'),
+            content: Text('Mật khẩu sai. Hãy thử lại!'),
           ),
         );
         return false;
@@ -65,10 +65,12 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
         children: [
           Text(
             "Thay đổi mật khẩu",
-            style: AppText.style.mediumBlack16.copyWith(fontSize: 18),
+            style: AppText.style.mediumBlack16
+                .copyWith(fontSize: Dimension.getFontSize(18)),
           ),
           CustormTextForm(
-            margin: EdgeInsets.symmetric(vertical: 20),
+            margin: EdgeInsets.symmetric(
+                vertical: Dimension.getHeightFromValue(20)),
             controller: oldPassController,
             label: 'Mật khẩu cũ',
             secure: true,
@@ -81,7 +83,8 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
             validator: PasswordValidator(),
           ),
           CustormTextForm(
-            margin: EdgeInsets.symmetric(vertical: 20),
+            margin: EdgeInsets.symmetric(
+                vertical: Dimension.getHeightFromValue(20)),
             controller: confirmPassController,
             label: 'Nhập lại mật khẩu mới',
             secure: true,

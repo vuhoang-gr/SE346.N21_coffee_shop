@@ -63,8 +63,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (user == null) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Email hoặc mật khẩu sai! Hãy thử lại!')));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+                  'Email, mật khẩu sai hoặc bạn không có quyền truy cập trang này!')));
           return;
         }
       }
@@ -98,9 +99,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     return Column(
       children: [
-        SizedBox(
-          height: Dimension.getHeightFromValue(72),
-        ),
         CustormTextForm(
           controller: emailController,
           validator: EmailValidator(),
@@ -118,8 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         Container(
           margin: EdgeInsets.only(
-            bottom: Dimension.getHeightFromValue(39),
-            top: Dimension.getHeightFromValue(9),
+            bottom: Dimension.getHeightFromValue(30),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

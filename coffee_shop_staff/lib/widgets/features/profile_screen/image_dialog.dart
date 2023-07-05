@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../services/models/user.dart';
+import '../../../utils/constants/dimension.dart';
 import '../../../utils/styles/app_texts.dart';
 
 // ignore: must_be_immutable
@@ -94,7 +95,7 @@ class ImageDialog extends StatelessWidget {
                 'Xem ảnh',
                 textAlign: TextAlign.start,
                 style: AppText.style.regularBlack14.copyWith(
-                  fontSize: 18,
+                  fontSize: Dimension.getFontSize(16),
                 ),
               ),
             ),
@@ -114,7 +115,7 @@ class ImageDialog extends StatelessWidget {
                 'Thay đổi ảnh ${imageType == ImageType.avatar ? 'đại diện' : 'bìa'}',
                 textAlign: TextAlign.start,
                 style: AppText.style.regularBlack14.copyWith(
-                  fontSize: 18,
+                  fontSize: Dimension.getFontSize(16),
                 ),
               ),
             ),

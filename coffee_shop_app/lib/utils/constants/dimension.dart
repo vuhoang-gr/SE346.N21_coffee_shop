@@ -16,6 +16,10 @@ class Dimension {
     return (width / 360) * inputWidth;
   }
 
+  static double getFontSize(double value) {
+    return getWidthFromValue(value) / textScale;
+  }
+
   static double heightTimePicker = 120 * width / 375;
   static double addToCart108 = 108 * width / 375;
   static double height150 = getHeightFromValue(150);

@@ -68,7 +68,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 child: Text(
                   order.id,
                   style: TextStyle(
-                      fontSize: Dimension.height18,
+                      fontSize: Dimension.getFontSize(16),
                       fontWeight: FontWeight.bold),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -339,9 +339,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               customButton: OrderStatusLabel(
                                 hasBorder: true,
                                 status: orderStatusTemp,
-                                fontSize: 15,
+                                fontSize: 14,
                                 padding: EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 15),
+                                    vertical: Dimension.getHeightFromValue(9),
+                                    horizontal:
+                                        Dimension.getWidthFromValue(14)),
                               ),
                               value: orderStatusTemp.name,
                               items: statusList.map((value) {

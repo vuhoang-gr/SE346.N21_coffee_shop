@@ -30,7 +30,6 @@ class _OrderListingState extends State<OrderListing> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     filterList = widget.orderList;
   }
@@ -64,7 +63,9 @@ class _OrderListingState extends State<OrderListing> {
                 padding: EdgeInsets.symmetric(horizontal: Dimension.height12),
                 child: Container(
                   color: Colors.white,
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                  padding: EdgeInsets.symmetric(
+                      vertical: Dimension.getHeightFromValue(9),
+                      horizontal: Dimension.getWidthFromValue(11)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -98,9 +99,10 @@ class _OrderListingState extends State<OrderListing> {
                             customButton: OrderStatusLabel(
                               hasBorder: true,
                               status: filter,
-                              fontSize: 15,
+                              fontSize: Dimension.getFontSize(13),
                               padding: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 15),
+                                  vertical: Dimension.getHeightFromValue(9),
+                                  horizontal: Dimension.getWidthFromValue(14)),
                             ),
                             value: filter.name,
                             items: statusList.map((value) {
@@ -149,31 +151,34 @@ class _OrderListingState extends State<OrderListing> {
           height: isNotEmpty ? Dimension.height12 : 0,
         ),
         isNotEmpty
-            ? Padding(
-                padding: EdgeInsets.symmetric(horizontal: Dimension.height12),
-                child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
-                  child: Column(
-                    children: [
-                      ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return OrderCard(
-                            order: filterList![index],
-                          );
-                        },
-                        separatorBuilder: (_, __) => SizedBox(
-                          height: Dimension.height12,
-                        ),
-                        itemCount: filterList!.length,
+            ? Expanded(
+                child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: Dimension.height12),
+                    child: SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: Column(
+                        children: [
+                          ListView.separated(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return OrderCard(
+                                order: filterList![index],
+                              );
+                            },
+                            separatorBuilder: (_, __) => SizedBox(
+                              height: Dimension.height12,
+                            ),
+                            itemCount: filterList!.length,
+                          ),
+                          SizedBox(
+                            height: Dimension.height16,
+                          ),
+                        ],
                       ),
-                      SizedBox(
-                        height: Dimension.height16,
-                      ),
-                    ],
-                  ),
-                ))
+                    )),
+              )
             : Expanded(child: NoOrderScreen()),
       ],
     );
@@ -229,7 +234,7 @@ class NoOrderScreen extends StatelessWidget {
                       child: Text(
                         'THỬ LẠI!',
                         style: TextStyle(
-                            fontSize: Dimension.height16,
+                            fontSize: Dimension.getFontSize(15),
                             fontWeight: FontWeight.normal),
                       ),
                     ),

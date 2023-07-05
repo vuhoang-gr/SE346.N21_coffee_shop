@@ -61,6 +61,19 @@ class AuthAPI {
     return null;
   }
 
+  Future<bool> forgotPassword(String email) async {
+    try {
+      var signInMethod = await firebaseAuth.fetchSignInMethodsForEmail(email);
+      if (signInMethod.isEmpty) {
+        return false;
+      }
+      await firebaseAuth.sendPasswordResetEmail(email: email);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   signOut() async {
     await firebaseAuth.signOut();
     currentUser = null;
@@ -83,7 +96,7 @@ class AuthAPI {
     if (data == null || data['isStaff'] == null || !data['isStaff']) {
       return null;
     }
-    Store? store = await StoreAPI().getRef(data['store']);
+    Store? store = await StoreAPI().get(data['store']);
     if (store == null) return null;
     if (data['isActive'] == null || !(data['isActive'] as bool)) {
       return null;

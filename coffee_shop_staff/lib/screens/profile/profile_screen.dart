@@ -231,7 +231,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Text(
                         'Điều khoản và điều kiện',
                         style: AppText.style.regularBlue16.copyWith(
-                            fontSize: 14, decoration: TextDecoration.underline),
+                            fontSize: Dimension.getFontSize(14),
+                            decoration: TextDecoration.underline),
                       ),
                     ),
                     SizedBox(

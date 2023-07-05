@@ -15,7 +15,6 @@ import 'package:intl/intl.dart';
 
 import '../../services/apis/auth_api.dart';
 import '../../services/models/user.dart';
-import '../../widgets/feature/profile_screen/image_dialog.dart';
 
 class ProfileSettingScreen extends StatefulWidget {
   static const String routeName = '/profile_setting_screen';
@@ -101,7 +100,7 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                         Text(
                           'Cài đặt',
                           style: AppText.style.boldBlack16.copyWith(
-                            fontSize: Dimension.getWidthFromValue(34),
+                            fontSize: Dimension.getFontSize(34),
                           ),
                         ),
                         SizedBox(
@@ -162,7 +161,8 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                                               'Hủy',
                                               style: AppText.style.regularGrey14
                                                   .copyWith(
-                                                fontSize: 14,
+                                                fontSize:
+                                                    Dimension.getFontSize(14),
                                               ),
                                             ),
                                           ),
@@ -176,7 +176,8 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                                               'Lưu',
                                               style: AppText.style.regularBlue16
                                                   .copyWith(
-                                                fontSize: 14,
+                                                fontSize:
+                                                    Dimension.getFontSize(14),
                                               ),
                                             ),
                                           ),
@@ -185,20 +186,23 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                               ],
                             ),
                             CustormTextForm(
-                              margin: EdgeInsets.only(top: 30),
+                              margin: EdgeInsets.only(
+                                  top: Dimension.getHeightFromValue(25)),
                               label: 'Họ và tên',
                               controller: nameController,
                               readOnly: !isChangeInformation,
                             ),
                             CustormTextForm(
-                              margin: EdgeInsets.only(top: 30),
+                              margin: EdgeInsets.only(
+                                  top: Dimension.getHeightFromValue(25)),
                               label: 'Ngày sinh',
                               controller: dobController,
                               readOnly: !isChangeInformation,
                               haveDatePicker: true,
                             ),
                             CustormTextForm(
-                              margin: EdgeInsets.only(top: 30),
+                              margin: EdgeInsets.only(
+                                  top: Dimension.getHeightFromValue(25)),
                               label: 'Số điện thoại',
                               controller: phoneController,
                               validator: PhoneValidator(),

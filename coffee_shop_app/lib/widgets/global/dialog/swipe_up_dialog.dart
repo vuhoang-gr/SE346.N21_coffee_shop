@@ -53,7 +53,7 @@ class _SwipeUpDialogState extends State<SwipeUpDialog>
       if (context.mounted) {
         if (visible) {
           setState(() {
-            maxHeight = Dimension.height / 2;
+            maxHeight = Dimension.height / 2.5;
           });
         } else {
           setState(() {
