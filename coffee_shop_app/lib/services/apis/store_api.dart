@@ -25,7 +25,7 @@ class StoreAPI {
       List<dynamic> favoriteStores = [];
       if (FirebaseAuth.instance.currentUser != null) {
         DocumentSnapshot userData =
-            await userReference.doc(AuthAPI.currentUser!.id).get();
+            await userReference.doc(FirebaseAuth.instance.currentUser!.uid).get();
         if (userData.exists) {
           favoriteStores =
               (userData.data() as Map<String, dynamic>)['favoriteStores'] ?? [];

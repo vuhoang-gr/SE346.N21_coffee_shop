@@ -110,42 +110,44 @@ class _PromoScreenState extends State<PromoScreen> {
                         ],
                       ),
                     ),
-                    RefreshIndicator(
-                        onRefresh: () async {
-                          BlocProvider.of<PromoStoreBloc>(context)
-                              .add(FetchData());
-                        },
-                        child: SingleChildScrollView(
-                          physics: AlwaysScrollableScrollPhysics(),
-                          child: Column(
-                            children: [
-                              SizedBox(height: Dimension.height8),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: Dimension.width16),
-                                child: ListView.separated(
-                                  padding:
-                                      EdgeInsets.only(top: Dimension.height8),
-                                  itemCount: PromoAPI().currentPromos.length,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemBuilder: (context, index) {
-                                    return PromoItem(
-                                        promo: PromoAPI().currentPromos[index]);
-                                  },
-                                  separatorBuilder: (context, index) {
-                                    return SizedBox(
-                                      height: Dimension.height12,
-                                    );
-                                  },
+                    Expanded(
+                      child: RefreshIndicator(
+                          onRefresh: () async {
+                            BlocProvider.of<PromoStoreBloc>(context)
+                                .add(FetchData());
+                          },
+                          child: SingleChildScrollView(
+                            physics: AlwaysScrollableScrollPhysics(),
+                            child: Column(
+                              children: [
+                                SizedBox(height: Dimension.height8),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: Dimension.width16),
+                                  child: ListView.separated(
+                                    padding:
+                                        EdgeInsets.only(top: Dimension.height8),
+                                    itemCount: PromoAPI().currentPromos.length,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemBuilder: (context, index) {
+                                      return PromoItem(
+                                          promo: PromoAPI().currentPromos[index]);
+                                    },
+                                    separatorBuilder: (context, index) {
+                                      return SizedBox(
+                                        height: Dimension.height12,
+                                      );
+                                    },
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: Dimension.height8,
-                              )
-                            ],
-                          ),
-                        )),
+                                SizedBox(
+                                  height: Dimension.height8,
+                                )
+                              ],
+                            ),
+                          )),
+                    ),
                   ],
                 );
               } else if (state is LoadingState) {
