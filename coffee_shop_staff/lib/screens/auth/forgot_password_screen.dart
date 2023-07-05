@@ -73,9 +73,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          height: Dimension.getHeightFromValue(72),
-        ),
         Text(
           'Vui lòng nhập email phía bên dưới, chúng tôi sẽ gửi cho bạn một hướng dẫn đổi mật khẩu mới thông qua email!',
           style: AppText.style.regularBlack10.copyWith(

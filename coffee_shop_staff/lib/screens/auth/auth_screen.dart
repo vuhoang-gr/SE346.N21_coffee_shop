@@ -79,7 +79,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           Text(
                             state is Login ? 'Đăng nhập' : 'Quên mật khẩu',
                             style: AppText.style.boldBlack16.copyWith(
-                              fontSize: Dimension.getWidthFromValue(34),
+                              fontSize: Dimension.getFontSize(34),
                             ),
                           ),
                           //Body
@@ -89,11 +89,18 @@ class _AuthScreenState extends State<AuthScreen> {
                                 : 1,
                             child: SingleChildScrollView(
                                 physics: BouncingScrollPhysics(),
-                                child: state is ForgotPassword
-                                    ? ForgotPasswordScreen(
-                                        email: state.email,
-                                      )
-                                    : LoginScreen()),
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: Dimension.getHeightFromValue(50),
+                                    ),
+                                    state is ForgotPassword
+                                        ? ForgotPasswordScreen(
+                                            email: state.email,
+                                          )
+                                        : LoginScreen(),
+                                  ],
+                                )),
                           ),
                         ],
                       ),
