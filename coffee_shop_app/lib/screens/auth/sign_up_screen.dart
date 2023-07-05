@@ -41,7 +41,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       if (!canSignUp()) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Something is wrong. Try again!'),
+            content: Text('Có gì đó không ổn. Hãy thử lại!'),
           ),
         );
         return;
@@ -51,8 +51,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         context.read<AppCubit>().changeState(AppLoading());
       }
 
-      await AuthAPI()
+      var user = await AuthAPI()
           .emailSignUp(emailController.text, passwordController.text);
+
       if (context.mounted) {
         context
             .read<AuthActionCubit>()
@@ -60,7 +61,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         context.read<AppCubit>().changeState(AppLoaded());
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Sign up successed!'),
+            content: Text(user != null
+                ? 'Đăng ký thành công!'
+                : 'Tài khoản đã được đăng ký, hãy đăng nhập!'),
           ),
         );
       }
@@ -75,9 +78,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     return Column(
       children: [
-        SizedBox(
-          height: Dimension.getHeightFromValue(72),
-        ),
         CustormTextForm(
           controller: emailController,
           validator: EmailValidator(),

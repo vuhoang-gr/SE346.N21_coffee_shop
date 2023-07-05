@@ -103,9 +103,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     return Column(
       children: [
-        SizedBox(
-          height: Dimension.getHeightFromValue(72),
-        ),
         CustormTextForm(
           controller: emailController,
           validator: EmailValidator(),
@@ -123,8 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         Container(
           margin: EdgeInsets.only(
-            bottom: Dimension.getHeightFromValue(39),
-            top: Dimension.getHeightFromValue(9),
+            bottom: Dimension.getHeightFromValue(30),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

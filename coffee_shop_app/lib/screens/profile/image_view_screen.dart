@@ -80,10 +80,10 @@ class ImageViewScreen extends StatelessWidget {
               middle: Text(
                 'Xem ảnh',
                 style: AppText.style.mediumWhite12
-                    .copyWith(fontSize: Dimension.getWidthFromValue(20)),
+                    .copyWith(fontSize: Dimension.getFontSize(20)),
               ),
             ),
-            AsyncImage(src: image),
+            Flexible(child: AsyncImage(src: image)),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
