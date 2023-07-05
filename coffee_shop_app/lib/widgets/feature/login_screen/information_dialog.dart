@@ -69,10 +69,12 @@ class _InformationDialogState extends State<InformationDialog> {
         children: [
           Text(
             "Thông tin cá nhân",
-            style: AppText.style.mediumBlack16.copyWith(fontSize: 18),
+            style: AppText.style.mediumBlack16
+                .copyWith(fontSize: Dimension.getFontSize(18)),
           ),
           CustormTextForm(
-            margin: EdgeInsets.symmetric(vertical: 20),
+            margin: EdgeInsets.symmetric(
+                vertical: Dimension.getHeightFromValue(20)),
             controller: nameController,
             label: 'Họ và tên',
           ),
@@ -82,7 +84,8 @@ class _InformationDialogState extends State<InformationDialog> {
             haveDatePicker: true,
           ),
           CustormTextForm(
-            margin: EdgeInsets.symmetric(vertical: 20),
+            margin: EdgeInsets.symmetric(
+                vertical: Dimension.getHeightFromValue(20)),
             controller: phoneController,
             label: 'Số điện thoại',
             validator: PhoneValidator(),

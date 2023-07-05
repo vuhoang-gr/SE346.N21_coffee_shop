@@ -15,7 +15,7 @@ class ConfirmPasswordValidator extends Validator {
   @override
   String? validator(String? value) {
     if (!validate(value)) {
-      return "Confirm password is wrong!";
+      return "Xác nhận mật khẩu sai!";
     }
     return null;
   }

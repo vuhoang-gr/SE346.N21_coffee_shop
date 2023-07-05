@@ -1,6 +1,7 @@
 import 'package:coffee_shop_app/screens/profile/image_view_screen.dart';
 import 'package:coffee_shop_app/services/apis/auth_api.dart';
 import 'package:coffee_shop_app/services/blocs/auth/auth_bloc.dart';
+import 'package:coffee_shop_app/utils/constants/dimension.dart';
 import 'package:coffee_shop_app/utils/constants/firestorage_bucket.dart';
 import 'package:coffee_shop_app/utils/constants/image_enum.dart';
 import 'package:coffee_shop_app/widgets/global/buttons/touchable_opacity.dart';
@@ -94,7 +95,7 @@ class ImageDialog extends StatelessWidget {
                 'Xem ảnh',
                 textAlign: TextAlign.start,
                 style: AppText.style.regularBlack14.copyWith(
-                  fontSize: 18,
+                  fontSize: Dimension.getFontSize(16),
                 ),
               ),
             ),
@@ -114,7 +115,7 @@ class ImageDialog extends StatelessWidget {
                 'Thay đổi ảnh ${imageType == ImageType.avatar ? 'đại diện' : 'bìa'}',
                 textAlign: TextAlign.start,
                 style: AppText.style.regularBlack14.copyWith(
-                  fontSize: 18,
+                  fontSize: Dimension.getFontSize(16),
                 ),
               ),
             ),
