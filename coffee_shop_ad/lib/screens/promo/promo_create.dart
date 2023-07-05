@@ -74,7 +74,6 @@ class _CreatePromoScreenState extends State<CreatePromoScreen> {
       if (mxPrice.isEmpty || int.tryParse(mxPrice) == null) {
         return false;
       }
-      if (int.parse(mxPrice) < int.parse(miPrice)) return false;
 
       return true;
     }
