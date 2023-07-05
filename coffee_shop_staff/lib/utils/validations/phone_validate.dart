@@ -12,10 +12,10 @@ class PhoneValidator extends Validator {
   @override
   String? validator(String? value) {
     if (value == null || value.isEmpty) {
-      return "This field cannot be empty!";
+      return "Không được bỏ trống trường này!";
     }
     if (!validate(value)) {
-      return "Wrong type!";
+      return "Sai định dạng!";
     }
     return null;
   }

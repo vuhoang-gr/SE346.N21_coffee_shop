@@ -62,7 +62,7 @@ class OrderStatusLabel extends StatelessWidget {
       child: Text(
         status.name,
         style: TextStyle(
-            fontSize: fontSize,
+            fontSize: Dimension.getFontSize(fontSize!),
             fontWeight: FontWeight.w500,
             color: foregroundColor),
       ),

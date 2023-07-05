@@ -56,11 +56,15 @@ class StoreAPI {
 
   Future<Store?> get(String id) async {
     // print(id);
-    var raw = await firestore.collection('Store').doc(id).get();
-    var data = raw.data();
-    _rawStore = data ?? {};
-    currentStore = fromFireStore(data, id);
-    return currentStore;
+    try {
+      var raw = await firestore.collection('Store').doc(id).get();
+      var data = raw.data();
+      _rawStore = data ?? {};
+      currentStore = fromFireStore(data, id);
+      return currentStore;
+    } catch (e) {
+      return null;
+    }
   }
 
   update(Store store) async {
