@@ -96,7 +96,7 @@ class _UserCardState extends State<UserCard> with SingleTickerProviderStateMixin
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "${widget.self ? "[ME] " : ""} ${user.name}",
+                          "${widget.self ? "[ME] " : ""}${user.name}",
                           style: AppText.style.boldBlack16.copyWith(
                             color: AppColors.blueColor,
                           ),
