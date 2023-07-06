@@ -263,7 +263,9 @@ class CartDelivery extends StatelessWidget {
                                                 if (!state.products[index]
                                                         .isToppingAvailable ||
                                                     !state.products[index]
-                                                        .isSizeAvailable) {
+                                                        .isSizeAvailable ||
+                                                    !state.products[index].food
+                                                        .isAvailable) {
                                                   return Opacity(
                                                     opacity: 0.5,
                                                     child: CheckoutProdItem(
@@ -595,13 +597,8 @@ class CartDelivery extends StatelessWidget {
                                                 text: 'Đặt hàng thành công',
                                                 confirmBtnText: 'OK',
                                                 onConfirmBtnTap: () {
-                                                  Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              MainPage(
-                                                                selectedPage: 3,
-                                                              )));
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
                                                 });
                                           }
                                         });

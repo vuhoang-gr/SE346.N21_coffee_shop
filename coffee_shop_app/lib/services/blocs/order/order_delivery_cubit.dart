@@ -5,6 +5,7 @@ import 'package:coffee_shop_app/services/apis/order_api.dart';
 import 'package:coffee_shop_app/services/blocs/order/order_list_state.dart';
 import 'package:coffee_shop_app/services/models/order.dart' as Order;
 import 'package:coffee_shop_app/utils/constants/string.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OrderDeliveryCubit extends Cubit<OrderListState> {
@@ -14,6 +15,18 @@ class OrderDeliveryCubit extends Cubit<OrderListState> {
           listPickupOrders: [],
           isLoaded: false,
         )) {
+    loadFromFirebase();
+    _userChangedSubscription =
+        FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (user != null) {
+        loadFromFirebase();
+      }
+    });
+  }
+  late StreamSubscription<QuerySnapshot<Map<String, dynamic>>>
+      _oderSubscription;
+  late StreamSubscription _userChangedSubscription;
+  loadFromFirebase() {
     _oderSubscription = OrderAPI().fetchData().listen((snapshot) async {
       needLoad();
       List<Order.Order> orderList = [];
@@ -27,8 +40,7 @@ class OrderDeliveryCubit extends Cubit<OrderListState> {
       finishLoad();
     });
   }
-  late StreamSubscription<QuerySnapshot<Map<String, dynamic>>>
-      _oderSubscription;
+
   loadOrder() async {
     // await OrderAPI().loadOrder();
     if (state is OrderHistoryState) {
@@ -125,6 +137,7 @@ class OrderDeliveryCubit extends Cubit<OrderListState> {
   Future<void> close() {
     // TODO: implement close
     _oderSubscription.cancel();
+    _userChangedSubscription.cancel();
     return super.close();
   }
 }

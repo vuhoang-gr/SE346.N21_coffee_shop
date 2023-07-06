@@ -133,15 +133,15 @@ class OrderDetailScreen extends StatelessWidget {
                                                       children: <TextSpan>[
                                                         const TextSpan(
                                                             text:
-                                                                'Order will be automatically completed '),
+                                                                'Đơn hàng sẽ tự động hoàn thành '),
                                                         TextSpan(
-                                                          text: 'X hours',
+                                                          text: '2 tiếng',
                                                           style: AppText.style
                                                               .boldBlack14,
                                                         ),
                                                         const TextSpan(
                                                             text:
-                                                                ' after your pick up time. The store won\'t be responsible for your order after that time.'),
+                                                                ' sau giờ đến lấy của bạn. Cửa hàng sẽ không chịu trách nhiệm về đơn hàng sau khoảng thời gian đó.'),
                                                       ],
                                                     ),
                                                   ),
