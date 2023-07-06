@@ -40,9 +40,9 @@ class ProfileCustomButton extends StatelessWidget {
           SizedBox(
             width: Dimension.getWidthFromValue(12),
           ),
-          Container(
-            color: Colors.transparent,
-            child: Expanded(
+          Expanded(
+            child: Container(
+              color: Colors.transparent,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -64,8 +64,7 @@ class ProfileCustomButton extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-          Expanded(child: SizedBox()),
+          ),    
           haveArrow
               ? Icon(
                   Icons.arrow_forward_ios,

@@ -88,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               style: AppText.style.regular,
                             ),
                             Text(
-                              "K U P I",
+                              "Coffee Shop",
                               style: AppText.style.boldBlack14,
                             ),
                           ],

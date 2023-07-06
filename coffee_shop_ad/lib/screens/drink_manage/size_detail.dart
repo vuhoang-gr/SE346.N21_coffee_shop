@@ -98,9 +98,10 @@ class _SizeDetailState extends State<SizeDetail> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   CustomAppBar(
-                    leading: Text(
+                    middle: Text(
                       'Size: ${widget.product.name}',
                       style: AppText.style.regularBlack16,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
 
