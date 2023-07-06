@@ -29,7 +29,7 @@ class CustomAppBar extends StatelessWidget {
                             Icons.chevron_left_rounded,
                             color: AppColors.blackColor,
                           )),
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () => Navigator.of(context).maybePop(),
                     )
                   : SizedBox(
                       width: Dimension.width16,

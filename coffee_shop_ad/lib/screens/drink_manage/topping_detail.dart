@@ -98,9 +98,10 @@ class _ToppingDetailState extends State<ToppingDetail> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   CustomAppBar(
-                    leading: Text(
+                    middle: Text(
                       'Topping: ${widget.product.name}',
                       style: AppText.style.regularBlack16,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
 

@@ -2,7 +2,6 @@ import 'package:coffee_shop_admin/screens/store/store_edit.dart';
 import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/blocs/store_store/store_store_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/store_store/store_store_event.dart';
-import 'package:coffee_shop_admin/services/models/address.dart';
 import 'package:coffee_shop_admin/services/models/store.dart';
 import 'package:coffee_shop_admin/utils/colors/app_colors.dart';
 import 'package:coffee_shop_admin/utils/constants/dimension.dart';
@@ -71,9 +70,10 @@ class StoreDetail extends StatelessWidget {
           body: Column(
             children: [
               CustomAppBar(
-                leading: Text(
+                middle: Text(
                   'Store: ${store.sb}',
                   style: AppText.style.regularBlack16,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               Expanded(

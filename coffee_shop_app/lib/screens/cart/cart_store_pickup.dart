@@ -27,7 +27,6 @@ import '../../widgets/feature/product_detail_widgets/icon_widget_row.dart';
 import '../../widgets/global/container_card.dart';
 import '../../widgets/global/custom_app_bar.dart';
 import '../../widgets/global/order_type_modal.dart';
-import '../main_page.dart';
 import '../promo/promo_screen.dart';
 
 class CartStorePickup extends StatefulWidget {
@@ -509,7 +508,10 @@ class _CartStorePickupState extends State<CartStorePickup> {
                                                   ],
                                                 ));
                                       } else if (dateTimeToHour(
-                                                  DateTime.now()) >
+                                                  BlocProvider.of<TimerCubit>(
+                                                          context)
+                                                      .state
+                                                      .selectedDate!) >
                                               dateTimeToHour(cartButtonState
                                                   .selectedStore!.timeClose) ||
                                           dateTimeToHour(DateTime.now()) <
