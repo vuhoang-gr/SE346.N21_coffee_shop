@@ -106,7 +106,7 @@ class OrderTypeModal extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Mang đi",
+                            "Giao hàng đến",
                             style: AppText.style.boldBlack14,
                           ),
                           Text(
