@@ -61,10 +61,10 @@ class OrderHistory extends StatelessWidget {
                       unselectedLabelStyle: AppText.style.regular,
                       tabs: const [
                         Tab(
-                          text: 'Store pickup',
+                          text: 'Đến lấy',
                         ),
                         Tab(
-                          text: 'Delivery',
+                          text: 'Giao hàng',
                         ),
                       ],
                     ),
