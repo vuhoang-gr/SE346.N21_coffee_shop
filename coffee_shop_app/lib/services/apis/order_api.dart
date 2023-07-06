@@ -8,6 +8,7 @@ import 'package:coffee_shop_app/services/apis/topping_api.dart';
 import 'package:coffee_shop_app/services/models/delivery_address.dart';
 import 'package:coffee_shop_app/services/models/order.dart' as Order;
 import 'package:coffee_shop_app/services/models/order_food.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../models/cart.dart';
 import '../models/store.dart';
@@ -36,7 +37,7 @@ class OrderAPI {
 
   Stream<QuerySnapshot<Map<String, dynamic>>> fetchData() {
     return orderRF
-        .where('user', isEqualTo: AuthAPI.currentUser!.id)
+        .where('user', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .snapshots();
   }
 
@@ -123,6 +124,7 @@ class OrderAPI {
             .doc(value.id)
             .collection('orderedFoods')
             .add({
+              'idFood': orderFood.idFood,
               'name': orderFood.name,
               'image': orderFood.image,
               'quantity': orderFood.quantity,
@@ -156,6 +158,7 @@ class OrderAPI {
         pickupTime: pickupTime,
         products: cart.products
             .map((e) => OrderFood(
+                idFood: e.food.id,
                 name: e.food.name,
                 quantity: e.quantity,
                 size: SizeApi()
