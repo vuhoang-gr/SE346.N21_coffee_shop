@@ -1,14 +1,15 @@
 import 'package:coffee_shop_app/services/blocs/product_store/product_store_bloc.dart';
 import 'package:coffee_shop_app/services/blocs/product_store/product_store_event.dart';
 import 'package:coffee_shop_app/services/models/food.dart';
+import 'package:coffee_shop_app/widgets/global/aysncImage/async_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../services/blocs/product_store/product_store_state.dart';
 import '../../../services/functions/money_transfer.dart';
 import '../../../utils/constants/dimension.dart';
+import '../../../utils/constants/placeholder_enum.dart';
 import '../../../utils/styles/app_texts.dart';
 
 class ProductCard extends StatefulWidget {
@@ -43,15 +44,11 @@ class _ProductCardState extends State<ProductCard> {
                   child: PageView.builder(
                     itemCount: widget.product.images.length,
                     itemBuilder: (BuildContext context, int index) => Center(
-                      child: CachedNetworkImage(
-                        alignment: Alignment.center,
+                      child: AsyncImage(
                         width: double.maxFinite,
-                        imageUrl: widget.product.images[index],
-                        placeholder: (context, url) => Container(
-                          alignment: Alignment.center,
-                          child: const CircularProgressIndicator(),
-                        ),
-                        errorWidget: (context, url, error) => Container(),
+                        src: widget.product.images[index],
+                        type: PlaceholderType.food,
+                        fit: BoxFit.cover,
                       ),
                     ),
                     onPageChanged: (page) {

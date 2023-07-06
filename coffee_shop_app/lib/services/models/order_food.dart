@@ -4,6 +4,7 @@ class OrderFood {
   // unit price including price of one drink, size price, topping price
   // size is the size id
   String? id;
+  String idFood;
   String image;
   String name;
   int quantity;
@@ -11,19 +12,20 @@ class OrderFood {
   String? topping;
   String? note;
   double unitPrice;
-  OrderFood({
-    required this.name,
-    this.id,
-    required this.quantity,
-    required this.size,
-    required this.image,
-    this.topping,
-    this.note,
-    required this.unitPrice,
-  });
+  OrderFood(
+      {required this.name,
+      this.id,
+      required this.quantity,
+      required this.size,
+      required this.image,
+      this.topping,
+      this.note,
+      required this.unitPrice,
+      required this.idFood});
 
   OrderFood.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> json)
       : id = json.id,
+        idFood = json.data()!.containsKey('idFood') ? json['idFood'] : null,
         name = json['name'],
         image = json['image'],
         quantity = json['quantity'].toInt(),

@@ -48,7 +48,7 @@ class StoreInfoDialog extends StatelessWidget {
                     height: Dimension.height16,
                   ),
                   Text(
-                    'Store contact informations',
+                    'Thông tin liên hệ cửa hàng',
                     style: AppText.style.regular,
                   ),
                   SizedBox(
@@ -61,7 +61,7 @@ class StoreInfoDialog extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Phone number',
+                            'Số điện thoại',
                             style: AppText.style.regular,
                           ),
                           Text(
@@ -81,7 +81,7 @@ class StoreInfoDialog extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Address',
+                              'Địa chỉ',
                               style: AppText.style.regular,
                             ),
                             Text(
@@ -104,7 +104,7 @@ class StoreInfoDialog extends StatelessWidget {
                           height: Dimension.height40,
                           child: Center(
                               child: Text(
-                            'Close',
+                            'Đóng',
                             style: AppText.style.boldBlack16
                                 .copyWith(fontWeight: FontWeight.normal),
                           )))),

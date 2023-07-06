@@ -279,6 +279,7 @@ class CartCubit extends Cubit<Cart> {
       if (state.products.isEmpty) {
         return;
       }
+      emit(state.copyWith(discount: 0));
       Fluttertoast.showToast(
           msg: "Không đủ điều kiện áp dụng mã giảm giá.",
           toastLength: Toast.LENGTH_SHORT,
@@ -336,8 +337,10 @@ class CartCubit extends Cubit<Cart> {
     for (var pr in state.products) {
       bool isSize = pr.isSizeAvailable;
       bool isTopping = pr.isToppingAvailable;
-      if (store.stateFood[pr] != null) {
-        isSize = false;
+      if (store.stateFood[pr.food.id] != null) {
+        if (store.stateFood[pr.food.id]!.contains(pr.size)) {
+          isSize = false;
+        }
       }
       if (pr.topping != null && pr.topping != '') {
         for (var tp in store.stateTopping) {
@@ -353,7 +356,9 @@ class CartCubit extends Cubit<Cart> {
     emit(state.copyWith(products: newList));
     return state.products
         .where((element) =>
-            !element.isSizeAvailable || !element.isToppingAvailable)
+            !element.isSizeAvailable ||
+            !element.isToppingAvailable ||
+            !element.food.isAvailable)
         .isEmpty;
   }
 

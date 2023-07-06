@@ -42,6 +42,8 @@ class _MainPageState extends State<MainPage> {
                         top: BorderSide(color: Colors.blue, width: 1.5))),
                 labelColor: Colors.blue,
                 labelStyle: AppText.style.boldBlack14,
+                labelPadding:
+                    EdgeInsets.symmetric(horizontal: Dimension.width10),
                 unselectedLabelColor: AppColors.greyTextColor,
                 unselectedLabelStyle: AppText.style.regular,
                 tabs: [
@@ -55,7 +57,7 @@ class _MainPageState extends State<MainPage> {
                           size: Dimension.font14 * 2,
                         ),
                         Text(
-                          'Home',
+                          'Trang chủ',
                           style: AppText.style.regular10,
                         )
                       ],
@@ -71,7 +73,7 @@ class _MainPageState extends State<MainPage> {
                           size: Dimension.font14 * 2,
                         ),
                         Text(
-                          'Menu',
+                          'Thực đơn',
                           style: AppText.style.regular10,
                         )
                       ],
@@ -87,7 +89,7 @@ class _MainPageState extends State<MainPage> {
                           size: Dimension.font14 * 2,
                         ),
                         Text(
-                          'Stores',
+                          'Cửa hàng',
                           style: AppText.style.regular10,
                         )
                       ],
@@ -103,7 +105,7 @@ class _MainPageState extends State<MainPage> {
                           size: Dimension.font14 * 2,
                         ),
                         Text(
-                          'Order',
+                          'Đơn hàng',
                           style: AppText.style.regular10,
                         )
                       ],
@@ -119,7 +121,7 @@ class _MainPageState extends State<MainPage> {
                           size: Dimension.font14 * 2,
                         ),
                         Text(
-                          'Profile',
+                          'Cá nhân',
                           style: AppText.style.regular10,
                         ),
                       ],
@@ -140,7 +142,10 @@ class _MainPageState extends State<MainPage> {
                     MenuScreen(),
 
                     //stores page
-                    StoreSelectionScreen(latLng: initLatLng, isPurposeForShowDetail: true,),
+                    StoreSelectionScreen(
+                      latLng: initLatLng,
+                      isPurposeForShowDetail: true,
+                    ),
 
                     //order
                     OrderManagement(),

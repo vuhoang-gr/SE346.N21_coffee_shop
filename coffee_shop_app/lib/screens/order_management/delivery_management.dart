@@ -27,90 +27,124 @@ class DeliveryManagement extends StatelessWidget {
             ? Padding(
                 padding: EdgeInsets.only(
                     left: Dimension.height16, right: Dimension.height16),
+                child: RefreshIndicator(
+                  onRefresh: () async =>
+                      await BlocProvider.of<OrderDeliveryCubit>(context)
+                          .loadFromFirebase(),
+                  child: LayoutBuilder(builder:
+                      (BuildContext context, BoxConstraints constraints) {
+                    return ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
+                      ),
+                      child: ListView.separated(
+                          padding: EdgeInsets.symmetric(
+                              vertical: Dimension.height16),
+                          shrinkWrap: true,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return OrderCard(
+                              order: state.listDeliveryOrders[index],
+                            );
+                          },
+                          separatorBuilder: (_, __) => SizedBox(
+                                height: Dimension.height12,
+                              ),
+                          itemCount: state.listDeliveryOrders.length),
+                    );
+                  }),
+                ),
+              )
+            : RefreshIndicator(
+                onRefresh: () async =>
+                    await BlocProvider.of<OrderDeliveryCubit>(context)
+                        .loadFromFirebase(),
                 child: LayoutBuilder(builder:
                     (BuildContext context, BoxConstraints constraints) {
                   return ConstrainedBox(
                     constraints: BoxConstraints(
                       minHeight: constraints.maxHeight,
                     ),
-                    child: ListView.separated(
-                        padding:
-                            EdgeInsets.symmetric(vertical: Dimension.height16),
-                        shrinkWrap: true,
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return OrderCard(
-                            order: state.listDeliveryOrders[index],
-                          );
-                        },
-                        separatorBuilder: (_, __) => SizedBox(
-                              height: Dimension.height12,
-                            ),
-                        itemCount: state.listDeliveryOrders.length),
+                    child: SingleChildScrollView(
+                        physics: AlwaysScrollableScrollPhysics(),
+                        child: state is OrderNormalState
+                            ? Column(
+                                children: [
+                                  SizedBox(
+                                    height: Dimension.height150 / 2,
+                                  ),
+                                  Image.asset(
+                                    'assets/images/img_no_order.png',
+                                    height: 150,
+                                  ),
+                                  SizedBox(
+                                    height: Dimension.height24,
+                                  ),
+                                  Text(
+                                    'Bạn chưa có đơn hàng ?',
+                                    style: AppText.style.boldBlack16,
+                                  ),
+                                  SizedBox(
+                                    height: Dimension.height8 / 2,
+                                  ),
+                                  Text(
+                                    'Hãy thử thức uống mới nhất của chúng tôi.',
+                                    style: AppText.style.regular,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: Dimension.height16,
+                                        vertical: Dimension.height16),
+                                    child: ElevatedButton(
+                                        style: roundedButton,
+                                        onPressed: () {
+                                          Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      MainPage(
+                                                        selectedPage: 1,
+                                                      )));
+                                        },
+                                        child: SizedBox(
+                                          height: Dimension.height40,
+                                          width: double.maxFinite,
+                                          child: Center(
+                                            child: Text(
+                                              'Đặt hàng ngay!',
+                                              style:
+                                                  AppText.style.regularWhite16,
+                                            ),
+                                          ),
+                                        )),
+                                  ),
+                                ],
+                              )
+                            : Column(
+                                children: [
+                                  SizedBox(
+                                    height: Dimension.height150 / 2,
+                                    width: double.maxFinite,
+                                  ),
+                                  Image.asset(
+                                    'assets/images/img_no_order.png',
+                                    height: 150,
+                                  ),
+                                  SizedBox(
+                                    height: Dimension.height24,
+                                  ),
+                                  Text(
+                                    'Bạn chưa có đơn hàng nào !',
+                                    style: AppText.style.boldBlack16,
+                                  ),
+                                  SizedBox(
+                                    height: Dimension.height8 / 2,
+                                  ),
+                                ],
+                              )),
                   );
                 }),
-              )
-            : LayoutBuilder(
-                builder: (BuildContext context, BoxConstraints constraints) {
-                return ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: constraints.maxHeight,
-                  ),
-                  child: SingleChildScrollView(
-                    physics: AlwaysScrollableScrollPhysics(),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: Dimension.height150 / 2,
-                        ),
-                        Image.asset(
-                          'assets/images/img_no_order.png',
-                          height: 150,
-                        ),
-                        SizedBox(
-                          height: Dimension.height24,
-                        ),
-                        Text(
-                          'Bạn chưa có đơn hàng ?',
-                          style: AppText.style.boldBlack16,
-                        ),
-                        SizedBox(
-                          height: Dimension.height8 / 2,
-                        ),
-                        Text(
-                          'Hãy thử thức uống mới nhất của chúng tôi.',
-                          style: AppText.style.regular,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: Dimension.height16,
-                              vertical: Dimension.height16),
-                          child: ElevatedButton(
-                              style: roundedButton,
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => MainPage(
-                                              selectedPage: 1,
-                                            )));
-                              },
-                              child: SizedBox(
-                                height: Dimension.height40,
-                                width: double.maxFinite,
-                                child: Center(
-                                  child: Text(
-                                    'Đặt hàng ngay!',
-                                    style: AppText.style.regularWhite16,
-                                  ),
-                                ),
-                              )),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              });
+              );
       }
     });
   }

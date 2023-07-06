@@ -26,3 +26,7 @@ String indexToTime(int index) {
 int dateTimeToHour(DateTime dateTime) {
   return dateTime.hour * 2 + (dateTime.minute > 30 ? 2 : 1);
 }
+
+int timeCloseToHour(DateTime dateTime) {
+  return dateTime.hour * 2 + (dateTime.minute >= 30 ? 1 : 0);
+}
