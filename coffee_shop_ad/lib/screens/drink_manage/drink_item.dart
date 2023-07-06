@@ -21,8 +21,8 @@ class DrinkItem extends StatelessWidget {
             shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(5), color: CupertinoColors.white),
         child: GestureDetector(
             onTap: () {
-              Navigator.of(context).pushNamed("/drink_detail_screen", arguments: product).then((value) {
-                BlocProvider.of<DrinkListBloc>(context).add(FetchData());
+              Navigator.of(context).pushNamed("/drink_detail_screen", arguments: product).then((created) {
+                if (created != null) BlocProvider.of<DrinkListBloc>(context).add(FetchData());
               });
             },
             child: Row(
