@@ -37,7 +37,7 @@ class _StoreSearchScreenState extends State<StoreSearchScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<SearchStoreBloc>(context).add(UpdateList(
+    BlocProvider.of<SearchStoreBloc>(context).add(InitList(
         listStore: BlocProvider.of<StoreStoreBloc>(context).state.initStores));
     _streamSubscription = BlocProvider.of<StoreStoreBloc>(context)
         .stream

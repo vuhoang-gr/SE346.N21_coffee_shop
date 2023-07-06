@@ -5,6 +5,7 @@ import 'package:coffee_shop_app/services/functions/calculate_distance.dart';
 import 'package:coffee_shop_app/services/models/delivery_address.dart';
 import 'package:coffee_shop_app/services/models/location.dart';
 import 'package:coffee_shop_app/services/models/store.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -21,6 +22,14 @@ class CartButtonBloc extends Bloc<CartButtonEvent, CartButtonState> {
     on<ChangeSelectedDeliveryAddress>(_mapChangeSelectedAddressToState);
     on<ChangeSelectedOrderType>(_mapChangeSelectedOrderTypeToState);
     on<UpdateDataSelectedStore>(_mapUpdateDataSelectedStore);
+
+    FirebaseAuth.instance.authStateChanges().listen(userSubscriptionFunction);
+  }
+
+  void userSubscriptionFunction(User? user) {
+    if (user != null) {
+      add(ChangeSelectedDeliveryAddress(selectedDeliveryAddress: null));
+    }
   }
 
   void _mapChangeSelectedStoreToState(

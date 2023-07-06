@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: AsyncImage(
                               height: Dimension.height40,
                               width: Dimension.width40,
-                              src: AuthAPI.currentUser!.avatarUrl,
+                              src: AuthAPI.currentUser?.avatarUrl??"",
                               type: PlaceholderType.user,
                               fit: BoxFit.cover,
                             ),
