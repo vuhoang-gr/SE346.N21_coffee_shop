@@ -13,6 +13,7 @@ class Promo {
   final List<String> products;
   final List<String> stores;
   final bool forNewCustomer;
+  final bool isActive;
 
   Promo({
     required this.id,
@@ -25,5 +26,6 @@ class Promo {
     required this.products,
     required this.stores,
     this.forNewCustomer = false,
+    this.isActive = false,
   });
 }

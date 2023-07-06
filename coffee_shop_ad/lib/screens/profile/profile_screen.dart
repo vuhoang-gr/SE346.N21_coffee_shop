@@ -77,14 +77,12 @@ class ProfileScreen extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: Dimension.getWidthFromValue(16)),
+                padding: EdgeInsets.symmetric(horizontal: Dimension.getWidthFromValue(16)),
                 child: Column(
                   children: [
                     ProfileCustomButton(
                       onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(ProfileSettingScreen.routeName);
+                        Navigator.of(context).pushNamed(ProfileSettingScreen.routeName);
                       },
                       icon: Icons.settings,
                       title: 'Settings',
@@ -105,8 +103,7 @@ class ProfileScreen extends StatelessWidget {
                     TouchableOpacity(
                       child: Text(
                         'Term and Conditions',
-                        style: AppText.style.regularBlue16.copyWith(
-                            fontSize: 14, decoration: TextDecoration.underline),
+                        style: AppText.style.regularBlue16.copyWith(fontSize: 14, decoration: TextDecoration.underline),
                       ),
                     ),
                     SizedBox(

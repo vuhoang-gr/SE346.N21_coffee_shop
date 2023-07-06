@@ -20,6 +20,7 @@ class User extends Equatable {
   String staffOfStore;
   String avatarUrl;
   String coverUrl;
+  bool isSuperAdmin;
 
   User({
     required this.id,
@@ -37,6 +38,7 @@ class User extends Equatable {
     this.isAdmin = false,
     this.isStaff = false,
     this.staffOfStore = "",
+    this.isSuperAdmin = false,
   });
 
   @override

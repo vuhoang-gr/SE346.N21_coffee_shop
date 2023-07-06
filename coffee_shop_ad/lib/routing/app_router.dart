@@ -18,6 +18,7 @@ import 'package:coffee_shop_admin/screens/promo/promo_edit.dart';
 import 'package:coffee_shop_admin/screens/promo/promo_screen.dart';
 import 'package:coffee_shop_admin/screens/store/store_detail.dart';
 import 'package:coffee_shop_admin/screens/store/store_create.dart';
+import 'package:coffee_shop_admin/screens/store/store_edit.dart';
 import 'package:coffee_shop_admin/screens/store/store_screen.dart';
 import 'package:coffee_shop_admin/services/blocs/auth/auth_bloc.dart';
 import 'package:coffee_shop_admin/services/models/drink.dart';
@@ -126,6 +127,12 @@ class AppRouter {
         Address? deliveryAddress = settings.arguments as Address?;
         return _createRoute(CreateStoreScreen(
           deliveryAddress: deliveryAddress,
+        ));
+      case EditStoreScreen.routeName:
+        Store store = settings.arguments as Store;
+        return _createRoute(EditStoreScreen(
+          storeAddress: Address(address: store.address, addressNote: "", nameReceiver: store.sb, phone: store.phone),
+          store: store,
         ));
 
       case MapScreen.routeName:

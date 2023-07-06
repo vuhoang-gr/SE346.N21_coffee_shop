@@ -1,3 +1,4 @@
+import 'package:coffee_shop_admin/services/apis/auth_api.dart';
 import 'package:coffee_shop_admin/services/blocs/user/user_bloc.dart';
 import 'package:coffee_shop_admin/services/blocs/user/user_event.dart';
 import 'package:coffee_shop_admin/services/blocs/user/user_state.dart';
@@ -57,6 +58,7 @@ class _UserScreenState extends State<UserScreen> {
                               physics: BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
                                 return UserCard(
+                                  self: state.users[index].email == AuthAPI.currentUser?.email,
                                   user: state.users[index],
                                 );
                               },

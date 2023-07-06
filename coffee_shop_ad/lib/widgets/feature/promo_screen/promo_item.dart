@@ -26,7 +26,7 @@ class PromoItem extends StatelessWidget {
         },
       ),
       child: Card(
-        color: Colors.white,
+        color: promo.isActive ? Color.fromRGBO(100, 255, 145, 1) : Colors.white,
         margin: EdgeInsets.zero,
         child: IntrinsicHeight(
           child: Row(

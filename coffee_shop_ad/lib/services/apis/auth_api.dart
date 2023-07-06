@@ -39,6 +39,31 @@ class AuthAPI {
   }
 
   Future<User?> emailLogin(String email, String password) async {
+    // try {
+    //   bool havePermission = false;
+    //   final pro = await userReference.get();
+    //   for (var doc in pro.docs) {
+    //     var s = doc.data();
+    //     var curUser = User(
+    //       id: doc.id,
+    //       name: s["name"] ?? "Unnamed",
+    //       phoneNumber: s["phoneNumber"] ?? "",
+    //       email: s["email"],
+    //       isActive: s["isActive"] ?? true,
+    //       avatarUrl: s["avatarUrl"] ?? "https://img.freepik.com/free-icon/user_318-159711.jpg",
+    //       isAdmin: s["isAdmin"] ?? false,
+    //       isStaff: s["isStaff"] ?? false,
+    //       isSuperAdmin: s["isSuperAdmin"] ?? false,
+    //     );
+    //     if (curUser.isSuperAdmin || curUser.isAdmin) {
+    //       havePermission = true;
+    //       break;
+    //     }
+    //   }
+    //   if (!havePermission) return null;
+    // } catch (e) {
+    //   print('Something error on check user permission.');
+    // }
     try {
       final credential = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
       print('Login Success');

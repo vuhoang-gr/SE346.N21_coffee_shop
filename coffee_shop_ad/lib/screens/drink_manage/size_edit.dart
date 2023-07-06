@@ -97,7 +97,8 @@ class _EditSizeScreenState extends State<EditSizeScreen> {
   }
 
   bool _isValidData() {
-    if (sizePriceController.text.isNotEmpty && int.tryParse(sizePriceController.text) == null) return false;
+    if (sizeNameController.text.isEmpty || sizePriceController.text.isEmpty) return false;
+    if (int.tryParse(sizePriceController.text) == null) return false;
     return true;
   }
 

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:coffee_shop_admin/services/apis/auth_api.dart';
 import 'package:coffee_shop_admin/services/apis/firestore_references.dart';
 import 'package:coffee_shop_admin/services/blocs/user/user_event.dart';
 import 'package:coffee_shop_admin/services/blocs/user/user_state.dart';
@@ -20,20 +21,26 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     for (var doc in pro.docs) {
       var s = doc.data();
 
-      users.add(User(
-          id: doc.id,
-          name: s["name"] ?? "Unnamed",
-          phoneNumber: s["phoneNumber"] ?? "",
-          email: s["email"],
-          isActive: s["isActive"] ?? true,
-          avatarUrl: s["avatarUrl"] ??
-              "https://img.freepik.com/free-icon/user_318-159711.jpg",
-          isAdmin: s["isAdmin"] ?? false,
-          isStaff: s["isStaff"] ?? false));
+      var curUser = User(
+        id: doc.id,
+        name: s["name"] ?? "Unnamed",
+        phoneNumber: s["phoneNumber"] ?? "",
+        email: s["email"],
+        isActive: s["isActive"] ?? true,
+        avatarUrl: s["avatarUrl"] ?? "https://img.freepik.com/free-icon/user_318-159711.jpg",
+        isAdmin: s["isAdmin"] ?? false,
+        isStaff: s["isStaff"] ?? false,
+        isSuperAdmin: s["isSuperAdmin"] ?? false,
+      );
+      if (!curUser.isSuperAdmin) users.add(curUser);
     }
 
+    var curUser = AuthAPI.currentUser;
     users.sort((a, b) {
       int A = 0, B = 0;
+      A = ((curUser?.email != null && a.email == curUser?.email) ? 1000 : 0);
+      B = ((curUser?.email != null && b.email == curUser?.email) ? 1000 : 0);
+
       if (a.isAdmin) A += 10;
       if (a.isStaff) A++;
       if (b.isAdmin) B += 10;
@@ -56,9 +63,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           id: doc.id,
           sb: s["shortName"],
           address: MLocation(
-              formattedAddress: s["address"]["formattedAddress"],
-              lat: s["address"]["lat"],
-              lng: s["address"]["lng"]),
+              formattedAddress: s["address"]["formattedAddress"], lat: s["address"]["lat"], lng: s["address"]["lng"]),
           phone: s["phone"],
           images: s["images"]));
     }
