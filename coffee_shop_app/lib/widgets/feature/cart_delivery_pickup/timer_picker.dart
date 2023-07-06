@@ -1,3 +1,4 @@
+import 'package:coffee_shop_app/services/blocs/cart_button/cart_button_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -17,159 +18,164 @@ class TimerPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TimerCubit, PickupTimerState>(builder: (context, state) {
-      var timeClose = dateTimeToHour(BlocProvider.of<CartButtonBloc>(context)
-          .state
-          .selectedStore!
-          .timeClose);
-      return Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(8), topRight: Radius.circular(8)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              height: Dimension.height8,
-            ),
-            Stack(
-              children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Thời gian mang đi',
-                    style: AppText.style.boldBlack16,
-                  ),
-                )
-              ],
-            ),
-            const Divider(
-              thickness: 1,
-              color: AppColors.greyBoxColor,
-            ),
-
-            //the time picker
-            SizedBox(
-              height: Dimension.heightTimePicker,
-              child: Stack(
+      return BlocBuilder<CartButtonBloc, CartButtonState>(
+          builder: (context, cartButtonState) {
+        var timeClose =
+            timeCloseToHour(cartButtonState.selectedStore!.timeClose);
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(8), topRight: Radius.circular(8)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: Dimension.height8,
+              ),
+              Stack(
                 children: [
                   Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        width: double.maxFinite,
-                        height: Dimension.height24,
-                        decoration: const BoxDecoration(
-                            border: Border(
-                                top: BorderSide(
-                                    color: AppColors.greyBoxColor, width: 1),
-                                bottom: BorderSide(
-                                    color: AppColors.greyBoxColor, width: 1))),
-                      )),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Expanded(
-                        child: ListWheelScrollView.useDelegate(
-                            onSelectedItemChanged: (value) {
-                              var date =
-                                  (DateTime.now().add(Duration(days: value)));
-                              BlocProvider.of<TimerCubit>(context)
-                                  .setDateTime(newDate: date);
-                            },
-                            physics: const FixedExtentScrollPhysics(),
-                            itemExtent: Dimension.height24,
-                            childDelegate: ListWheelChildBuilderDelegate(
-                                childCount: 3,
-                                builder: (context, index) {
-                                  String day;
-                                  if (index == 0) {
-                                    day = 'Hôm nay';
-                                  } else if (index == 1) {
-                                    day = 'Ngày mai';
-                                  } else {
-                                    day = DateFormat('dd-MM-yyyy')
-                                        .format((DateTime.now()
-                                            .add(Duration(days: index))))
-                                        .toString();
-                                  }
-
-                                  return Center(
-                                    child: Text(
-                                      day,
-                                      style: AppText.style.boldBlack16,
-                                    ),
-                                  );
-                                })),
-                      ),
-                      Expanded(
-                        child: ListWheelScrollView.useDelegate(
-                            onSelectedItemChanged: (value) {
-                              int time = value + state.hourStartTime;
-                              int hour = (time / 2).floor();
-                              int minute = time % 2 * 30;
-                              BlocProvider.of<TimerCubit>(context).setDateTime(
-                                  newDate: state.newDate,
-                                  hour: hour,
-                                  minute: minute);
-                            },
-                            physics: const FixedExtentScrollPhysics(),
-                            itemExtent: Dimension.height24,
-                            childDelegate: ListWheelChildBuilderDelegate(
-                                childCount: (timeClose - state.hourStartTime),
-                                builder: (context, index) {
-                                  return Center(
-                                    child: Text(
-                                      indexToTime(index + state.hourStartTime),
-                                      style: AppText.style.boldBlack16,
-                                    ),
-                                  );
-                                })),
-                      ),
-                    ],
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
                   ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Thời gian mang đi',
+                      style: AppText.style.boldBlack16,
+                    ),
+                  )
                 ],
               ),
-            ),
+              const Divider(
+                thickness: 1,
+                color: AppColors.greyBoxColor,
+              ),
 
-            SizedBox(
-              height: Dimension.height16,
-            ),
-            const Divider(
-              thickness: 1,
-              color: AppColors.greyBoxColor,
-            ),
-            SizedBox(
-              width: double.maxFinite,
-              height: Dimension.height40,
-              child: ElevatedButton(
-                style: roundedButton,
-                onPressed: () {
-                  BlocProvider.of<TimerCubit>(context).setSelectedDate(
-                      BlocProvider.of<TimerCubit>(context).state.newDate);
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  'Áp dụng',
-                  style: AppText.style.regularWhite16,
+              //the time picker
+              SizedBox(
+                height: Dimension.heightTimePicker,
+                child: Stack(
+                  children: [
+                    Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          width: double.maxFinite,
+                          height: Dimension.height24,
+                          decoration: const BoxDecoration(
+                              border: Border(
+                                  top: BorderSide(
+                                      color: AppColors.greyBoxColor, width: 1),
+                                  bottom: BorderSide(
+                                      color: AppColors.greyBoxColor,
+                                      width: 1))),
+                        )),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Expanded(
+                          child: ListWheelScrollView.useDelegate(
+                              onSelectedItemChanged: (value) {
+                                var date =
+                                    (DateTime.now().add(Duration(days: value)));
+                                BlocProvider.of<TimerCubit>(context)
+                                    .setDateTime(newDate: date);
+                              },
+                              physics: const FixedExtentScrollPhysics(),
+                              itemExtent: Dimension.height24,
+                              childDelegate: ListWheelChildBuilderDelegate(
+                                  childCount: 3,
+                                  builder: (context, index) {
+                                    String day;
+                                    if (index == 0) {
+                                      day = 'Hôm nay';
+                                    } else if (index == 1) {
+                                      day = 'Ngày mai';
+                                    } else {
+                                      day = DateFormat('dd-MM-yyyy')
+                                          .format((DateTime.now()
+                                              .add(Duration(days: index))))
+                                          .toString();
+                                    }
+
+                                    return Center(
+                                      child: Text(
+                                        day,
+                                        style: AppText.style.boldBlack16,
+                                      ),
+                                    );
+                                  })),
+                        ),
+                        Expanded(
+                          child: ListWheelScrollView.useDelegate(
+                              onSelectedItemChanged: (value) {
+                                int time = value + state.hourStartTime;
+                                int hour = (time / 2).floor();
+                                int minute = time % 2 * 30;
+                                BlocProvider.of<TimerCubit>(context)
+                                    .setDateTime(
+                                        newDate: state.newDate,
+                                        hour: hour,
+                                        minute: minute);
+                              },
+                              physics: const FixedExtentScrollPhysics(),
+                              itemExtent: Dimension.height24,
+                              childDelegate: ListWheelChildBuilderDelegate(
+                                  childCount:
+                                      (timeClose - state.hourStartTime + 1),
+                                  builder: (context, index) {
+                                    return Center(
+                                      child: Text(
+                                        indexToTime(
+                                            index + state.hourStartTime),
+                                        style: AppText.style.boldBlack16,
+                                      ),
+                                    );
+                                  })),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-            ),
-            SizedBox(
-              height: Dimension.height8,
-            ),
-          ],
-        ),
-      );
+
+              SizedBox(
+                height: Dimension.height16,
+              ),
+              const Divider(
+                thickness: 1,
+                color: AppColors.greyBoxColor,
+              ),
+              SizedBox(
+                width: double.maxFinite,
+                height: Dimension.height40,
+                child: ElevatedButton(
+                  style: roundedButton,
+                  onPressed: () {
+                    BlocProvider.of<TimerCubit>(context).setSelectedDate(
+                        BlocProvider.of<TimerCubit>(context).state.newDate);
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'Áp dụng',
+                    style: AppText.style.regularWhite16,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: Dimension.height8,
+              ),
+            ],
+          ),
+        );
+      });
     });
   }
 }
