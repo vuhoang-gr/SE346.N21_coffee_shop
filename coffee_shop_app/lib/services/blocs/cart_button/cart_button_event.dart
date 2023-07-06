@@ -16,7 +16,7 @@ class ChangeSelectedStoreButNotUse extends CartButtonEvent {
 }
 
 class ChangeSelectedDeliveryAddress extends CartButtonEvent {
-  final DeliveryAddress selectedDeliveryAddress;
+  final DeliveryAddress? selectedDeliveryAddress;
 
   ChangeSelectedDeliveryAddress({required this.selectedDeliveryAddress});
 }

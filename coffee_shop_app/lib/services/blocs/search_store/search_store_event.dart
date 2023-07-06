@@ -14,3 +14,8 @@ class UpdateList extends SearchStoreEvent {
   List<Store> listStore;
   UpdateList({required this.listStore});
 }
+
+class InitList extends SearchStoreEvent {
+  List<Store> listStore;
+  InitList({required this.listStore});
+}

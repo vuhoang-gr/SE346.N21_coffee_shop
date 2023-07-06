@@ -11,6 +11,7 @@ class SearchStoreBloc extends Bloc<SearchStoreEvent, SearchStoreState> {
     on<SearchTextChanged>(_mapSearchTextChangedToState);
     on<SearchClear>(_mapSearchClearToState);
     on<UpdateList>(_mapUpdateList);
+    on<InitList>(_mapInitList);
   }
 
   void _mapSearchTextChangedToState(
@@ -47,6 +48,15 @@ class SearchStoreBloc extends Bloc<SearchStoreEvent, SearchStoreState> {
   }
 
   void _mapUpdateList(UpdateList event, Emitter<SearchStoreState> emit) {
+    emit(LoadedListStore(
+      initStoreList: event.listStore,
+      searchStoreResults: event.listStore,
+    ));
+  }
+
+  void _mapInitList(InitList event, Emitter<SearchStoreState> emit)
+  {
+    controller.clear();
     emit(LoadedListStore(
       initStoreList: event.listStore,
       searchStoreResults: event.listStore,

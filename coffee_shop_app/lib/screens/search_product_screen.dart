@@ -103,11 +103,14 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
                             "isPurposeForShowDetail": false,
                           }).then((value) {
                         if (value != null && value is Store) {
-                          BlocProvider.of<SearchProductBloc>(context)
-                              .add(WaitingUpdateList());
-                          BlocProvider.of<CartButtonBloc>(context).add(
-                              ChangeSelectedStoreButNotUse(
-                                  selectedStore: value));
+                          if (cartButtonState.selectedStore == null ||
+                              cartButtonState.selectedStore!.id != value.id) {
+                            BlocProvider.of<SearchProductBloc>(context)
+                                .add(WaitingUpdateList());
+                            BlocProvider.of<CartButtonBloc>(context).add(
+                                ChangeSelectedStoreButNotUse(
+                                    selectedStore: value));
+                          }
                         }
                       });
                     },
