@@ -41,13 +41,12 @@ class _ProductScreenState extends State<ProductScreen> {
                   leading: Text(
                     'Sản phẩm',
                     style: TextStyle(
-                        fontSize: Dimension.height18,
+                        fontSize: Dimension.font18,
                         fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
               Container(
-                height: Dimension.height45,
                 decoration: const BoxDecoration(
                     color: Colors.white,
                     border: Border(

@@ -42,7 +42,7 @@ class CartDelivery extends StatelessWidget {
             child: Column(
               children: [
                 CustomAppBar(
-                  leading: Text('Cart', style: AppText.style.boldBlack18),
+                  leading: Text('Giỏ hàng', style: AppText.style.boldBlack18),
                 ),
                 Expanded(
                   child: SingleChildScrollView(

@@ -63,7 +63,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         body: Column(
           children: [
             CustomAppBar(
-              leading: Container(
+              middle: Container(
                 constraints: BoxConstraints(minWidth: 100, maxWidth: 150),
                 child: Text(
                   order.id,
@@ -339,7 +339,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               customButton: OrderStatusLabel(
                                 hasBorder: true,
                                 status: orderStatusTemp,
-                                fontSize: 14,
+                                fontSize: Dimension.font14,
                                 padding: EdgeInsets.symmetric(
                                     vertical: Dimension.getHeightFromValue(9),
                                     horizontal:

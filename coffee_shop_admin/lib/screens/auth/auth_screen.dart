@@ -26,8 +26,11 @@ class _AuthScreenState extends State<AuthScreen> {
       context.read<AuthActionCubit>().changeState(authStatus.authActionState);
     }
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (authStatus is UnAuthenticated && authStatus.message != null && authStatus.message.isNotEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(authStatus.message)));
+      if (authStatus is UnAuthenticated &&
+          authStatus.message != null &&
+          authStatus.message.isNotEmpty) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(authStatus.message)));
       }
     });
   }
@@ -50,42 +53,26 @@ class _AuthScreenState extends State<AuthScreen> {
               }
             },
             child: Scaffold(
-              resizeToAvoidBottomInset: false,
-              body: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //body
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: Dimension.getWidthFromValue(15),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex: MediaQuery.of(context).viewInsets.bottom == 0 ? 4 : 2,
-                            child: SingleChildScrollView(physics: BouncingScrollPhysics(), child: LoginScreen()),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Container(margin: EdgeInsets.only(bottom: 12), child: Text('Coffee Shop Admin')),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [],
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+              resizeToAvoidBottomInset: true,
+              body: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: Dimension.getWidthFromValue(15),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                          physics: BouncingScrollPhysics(),
+                          child: LoginScreen()),
                     ),
-                  ),
-                ],
+                    MediaQuery.of(context).viewInsets.bottom == 0
+                        ? Container(
+                            margin: EdgeInsets.only(bottom: 12),
+                            child: Text('Coffee Shop Admin'))
+                        : SizedBox.shrink(),
+                  ],
+                ),
               ),
             ),
           );

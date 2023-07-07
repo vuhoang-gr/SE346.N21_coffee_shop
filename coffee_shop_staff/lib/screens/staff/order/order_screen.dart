@@ -33,7 +33,7 @@ class _OrderScreenState extends State<OrderScreen> {
                   leading: Text(
                     'Đơn hàng',
                     style: TextStyle(
-                        fontSize: Dimension.height18,
+                        fontSize: Dimension.font18,
                         fontWeight: FontWeight.bold),
                   ),
                 ),

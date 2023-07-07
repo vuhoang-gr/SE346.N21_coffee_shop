@@ -37,7 +37,7 @@ class ProfileCustomButton extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: Dimension.getWidthFromValue(12),
+            width: Dimension.width12,
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,13 +46,13 @@ class ProfileCustomButton extends StatelessWidget {
               Text(
                 title,
                 style: AppText.style.regularBlack10.copyWith(
-                  fontSize: 15,
+                  fontSize: Dimension.font15,
                 ),
               ),
               Text(
                 description,
                 style: AppText.style.regularGrey12.copyWith(
-                  fontSize: 14,
+                  fontSize: Dimension.font14,
                 ),
               ),
             ],

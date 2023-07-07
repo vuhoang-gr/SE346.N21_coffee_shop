@@ -60,7 +60,7 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                         Text(
                           'Settings',
                           style: AppText.style.boldBlack16.copyWith(
-                            fontSize: Dimension.getWidthFromValue(34),
+                            fontSize: Dimension.font34,
                           ),
                         ),
                         SizedBox(
@@ -78,7 +78,7 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                                 Text(
                                   'Personal Information',
                                   style: AppText.style.mediumBlack16.copyWith(
-                                    fontSize: 18,
+                                    fontSize: Dimension.font18,
                                   ),
                                 ),
                                 !isChangeInformation
@@ -91,7 +91,7 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                                         child: Text(
                                           'Change',
                                           style: AppText.style.regularBlue16.copyWith(
-                                            fontSize: 14,
+                                            fontSize: Dimension.font14,
                                           ),
                                         ),
                                       )
@@ -110,7 +110,7 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                                             child: Text(
                                               'Cancel',
                                               style: AppText.style.regularGrey14.copyWith(
-                                                fontSize: 14,
+                                                fontSize: Dimension.font14,
                                               ),
                                             ),
                                           ),
@@ -137,7 +137,7 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                                             child: Text(
                                               'Save',
                                               style: AppText.style.regularBlue16.copyWith(
-                                                fontSize: 14,
+                                                fontSize: Dimension.font14,
                                               ),
                                             ),
                                           ),
@@ -146,13 +146,13 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                               ],
                             ),
                             CustormTextForm(
-                              margin: EdgeInsets.only(top: 30),
+                              margin: EdgeInsets.only(top: Dimension.height30),
                               label: 'Fullname',
                               controller: nameController,
                               readOnly: !isChangeInformation,
                             ),
                             CustormTextForm(
-                              margin: EdgeInsets.only(top: 30),
+                              margin: EdgeInsets.only(top: Dimension.height30),
                               label: 'Date of birth',
                               controller: dobController,
                               readOnly: !isChangeInformation,
