@@ -29,11 +29,9 @@ class _DrinkDetailState extends State<DrinkDetail> {
   void initState() {
     super.initState();
 
-    _selectedSizes = widget.product.selectedSizes ??
-        List<bool>.generate(Drink.sizes.length, (index) => false);
+    _selectedSizes = widget.product.selectedSizes ?? List<bool>.generate(Drink.sizes.length, (index) => false);
 
-    _selectedToppings = widget.product.selectedToppings ??
-        List<bool>.generate(Drink.toppings.length, (index) => false);
+    _selectedToppings = widget.product.selectedToppings ?? List<bool>.generate(Drink.toppings.length, (index) => false);
   }
 
   @override
@@ -46,8 +44,7 @@ class _DrinkDetailState extends State<DrinkDetail> {
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
     // ignore: no_leading_underscores_for_local_identifiers
     void _handleOnTapEditDrink() {
-      Navigator.of(context)
-          .pushNamed(EditDrinkScreen.routeName, arguments: widget.product);
+      Navigator.of(context).pushNamed(EditDrinkScreen.routeName, arguments: widget.product);
     }
 
     // ignore: no_leading_underscores_for_local_identifiers
@@ -74,7 +71,7 @@ class _DrinkDetailState extends State<DrinkDetail> {
           try {
             await drinkReference.doc(widget.product.id).delete().then((value) {
               Navigator.of(context).pop();
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(true);
               QuickAlert.show(
                 context: context,
                 type: QuickAlertType.success,
@@ -123,13 +120,9 @@ class _DrinkDetailState extends State<DrinkDetail> {
                       //size
                       Container(
                         width: double.maxFinite,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: Dimension.height16,
-                            vertical: Dimension.height16),
+                        padding: EdgeInsets.symmetric(horizontal: Dimension.height16, vertical: Dimension.height16),
                         margin: EdgeInsets.only(
-                            top: Dimension.height12,
-                            left: Dimension.height16,
-                            right: Dimension.height16),
+                            top: Dimension.height12, left: Dimension.height16, right: Dimension.height16),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(8),
@@ -142,21 +135,18 @@ class _DrinkDetailState extends State<DrinkDetail> {
                               style: AppText.style.boldBlack16,
                             ),
                             ListView.separated(
-                                padding:
-                                    EdgeInsets.only(top: Dimension.height16),
+                                padding: EdgeInsets.only(top: Dimension.height16),
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 controller: ScrollController(),
                                 itemBuilder: (context, index) => InkWell(
                                       onTap: () {
                                         setState(() {
-                                          _selectedSizes[index] =
-                                              !_selectedSizes[index];
+                                          _selectedSizes[index] = !_selectedSizes[index];
                                         });
                                       },
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Expanded(
                                             child: Row(
@@ -165,22 +155,17 @@ class _DrinkDetailState extends State<DrinkDetail> {
                                                   value: _selectedSizes[index],
                                                   onChanged: (value) {
                                                     setState(() {
-                                                      _selectedSizes[index] =
-                                                          value;
+                                                      _selectedSizes[index] = value;
                                                     });
                                                   },
                                                 ),
-                                                RoundImage(
-                                                    imgUrl: Drink
-                                                        .sizes[index].image),
+                                                RoundImage(imgUrl: Drink.sizes[index].image),
                                                 SizedBox(
                                                   width: Dimension.height8,
                                                 ),
                                                 Expanded(
-                                                    child: Text(
-                                                        Drink.sizes[index].name,
-                                                        style: AppText.style
-                                                            .regularBlack14)),
+                                                    child: Text(Drink.sizes[index].name,
+                                                        style: AppText.style.regularBlack14)),
                                               ],
                                             ),
                                           ),
@@ -203,13 +188,9 @@ class _DrinkDetailState extends State<DrinkDetail> {
                       //topping
                       Container(
                         width: double.maxFinite,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: Dimension.height16,
-                            vertical: Dimension.height16),
+                        padding: EdgeInsets.symmetric(horizontal: Dimension.height16, vertical: Dimension.height16),
                         margin: EdgeInsets.only(
-                            top: Dimension.height12,
-                            left: Dimension.height16,
-                            right: Dimension.height16),
+                            top: Dimension.height12, left: Dimension.height16, right: Dimension.height16),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(8),
@@ -222,47 +203,37 @@ class _DrinkDetailState extends State<DrinkDetail> {
                               style: AppText.style.boldBlack16,
                             ),
                             ListView.separated(
-                                padding:
-                                    EdgeInsets.only(top: Dimension.height16),
+                                padding: EdgeInsets.only(top: Dimension.height16),
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 controller: ScrollController(),
                                 itemBuilder: (context, index) => InkWell(
                                       onTap: () {
                                         setState(() {
-                                          _selectedToppings[index] =
-                                              !_selectedToppings[index];
+                                          _selectedToppings[index] = !_selectedToppings[index];
                                         });
                                       },
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Expanded(
                                             child: Row(
                                               children: [
                                                 Checkbox(
-                                                  value:
-                                                      _selectedToppings[index],
+                                                  value: _selectedToppings[index],
                                                   onChanged: (value) {
                                                     setState(() {
-                                                      _selectedToppings[index] =
-                                                          value;
+                                                      _selectedToppings[index] = value;
                                                     });
                                                   },
                                                 ),
-                                                RoundImage(
-                                                    imgUrl: Drink
-                                                        .toppings[index].image),
+                                                RoundImage(imgUrl: Drink.toppings[index].image),
                                                 SizedBox(
                                                   width: Dimension.height8,
                                                 ),
                                                 Expanded(
-                                                    child: Text(
-                                                        Drink.toppings[index]
-                                                            .name,
-                                                        style: AppText.style
-                                                            .regularBlack14)),
+                                                    child: Text(Drink.toppings[index].name,
+                                                        style: AppText.style.regularBlack14)),
                                               ],
                                             ),
                                           ),
@@ -310,8 +281,7 @@ class _DrinkDetailState extends State<DrinkDetail> {
                                     backgroundColor: Colors.red,
                                     elevation: 0,
                                     shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(45)))),
+                                        borderRadius: BorderRadius.all(Radius.circular(45)))),
                                 icon: Icon(
                                   Icons.delete_forever,
                                   size: 28,
@@ -334,9 +304,7 @@ class _DrinkDetailState extends State<DrinkDetail> {
                   isKeyboard
                       ? const SizedBox()
                       : Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: Dimension.height16,
-                              vertical: Dimension.height8),
+                          padding: EdgeInsets.symmetric(horizontal: Dimension.height16, vertical: Dimension.height8),
                           width: double.maxFinite,
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -345,8 +313,7 @@ class _DrinkDetailState extends State<DrinkDetail> {
                                 color: Colors.grey.withOpacity(0.5),
                                 spreadRadius: 3,
                                 blurRadius: 5,
-                                offset: const Offset(
-                                    0, 5), // changes position of shadow
+                                offset: const Offset(0, 5), // changes position of shadow
                               ),
                             ],
                           ),
@@ -363,36 +330,27 @@ class _DrinkDetailState extends State<DrinkDetail> {
                                         context: context,
                                         type: QuickAlertType.loading,
                                         title: 'Loading',
-                                        text:
-                                            'Saving ${widget.product.name}...',
+                                        text: 'Saving ${widget.product.name}...',
                                       );
 
                                       List<String> updatedSizes = [];
-                                      for (int i = 0;
-                                          i < Drink.sizes.length;
-                                          i++) {
+                                      for (int i = 0; i < Drink.sizes.length; i++) {
                                         if (_selectedSizes[i]) {
                                           updatedSizes.add(Drink.sizes[i].id);
                                         }
                                       }
                                       List<String> updatedToppings = [];
-                                      for (int i = 0;
-                                          i < Drink.toppings.length;
-                                          i++) {
+                                      for (int i = 0; i < Drink.toppings.length; i++) {
                                         if (_selectedToppings[i]) {
-                                          updatedToppings
-                                              .add(Drink.toppings[i].id);
+                                          updatedToppings.add(Drink.toppings[i].id);
                                         }
                                       }
 
                                       await drinkReference
                                           .doc(widget.product.id)
-                                          .update({
-                                        "sizes": updatedSizes,
-                                        "toppings": updatedToppings
-                                      }).then((value) {
+                                          .update({"sizes": updatedSizes, "toppings": updatedToppings}).then((value) {
                                         Navigator.of(context).pop();
-                                        Navigator.of(context).pop();
+                                        Navigator.of(context).pop(true);
                                         QuickAlert.show(
                                           context: context,
                                           type: QuickAlertType.success,
