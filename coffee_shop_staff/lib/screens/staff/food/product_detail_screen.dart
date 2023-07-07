@@ -74,7 +74,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         context
             .read<ProductBloc>()
             .add(ChangeProduct(product: store.stateFood));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Cập nhật thành công')));
+        Navigator.of(context).pop();
       }
+
       return;
     }
 
