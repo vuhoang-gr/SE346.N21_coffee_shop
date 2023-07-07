@@ -172,7 +172,7 @@ class OrderAPI {
                         .currentToppings
                         .where((t) => e.topping!.contains(t.id))
                         .map((i) => i.name)
-                        .join(' ,'),
+                        .join(', '),
                 image: e.food.images[0],
                 unitPrice: e.unitPrice))
             .toList());
