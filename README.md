@@ -9,7 +9,7 @@
   - Nếu là *quản trị viên*: chọn folder *coffee_shop_admin*
 - **Bước 4:** Mở folder đó lên
 - **Bước 5:** Mở terminal lên
-- **Bước 6:** Gõ vào `flutter run --release` sau đó chờ app build và tận hưởng
+- **Bước 6:** Gõ vào `flutter run --release` sau đó chờ app build và sử dụng
 
 ## Người đóng góp
 Nhóm 5 lớp SE346.N21 trường Đại học Công nghệ Thông tin
