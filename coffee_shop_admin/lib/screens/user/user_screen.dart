@@ -28,59 +28,55 @@ class _UserScreenState extends State<UserScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        child: Scaffold(
-          backgroundColor: AppColors.backgroundColor,
-          body: SafeArea(
-            child: Column(
-              children: [
-                CustomAppBar(
-                  leading: Text(
-                    'Users',
-                    style: AppText.style.boldBlack18,
-                  ),
-                ),
-                Expanded(child: BlocBuilder<UserBloc, UserState>(builder: (context, state) {
-                  if (state is LoadedState) {
-                    return RefreshIndicator(
-                        onRefresh: () async {
-                          BlocProvider.of<UserBloc>(context).add(FetchData());
-                        },
-                        child: SingleChildScrollView(
-                          physics: AlwaysScrollableScrollPhysics(),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                            child: ListView.separated(
-                              shrinkWrap: true,
-                              physics: BouncingScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                return UserCard(
-                                  self: state.users[index].email == AuthAPI.currentUser?.email,
-                                  user: state.users[index],
-                                );
-                              },
-                              separatorBuilder: (context, index) {
-                                return SizedBox(
-                                  height: Dimension.height12,
-                                );
-                              },
-                              itemCount: state.users.length,
-                            ),
-                          ),
-                        ));
-                  } else if (state is LoadingState) {
-                    return ListItemSkeleton();
-                  } else {
-                    print("err");
-                    return SizedBox.shrink();
-                  }
-                })),
-              ],
+    return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
+      body: SafeArea(
+        child: Column(
+          children: [
+            CustomAppBar(
+              leading: Text(
+                'Users',
+                style: AppText.style.boldBlack18,
+              ),
             ),
-          ),
-        ));
+            Expanded(child: BlocBuilder<UserBloc, UserState>(builder: (context, state) {
+              if (state is LoadedState) {
+                return RefreshIndicator(
+                    onRefresh: () async {
+                      BlocProvider.of<UserBloc>(context).add(FetchData());
+                    },
+                    child: SingleChildScrollView(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          physics: BouncingScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return UserCard(
+                              self: state.users[index].email == AuthAPI.currentUser?.email,
+                              user: state.users[index],
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return SizedBox(
+                              height: Dimension.height12,
+                            );
+                          },
+                          itemCount: state.users.length,
+                        ),
+                      ),
+                    ));
+              } else if (state is LoadingState) {
+                return ListItemSkeleton();
+              } else {
+                print("err");
+                return SizedBox.shrink();
+              }
+            })),
+          ],
+        ),
+      ),
+    );
   }
 }

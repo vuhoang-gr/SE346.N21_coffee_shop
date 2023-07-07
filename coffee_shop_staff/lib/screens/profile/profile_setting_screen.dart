@@ -117,7 +117,7 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                                 Text(
                                   'Thông tin cá nhân',
                                   style: AppText.style.mediumBlack16.copyWith(
-                                    fontSize: Dimension.getWidthFromValue(18),
+                                    fontSize: Dimension.font18,
                                   ),
                                 ),
                                 !isChangeInformation
@@ -134,7 +134,7 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                                           style: AppText.style.regularBlue16
                                               .copyWith(
                                             fontSize:
-                                                Dimension.getWidthFromValue(14),
+                                                Dimension.font14,
                                           ),
                                         ),
                                       )
@@ -161,7 +161,7 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                                               style: AppText.style.regularGrey14
                                                   .copyWith(
                                                 fontSize:
-                                                    Dimension.getFontSize(14),
+                                                    Dimension.font14,
                                               ),
                                             ),
                                           ),
@@ -175,7 +175,7 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                                               'Lưu',
                                               style: AppText.style.regularBlue16
                                                   .copyWith(
-                                                fontSize: 14,
+                                                fontSize: Dimension.font14,
                                               ),
                                             ),
                                           ),

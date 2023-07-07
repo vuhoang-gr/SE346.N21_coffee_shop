@@ -27,6 +27,12 @@ class AppText {
       textBaseline: TextBaseline.ideographic,
       fontWeight: FontWeight.w500,
       color: AppColors.blackColor);
+  final mediumGreen14 = TextStyle(
+      fontSize: Dimension.font14,
+      height: 1.5,
+      textBaseline: TextBaseline.ideographic,
+      fontWeight: FontWeight.w500,
+      color: Color.fromARGB(255, 46, 206, 10));
   final mediumBlack16 =
       TextStyle(fontSize: Dimension.font16, height: 1.5, fontWeight: FontWeight.bold, color: AppColors.blackColor);
   final mediumGrey12 = TextStyle(
