@@ -4,9 +4,9 @@
 - **Bước 1**: Cài đặt môi trường để phát triển ứng dụng flutter tại https://docs.flutter.dev/get-started/install nếu chưa cài đặt
 - **Bước 2:** Tải project về máy
 - **Bước 3:** Chọn nhóm người dùng sử dụng app
-  - Nếu là *người dùng bình thường*: chọn folder coffee_shop_app
-  - Nếu là *nhân viên*: chọn folder coffee_shop_staff
-  - Nếu là *quản trị viên*: chọn folder coffee_shop_admin
+  - Nếu là *người dùng bình thường*: chọn folder *coffee_shop_app*
+  - Nếu là *nhân viên*: chọn folder *coffee_shop_staff*
+  - Nếu là *quản trị viên*: chọn folder *coffee_shop_admin*
 - **Bước 4:** Mở folder đó lên
 - **Bước 5:** Mở terminal lên
 - **Bước 6:** Gõ vào `flutter run --release` sau đó chờ app build và tận hưởng
