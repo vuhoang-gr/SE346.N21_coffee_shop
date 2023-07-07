@@ -51,7 +51,8 @@ class OrderDetailScreen extends StatelessWidget {
                               } else if (order.status == orderReadyForPickup) {
                                 imgUrl =
                                     'assets/images/img_ready_for_pickup.png';
-                              } else if (order.status == orderCancelled) {
+                              } else if (order.status == orderCancelled ||
+                                  order.status == orderFailed) {
                                 imgUrl =
                                     'assets/images/img_delivery_failed.png';
                               } else {
@@ -303,8 +304,7 @@ class OrderDetailScreen extends StatelessWidget {
                                                           TextSpan(
                                                             style: AppText.style
                                                                 .regularGrey12,
-                                                            children: <
-                                                                TextSpan>[
+                                                            children: <TextSpan>[
                                                               TextSpan(
                                                                   text: order
                                                                       .address!

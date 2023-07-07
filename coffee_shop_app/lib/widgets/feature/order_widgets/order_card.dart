@@ -41,7 +41,7 @@ class OrderCard extends StatelessWidget {
         order.status == orderCompleted) {
       backgroundColor = AppColors.greenBackgroundColor;
       labelColor = AppColors.greenColor;
-    } else if (order.status == orderCancelled) {
+    } else if (order.status == orderCancelled || order.status == orderFailed) {
       backgroundColor = AppColors.pinkBackgroundColor;
       labelColor = AppColors.pinkColor;
     }

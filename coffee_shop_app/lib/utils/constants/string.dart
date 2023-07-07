@@ -4,3 +4,4 @@ const String orderDelivered = 'Đã giao';
 const String orderCancelled = 'Đã huỷ';
 const String orderReadyForPickup = 'Đã chuẩn bị';
 const String orderCompleted = 'Hoàn thành';
+const String orderFailed = "Giao hàng thất bại";

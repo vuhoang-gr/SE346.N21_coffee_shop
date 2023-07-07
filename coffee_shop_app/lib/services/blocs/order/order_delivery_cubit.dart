@@ -91,6 +91,7 @@ class OrderDeliveryCubit extends Cubit<OrderListState> {
     final List<Order.Order> listPickup = [];
     for (var ord in OrderAPI.ordersDelivery!) {
       if (ord.status == orderCancelled ||
+          ord.status == orderFailed ||
           ord.status == orderDelivered ||
           ord.status == orderCompleted) {
         listDeli.add(ord);
@@ -98,6 +99,7 @@ class OrderDeliveryCubit extends Cubit<OrderListState> {
     }
     for (var p in OrderAPI.ordersPickup!) {
       if (p.status == orderCancelled ||
+          p.status == orderFailed ||
           p.status == orderDelivered ||
           p.status == orderCompleted) {
         listPickup.add(p);
@@ -115,6 +117,7 @@ class OrderDeliveryCubit extends Cubit<OrderListState> {
 
     for (var ord in OrderAPI.ordersDelivery!) {
       if (ord.status != orderCancelled &&
+          ord.status != orderFailed &&
           ord.status != orderDelivered &&
           ord.status != orderCompleted) {
         listDeli.add(ord);
@@ -122,6 +125,7 @@ class OrderDeliveryCubit extends Cubit<OrderListState> {
     }
     for (var p in OrderAPI.ordersPickup!) {
       if (p.status != orderCancelled &&
+          p.status != orderFailed &&
           p.status != orderDelivered &&
           p.status != orderCompleted) {
         listPickup.add(p);
