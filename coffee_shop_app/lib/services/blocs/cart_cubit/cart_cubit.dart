@@ -275,12 +275,12 @@ class CartCubit extends Cubit<Cart> {
   applyPromoAndCalPrice(Promo? promo) {
     var discount = calculatePromo(promo);
     if (discount == -1) {
-      emit(state.copyWith(promo: promo, discount: 0));
+      emit(state.copyWithNullPromo(discount: 0));
     } else if (discount == 0) {
       if (state.products.isEmpty) {
         return;
       }
-      emit(state.copyWith(discount: 0));
+      emit(state.copyWithNullPromo(discount: 0));
       Fluttertoast.showToast(
           msg: "Không đủ điều kiện áp dụng mã giảm giá.",
           toastLength: Toast.LENGTH_SHORT,

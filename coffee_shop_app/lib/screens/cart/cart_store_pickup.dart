@@ -53,7 +53,6 @@ class _CartStorePickupState extends State<CartStorePickup> {
   onTick(Timer timer) {
     if (mounted) {
       BlocProvider.of<TimerCubit>(context).setTimer();
-      print('Timer ${timer.tick}: ${DateTime.now().toLocal()}');
     }
   }
 
