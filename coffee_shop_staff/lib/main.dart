@@ -67,7 +67,7 @@ class MyApp extends StatelessWidget {
             context
                 .read<ProductBloc>()
                 .add(LoadProduct(storeID: StoreAPI.currentStore!.id));
-            context.read<OrderBloc>().add(LoadOrder());
+            context.read<OrderBloc>().add(FetchOrder());
           }
           // print(state);
           return MaterialApp(

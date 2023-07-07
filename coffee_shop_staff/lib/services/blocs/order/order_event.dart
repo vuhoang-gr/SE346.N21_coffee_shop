@@ -6,7 +6,15 @@ abstract class OrderEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class LoadOrder extends OrderEvent {}
+class FetchOrder extends OrderEvent {}
+
+class LoadOrder extends OrderEvent {
+  final List<Order> deli;
+  final List<Order> pickup;
+  LoadOrder({required this.deli, required this.pickup});
+  @override
+  List<Object?> get props => [deli, pickup];
+}
 
 class ChangeOrder extends OrderEvent {
   final Order order;

@@ -10,7 +10,7 @@ part 'order_state.dart';
 
 class OrderBloc extends Bloc<OrderEvent, OrderState> {
   OrderBloc() : super(OrderInitial()) {
-    on<LoadOrder>((event, emit) async {
+    on<FetchOrder>((event, emit) async {
       emit(OrderLoading());
       var orderListRaw = await OrderAPI().getAll(StoreAPI.currentStore!.id);
       var orderList = orderListRaw?.map((e) => e as Order).toList();
@@ -26,6 +26,11 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           .toList();
       emit(OrderLoaded(pickup: pickupList, delivery: deliList));
     });
+    on<LoadOrder>(
+      (event, emit) {
+        emit(OrderLoaded(pickup: event.pickup, delivery: event.deli));
+      },
+    );
     on<ChangeOrder>(
       (event, emit) async {
         await OrderAPI().update(event.order);

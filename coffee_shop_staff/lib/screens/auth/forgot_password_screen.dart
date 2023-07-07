@@ -93,7 +93,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           ),
         ),
         RoundedButton(
-          onPressed: () {},
+          onPressed: onSubmit,
           label: "GỬI",
         ),
       ],

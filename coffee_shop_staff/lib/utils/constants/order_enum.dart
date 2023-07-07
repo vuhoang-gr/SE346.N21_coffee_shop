@@ -1,12 +1,11 @@
 enum OrderStatus {
   preparing("Đang xử lí"),
-  delivering("Đang giao hàng"),
-  delivered("Đã giao hàng"),
+  delivering("Đang giao"),
+  delivered("Đã giao"),
   deliverFailed("Giao hàng thất bại"),
-  received("Đã nhận"),
-  prepared("Đang chuẩn bị"),
-  completed("Đã hoàn thành"),
-  cancelled("Đã hủy đơn"),
+  prepared("Đã chuẩn bị"),
+  completed("Hoàn thành"),
+  cancelled("Đã hủy"),
   all("Tất cả");
 
   final String name;
@@ -24,19 +23,17 @@ extension StringToOrder on String {
     switch (this) {
       case 'Đang xử lí':
         return OrderStatus.preparing;
-      case 'Đang giao hàng':
+      case 'Đang giao':
         return OrderStatus.delivering;
-      case 'Đã giao hàng':
+      case 'Đã giao':
         return OrderStatus.delivered;
       case 'Giao hàng thất bại':
         return OrderStatus.deliverFailed;
-      case 'Đã nhận':
-        return OrderStatus.received;
-      case 'Đang chuẩn bị':
+      case 'Đã chuẩn bị':
         return OrderStatus.prepared;
-      case 'Đã hoàn thành':
+      case 'Hoàn thành':
         return OrderStatus.completed;
-      case 'Đã hủy đơn':
+      case 'Đã hủy':
         return OrderStatus.cancelled;
       case 'Tất cả':
         return OrderStatus.all;

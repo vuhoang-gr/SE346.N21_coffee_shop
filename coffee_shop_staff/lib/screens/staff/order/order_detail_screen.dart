@@ -46,7 +46,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     } else if (order.status == OrderStatus.delivered ||
         widget.order.status == OrderStatus.completed) {
       imgUrl = 'assets/images/img_delivered.png';
-    } else if (order.status == OrderStatus.received) {
+    } else if (order.status == OrderStatus.preparing) {
       imgUrl = 'assets/images/img_received.png';
     } else if (order.status == OrderStatus.prepared) {
       imgUrl = 'assets/images/img_ready_for_pickup.png';
@@ -56,6 +56,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     } else {
       imgUrl = 'assets/images/img_preparing.png';
     }
+
+    bool canChangeStatus = order.status == OrderStatus.cancelled ||
+        order.status == OrderStatus.completed ||
+        order.status == OrderStatus.delivered ||
+        order.status == OrderStatus.prepared;
 
     return SafeArea(
       child: Scaffold(
@@ -302,110 +307,115 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.all(Dimension.height12),
-              child: ContainerCard(
-                verticalPadding: Dimension.height12,
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Thay đổi trạng thái: ',
-                          style: AppText.style.regularGrey14
-                              .copyWith(color: Colors.black),
-                        ),
-                        DropdownButtonHideUnderline(
-                          child: Builder(builder: (context) {
-                            List<OrderStatus> statusList = [];
-                            if (order.isPickup) {
-                              statusList = [
-                                OrderStatus.received,
-                                OrderStatus.prepared,
-                                OrderStatus.completed,
-                                OrderStatus.cancelled
-                              ];
-                            } else {
-                              statusList = [
-                                OrderStatus.preparing,
-                                OrderStatus.delivering,
-                                OrderStatus.delivered,
-                                OrderStatus.deliverFailed,
-                                OrderStatus.cancelled
-                              ];
-                            }
-                            return DropdownButton2(
-                              customButton: OrderStatusLabel(
-                                hasBorder: true,
-                                status: orderStatusTemp,
-                                fontSize: Dimension.font14,
-                                padding: EdgeInsets.symmetric(
-                                    vertical: Dimension.getHeightFromValue(9),
-                                    horizontal:
-                                        Dimension.getWidthFromValue(14)),
+            !canChangeStatus
+                ? Padding(
+                    padding: EdgeInsets.all(Dimension.height12),
+                    child: ContainerCard(
+                      verticalPadding: Dimension.height12,
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Thay đổi trạng thái: ',
+                                style: AppText.style.regularGrey14
+                                    .copyWith(color: Colors.black),
                               ),
-                              value: orderStatusTemp.name,
-                              items: statusList.map((value) {
-                                return DropdownMenuItem(
-                                    value: value.name,
-                                    child: OrderStatusLabel(
-                                      status: value,
-                                    ));
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  orderStatusTemp =
-                                      (value as String).toOrderStatus();
-                                });
-                              },
-                              buttonStyleData: ButtonStyleData(
-                                padding: const EdgeInsets.only(right: 8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(14),
-                                  border: Border.all(
-                                    color: AppColors.blueColor,
-                                  ),
-                                  color: Colors.white,
-                                ),
+                              DropdownButtonHideUnderline(
+                                child: Builder(builder: (context) {
+                                  List<OrderStatus> statusList = [];
+                                  if (order.isPickup) {
+                                    statusList = [
+                                      OrderStatus.preparing,
+                                      OrderStatus.prepared,
+                                      OrderStatus.completed,
+                                      OrderStatus.cancelled
+                                    ];
+                                  } else {
+                                    statusList = [
+                                      OrderStatus.preparing,
+                                      OrderStatus.delivering,
+                                      OrderStatus.delivered,
+                                      OrderStatus.deliverFailed,
+                                      OrderStatus.cancelled
+                                    ];
+                                  }
+                                  return DropdownButton2(
+                                    customButton: OrderStatusLabel(
+                                      hasBorder: true,
+                                      status: orderStatusTemp,
+                                      fontSize: Dimension.font14,
+                                      padding: EdgeInsets.symmetric(
+                                          vertical:
+                                              Dimension.getHeightFromValue(9),
+                                          horizontal:
+                                              Dimension.getWidthFromValue(14)),
+                                    ),
+                                    value: orderStatusTemp.name,
+                                    items: statusList.map((value) {
+                                      return DropdownMenuItem(
+                                          value: value.name,
+                                          child: OrderStatusLabel(
+                                            status: value,
+                                          ));
+                                    }).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        orderStatusTemp =
+                                            (value as String).toOrderStatus();
+                                      });
+                                    },
+                                    buttonStyleData: ButtonStyleData(
+                                      padding: const EdgeInsets.only(right: 8),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(14),
+                                        border: Border.all(
+                                          color: AppColors.blueColor,
+                                        ),
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    dropdownStyleData: DropdownStyleData(
+                                      maxHeight: 400,
+                                      width: 200,
+                                      padding: null,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(14),
+                                        color: Colors.white,
+                                      ),
+                                      elevation: 3,
+                                      offset: const Offset(-20, 315),
+                                    ),
+                                  );
+                                }),
                               ),
-                              dropdownStyleData: DropdownStyleData(
-                                maxHeight: 400,
-                                width: 200,
-                                padding: null,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(14),
-                                  color: Colors.white,
-                                ),
-                                elevation: 3,
-                                offset: const Offset(-20, 315),
-                              ),
-                            );
-                          }),
-                        ),
-                      ],
+                            ],
+                          ),
+                          SizedBox(
+                            height: Dimension.height6,
+                          ),
+                          RoundedButton(
+                            onPressed: () async {
+                              setState(() {
+                                order.status = orderStatusTemp;
+                              });
+                              // await OrderAPI().update(order);
+                              if (context.mounted) {
+                                context
+                                    .read<OrderBloc>()
+                                    .add(ChangeOrder(order: order));
+                              }
+                            },
+                            label: 'XÁC NHẬN',
+                          ),
+                        ],
+                      ),
                     ),
-                    SizedBox(
-                      height: Dimension.height6,
-                    ),
-                    RoundedButton(
-                      onPressed: () async {
-                        setState(() {
-                          order.status = orderStatusTemp;
-                        });
-                        // await OrderAPI().update(order);
-                        if (context.mounted) {
-                          context
-                              .read<OrderBloc>()
-                              .add(ChangeOrder(order: order));
-                        }
-                      },
-                      label: 'XÁC NHẬN',
-                    ),
-                  ],
-                ),
-              ),
-            ),
+                  )
+                : Container(
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                  )
           ],
         ),
       ),

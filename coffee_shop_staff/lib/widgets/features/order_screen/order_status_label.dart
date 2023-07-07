@@ -27,7 +27,7 @@ class OrderStatusLabel extends StatelessWidget {
     Color? backgroundColor;
     Color? foregroundColor;
 
-    if (status == OrderStatus.preparing || status == OrderStatus.received) {
+    if (status == OrderStatus.preparing) {
       backgroundColor = AppColors.orangeBackgroundColor;
       foregroundColor = AppColors.orangeColor;
     } else if (status == OrderStatus.delivering ||
