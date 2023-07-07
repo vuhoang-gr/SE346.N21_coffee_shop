@@ -332,7 +332,7 @@ class _EditStoreScreenState extends State<EditStoreScreen> with InputValidationM
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "Drink images",
+                                        "Store images",
                                         style: AppText.style.boldBlack14,
                                       ),
                                       SizedBox(height: 8),
@@ -402,7 +402,7 @@ class _EditStoreScreenState extends State<EditStoreScreen> with InputValidationM
                                     children: [
                                       Text(
                                         "Upload more images",
-                                        style: AppText.style.boldBlack16,
+                                        style: AppText.style.boldBlack14,
                                       ),
                                       MultiImagePickerView(
                                         draggable: false,
