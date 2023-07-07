@@ -15,7 +15,7 @@ class User extends Equatable {
   bool isActive;
   String avatarUrl;
   String coverUrl;
-  Store store;
+  Store? store;
 
   User(
       {required this.id,

@@ -126,14 +126,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 return Column(
                   children: [
                     Text(
-                      (state as Authenticated).user.name,
+                      (state is Authenticated) ? state.user.name : 'Null',
                       style: AppText.style.boldBlack18,
                     ),
                     SizedBox(
                       height: Dimension.getHeightFromValue(5),
                     ),
                     Text(
-                      'Store: ${user.store.sb}',
+                      'Store: ${user.store!.sb}',
                       style: AppText.style.regularBlack14,
                     ),
                   ],
@@ -227,16 +227,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       haveArrow: false,
                     ),
                     Expanded(child: SizedBox()),
-                    TouchableOpacity(
-                      child: Text(
-                        'Điều khoản và điều kiện',
-                        style: AppText.style.regularBlue16.copyWith(
-                            fontSize: Dimension.getFontSize(14),
-                            decoration: TextDecoration.underline),
-                      ),
-                    ),
                     SizedBox(
-                      height: Dimension.getHeightFromValue(12),
+                      height: Dimension.getHeightFromValue(15),
                     ),
                     Text(
                       'Phiên bản 1.0.0',

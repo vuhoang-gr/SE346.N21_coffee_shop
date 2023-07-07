@@ -94,11 +94,17 @@ class AuthAPI {
   }
 
   Future<User?> fromFireStore(Map<String, dynamic>? data, String id) async {
-    if (data == null || data['isStaff'] == null || !data['isStaff']) {
+    if (data == null) {
       return null;
     }
-    Store? store = await StoreAPI().get(data['store']);
-    if (store == null) return null;
+    if (data['isStaff'] == null && currentUser == null) {
+      return null;
+    }
+    Store? store;
+    if (data['store'] != null) {
+      store = await StoreAPI().get(data['store']);
+    }
+    if (currentUser == null && store == null) return null;
     if (data['isActive'] == null || !(data['isActive'] as bool)) {
       return null;
     }

@@ -112,16 +112,24 @@ class _OrderScreenState extends State<OrderScreen> {
                   children: [
                     //store pickup
                     //map order have pickup type
-                    OrderListing(
-                      orderList: pickupList,
-                      onRefresh: onRefresh,
+                    BlocBuilder<OrderBloc, OrderState>(
+                      builder: (context, state) {
+                        return OrderListing(
+                          orderList: pickupList,
+                          onRefresh: onRefresh,
+                        );
+                      },
                     ),
 
                     //delivery
                     //map order have delivery type
-                    OrderListing(
-                      orderList: deliList,
-                      onRefresh: onRefresh,
+                    BlocBuilder<OrderBloc, OrderState>(
+                      builder: (context, state) {
+                        return OrderListing(
+                          orderList: deliList,
+                          onRefresh: onRefresh,
+                        );
+                      },
                     )
                   ],
                 ),

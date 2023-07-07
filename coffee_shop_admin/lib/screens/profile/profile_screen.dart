@@ -77,12 +77,14 @@ class ProfileScreen extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: Dimension.getWidthFromValue(16)),
+                padding: EdgeInsets.symmetric(
+                    horizontal: Dimension.getWidthFromValue(16)),
                 child: Column(
                   children: [
                     ProfileCustomButton(
                       onPressed: () {
-                        Navigator.of(context).pushNamed(ProfileSettingScreen.routeName);
+                        Navigator.of(context)
+                            .pushNamed(ProfileSettingScreen.routeName);
                       },
                       icon: Icons.settings,
                       title: 'Settings',
@@ -100,14 +102,8 @@ class ProfileScreen extends StatelessWidget {
                       description: 'Go back to Login page',
                     ),
                     Expanded(child: SizedBox()),
-                    TouchableOpacity(
-                      child: Text(
-                        'Term and Conditions',
-                        style: AppText.style.regularBlue16.copyWith(fontSize: 14, decoration: TextDecoration.underline),
-                      ),
-                    ),
                     SizedBox(
-                      height: Dimension.getHeightFromValue(12),
+                      height: Dimension.getHeightFromValue(15),
                     ),
                     Text(
                       'Version 1.0.0',

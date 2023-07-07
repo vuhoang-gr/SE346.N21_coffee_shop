@@ -122,7 +122,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               builder: (context, state) {
                 // print(state);
                 return Text(
-                  (state as Authenticated).user.name,
+                  (state is Authenticated) ? state.user.name : 'Null',
                   style: AppText.style.boldBlack18,
                 );
               },
@@ -218,16 +218,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       haveArrow: false,
                     ),
                     Expanded(child: SizedBox()),
-                    TouchableOpacity(
-                      child: Text(
-                        'Điều khoản và điều kiện',
-                        style: AppText.style.regularBlue16.copyWith(
-                            fontSize: Dimension.getFontSize(14),
-                            decoration: TextDecoration.underline),
-                      ),
-                    ),
                     SizedBox(
-                      height: Dimension.getHeightFromValue(12),
+                      height: Dimension.getHeightFromValue(15),
                     ),
                     Text(
                       'Phiên bản 1.0.0',

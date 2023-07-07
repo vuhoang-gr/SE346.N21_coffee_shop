@@ -72,6 +72,16 @@ class OrderAPI {
     return res;
   }
 
+  Future<od.Order?> rawGet(String id) async {
+    var raw = await firestore.collection('orders').doc(id).get();
+    var data = raw.data();
+    var res = await fromFireStore(data, id);
+    if (res != null) {
+      allOrder[id] = res;
+    }
+    return res;
+  }
+
   Future<List<od.Order>?> getList(List<String> listId) async {
     List<od.Order>? res = [];
     for (var item in listId) {
@@ -133,6 +143,7 @@ class OrderAPI {
   }
 
   Future<bool> update(od.Order order) async {
+    allOrder[order.id] = order;
     await firestore
         .collection('orders')
         .doc(order.id)
