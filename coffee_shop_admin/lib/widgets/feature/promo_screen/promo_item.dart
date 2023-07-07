@@ -26,7 +26,7 @@ class PromoItem extends StatelessWidget {
         },
       ),
       child: Card(
-        color: promo.isActive ? Color.fromRGBO(190, 250, 200, 1) : Colors.white,
+        color: Colors.white,
         margin: EdgeInsets.zero,
         child: IntrinsicHeight(
           child: Row(
@@ -72,7 +72,7 @@ class PromoItem extends StatelessWidget {
                       ),
                       Text(
                         promo.id,
-                        style: AppText.style.mediumBlack14,
+                        style: promo.isActive ? AppText.style.mediumGreen14 : AppText.style.mediumBlack14,
                       ),
                       Text(
                         "Expired in: ${DateFormat('HH:mm dd/MM/yyyy').format(promo.dateEnd)}",
