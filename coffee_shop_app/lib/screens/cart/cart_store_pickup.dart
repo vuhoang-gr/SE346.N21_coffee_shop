@@ -513,7 +513,11 @@ class _CartStorePickupState extends State<CartStorePickup> {
                                                       .selectedDate!) >
                                               dateTimeToHour(cartButtonState
                                                   .selectedStore!.timeClose) ||
-                                          dateTimeToHour(DateTime.now()) <
+                                          dateTimeToHour(
+                                                  BlocProvider.of<TimerCubit>(
+                                                          context)
+                                                      .state
+                                                      .selectedDate!) <
                                               dateTimeToHour(cartButtonState
                                                   .selectedStore!.timeOpen)) {
                                         Fluttertoast.showToast(
