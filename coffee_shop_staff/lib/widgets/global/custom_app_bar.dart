@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../../utils/colors/app_colors.dart';
 import '../../utils/constants/dimension.dart';
@@ -28,22 +29,21 @@ class CustomAppBar extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(width: Dimension.width16),
               Navigator.of(context).canPop()
-                  ? Container(
-                      margin: EdgeInsets.fromLTRB(0, 0, Dimension.width8, 0),
-                      padding: EdgeInsets.zero,
-                      child: GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: IconTheme(
-                            data: IconThemeData(size: Dimension.height24),
-                            child: const Icon(
-                              CupertinoIcons.back,
-                              color: AppColors.blackColor,
-                            )),
-                      ),
+                  ? IconButton(
+                      icon: IconTheme(
+                          data: IconThemeData(size: Dimension.height32),
+                          child: Icon(
+                            Icons.chevron_left_rounded,
+                            color: color != Color.fromARGB(221, 71, 71, 71)
+                                ? AppColors.blackColor
+                                : Colors.white,
+                          )),
+                      onPressed: () => Navigator.of(context).maybePop(),
                     )
-                  : Container(),
+                  : SizedBox(
+                      width: Dimension.width16,
+                    ),
               if (leading != null)
                 Container(
                   constraints: BoxConstraints(minWidth: 100, maxWidth: 200),
