@@ -416,7 +416,7 @@ class _CartButtonState extends State<CartButton> {
                                                 width: Dimension.width4,
                                               ),
                                               Text(
-                                                "${MoneyTransfer.transferFromDouble(BlocProvider.of<CartCubit>(context).state.total ?? 0)}đ",
+                                                "${MoneyTransfer.transferFromDouble(BlocProvider.of<CartCubit>(context).state.totalFood ?? 0)}đ",
                                                 style:
                                                     AppText.style.mediumWhite12,
                                               ),

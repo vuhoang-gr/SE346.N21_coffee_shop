@@ -68,6 +68,7 @@ class Dimension {
 
   static double font18 = getWidthFromValue(18) / textScale;
   static double font16 = getWidthFromValue(16) / textScale;
+  static double font15 = getWidthFromValue(15) / textScale;
   static double font14 = getWidthFromValue(14) / textScale;
   static double font12 = getWidthFromValue(12) / textScale;
   static double font10 = getWidthFromValue(10) / textScale;

@@ -40,32 +40,28 @@ class ProfileCustomButton extends StatelessWidget {
           SizedBox(
             width: Dimension.getWidthFromValue(12),
           ),
-          Container(
-            color: Colors.transparent,
-            child: Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    title,
-                    style: AppText.style.regularBlack10.copyWith(
-                      fontSize: Dimension.getFontSize(14),
-                    ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  title,
+                  style: AppText.style.regularBlack10.copyWith(
+                    fontSize: Dimension.getFontSize(14),
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  description,
+                  style: AppText.style.regularGrey12.copyWith(
+                    fontSize: Dimension.getFontSize(13),
                     overflow: TextOverflow.ellipsis,
                   ),
-                  Text(
-                    description,
-                    style: AppText.style.regularGrey12.copyWith(
-                      fontSize: Dimension.getFontSize(13),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-          Expanded(child: SizedBox()),
           haveArrow
               ? Icon(
                   Icons.arrow_forward_ios,

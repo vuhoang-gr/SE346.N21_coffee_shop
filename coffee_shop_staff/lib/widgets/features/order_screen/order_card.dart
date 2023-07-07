@@ -49,7 +49,7 @@ class OrderCard extends StatelessWidget {
                   Text(
                     DateFormat('dd/MM/yyyy hh:mm:ss').format(order.orderDate),
                     style: TextStyle(
-                        fontSize: Dimension.height12,
+                        fontSize: Dimension.font12,
                         color: AppColors.greyTextColor),
                   ),
                 ],
@@ -89,7 +89,7 @@ class OrderCard extends StatelessWidget {
                   children: [
                     Text(
                       order.isPickup
-                          ? 'PICKUP'
+                          ? 'Đến lấy'
                           : order.deliveryAddress!.address.formattedAddress,
                       style: AppText.style.regular,
                       maxLines: 1,
@@ -105,11 +105,9 @@ class OrderCard extends StatelessWidget {
 
               //Order summary
               Builder(builder: (context) {
-                String productSummary = '';
-                for (var item in order.productList) {
-                  productSummary += '${item.name} (${item.amount}), ';
-                }
-                productSummary.substring(0, productSummary.length - 2);
+                String productSummary = order.productList
+                    .map((item) => '${item.name} (${item.amount})')
+                    .join(", ");
                 return Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -129,12 +127,12 @@ class OrderCard extends StatelessWidget {
               //Price
               !order.isPickup
                   ? PriceRow(
-                      title: 'Delivery',
+                      title: 'Tổng hóa đơn',
                       price: order.deliveryFee ?? 0,
                     )
                   : SizedBox.shrink(),
-              PriceRow(title: 'Discount', price: order.discount ?? 0),
-              PriceRow(title: 'Total', price: order.totalPrice),
+              PriceRow(title: 'Giảm giá', price: order.discount ?? 0),
+              PriceRow(title: 'Tổng tiền', price: order.totalPrice),
             ],
           )),
     );

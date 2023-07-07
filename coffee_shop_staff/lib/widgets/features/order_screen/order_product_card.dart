@@ -3,7 +3,7 @@ import 'package:coffee_shop_staff/utils/constants/placeholder_enum.dart';
 import 'package:coffee_shop_staff/utils/styles/app_texts.dart';
 import 'package:coffee_shop_staff/widgets/global/aysncImage/async_image.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import '../../../services/functions/money_transfer.dart';
 import '../../../utils/constants/dimension.dart';
 
 class OrderProductCard extends StatelessWidget {
@@ -46,7 +46,7 @@ class OrderProductCard extends StatelessWidget {
                   Text(
                     product.name,
                     style: AppText.style.boldBlack14.copyWith(
-                      fontSize: 15,
+                      fontSize: Dimension.font15,
                     ),
                   ),
                   SizedBox(
@@ -59,13 +59,7 @@ class OrderProductCard extends StatelessWidget {
                         'Size: ',
                         style: AppText.style.mediumBlack14,
                       ),
-                      Text(
-                        product.size,
-                        style: TextStyle(
-                            fontSize: Dimension.height12,
-                            color: Colors.black.withOpacity(0.8),
-                            height: 1.5),
-                      ),
+                      Text(product.size, style: AppText.style.regularBlack14),
                     ],
                   ),
                   SizedBox(
@@ -75,16 +69,12 @@ class OrderProductCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        'Unit price: ',
+                        'Đơn giá: ',
                         style: AppText.style.mediumBlack14,
                       ),
                       Text(
-                        '${NumberFormat("#,##0.00", "en_US").format(product.unitPrice)} đ x ${product.amount}',
-                        style: TextStyle(
-                            fontSize: Dimension.height12,
-                            color: Colors.black.withOpacity(0.8),
-                            height: 1.5),
-                      ),
+                          '${MoneyTransfer.transferFromDouble(product.unitPrice)} đ x ${product.amount}',
+                          style: AppText.style.regularBlack14),
                     ],
                   ),
                   SizedBox(
@@ -100,11 +90,11 @@ class OrderProductCard extends StatelessWidget {
                             style: AppText.style.mediumBlack14,
                           ),
                           Text(
-                            product.topping != null &&
-                                    product.topping!.isNotEmpty
-                                ? product.topping!
-                                : 'Không có',
-                          ),
+                              product.topping != null &&
+                                      product.topping!.isNotEmpty
+                                  ? product.topping!
+                                  : 'Không có',
+                              style: AppText.style.regularBlack14),
                         ],
                       );
                     },

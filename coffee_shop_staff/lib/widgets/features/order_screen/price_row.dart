@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
+import '../../../services/functions/money_transfer.dart';
 import '../../../utils/styles/app_texts.dart';
 
 //VHDONE
@@ -26,7 +26,7 @@ class PriceRow extends StatelessWidget {
           ),
         ),
         Text(
-          '${NumberFormat("#,##0.00", "en_US").format(price)} đ',
+          '${MoneyTransfer.transferFromDouble(price)} đ',
           style: AppText.style.boldBlack14,
         ),
       ],

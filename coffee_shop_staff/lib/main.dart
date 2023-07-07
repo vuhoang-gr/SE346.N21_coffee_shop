@@ -71,7 +71,7 @@ class MyApp extends StatelessWidget {
           }
           // print(state);
           return MaterialApp(
-              title: 'Coffee Shop',
+              title: 'Coffee Shop Staff',
               theme: ThemeData(
                 primarySwatch: Colors.blue,
                 fontFamily: "Inter",

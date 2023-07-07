@@ -7,8 +7,8 @@ import 'package:coffee_shop_staff/utils/styles/app_texts.dart';
 import 'package:coffee_shop_staff/widgets/global/aysncImage/async_image.dart';
 import 'package:coffee_shop_staff/widgets/global/buttons/touchable_opacity.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
+import '../../../services/functions/money_transfer.dart';
 import '../../../services/models/food.dart';
 import '../../../utils/constants/dimension.dart';
 
@@ -137,7 +137,7 @@ class _ProductCardState extends State<ProductCard>
                         //   ),
                         // ),
                         Text(
-                          '${NumberFormat("#,##0", "en_US").format(product.item.price)} đ',
+                          '${MoneyTransfer.transferFromDouble(product.item.price)} đ',
                           style: AppText.style.regularGrey14.copyWith(
                             color: Colors.black,
                           ),
