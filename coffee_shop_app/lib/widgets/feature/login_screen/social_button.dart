@@ -1,9 +1,14 @@
 import 'package:coffee_shop_app/services/blocs/auth/auth_bloc.dart';
+import 'package:coffee_shop_app/services/models/user.dart';
 import 'package:coffee_shop_app/utils/constants/social_enum.dart';
 import 'package:coffee_shop_app/widgets/global/buttons/touchable_opacity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../../services/apis/auth_api.dart';
+import '../../../services/blocs/app_cubit/app_cubit.dart';
+import 'information_dialog.dart';
 
 // ignore: must_be_immutable
 class SocialButton extends StatelessWidget {
@@ -20,10 +25,46 @@ class SocialButton extends StatelessWidget {
   Widget build(BuildContext context) {
     pressed() async {
       if (onPressed != null) return onPressed;
+
+      context.read<AppCubit>().changeState(AppLoading());
+
+      User? user;
       if (type == Social.google) {
-        context.read<AuthBloc>().add(GoogleLogin());
+        user = await AuthAPI().googleLogin();
       } else if (type == Social.facebook) {
-        context.read<AuthBloc>().add(FacebookLogin());
+        user = await AuthAPI().facebookLogin();
+      }
+
+      if (user == null && context.mounted) {
+        context.read<AuthBloc>().add(SocialLogin(user: user));
+        return null;
+      }
+      if (context.mounted) {
+        context.read<AppCubit>().changeState(AppLoaded());
+        await Future.delayed(const Duration(milliseconds: 2));
+      }
+      // await AuthAPI().signOut();
+
+      if (context.mounted) {
+        if (user!.phoneNumber == "No Phone Number") {
+          var check = await showDialog(
+            context: context,
+            builder: (context) => InformationDialog(
+              user: user,
+            ),
+          );
+          if (!check) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Vui lòng điền đầy đủ thông tin!')));
+              await AuthAPI().signOut();
+              return null;
+            }
+          }
+        }
+        if (context.mounted) {
+          context.read<AuthBloc>().add(SocialLogin(user: user));
+        }
       }
     }
 

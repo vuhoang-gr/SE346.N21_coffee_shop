@@ -24,7 +24,7 @@ dependencies:
   formz: ^0.6.0
   google_maps_flutter: ^2.2.6
   location: ^4.4.0
-  http: ^0.13.6
+  http: ^1.1.0
   geocoding: ^2.1.0
   google_places_flutter: ^2.0.5
   flutter_typeahead: ^4.3.8
@@ -32,10 +32,11 @@ dependencies:
   skeletons: ^0.0.3
   # firebase_core: ^1.14.0
   # firebase_auth: ^3.3.13
-  firebase_core: ^2.9.0
-  firebase_auth: ^4.4.1
-  google_sign_in: ^6.1.2
-  flutter_facebook_auth: ^5.0.11
+  firebase_core: ^2.14.0
+  firebase_auth: ^4.6.3
+  google_sign_in: ^6.1.4
+  googleapis: ^11.2.0
+  flutter_facebook_auth: ^6.0.0
   cloud_firestore: ^4.7.1
   firebase_storage: ^11.2.1
   fluttertoast: ^8.2.2

@@ -17,6 +17,7 @@ class User extends Equatable {
   bool isStaff;
   String avatarUrl;
   String coverUrl;
+  DateTime createDate;
 
   User(
       {required this.id,
@@ -24,6 +25,7 @@ class User extends Equatable {
       required this.phoneNumber,
       required this.email,
       this.dob,
+      required this.createDate,
       required this.isActive,
       this.isAdmin = false,
       this.isStaff = false,

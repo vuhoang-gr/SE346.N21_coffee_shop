@@ -15,9 +15,12 @@ class EmailLogin extends AuthEvent {
   List<Object?> get props => [email, password];
 }
 
-class GoogleLogin extends AuthEvent {}
-
-class FacebookLogin extends AuthEvent {}
+class SocialLogin extends AuthEvent {
+  final User? user;
+  SocialLogin({this.user});
+  @override
+  List<Object?> get props => [user];
+}
 
 class LogOut extends AuthEvent {}
 

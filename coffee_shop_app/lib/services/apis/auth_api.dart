@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:googleapis/people/v1.dart' as people;
 
 class AuthAPI {
   //singleton
@@ -68,7 +69,9 @@ class AuthAPI {
     });
 
     try {
-      GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      GoogleSignInAccount? googleUser = await GoogleSignIn.standard(scopes: [
+        people.PeopleServiceApi.userinfoEmailScope,
+      ]).signIn();
 
       GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
@@ -81,15 +84,20 @@ class AuthAPI {
 
       var user = await toUser(rawUser.user);
       if (user != null && user.phoneNumber == "No Phone Number") {
+        var temp = rawUser.user;
+        if (temp != null) {
+          if (temp.photoURL != null) {
+            user.avatarUrl = temp.photoURL!;
+          }
+          if (temp.displayName != null) {
+            user.name = temp.displayName!;
+          }
+        }
         await push(user);
       }
       return user;
-    } on firebase_auth.FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-      }
+    } catch (e) {
+      print(e);
     }
     return null;
   }
@@ -110,6 +118,15 @@ class AuthAPI {
           await firebaseAuth.signInWithCredential(facebookAuthCredential);
       var user = await toUser(rawUser.user);
       if (user != null && user.phoneNumber == "No Phone Number") {
+        var temp = rawUser.user;
+        if (temp != null) {
+          if (temp.photoURL != null) {
+            user.avatarUrl = temp.photoURL!;
+          }
+          if (temp.displayName != null) {
+            user.name = temp.displayName!;
+          }
+        }
         await push(user);
       }
       return user;
@@ -169,6 +186,7 @@ class AuthAPI {
       dob: DateTime.tryParse(
               (data['dob'] ?? Timestamp.now()).toDate().toString()) ??
           DateTime.now(),
+      createDate: DateTime.now(),
       isActive: data['isActive'],
       avatarUrl: data['avatarUrl'],
       coverUrl: data['coverUrl'],
@@ -204,13 +222,18 @@ class AuthAPI {
   Future<User?> toUser(firebase_auth.User? raw) async {
     if (raw == null) return null;
     User? user = await get(raw.uid);
+    if (user != null) {
+      user.createDate = raw.metadata.creationTime!;
+    }
     user ??= User(
       email: raw.email!,
       id: raw.uid,
+      createDate: DateTime.now(),
       isActive: true,
       name: raw.displayName ?? 'No Name',
       phoneNumber: 'No Phone Number',
     );
+
     return user;
   }
 }
