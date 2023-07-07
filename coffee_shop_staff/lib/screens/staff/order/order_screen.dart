@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../services/apis/order_api.dart';
+import '../../../services/apis/store_api.dart';
 import '../../../services/blocs/order/order_bloc.dart';
 import '../../../services/models/order.dart';
 import 'order_listing.dart';
@@ -18,6 +20,48 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
+  List<Order> deliList = [];
+  List<Order> pickupList = [];
+
+  Future<void> onRefresh() async {
+    var orderListRaw = await OrderAPI().getAll(StoreAPI.currentStore!.id);
+    var odList = orderListRaw?.map((e) => e as Order).toList();
+    var pList = odList!
+        .where(
+          (element) => element.deliveryAddress == null,
+        )
+        .toList();
+    var dList = odList
+        .where(
+          (element) => element.deliveryAddress != null,
+        )
+        .toList();
+    setState(() {
+      deliList = dList;
+    });
+    setState(() {
+      pickupList = pList;
+    });
+    if (context.mounted) {
+      context
+          .read<OrderBloc>()
+          .add(LoadOrder(deli: deliList, pickup: pickupList));
+    }
+    setState(() {});
+    await Future.delayed(Duration(milliseconds: 5));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    var orderState = context.read<OrderBloc>().state;
+    if (orderState is OrderLoaded) {
+      deliList = orderState.delivery;
+      pickupList = orderState.pickup;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -68,28 +112,16 @@ class _OrderScreenState extends State<OrderScreen> {
                   children: [
                     //store pickup
                     //map order have pickup type
-                    BlocBuilder<OrderBloc, OrderState>(
-                      builder: (context, state) {
-                        List<Order>? orderList = [];
-                        var orderState = context.read<OrderBloc>().state;
-                        if (orderState is OrderLoaded) {
-                          orderList = orderState.pickup;
-                        }
-                        return OrderListing(orderList: orderList);
-                      },
+                    OrderListing(
+                      orderList: pickupList,
+                      onRefresh: onRefresh,
                     ),
 
                     //delivery
                     //map order have delivery type
-                    BlocBuilder<OrderBloc, OrderState>(
-                      builder: (context, state) {
-                        List<Order>? orderList = [];
-                        var orderState = context.read<OrderBloc>().state;
-                        if (orderState is OrderLoaded) {
-                          orderList = orderState.delivery;
-                        }
-                        return OrderListing(orderList: orderList);
-                      },
+                    OrderListing(
+                      orderList: deliList,
+                      onRefresh: onRefresh,
                     )
                   ],
                 ),

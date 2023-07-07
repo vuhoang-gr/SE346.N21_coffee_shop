@@ -25,23 +25,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     });
 
-    on<GoogleLogin>((event, emit) async {
-      emit(Loading());
-      var user = await _authAPI.googleLogin();
-      if (user != null) {
-        emit(Authenticated(user: user));
+    on<SocialLogin>((event, emit) {
+      if (event.user != null) {
+        emit(Authenticated(user: event.user!));
       } else {
-        emit(UnAuthenticated(message: 'Login Failed', pageState: Login()));
-      }
-    });
-
-    on<FacebookLogin>((event, emit) async {
-      emit(Loading());
-      var user = await _authAPI.facebookLogin();
-      if (user != null) {
-        emit(Authenticated(user: user));
-      } else {
-        emit(UnAuthenticated(message: 'Login Failed', pageState: Login()));
+        emit(UnAuthenticated(message: 'Login failled', pageState: Login()));
       }
     });
 

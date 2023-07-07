@@ -23,8 +23,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController emailController = TextEditingController(text: '');
+  TextEditingController passwordController = TextEditingController(text: '');
   bool isRemember = false;
 
   @override
@@ -35,6 +35,18 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       isRemember = isRmb;
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    var status = context.read<AuthActionCubit>().state;
+    if (status is Login) {
+      if (status.email != null && status.email!.isNotEmpty) {
+        emailController.text = status.email!;
+      }
+    }
   }
 
   @override
@@ -58,6 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
           .emailLogin(emailController.text, passwordController.text);
       if (context.mounted) {
         context.read<AppCubit>().changeState(AppLoaded());
+        await Future.delayed(Duration(milliseconds: 5));
       }
 
       if (user == null) {
@@ -68,10 +81,8 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       }
 
-      await AuthAPI().signOut();
-
       if (context.mounted) {
-        if (user!.name == "No Name") {
+        if (user!.phoneNumber == "No Phone Number") {
           var check = await showDialog(
             context: context,
             builder: (context) => InformationDialog(
@@ -81,7 +92,9 @@ class _LoginScreenState extends State<LoginScreen> {
           if (!check) {
             if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Please fill the information!')));
+                  SnackBar(content: Text('Vui lòng điền đầy đủ thông tin!')));
+              context.read<AuthBloc>().add(LogOut());
+
               return;
             }
           }
@@ -95,12 +108,6 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }
 
-    var status = context.watch<AuthActionCubit>().state;
-    if (status is Login) {
-      if (status.email != null && status.email!.isNotEmpty) {
-        emailController.text = status.email!;
-      }
-    }
     return Column(
       children: [
         CustormTextForm(

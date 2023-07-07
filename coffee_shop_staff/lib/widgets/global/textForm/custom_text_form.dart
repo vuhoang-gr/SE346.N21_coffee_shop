@@ -49,7 +49,7 @@ class _CustormTextFormState extends State<CustormTextForm> {
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
     );
-    if (picked != null && picked != selectedDate) {
+    if (picked != null) {
       setState(() {
         selectedDate = picked;
         widget.controller.text = DateFormat('dd/MM/yyyy').format(selectedDate);

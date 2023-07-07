@@ -1,9 +1,7 @@
-import 'package:coffee_shop_staff/services/blocs/order/order_bloc.dart';
 import 'package:coffee_shop_staff/services/models/order.dart';
 import 'package:coffee_shop_staff/utils/styles/app_texts.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utils/colors/app_colors.dart';
 import '../../../utils/constants/dimension.dart';
@@ -17,8 +15,10 @@ class OrderListing extends StatefulWidget {
   OrderListing({
     super.key,
     this.orderList,
+    required this.onRefresh,
   });
   List<Order>? orderList;
+  Future<void> Function() onRefresh;
 
   @override
   State<OrderListing> createState() => _OrderListingState();
@@ -48,147 +48,160 @@ class _OrderListingState extends State<OrderListing> {
     });
   }
 
+  Future<void> onRefresh() async {
+    await widget.onRefresh();
+    await Future.delayed(Duration(milliseconds: 5));
+    setState(() {});
+    onFilter();
+  }
+
   @override
   Widget build(BuildContext context) {
     var isNotEmpty = widget.orderList != null && widget.orderList!.isNotEmpty;
-    return Column(
-      children: [
-        isNotEmpty
-            ? SizedBox(
-                height: Dimension.height12,
-              )
-            : SizedBox.shrink(),
-        isNotEmpty
-            ? Padding(
-                padding: EdgeInsets.symmetric(horizontal: Dimension.height12),
-                child: Container(
-                  color: Colors.white,
-                  padding: EdgeInsets.symmetric(
-                      vertical: Dimension.getHeightFromValue(9),
-                      horizontal: Dimension.getWidthFromValue(11)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Chọn trạng thái: ',
-                        style: AppText.style.regularGrey14
-                            .copyWith(color: Colors.black),
-                      ),
-                      DropdownButtonHideUnderline(
-                        child: Builder(builder: (context) {
-                          List<OrderStatus> statusList = [];
-                          if (widget.orderList![0].isPickup) {
-                            statusList = [
-                              OrderStatus.all,
-                              OrderStatus.received,
-                              OrderStatus.prepared,
-                              OrderStatus.completed,
-                              OrderStatus.cancelled,
-                            ];
-                          } else {
-                            statusList = [
-                              OrderStatus.all,
-                              OrderStatus.preparing,
-                              OrderStatus.delivering,
-                              OrderStatus.delivered,
-                              OrderStatus.deliverFailed,
-                              OrderStatus.cancelled,
-                            ];
-                          }
-                          return DropdownButton2(
-                            customButton: OrderStatusLabel(
-                              hasBorder: true,
-                              status: filter,
-                              fontSize: Dimension.getFontSize(13),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: Dimension.getHeightFromValue(9),
-                                  horizontal: Dimension.getWidthFromValue(14)),
-                            ),
-                            value: filter.name,
-                            items: statusList.map((value) {
-                              return DropdownMenuItem(
-                                  value: value.name,
-                                  child: OrderStatusLabel(
-                                    status: value,
-                                  ));
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                filter = value!.toOrderStatus();
-                              });
-                              onFilter();
-                            },
-                            buttonStyleData: ButtonStyleData(
-                              padding: const EdgeInsets.only(right: 8),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
-                                border: Border.all(
-                                  color: AppColors.blueColor,
+    return RefreshIndicator(
+      onRefresh: onRefresh,
+      child: Column(
+        children: [
+          isNotEmpty
+              ? SizedBox(
+                  height: Dimension.height12,
+                )
+              : SizedBox.shrink(),
+          isNotEmpty
+              ? Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Dimension.height12),
+                  child: Container(
+                    color: Colors.white,
+                    padding: EdgeInsets.symmetric(
+                        vertical: Dimension.getHeightFromValue(9),
+                        horizontal: Dimension.getWidthFromValue(11)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Chọn trạng thái: ',
+                          style: AppText.style.regularGrey14
+                              .copyWith(color: Colors.black),
+                        ),
+                        DropdownButtonHideUnderline(
+                          child: Builder(builder: (context) {
+                            List<OrderStatus> statusList = [];
+                            if (widget.orderList![0].isPickup) {
+                              statusList = [
+                                OrderStatus.all,
+                                OrderStatus.preparing,
+                                OrderStatus.prepared,
+                                OrderStatus.completed,
+                                OrderStatus.cancelled,
+                              ];
+                            } else {
+                              statusList = [
+                                OrderStatus.all,
+                                OrderStatus.preparing,
+                                OrderStatus.delivering,
+                                OrderStatus.delivered,
+                                OrderStatus.deliverFailed,
+                                OrderStatus.cancelled,
+                              ];
+                            }
+                            return DropdownButton2(
+                              customButton: OrderStatusLabel(
+                                hasBorder: true,
+                                status: filter,
+                                fontSize: Dimension.getFontSize(13),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: Dimension.getHeightFromValue(9),
+                                    horizontal:
+                                        Dimension.getWidthFromValue(14)),
+                              ),
+                              value: filter.name,
+                              items: statusList.map((value) {
+                                return DropdownMenuItem(
+                                    value: value.name,
+                                    child: OrderStatusLabel(
+                                      status: value,
+                                    ));
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  filter = value!.toOrderStatus();
+                                });
+                                onFilter();
+                              },
+                              buttonStyleData: ButtonStyleData(
+                                padding: const EdgeInsets.only(right: 8),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(14),
+                                  border: Border.all(
+                                    color: AppColors.blueColor,
+                                  ),
+                                  color: Colors.white,
                                 ),
-                                color: Colors.white,
                               ),
-                            ),
-                            dropdownStyleData: DropdownStyleData(
-                              maxHeight: 400,
-                              width: 200,
-                              padding: null,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
-                                color: Colors.white,
+                              dropdownStyleData: DropdownStyleData(
+                                maxHeight: 400,
+                                width: 200,
+                                padding: null,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(14),
+                                  color: Colors.white,
+                                ),
+                                elevation: 3,
+                                offset: const Offset(-20, 315),
                               ),
-                              elevation: 3,
-                              offset: const Offset(-20, 315),
-                            ),
-                          );
-                        }),
-                      ),
-                    ],
+                            );
+                          }),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              )
-            : SizedBox.shrink(),
-        SizedBox(
-          height: isNotEmpty ? Dimension.height12 : 0,
-        ),
-        isNotEmpty
-            ? Expanded(
-                child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: Dimension.height12),
-                    child: SingleChildScrollView(
-                      physics: BouncingScrollPhysics(),
+                )
+              : SizedBox.shrink(),
+          SizedBox(
+            height: isNotEmpty ? Dimension.height12 : 0,
+          ),
+          isNotEmpty
+              ? Expanded(
+                  child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: Dimension.height12),
                       child: Column(
                         children: [
-                          ListView.separated(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              return OrderCard(
-                                order: filterList![index],
-                              );
-                            },
-                            separatorBuilder: (_, __) => SizedBox(
-                              height: Dimension.height12,
+                          Flexible(
+                            child: ListView.separated(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return OrderCard(
+                                  order: filterList![index],
+                                );
+                              },
+                              separatorBuilder: (_, __) => SizedBox(
+                                height: Dimension.height12,
+                              ),
+                              itemCount: filterList!.length,
                             ),
-                            itemCount: filterList!.length,
                           ),
                           SizedBox(
-                            height: Dimension.height16,
+                            height: Dimension.height10,
                           ),
                         ],
-                      ),
-                    )),
-              )
-            : Expanded(child: NoOrderScreen()),
-      ],
+                      )),
+                )
+              : Expanded(
+                  child: NoOrderScreen(
+                  onRefresh: widget.onRefresh,
+                  onFilter: onFilter,
+                )),
+        ],
+      ),
     );
   }
 }
 
 class NoOrderScreen extends StatelessWidget {
-  const NoOrderScreen({
-    super.key,
-  });
+  NoOrderScreen({super.key, required this.onRefresh, required this.onFilter});
+  final Future<void> Function() onRefresh;
+  final void Function() onFilter;
 
   @override
   Widget build(BuildContext context) {
@@ -224,8 +237,11 @@ class NoOrderScreen extends StatelessWidget {
                   horizontal: Dimension.height16, vertical: Dimension.height16),
               child: ElevatedButton(
                   style: roundedButton,
-                  onPressed: () {
-                    context.read<OrderBloc>().add(LoadOrder());
+                  onPressed: () async {
+                    await onRefresh();
+                    await Future.delayed(Duration(milliseconds: 5));
+                    onFilter();
+                    // context.read<OrderBloc>().add(FetchOrder());
                   },
                   child: SizedBox(
                     height: Dimension.height40,

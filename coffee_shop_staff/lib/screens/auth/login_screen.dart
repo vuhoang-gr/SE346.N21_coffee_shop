@@ -59,6 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
           .emailLogin(emailController.text, passwordController.text);
       if (context.mounted) {
         context.read<AppCubit>().changeState(AppLoaded());
+        await Future.delayed(const Duration(milliseconds: 2));
       }
 
       if (user == null) {
@@ -71,13 +72,17 @@ class _LoginScreenState extends State<LoginScreen> {
       }
 
       if (context.mounted) {
-        if (user!.name == "No Name") {
+        if (user!.phoneNumber == "No Phone Number") {
           var check = await showDialog(
-              context: context, builder: (context) => InformationDialog());
+              context: context,
+              builder: (context) => InformationDialog(
+                    user: user,
+                  ));
           if (!check) {
             if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Vui lòng điền đầy đủ thông tin!')));
+              context.read<AuthBloc>().add(LogOut());
               return;
             }
           }

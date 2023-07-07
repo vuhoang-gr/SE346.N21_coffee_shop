@@ -59,8 +59,10 @@ class StoreAPI {
     try {
       var raw = await firestore.collection('Store').doc(id).get();
       var data = raw.data();
-      _rawStore = data ?? {};
-      currentStore = fromFireStore(data, id);
+      if (currentStore == null) {
+        _rawStore = data ?? {};
+        currentStore = fromFireStore(data, id);
+      }
       return currentStore;
     } catch (e) {
       return null;

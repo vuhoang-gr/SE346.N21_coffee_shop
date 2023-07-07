@@ -76,6 +76,7 @@ class AuthAPI {
 
   signOut() async {
     await firebaseAuth.signOut();
+    StoreAPI.currentStore = null;
     currentUser = null;
   }
 

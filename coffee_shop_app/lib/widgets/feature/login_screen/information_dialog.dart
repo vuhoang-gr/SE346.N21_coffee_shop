@@ -22,6 +22,14 @@ class _InformationDialogState extends State<InformationDialog> {
   TextEditingController nameController = TextEditingController(text: '');
   TextEditingController dobController = TextEditingController(text: '');
   TextEditingController phoneController = TextEditingController(text: '');
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    nameController.text = widget.user!.name;
+  }
+
   @override
   Widget build(BuildContext context) {
     bool canSaveInfor() {
