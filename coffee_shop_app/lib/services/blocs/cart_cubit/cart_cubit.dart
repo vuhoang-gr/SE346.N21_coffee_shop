@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:coffee_shop_app/services/apis/auth_api.dart';
 import 'package:coffee_shop_app/services/apis/order_api.dart';
 import 'package:coffee_shop_app/services/apis/size_api.dart';
 import 'package:coffee_shop_app/services/apis/topping_api.dart';
@@ -292,11 +293,27 @@ class CartCubit extends Cubit<Cart> {
     }
   }
 
-  checkPromo(Object? value, Store store) {
+  void checkPromo(Object? value, Store store) {
     if (value != null && value is Promo) {
       String? idSelectedStore = store.id;
       if (value.stores.contains(idSelectedStore)) {
-        applyPromoAndCalPrice(value);
+        if (!value.forNewCustomer) {
+          applyPromoAndCalPrice(value);
+        } else {
+          if (AuthAPI.currentUser != null) {
+            if (AuthAPI.currentUser!.createDate
+                .isAfter(DateTime.now().add(Duration(days: -7)))) {
+              applyPromoAndCalPrice(value);
+              return;
+            }
+          }
+          Fluttertoast.showToast(
+              msg: "Mã giảm giá chỉ áp dụng cho người dùng mới",
+              toastLength: Toast.LENGTH_SHORT,
+              timeInSecForIosWeb: 1,
+              textColor: Colors.white,
+              fontSize: Dimension.font14);
+        }
       } else {
         applyPromoAndCalPrice(null);
         Fluttertoast.showToast(
