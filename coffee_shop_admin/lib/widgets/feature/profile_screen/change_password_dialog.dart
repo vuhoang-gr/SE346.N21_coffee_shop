@@ -25,7 +25,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
         children: [
           Text(
             "Password Change",
-            style: AppText.style.mediumBlack16.copyWith(fontSize: 18),
+            style: AppText.style.mediumBlack16.copyWith(fontSize: Dimension.font18),
           ),
           CustormTextForm(
             margin: EdgeInsets.symmetric(vertical: 20),

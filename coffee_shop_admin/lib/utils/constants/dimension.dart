@@ -28,6 +28,7 @@ class Dimension {
   static double height40 = getHeightFromValue(40);
   static double height37 = getHeightFromValue(37);
   static double height32 = getHeightFromValue(32);
+  static double height30 = getHeightFromValue(30);
   static double height24 = getHeightFromValue(24);
   static double height20 = getHeightFromValue(20);
   static double height16 = getHeightFromValue(16);
@@ -58,9 +59,11 @@ class Dimension {
   static double width2 = getWidthFromValue(2);
   static double width1 = getWidthFromValue(1);
 
+  static double font34 = getWidthFromValue(34) / textScale;
   static double font18 = getWidthFromValue(18) / textScale;
   static double font16 = getWidthFromValue(16) / textScale;
   static double font14 = getWidthFromValue(14) / textScale;
+  static double font15 = getWidthFromValue(15) / textScale;
   static double font12 = getWidthFromValue(12) / textScale;
   static double font10 = getWidthFromValue(10) / textScale;
 }

@@ -23,7 +23,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     onLogin() async {
       context.read<AppCubit>().changeState(AppLoading());
-      context.read<AuthBloc>().add(EmailLogin(email: emailController.text, password: passwordController.text));
+      context.read<AuthBloc>().add(EmailLogin(
+          email: emailController.text, password: passwordController.text));
       context.read<AppCubit>().changeState(AppLoaded());
     }
 
@@ -42,12 +43,16 @@ class _LoginScreenState extends State<LoginScreen> {
           validator: NullValidator(),
           secure: true,
           label: 'Password',
-          margin: EdgeInsets.symmetric(vertical: Dimension.getHeightFromValue(15)),
+          margin:
+              EdgeInsets.symmetric(vertical: Dimension.getHeightFromValue(15)),
         ),
         RoundedButton(
           onPressed: onLogin,
           label: "LOGIN",
         ),
+        SizedBox(
+          height: Dimension.height16,
+        )
       ],
     );
   }
