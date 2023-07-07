@@ -168,8 +168,7 @@ class CartDelivery extends StatelessWidget {
                                                           TextSpan(
                                                             style: AppText.style
                                                                 .regularGrey12,
-                                                            children: <
-                                                                TextSpan>[
+                                                            children: <TextSpan>[
                                                               TextSpan(
                                                                   text:
                                                                       '${state.selectedDeliveryAddress?.nameReceiver}'),
@@ -404,10 +403,15 @@ class CartDelivery extends StatelessWidget {
                                 icon: Icons.discount_rounded,
                                 iconColor: AppColors.greenColor,
                                 size: Dimension.height12 * 2,
-                                child: Text(
-                                  'Sử dụng mã giảm giá',
-                                  style: AppText.style.boldBlack14,
-                                )),
+                                child: state.promo == null
+                                    ? Text(
+                                        'Sử dụng mã giảm giá',
+                                        style: AppText.style.boldBlack14,
+                                      )
+                                    : Text(
+                                        state.promo!.id,
+                                        style: AppText.style.boldBlack14,
+                                      )),
                             BlocBuilder<CartButtonBloc, CartButtonState>(
                                 builder: (context, cartButtonState) {
                               return IconButton(

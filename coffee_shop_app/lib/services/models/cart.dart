@@ -41,7 +41,15 @@ class Cart extends Equatable {
           deliveryCost: deliveryCost ?? this.deliveryCost,
           promo: promo ?? this.promo,
           isLoaded: isLoaded ?? this.isLoaded);
-
+  Cart copyWithNullPromo({double? discount}) => Cart(
+      products: products,
+      id: id,
+      discount: discount ?? this.discount,
+      total: total,
+      totalFood: totalFood,
+      deliveryCost: deliveryCost,
+      promo: null,
+      isLoaded: isLoaded);
   @override
   // TODO: implement props
   List<Object?> get props => [
