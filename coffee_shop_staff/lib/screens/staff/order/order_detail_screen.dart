@@ -60,7 +60,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     bool canChangeStatus = order.status == OrderStatus.cancelled ||
         order.status == OrderStatus.completed ||
         order.status == OrderStatus.delivered ||
-        order.status == OrderStatus.prepared;
+        order.status == OrderStatus.prepared ||
+        order.status == OrderStatus.deliverFailed;
 
     return SafeArea(
       child: Scaffold(

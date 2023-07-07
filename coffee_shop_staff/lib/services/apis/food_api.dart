@@ -20,6 +20,30 @@ class FoodAPI {
 
   final firestore = FirebaseFirestore.instance;
 
+  Stream<List<Food>> fetchData(Map<String, List<String>>? stateFood) {
+    return firestore
+        .collection('Food')
+        .snapshots()
+        .asyncMap<List<Food>>((snapshot) async {
+      if (stateFood == null) {
+        return [];
+      }
+
+      List<Food> foods = [];
+      for (var doc in snapshot.docs) {
+        Food? food = await fromFireStore(doc.data(), doc.id);
+        if (food != null) {
+          foods.add(food);
+          allFood[doc.id] = food;
+        }
+      }
+
+      foods.sort((a, b) => a.name.compareTo(b.name));
+
+      return foods;
+    });
+  }
+
   Future<Food?> fromFireStore(Map<String, dynamic>? data, String id) async {
     try {
       if (data == null) return null;

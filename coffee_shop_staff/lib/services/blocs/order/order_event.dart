@@ -22,3 +22,10 @@ class ChangeOrder extends OrderEvent {
   @override
   List<Object?> get props => [order];
 }
+
+class UpdateOrderList extends OrderEvent {
+  final List<Order> orderList;
+  UpdateOrderList({required this.orderList});
+  @override
+  List<Object?> get props => [orderList];
+}
